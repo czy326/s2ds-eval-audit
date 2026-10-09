@@ -1,0 +1,1556 @@
+ 
+
+ SlimDiffSR: Toward Lightweight and Efficient Remote Sensing Image Super-Resolution via Diffusion Model Distillation 
+
+ Report GitHub Issue 
+ × 
+
+ Title: 
+
+ Content selection saved. Describe the issue below: 
+
+ Description: 
+
+ Submit without GitHub 
+ Submit in GitHub 
+
+ arXiv is now an independent nonprofit! 
+ Learn more 
+ &times; 
+
+ Back to arXiv 
+
+ Why HTML? 
+
+ Report Issue 
+
+ Back to Abstract 
+
+ Download PDF 
+
+ Abstract 
+ 1 Introduction 
+ 2 Related Work 
+ 
+ 2.1 Remote Sensing Image Super-Resolution 
+ 2.2 SR Diffusion Models 
+ 
+ 3 Method 
+ 
+ 3.1 Overview 
+ 3.2 Single-Step Teacher Model Construction 
+ 
+ 3.2.1 Uncertainty Estimation 
+ 3.2.2 Timestep Inversion 
+ 
+ 3.3 Lightweight Student Model Construction 
+ 
+ 3.3.1 Enhanced Lightweight VAE 
+ 3.3.2 Module Removal in UNet 
+ 3.3.3 Module Replacement in UNet 
+ 
+ 3.4 Knowledge Distillation 
+ 3.5 Training Scheme 
+ 
+ 3.5.1 Stage 1: Teacher Model Pretraining 
+ 3.5.2 Stage 2: Knowledge Distillation from Teacher to Student 
+
+ 4 Experiments and discussion 
+ 
+ 4.1 Dataset 
+ 4.2 Implementation Details 
+ 4.3 Evaluation Metrics 
+ 4.4 Comparison With State-of-the-Art Methods 
+ 
+ 4.4.1 Quantitative Comparison 
+ 4.4.2 Qualitative Comparison 
+ 4.4.3 Results of 8 × 8\times SR 
+ 4.4.4 Results of Real-World Dataset 
+ 
+ 4.5 Ablation Studies 
+ 
+ 4.5.1 Effectiveness of Uncertainty Guidance 
+ 4.5.2 Effectiveness of Enhanced Lightweight VAE 
+ 4.5.3 Effectiveness of Module Removal Strategy 
+ 4.5.4 Effectiveness of Module Replacement Strategy 
+ 4.5.5 Effectiveness of Knowledge Distillation 
+
+ 5 Conclusion 
+ References 
+
+ License: arXiv.org perpetual non-exclusive license
+
+arXiv:2605.02198v1 [cs.CV] 04 May 2026 
+
+ SlimDiffSR: Toward Lightweight and Efficient Remote Sensing Image Super-Resolution via Diffusion Model Distillation 
+
+ Ce Wang
+ 
+ Affiliation:  School of Remote Sensing and Information Engineering, Wuhan University
+
+ Zhenyu Hu
+ 
+ Affiliation:  Wuhan 430079, China
+
+ Wanjie Sun
+ † † thanks: Corresponding author 
+ Affiliation:  {cewang, zhenyuhu, sunwanjie}@whu.edu.cn 
+
+ Abstract 
+ 
+ Diffusion models have recently achieved remarkable performance in image super-resolution (SR), but their high computational cost limits practical deployment in remote sensing applications. To address this issue, we propose SlimDiffSR, a lightweight and efficient diffusion-based framework for real-world remote sensing image super-resolution. Unlike existing single-step diffusion methods that rely on fixed timesteps, we first introduce an uncertainty-guided timestep assignment strategy to construct a stronger single-step teacher model, where reconstruction difficulty is explicitly linked to diffusion timesteps, enabling adaptive generative strength. Building upon this teacher, we further present a structured pruning strategy tailored to remote sensing imagery, which systematically removes redundant semantic modules and replaces standard operations with lightweight designs, including frequency-separable convolution, direction-separable convolution, and a query-driven global aggregation module. These components explicitly exploit the unique characteristics of remote sensing data, such as sparse high-frequency details, strong directional patterns, and long-range spatial dependencies. To enhance knowledge transfer, we incorporate Maximum Mean Discrepancy (MMD) into the distillation process to align feature distributions between the teacher and student models. Extensive experiments on multiple remote sensing benchmarks demonstrate that SlimDiffSR achieves a favorable balance between efficiency and reconstruction quality. In particular, it attains up to 200 × 200\times inference acceleration and a 20 × 20\times reduction in model parameters compared with multi-step diffusion models, while achieving competitive perceptual quality and clearly outperforming existing lightweight diffusion baselines in efficiency. The code is available at: https://github.com/wwangcece/SlimDiffSR . 
+
+ 1 Introduction 
+
+ High-resolution (HR) remote sensing imagery is critical for a wide range of Earth observation and monitoring applications, including but not limited to weather forecasting [ 41 ] , object detection [ 25 ] , and land use and land cover mapping [ 39 ] . However, the spatial resolution of many satellite images is inherently constrained by hardware limitations and transmission bandwidth, often resulting in insufficient detail for reliable interpretation and analysis [ 14 ] . To address this limitation, super-resolution (SR) techniques aim to enhance the spatial fidelity of low-resolution (LR) observations through data-driven reconstruction, enabling the generation of HR imagery in a cost-effective manner. 
+
+ Over the past decades, a variety of SR approaches have been developed [ 49 ] , including reconstruction-based methods, sparse representation-based methods, and regression-based methods. More recently, deep learning has significantly advanced SR performance by leveraging large-scale datasets to learn complex LR-to-HR mapping. Early deep SR research primarily focused on network architecture design [ 63 , 19 , 3 ] , loss functions [ 15 , 22 ] , and optimization strategies [ 49 ] , achieving substantial improvements in distortion-oriented metrics such as peak signal-to-noise ratio (PSNR). Subsequently, generative adversarial networks (GANs) [ 8 , 62 ] were introduced to enhance perceptual quality by encouraging the generation of realistic textures through adversarial training. Despite their success, GAN-based methods often suffer from training instability, mode collapse, and the introduction of undesirable visual artifacts [ 28 ] . In recent years, diffusion models (DMs) [ 12 ] have demonstrated remarkable success in high-fidelity image generation and have been extended to a variety of low-level vision tasks, including image-to-image translation and image restoration. Their application to SR has shown promising results, offering improved perceptual quality, enhanced training stability, and more diverse reconstruction outcomes [ 57 , 46 , 30 ] . 
+
+ Despite these advantages, diffusion-based SR methods remain computationally expensive due to their iterative sampling procedures and large model sizes. For instance, a typical multi-step diffusion model [ 46 ] may require more than 100 seconds to process a single 1024 × 1024 1024\times 1024 image on an RTX 3090 GPU. Such computational cost poses a significant barrier to large-scale deployment in remote sensing applications, where massive volumes of imagery must be processed efficiently. To mitigate this issue, recent studies have focused on developing lightweight diffusion frameworks, which can be broadly categorized into three directions. First, task-specific diffusion formulations have been proposed for SR and image restoration [ 57 , 32 ] , aiming to exploit degraded inputs more effectively while reducing the number of denoising steps. Second, advanced ordinary differential equation (ODE) and stochastic differential equation (SDE) solvers have been introduced to accelerate the sampling process [ 38 , 33 ] . Third, model compression techniques, such as knowledge distillation and structured pruning, have been employed to simultaneously reduce sampling steps and model complexity [ 2 , 18 ] . 
+
+ Despite these advances, several challenges remain when applying lightweight diffusion models to remote sensing SR: 
+
+ 1. 
+ 
+ Fixed timestep : Existing single-step diffusion models typically adopt a fixed timestep [ 50 , 2 ] , ignoring the fact that different timesteps in multi-step diffusion pretraining provide distinct guidance signals for the denoising process. 
+ 
+ 2. 
+ 
+ Suboptimal pruning strategies : Current pruning methods are largely adapted from natural image generation tasks [ 18 ] , without accounting for the unique characteristics of SR and remote sensing imagery. 
+ 
+ 3. 
+ 
+ Limited distillation objectives : Most existing distillation approaches rely on mean squared error (MSE) to align intermediate features between teacher and student networks [ 18 ] , which only captures first-order statistics and fails to model distribution-level discrepancies. 
+
+ Figure 1 : Our method achieves a substantial reduction in both inference time and model size. By constructing a single-step diffusion model and further incorporating structured pruning techniques, the final lightweight model attains up to 200 × \times inference acceleration and a 20 × \times reduction in the number of parameters, while maintaining competitive restoration performance. 
+
+ To address these challenges, we propose SlimDiffSR, a lightweight and efficient diffusion-based framework for real-world remote sensing image super-resolution. As illustrated in Fig. 1 , the proposed method achieves significant improvements in both inference efficiency and model compactness. The overall framework consists of two stages: teacher model training and student model distillation. 
+
+ In the first stage, we construct an unpruned single-step diffusion-based SR network as the teacher model. Although existing single-step diffusion-based methods, such as OSEDiff [ 50 ] and S3Diff [ 58 ] , demonstrate promising runtime efficiency, they rely on fixed diffusion timestep and thus fail to fully exploit timestep-dependent guidance learned during diffusion pretraining. Our prior studies [ 43 ] have shown that different inputs may require different timesteps to achieve better restoration quality due to varying degradation levels. Motivated by this observation, we propose an uncertainty-guided single-step diffusion model for remote sensing image SR as the teacher model. Specifically, we establish a correspondence between reconstruction uncertainty and diffusion timesteps. An uncertainty estimator is first trained in the latent space using an uncertainty-aware objective [ 35 ] to predict reconstruction difficulty. A timestep inversion strategy is then introduced to map uncertainty scores to appropriate diffusion timesteps, enabling dynamic timestep assignment for different LR inputs. 
+
+ In the second stage, the teacher model is pruned and distilled to improve inference efficiency while preserving reconstruction performance. This stage consists of two steps: structural pruning and distillation training. For the pruning strategy, the denoising network is decomposed into removable and replaceable modules. Since LR inputs already contain substantial semantic information, and deeper UNet layers of the diffusion model primarily capture high-level semantics [ 42 ] , these components are considered redundant for SR and can be removed. Second, considering the characteristics of remote sensing imagery, we redesign the remaining modules to better match the data properties. Remote sensing images typically contain large homogeneous regions with limited low-frequency variation, while critical information is concentrated in high-frequency structures such as edges and object boundaries. To exploit this, we introduce frequency-separable convolution to emphasize informative high-frequency components while reducing redundant computation. In addition, remote sensing scenes often exhibit strong directional patterns (e.g., roads and rivers). To capture such anisotropic structures efficiently, we design direction-separable convolution. Furthermore, due to the large spatial extent of remote sensing images, long-range dependencies are important but costly to model with standard self-attention. Therefore, we propose a query-driven global aggregation module to approximate global context in a more efficient manner. These designs replace standard convolution and self-attention layers, improving efficiency while preserving task-relevant information. For distillation, a multi-scale feature supervision strategy is adopted to transfer knowledge from the teacher to the student network. To address the distribution mismatch between their features, we incorporate the Maximum Mean Discrepancy (MMD) loss [ 10 ] alongside the MSE loss to enforce both point-wise and distribution-level alignment. 
+
+ Unlike existing lightweight diffusion-based SR methods that directly approximate multi-step inference with fixed designs, this work addresses a key limitation in single-step diffusion for remote sensing SR, i.e., the lack of adaptive generative strength under varying degradation levels. To this end, we introduce an uncertainty-guided timestep assignment strategy to construct a stronger single-step teacher model, where reconstruction difficulty is explicitly linked to diffusion timesteps. Building upon this teacher, we further develop a lightweight student model through RS-aware structural redesign. Instead of applying generic pruning strategies, we exploit the characteristics of remote sensing imagery to remove redundant semantic modules and replace remaining components with efficient alternatives. This teacher–student design enables us to improve reconstruction quality through adaptive diffusion guidance, while achieving high inference efficiency via lightweight model construction. As shown in Fig. 2 , while maintaining a compact model size and strong reconstruction quality, our lightweight model not only significantly outperforms existing multi-step and single-step DMs-based methods in inference speed, but also surpasses GAN-based approaches. 
+
+ Figure 2 : Performance and efficiency comparison among different remote sensing image SR methods for processing a single 512 × \times 512 image on an RTX 3090 GPU. Red bubbles denote multi-step diffusion-model-based methods, green bubbles denote single-step diffusion-model-based methods, and yellow bubbles denote GAN-based methods. Our method achieves the fastest inference speed and the best LPIPS score while maintaining a relatively small model size. 
+
+ To summarize, the main contributions of this work are as follows: 
+ 
+ 1. 
+ 
+ We identify the limitation of fixed-timestep selection in existing single-step diffusion SR models and propose an uncertainty-guided timestep assignment strategy. By explicitly linking reconstruction difficulty with diffusion timesteps, the proposed method enables adaptive generative strength and improves the effectiveness of single-step diffusion for remote sensing SR. 
+ 
+ 2. 
+ 
+ We show that effective model compression for remote sensing SR requires RS-specific structural redesign rather than generic pruning. Based on this insight, we remove redundant deep semantic modules and introduce lightweight operators, including frequency-separable convolution, direction-separable convolution, and query-driven global aggregation, which better match the characteristics of remote sensing imagery. 
+ 
+ 3. 
+ 
+ We develop a two-stage teacher–student diffusion framework that decouples quality enhancement from efficient deployment. The adaptive teacher provides strong reconstruction supervision, while the lightweight student inherits this capability through distillation and performs fixed single-step inference without additional timestep prediction overhead. 
+ 
+ 4. 
+ 
+ We incorporate MMD into the distillation process to complement conventional MSE supervision, enabling alignment of both point-wise features and their underlying distributions, which leads to improved perceptual quality and reconstruction fidelity. 
+
+ 2 Related Work 
+
+ 2.1 Remote Sensing Image Super-Resolution 
+
+ Early research on remote sensing image super-resolution (SR) predominantly relied on convolutional neural networks (CNNs). Representative models such as SRCNN [ 6 ] and VDSR [ 19 ] were directly applied to satellite imagery, demonstrating the effectiveness of deep learning for enhancing both panchromatic and multispectral data. For example, Tuna et al. [ 40 ] showed that VDSR performs well on high-resolution images from SPOT and Pleiades sensors. However, these early models are relatively shallow and lack sufficient contextual modeling capability, limiting their ability to capture complex spatial patterns in remote sensing scenes. 
+
+ To address this limitation, deeper and task-specific CNN-based models have been proposed. The RS-DRL network [ 9 ] introduces residual learning for Sentinel-2 data, while the Deep Memory Connected Network (DMCN) [ 55 ] incorporates local and global memory mechanisms to enhance multi-level feature representation. Although these methods achieve strong performance in distortion-oriented metrics such as PSNR and SSIM, they often produce over-smoothed textures and fail to preserve fine details. 
+
+ To improve perceptual quality, GANs have been introduced into remote sensing SR. Models such as ESRGAN [ 21 ] , EEGAN [ 4 ] , and DRGAN [ 34 ] employ adversarial training and perceptual losses to generate sharper and more realistic images. In addition, task-specific variants such as SRAGAN [ 27 ] are designed to better capture structural characteristics in remote sensing imagery. However, GAN-based methods often suffer from inferior quantitative performance and may introduce artifacts, especially under large scaling factors or cross-sensor scenarios. To mitigate these issues, subsequent studies have explored hybrid loss functions [ 31 ] and improved discriminator designs [ 59 ] to balance perceptual quality and reconstruction fidelity. 
+
+ 2.2 SR Diffusion Models 
+
+ Diffusion models (DMs) have recently emerged as a powerful paradigm for image SR, initially in the domain of natural images. Early approaches such as SR3 [ 37 ] and SRDiff [ 24 ] train diffusion models from scratch to reconstruct HR images from LR inputs, but require substantial computational resources and large-scale paired datasets. To alleviate this limitation, recent methods leverage pretrained text-to-image diffusion models as strong generative priors. For example, DiffBIR [ 30 ] and StableSR [ 46 ] utilize pretrained Stable Diffusion (SD) [ 36 ] to guide texture synthesis, demonstrating that pretrained generative knowledge can be effectively transferred to SR tasks. 
+
+ Despite their strong performance, pretrained diffusion models are characterized by large parameter sizes and slow inference speeds, which hinder practical deployment. To improve efficiency, recent studies have explored lightweight diffusion techniques from three main perspectives. First, task-specific diffusion formulations, such as ResShift [ 57 ] and RDDM [ 32 ] , aim to reduce the number of denoising steps. Second, efficient ODE/SDE-based samplers [ 38 , 33 ] are developed to accelerate the sampling process. Third, model compression techniques, including knowledge distillation and structured pruning, are employed to jointly reduce sampling steps and model complexity. For instance, OSEDiff [ 50 ] and S3Diff [ 58 ] achieve single-step inference via distillation, while AdcSR [ 2 ] further reduces model size through structured pruning. 
+
+ In the domain of remote sensing, SR poses unique challenges due to complex textures, large scale variations, and sensor-specific imaging characteristics. Early DMs-based SR methods for remote sensing typically relied on training models from scratch using domain-specific datasets. For example, EDiffSR [ 53 ] introduces an efficient diffusion probabilistic framework tailored for remote sensing SR, incorporating an Efficient Activation Network for noise prediction and a Conditional Prior Enhancement Module to strengthen conditioning cues. More recent studies have attempted to bridge the gap between natural-image diffusion foundation models and remote sensing applications. SGDM [ 44 ] , for instance, leverages pretrained SD models to perform 16 × 16\times and 32 × 32\times SR for remote sensing imagery by disentangling style and content representations and incorporating vector map priors to enhance semantic consistency. Likewise, DiffusionSat [ 17 ] , the first diffusion foundation model for remote sensing, combines pretrained SD with auxiliary metadata (e.g., geographic coordinates) to support temporal SR and image inpainting, demonstrating superior performance over GAN-based approaches. 
+
+ Despite these advances, existing diffusion-based SR methods for remote sensing remain computationally expensive and are not well suited for large-scale deployment. Meanwhile, lightweight diffusion techniques developed for natural images do not fully consider the unique characteristics of remote sensing data, as discussed in Section  1 . Therefore, there remains a need for a dedicated lightweight diffusion framework tailored to remote sensing image SR. 
+
+ 3 Method 
+
+ 3.1 Overview 
+
+ The overall framework of SlimDiffSR is illustrated in Fig. 3 . The goal of this work is to develop a lightweight diffusion-based model for remote sensing image super-resolution that achieves high reconstruction quality while maintaining efficient inference. To this end, we adopt a two-stage teacher–student framework. In the first stage, we construct a strong single-step diffusion teacher model to provide high-quality supervision. Unlike existing single-step diffusion methods that rely on fixed timesteps, we introduce an uncertainty-guided timestep assignment strategy to enhance the reconstruction capability of the teacher model under varying degradation levels. In the second stage, we focus on efficiency by designing a lightweight student model through RS-aware structural pruning and module replacement tailored to remote sensing imagery. 
+
+ Importantly, the adaptive timestep mechanism is only used during teacher model construction. The final student model operates with a fixed single-step inference, introducing no additional computational overhead. The key idea is that the adaptive reconstruction behavior introduced by timestep variation in the teacher model can be transferred to the student via distillation. As a result, the student implicitly learns to approximate the effect of adaptive timestep selection, without explicitly requiring timestep prediction during inference. Through this design, the proposed framework effectively decouples reconstruction quality and inference efficiency, enabling SlimDiffSR to achieve a favorable balance between performance and efficiency for large-scale remote sensing applications. 
+
+ Figure 3 : Overview of the proposed SlimDiffSR framework. In the first stage, an uncertainty-guided single-step diffusion teacher is constructed to provide high-quality supervision. In the second stage, the adaptive behavior of the teacher is distilled into a lightweight student model, where redundant modules are removed or replaced for efficient fixed single-step inference. 
+
+ 3.2 Single-Step Teacher Model Construction 
+
+ The objective of the teacher model is to provide strong reconstruction supervision for the subsequent lightweight student. A key limitation of existing single-step diffusion methods lies in their use of a fixed timestep, which implicitly assumes a uniform degradation level across all inputs. However, in remote sensing SR, the degradation varies across scenes and spatial position, making such a fixed design suboptimal. 
+
+ To address this issue, we introduce an uncertainty-guided timestep assignment strategy. We design a mapping from reconstruction uncertainty to diffusion timestep, such that inputs with higher uncertainty are assigned larger timesteps, corresponding to stronger generative guidance. This enables the teacher model to adapt its reconstruction behavior to varying degradation levels, resulting in improved performance compared with fixed-timestep designs. As illustrated in Fig.  4 , given an LR input x lr x_{\mathrm{lr}} , an uncertainty estimator predicts a element-wise uncertainty map z var z_{\mathrm{var}} , which reflects reconstruction difficulty. Based on this uncertainty, a timestep inversion strategy is employed to estimate the optimal diffusion timestep t ∗ t^{*} , which is then used to guide the UNet denoising process to obtain a better SR result than that of a plain single-step diffusion SR model. 
+
+ Figure 4 : Overview of the uncertainty-guided single-step diffusion model in the first stage. 
+
+ 3.2.1 Uncertainty Estimation 
+
+ According to existing studies on uncertainty learning [ 35 ] , we model the ground-truth latent z gt z_{\mathrm{gt}} as a Gaussian distribution conditioned on the LR latent z lr z_{\mathrm{lr}} : 
+
+ z gt = z mean + ϵ ⋅ z var , ϵ ∼ 𝒩 ⁡ ( 0 , I ) z_{\mathrm{gt}}=z_{\mathrm{mean}}+\epsilon\cdot\sqrt{z_{\mathrm{var}}},\quad\epsilon\sim\mathcal{N}(0,\mathrm{I}) 
+ 
+ (1) 
+ 
+ where z mean z_{\mathrm{mean}} and z var z_{\mathrm{var}} denote the predicted mean and variance, respectively. Both are estimated by an uncertainty estimator ( z mean , z var ) = UE ϕ ​ ( z lr ) (z_{\mathrm{mean}},z_{\mathrm{var}})=\mathrm{UE}_{\phi}(z_{\mathrm{lr}}) . Intuitively, the role of the uncertainty estimator UE ϕ \mathrm{UE}_{\phi} can be decomposed into two complementary components. First, it performs a preliminary restoration of the LR input z lr z_{\mathrm{lr}} , producing a mean estimate z mean z_{\mathrm{mean}} that represents the expected HR latent under the predicted distribution in which most degradations are suppressed. Second, it estimates the reconstruction uncertainty for each pixel, yielding a variance map z var z_{\mathrm{var}} . As observed in prior studies [ 20 ] , texture-rich regions are generally more difficult to accurately reconstruct, leading to higher uncertainty values for the reconstruction process. 
+
+ To train the estimator, we maximize the posterior probability of the predicted variance conditioned on the observed LR-HR latent pair. According to Bayes’ rule, the posterior can be written as: 
+
+ p ⁡ ( z var ∣ z gt , z lr ) ∝ p ⁡ ( z gt ∣ z mean , z var ) ​ p ​ ( z var ) p(z_{\mathrm{var}}\mid z_{\mathrm{gt}},z_{\mathrm{lr}})\propto p(z_{\mathrm{gt}}\mid z_{\mathrm{mean}},z_{\mathrm{var}})p(z_{\mathrm{var}}) 
+ 
+ (2) 
+ 
+ where z mean z_{\mathrm{mean}} is implicitly conditioned on z lr z_{\mathrm{lr}} . Assuming a Gaussian observation model, the likelihood is given by: 
+
+ p ⁡ ( z gt ∣ z mean , z var ) = 1 2 ​ π ​ z var ​ exp ⁡ ( − ‖ z gt − z mean ‖ 2 2 2 ​ z var ) p(z_{\mathrm{gt}}\mid z_{\mathrm{mean}},z_{\mathrm{var}})=\frac{1}{\sqrt{2\pi z_{\mathrm{var}}}}\exp\left(-\frac{\|z_{\mathrm{gt}}-z_{\mathrm{mean}}\|_{2}^{2}}{2z_{\mathrm{var}}}\right) 
+ 
+ (3) 
+
+ Meanwhile, according to Jeffreys’ prior [ 7 ] , the uncertainty prior can be expressed as p ⁡ ( z var ) ∝ 1 z var p(z_{\mathrm{var}})\propto\frac{1}{z_{\mathrm{var}}} . By taking the logarithm of the posterior and removing constant terms, we obtain: 
+
+ ln ⁡ p ⁡ ( z var ∣ z gt , z lr ) ∝ − ‖ z gt − z mean ‖ 2 2 2 ​ z var − 3 2 ​ ln ⁡ z var \ln p(z_{\mathrm{var}}\mid z_{\mathrm{gt}},z_{\mathrm{lr}})\propto-\frac{\|z_{\mathrm{gt}}-z_{\mathrm{mean}}\|_{2}^{2}}{2z_{\mathrm{var}}}-\frac{3}{2}\ln z_{\mathrm{var}} 
+ 
+ (4) 
+
+ Minimizing the negative log-posterior leads to the following uncertainty-aware loss. Let s = ln ⁡ z var s=\ln z_{\mathrm{var}} for numerical stability, then the loss is defined as: 
+
+ ℒ uncertainty = 1 2 ​ N ​ ∑ i = 1 N ( exp ⁡ ( − s i ) ​ ‖ z gt i − z mean i ‖ 2 2 + 3 ​ s i ) \mathcal{L}_{\text{uncertainty}}=\frac{1}{2N}\sum_{i=1}^{N}\left(\exp(-s^{i})\|z_{\mathrm{gt}}^{i}-z_{\mathrm{mean}}^{i}\|_{2}^{2}+3s^{i}\right) 
+ 
+ (5) 
+ 
+ here, the variance is predicted element-wise over the latent representation, and each latent element is modeled as an independent scalar Gaussian variable. This formulation enables the estimator to adaptively assign higher uncertainty to regions that are more difficult to reconstruct, which subsequently guides the timestep assignment in the diffusion model. 
+
+ 3.2.2 Timestep Inversion 
+
+ Our previous studies have shown that, for single-step diffusion models, inputs with different reconstruction difficulties should be guided by different denoising timesteps [ 43 ] . Given the uncertainty map estimated in the previous section, our goal is to determine an appropriate timestep for the teacher model, so that the generative strength of the diffusion model can be adaptively adjusted according to the reconstruction difficulty. 
+
+ A straightforward solution is to directly predict the timestep t t with a neural network. However, this design is not suitable for end-to-end optimization, because the predicted timestep is used as a discrete index to retrieve the corresponding noise schedule value α ¯ t \bar{\alpha}_{t} . Such an indexing operation is non-differentiable, making it difficult to train the timestep prediction module jointly with the teacher model. Therefore, instead of directly predicting the discrete timestep t t , we predict a continuous noise-level variable α ¯ target \bar{\alpha}_{\text{target}} , which can be regarded as a continuous representation of the diffusion timestep. 
+
+ To provide a principled target for predicting α ¯ target \bar{\alpha}_{\text{target}} , we establish the relationship between reconstruction uncertainty and diffusion noise level through the signal-to-noise ratio (SNR). In the forward diffusion process, the noisy latent at timestep t t is formulated as: 
+
+ z t = α ¯ t ​ z 0 + 1 − α ¯ t ​ ϵ , ϵ ∼ 𝒩 ⁡ ( 0 , I ) z_{t}=\sqrt{\bar{\alpha}_{t}}z_{0}+\sqrt{1-\bar{\alpha}_{t}}\epsilon,\quad\epsilon\sim\mathcal{N}(0,\mathrm{I}) 
+ 
+ (6) 
+ 
+ where α ¯ t \bar{\alpha}_{t} controls the relative proportion of signal and noise. The corresponding SNR is given by: 
+
+ SNR diff ​ ( t ) = α ¯ t 1 − α ¯ t \mathrm{SNR}_{\mathrm{diff}}(t)=\frac{\bar{\alpha}_{t}}{1-\bar{\alpha}_{t}} 
+ 
+ (7) 
+
+ Similarly, the uncertainty-based observation model describes reconstruction difficulty through the predicted variance z var z_{\mathrm{var}} . A larger variance indicates higher uncertainty and thus a lower signal-to-noise ratio. Therefore, the uncertainty-based SNR can be written as: 
+
+ SNR uncertainty = σ gt 2 z var \mathrm{SNR}_{\mathrm{uncertainty}}=\frac{\sigma_{\mathrm{gt}}^{2}}{z_{\mathrm{var}}} 
+ 
+ (8) 
+ 
+ where σ gt 2 \sigma_{\mathrm{gt}}^{2} denotes the signal variance of the HR latent distribution. By aligning the SNR of the diffusion process with the SNR implied by the uncertainty model, we obtain: 
+
+ α ¯ target = σ gt 2 σ gt 2 + z var \bar{\alpha}_{\text{target}}=\frac{\sigma_{\mathrm{gt}}^{2}}{\sigma_{\mathrm{gt}}^{2}+z_{\mathrm{var}}} 
+ 
+ (9) 
+
+ This derivation shows that reconstruction uncertainty is monotonically related to the diffusion noise level. Specifically, a larger uncertainty corresponds to a smaller α ¯ target \bar{\alpha}_{\text{target}} , which indicates a larger diffusion timestep and stronger generative guidance. However, directly computing Eq.  9 is impractical because σ gt 2 \sigma_{\mathrm{gt}}^{2} is unknown and the Gaussian assumption may not fully describe the complex distribution of real remote sensing imagery. Therefore, we use Eq.  9 as a theoretical guideline and introduce a prediction network Pred θ \mathrm{Pred}_{\theta} to estimate α ¯ target \bar{\alpha}_{\text{target}} in a data-driven manner: 
+
+ α ¯ target = Pred θ ​ ( z gt , z var ) \bar{\alpha}_{\text{target}}=\mathrm{Pred}_{\theta}\left(z_{\mathrm{gt}},z_{\mathrm{var}}\right) 
+ 
+ (10) 
+ 
+ here, z gt z_{\mathrm{gt}} is available during teacher model construction and provides HR reference information for learning the target noise level through the teacher training objective, while z var z_{\mathrm{var}} encodes the reconstruction difficulty. The predictor is optimized jointly with the teacher model through the final reconstruction and adversarial objectives, allowing it to learn the noise level that yields the best restoration performance. It is worth noting that this prediction module is only used for constructing the teacher model and is not involved in the inference of the final lightweight student model. 
+
+ After obtaining α ¯ target \bar{\alpha}_{\text{target}} , we need to convert it into the corresponding timestep t ∗ t^{*} . Since α ¯ t \bar{\alpha}_{t} is determined by the predefined diffusion noise schedule, this conversion can be written as t ∗ = α ¯ − 1 ​ ( α ¯ target ) t^{*}=\bar{\alpha}^{-1}\left(\bar{\alpha}_{\text{target}}\right) . Instead of learning this inverse mapping with an additional MLP, we exploit the fact that the relationship between t t and log ⁡ α ¯ t \log\bar{\alpha}_{t} is smooth and monotonic under commonly used diffusion schedules. Therefore, this mapping can be accurately approximated by a simple low-order polynomial, which avoids unnecessary learning complexity and improves numerical stability. Specifically, we fit the following quadratic function: 
+
+ log ⁡ α ¯ ​ ( t ) ≈ c ​ t 2 + a ​ t + b \log\bar{\alpha}(t)\approx ct^{2}+at+b 
+ 
+ (11) 
+ 
+ where the coefficients a a , b b , and c c are obtained offline by least-squares fitting using samples from the original diffusion scheduler. In this way, the proposed timestep inversion strategy converts reconstruction uncertainty into an adaptive diffusion timestep through a differentiable noise-level prediction followed by an efficient analytical inversion. 
+
+ 3.3 Lightweight Student Model Construction 
+
+ In the second stage, we aim to lightweight the teacher model obtained in the first stage to derive a more efficient student model, as illustrated in Fig.  3 and Table  1 . For latent diffusion models such as Stable Diffusion v2.1, the majority of parameters are concentrated in the UNet, while the Variational Autoencoder (VAE) contributes a relatively smaller portion of parameters but incurs notable computational overhead due to its operations are performed in the high-resolution image space. 
+
+ As summarized in Table  1 , the UNet overwhelmingly dominates the model capacity, accounting for approximately 92.02 % 92.02\% of the total parameters while contributing only 16 % 16\% of the overall computational cost. In contrast, the VAE contains merely 7.98 % 7.98\% of the parameters but incurs a significantly higher computational burden, accounting for about 84 % 84\% of the total computation. This discrepancy reveals a pronounced imbalance between parameter distribution and computational cost across different components. Therefore, we apply dedicated lightweight optimization strategies to both the VAE and the UNet, leading to the following three approaches. 
+
+ Table 1: Proportion of Parameters and Computational Complexity of VAE and UNet in a Single-Step Stable Diffusion Model. 
+
+ Component 
+ Parameter Ratio 
+ Computation Ratio (MACs) 
+
+ UNet 
+ 92.02 % 92.02\% 
+ 16 % 16\% 
+ 
+ VAE 
+ 7.98 % 7.98\% 
+ 84 % 84\% 
+
+ Figure 5 : For the bottleneck between the VAE and the UNet, the last convolutional layer of the VAE encoder and the first convolutional layer of the UNet respectively perform dimensionality reduction and expansion on the latent features. These two layers together form a bottleneck structure. During the transformation from X 1 X_{1} to X 2 X_{2} , the feature is heavily compressed and cannot be fully recovered in the subsequent mapping from X 2 X_{2} to X 3 X_{3} . A similar situation also occurs between the last convolutional layer of the UNet and the first convolutional layer of the VAE decoder. 
+
+ 3.3.1 Enhanced Lightweight VAE 
+
+ To reduce the additional computational cost and parameter overhead introduced by the VAE, we replace the original VAE in the latent diffusion model with an extremely lightweight VAE model, TAESD 1 1 
+ 1 
+
+ https://github.com/madebyollin/taesd , a compact autoencoder that approximates the functionality of the VAE of Stable Diffusion models while significantly reducing model size and inference cost. Although efficient, TAESD still fails to address the information bottleneck between the UNet and the VAE in the original Stable Diffusion architecture. As illustrated in Fig.  5 , the last convolutional layer of the VAE encoder significantly compresses the number of feature channels, while the first convolutional layer of the UNet substantially expands the feature dimensionality: 
+
+ X 2 = Conv last enc. ​ ( X 1 ) , X 3 = Conv first unet ​ ( X 2 ) X_{2}=\text{Conv}_{\text{last}}^{\text{enc.}}\left(X_{1}\right),\quad X_{3}=\text{Conv}_{\text{first}}^{\text{unet}}\left(X_{2}\right) 
+ 
+ (12) 
+ 
+ where X 1 ∈ ℝ B × 64 × H × W X_{1}\in\mathbb{R}^{B\times 64\times H\times W} , X 2 ∈ ℝ B × 4 × H × W X_{2}\in\mathbb{R}^{B\times 4\times H\times W} , and X 3 ∈ ℝ B × 320 × H × W X_{3}\in\mathbb{R}^{B\times 320\times H\times W} denote the feature representations before compression, after compression, and after expansion, respectively. Here, the change in the three feature channel dimensions indicates that the feature information is heavily compressed when transforming from X 1 X_{1} to X 2 X_{2} , which creates an information bottleneck between the VAE encoder and the UNet. Similarly, the same information bottleneck also exists between the last convolutional layer of the UNet and the first convolutional layer of the VAE decoder. 
+
+ The presence of such bottleneck layers significantly compresses the edge details of the LR input images, which can adversely affect the subsequent reconstruction process, particularly in terms of fidelity. To address this issue, we propose a convolution fusion strategy, a simple yet effective approach to alleviate the information bottleneck between the VAE and the UNet. Specifically, we fuse the two consecutive convolution operations into a single convolutional transformation. Instead of first compressing the feature channels from 64 64 to 4 4 and then expanding them to 320 320 , the proposed strategy directly projects the feature representation from 64 64 channels to 320 320 channels: 
+
+ X 3 = Conv fuse ​ ( X 1 ) X_{3}=\text{Conv}_{\text{fuse}}\left(X_{1}\right) 
+ 
+ (13) 
+ 
+ where Conv fuse \text{Conv}_{\text{fuse}} denotes the fused convolution operation. By bypassing the intermediate 4 4 -channel latent representation X 2 X_{2} , the proposed design effectively removes the severe information bottleneck between the VAE encoder and the UNet, allowing richer structural and edge information to be preserved during feature propagation. Similarly, we employ another fused convolution to replace the last convolutional layer of the UNet and the first convolutional layer of the VAE decoder, thereby alleviating the information bottleneck between the UNet and the VAE decoder. 
+
+ 3.3.2 Module Removal in UNet 
+
+ The original UNet in Stable Diffusion is designed for generative tasks and thus contains many components that are redundant for SR. We adopt two strategies to remove these unnecessary modules. First, following AdcSR [ 2 ] , we remove the text encoder and cross-attention (CA) layers, since textual conditioning provides limited guidance for the pruned student network. We also remove time embeddings in the student model. This design is motivated by the different roles of the teacher and student models. The teacher model explicitly uses timestep conditioning to adapt its generative strength according to reconstruction difficulty. In contrast, the student model is trained via distillation to approximate the behavior of the teacher across different timesteps. As a result, the effect of timestep variation is implicitly encoded into the student network parameters. Therefore, explicit timestep conditioning becomes redundant for the student model. Removing the timestep embedding thus simplifies the model and improves efficiency, without sacrificing reconstruction quality. 
+
+ Figure 6 : We provide different textual prompts for the cross-attention layers at varying depths of the UNet. In the figure, we have omitted the prompt ”a satellite image with a top-down perspective” and only retained keywords related to style and content, such as ”green/grey” and ”trees/buildings.” It can be observed that the details of the generated image is determined by the shallow layers of the network, while the global content is governed by the deeper layers. 
+
+ Figure 7 : Our proposed semantic-aware pruning strategy entirely removes the two deepest layers of the UNet, while all shallow layers are fully retained. To ensure structural consistency, the removed deep modules are replaced with a simple ResBlock to preserve the skip connections between the encoder and decoder of the UNet. 
+
+ Next, we consider how to further prune the remaining modules. AdcSR applies uniform channel pruning to UNet modules of different depths. However, previous studies [ 42 , 26 ] have shown that deep modules in UNet tend to reconstruct structure and semantics, while shallow modules are responsible for reconstructing details and appearance. As shown in Fig. 6 , we provide different prompts for the CA layers at different depths. From the final generated images, it is evident that the semantics of the results follow the deep prompts, while the appearance adheres to the shallow prompts. However, for SR tasks, input LR images already provide sufficient semantic information, making the deep modules in UNet redundant for SR. Therefore, unlike AdcSR, which applies uniform channel pruning across UNet modules at different depths, we propose a semantic-aware pruning strategy that completely removes the deeper UNet blocks and replaces them with a single ResBlock to maintain structural integrity, as illustrated in Fig. 7 . Since deeper modules typically contain a larger number of channels, pruning them can significantly reduce the model parameters while minimizing the impact on the reconstruction capability of the student model. 
+
+ Figure 8 : The architecture diagrams of direction-separable convolution (DSC) and frequency-separable convolution (FSC). Both modules follow a similar pipeline: they first employ specialized convolutions to extract multi-source features, then perform weighted fusion over these features, and finally use two 1 × 1 1\times 1 convolutions to complete channel transformation. 
+
+ Figure 9 : The architecture diagram of the query-driven global aggregation module (QGAM). A set of learnable query tokens is first introduced, which interact with the input features via cross-attention to generate global contextual representations. Subsequently, the global context is propagated back to the input features through another cross-attention operation. 
+
+ 3.3.3 Module Replacement in UNet 
+
+ To further improve efficiency, we replace the remaining UNet modules with lightweight components tailored to remote sensing imagery. It should be emphasized that these modules are designed primarily as lightweight substitutes for standard operations, rather than as performance-enhancing modules. Their objective is to reduce model size and computational cost while preserving reconstruction capability. Remote sensing images typically exhibit large homogeneous regions with limited low-frequency variation, while critical information is concentrated in sparse high-frequency structures such as edges and object boundaries. To exploit this property, we introduce frequency-separable convolution (FSC), which decouples low and high-frequency components, allowing the network to focus computational resources on informative details. In addition, remote sensing scenes often contain strong directional patterns, such as roads, rivers, and building layouts. To capture such anisotropic structures efficiently, we propose direction-separable convolution (DSC), which decomposes convolution operations into directional components. As illustrated in Fig. 8 , both modules follow a similar pipeline: they first employ specialized convolutions to extract features from different aspects, then perform weighted fusion over these features, and finally use two 1 × 1 1\times 1 convolutions to complete channel transformation. For DSC, we use horizontal and vertical convolutions to extract features along horizontal, vertical, and diagonal directions. For FSC, we employ two convolutions to separately capture low-frequency information from the input features and high-frequency information from the residual features. It is worth noting that, except for the final two 1 × 1 1\times 1 convolutions used for channel transformation, all other convolutions are depthwise separable convolutions, which significantly reduce the number of parameters compared to the standard 3 × 3 3\times 3 convolutions in the original UNet. 
+
+ Furthermore, due to the large spatial extent of remote sensing imagery, long-range dependencies are essential but computationally expensive to model with standard self-attention. Remote sensing imagery often contains a large number of repetitive and limited land-cover categories [ 11 ] , which can be effectively represented by a set of learnable queries. Therefore, we introduce a query-driven global aggregation module (QGAM), which approximates global context modeling through learnable queries, reducing complexity from quadratic to linear while preserving global interactions. As illustrated in Fig. 9 , QGAM can be formulated as two cross-attention operations. Given input features F in ∈ ℝ N × d F_{\text{in}}\in\mathbb{R}^{N\times d} and learnable queries Q ∈ ℝ M × d Q\in\mathbb{R}^{M\times d} ( M ≪ N M\ll N ), we first aggregate global context tokens: 
+
+ G = CA ⁡ ( Q , F in ) = Softmax ⁡ ( ( Q ​ W q ) ​ ( F in ​ W k ) ⊤ d ) ​ F in ​ W v , G=\mathrm{CA}(Q,F_{\text{in}})=\mathrm{Softmax}\!\left(\frac{(QW_{q})(F_{\text{in}}W_{k})^{\top}}{\sqrt{d}}\right)F_{\text{in}}W_{v}, 
+ 
+ (14) 
+ 
+ and then propagate the global context back to feature tokens: 
+
+ F out = CA ⁡ ( F in , G ) = Softmax ⁡ ( ( F in ​ W q ′ ) ​ ( G ​ W k ′ ) ⊤ d ′ ) ​ G ​ W v ′ . F_{\text{out}}=\mathrm{CA}(F_{\text{in}},G)=\mathrm{Softmax}\!\left(\frac{(F_{\text{in}}W^{\prime}_{q})(GW^{\prime}_{k})^{\top}}{\sqrt{d^{\prime}}}\right)GW^{\prime}_{v}. 
+ 
+ (15) 
+ 
+ In this way, the computational complexity is reduced from 𝒪 ⁡ ( N 2 ) \mathcal{O}(N^{2}) to 𝒪 ⁡ ( N ​ M ) \mathcal{O}(NM) while preserving global interactions among input features. 
+
+ 3.4 Knowledge Distillation 
+
+ To minimize the performance gap between the lightweight student model and the teacher model, we employ knowledge distillation techniques to transfer the generative capabilities from the teacher to the student. Traditional feature distillation commonly relies on MSE loss, which enforces point-wise alignment between corresponding teacher and student features. However, point-wise alignment alone may be insufficient to capture distribution-level discrepancies between feature representations, potentially leading to suboptimal distillation outcomes. 
+
+ To address this limitation, we introduce the Maximum Mean Discrepancy (MMD) [ 10 ] loss in addition to the MSE loss to encourage distribution-level alignment between the teacher and student features. MMD is a kernel-based metric that measures the difference between two probability distributions by computing the maximum discrepancy over a class of functions. Specifically, we use the radial basis function (RBF) kernel to compute MMD: 
+
+ MMD 2 ​ ( P , Q ) = \displaystyle\text{MMD}^{2}(P,Q)= 
+ 𝔼 x , x ′ ∼ P ​ [ k ⁡ ( x , x ′ ) ] + 𝔼 y , y ′ ∼ Q ​ [ k ⁡ ( y , y ′ ) ] \displaystyle\mathbb{E}_{x,x^{\prime}\sim P}[k(x,x^{\prime})]+\mathbb{E}_{y,y^{\prime}\sim Q}[k(y,y^{\prime})] 
+ 
+ (16) 
+
+ − 2 ​ 𝔼 x ∼ P , y ∼ Q ​ [ k ⁡ ( x , y ) ] \displaystyle-2\mathbb{E}_{x\sim P,y\sim Q}[k(x,y)] 
+
+ where ( x , x ′ ) (x,x^{\prime}) and ( y , y ′ ) (y,y^{\prime}) denote samples drawn from distributions P P and Q Q , respectively, and k ⁡ ( ⋅ , ⋅ ) k(\cdot,\cdot) is the RBF kernel defined as k ⁡ ( x , y ) = exp ⁡ ( − | x − y | 2 2 ​ σ 2 ) k(x,y)=\exp\left(-\frac{|x-y|^{2}}{2\sigma^{2}}\right) with bandwidth σ \sigma . 
+
+ In our distillation process, for each corresponding layer between the teacher and student networks, we first apply a feature adapter ϕ \phi (a lightweight convolutional module) to align the channel dimensions of the student features with those of the teacher. We then compute the MSE loss directly on the aligned features: 
+
+ ℒ MSE-Dis = 1 N ​ ∑ i = 1 N ‖ ϕ ⁡ ( f stu i ) − f tea i ‖ 2 \mathcal{L}_{\text{MSE-Dis}}=\frac{1}{N}\sum_{i=1}^{N}\|\phi\left(f_{\text{stu}}^{i}\right)-f_{\text{tea}}^{i}\|^{2} 
+ 
+ (17) 
+ 
+ where f stu i f_{\text{stu}}^{i} and f tea i f_{\text{tea}}^{i} are the feature maps from the student and teacher networks at layer i i , and N N is the number of the remained UNet layers. 
+
+ Additionally, we flatten the feature maps into sample sets and compute the MMD loss to capture distributional differences: 
+
+ ℒ MMD-Dis = MMD 2 ​ ( P stu , P tea ) \mathcal{L}_{\text{MMD-Dis}}=\text{MMD}^{2}(P_{\text{stu}},P_{\text{tea}}) 
+ 
+ (18) 
+
+ The total feature distillation loss for each layer is a weighted combination of MSE and MMD: 
+
+ ℒ Dis = ℒ MSE-Dis + λ ​ ℒ MMD-Dis \mathcal{L}_{\text{Dis}}=\mathcal{L}_{\text{MSE-Dis}}+\lambda\mathcal{L}_{\text{MMD-Dis}} 
+ 
+ (19) 
+ 
+ where λ = 0.1 \lambda=0.1 is a hyperparameter balancing the two losses. This multi-scale feature distillation strategy ensures that the student model not only matches the point-wise statistics but also aligns the distribution-level discrepancies of the intermediate features, leading to improved visual quality and reconstruction fidelity. 
+
+ 3.5 Training Scheme 
+
+ As illustrated in Fig. 3 , our method consists of two main training stages: teacher model pretraining and knowledge distillation from teacher to student. 
+
+ 3.5.1 Stage 1: Teacher Model Pretraining 
+
+ In training the teacher model, we freeze the pre-trained uncertainty estimator UE ϕ \mathrm{UE}_{\phi} and use LoRA [ 13 ] to fine-tune the linear and convolutional layers in the UNet and VAE-Decoder. For the loss function, we employ a weighted combination of L1 loss, LPIPS loss [ 61 ] , and GAN loss: 
+
+ ℒ teacher = ℒ L1 + λ LPIPS ​ ℒ LPIPS + λ GAN ​ ℒ GAN \mathcal{L}_{\text{teacher}}=\mathcal{L}_{\text{L1}}+\lambda_{\text{LPIPS}}\mathcal{L}_{\text{LPIPS}}+\lambda_{\text{GAN}}\mathcal{L}_{\text{GAN}} 
+ 
+ (20) 
+
+ where ℒ L1 = ‖ x ^ − x gt ‖ 1 \mathcal{L}_{\text{L1}}=\|\hat{x}-x_{\text{gt}}\|_{1} , ℒ LPIPS \mathcal{L}_{\text{LPIPS}} is the perceptual loss, and ℒ GAN \mathcal{L}_{\text{GAN}} is the adversarial loss. We initialize the discriminator parameters using the pre-trained visual encoder DINO [ 1 ] to leverage its rich semantic representation capabilities. 
+
+ 3.5.2 Stage 2: Knowledge Distillation from Teacher to Student 
+
+ After completing the teacher model training, we use the teacher model as supervision to train the student model. The retained modules in the student model are initialized with pre-trained Stable Diffusion-2.1 parameters, while any newly added modules are initialized with random parameters. All parameters of the student model (including the pruned UNet and enhanced lightweight VAE) participate in training via full fine-tuning. For the loss function, in addition to the same reconstruction losses Eq. 20 used in teacher model training, we add the distillation loss Eq. 19 to ensure that the generative priors of the teacher model can adequately guide the training of the student model: 
+
+ ℒ student = ℒ teacher + ℒ Dis \mathcal{L}_{\text{student}}=\mathcal{L}_{\text{teacher}}+\mathcal{L}_{\text{Dis}} 
+ 
+ (21) 
+
+ 4 Experiments and discussion 
+
+ 4.1 Dataset 
+
+ We use all 10,000 images from the AID [ 52 ] dataset as the training set, and sample 630 images from NWPU-RESISC45 [ 5 ] , 500 from DOTA [ 51 ] , and 500 from DIOR [ 25 ] as the test set. All images retain their original sizes without any cropping operations. To construct LR images, we follow the degradation process of Real-ESRGAN [ 47 ] and consider two magnification factors, 4 × 4\times and 8 × 8\times , thereby enabling a comprehensive evaluation of the reconstruction performance of different methods under varying scaling factors. 
+
+ Beyond synthetic degradation, we also evaluate on a real-world remote sensing dataset Real-RefRSSRD. [ 45 ] , which provides paired images at different spatial resolutions from actual remote sensing systems. Specifically, the LR images are from Sentinel-2 with a ground sampling distance (GSD) of 10 m, and the HR images are from NAIP (National Agriculture Imagery Program) data with a GSD of 1 m. This dataset is particularly challenging because it involves real degradation processes and large-scale spatial variations inherent to actual Earth observation platforms, rather than synthetic degradation commonly used in standard benchmarks. 
+
+ 4.2 Implementation Details 
+
+ We conduct the two-stage training on 2 RTX 3090 GPUs. In training the teacher model, we use the AdamW optimizer with a learning rate of 2e-4, for 25,000 iterations with a batch size of 2. The LoRA ranks for the UNet and VAE-Decoder are set to 32 and 16, respectively. During training, input images are randomly cropped to 512 × 512 512\times 512 . The weights λ LPIPS \lambda_{\text{LPIPS}} and λ GAN \lambda_{\text{GAN}} are set to 2.5 and 0.25, respectively. In training the student model, we use the Adam optimizer with a learning rate of 5e-5, for 100,000 iterations with a batch size of 16. The deepest two layers of the student model’s UNet are completely removed and replaced with a simple ResBlock. For the remaining UNet modules, we replace them with our proposed lightweight alternative modules. During training, input images are also randomly cropped to 512 × 512 512\times 512 . 
+
+ 4.3 Evaluation Metrics 
+
+ To comprehensively evaluate different SR methods, we adopt both full-reference and no-reference image quality metrics. For pixel-level fidelity, we employ peak signal-to-noise ratio (PSNR) and structural similarity index (SSIM), both computed on the Y channel of the YCbCr color space. For perceptual quality assessment, we utilize learned perceptual image patch similarity (LPIPS) and deep image structure and texture similarity (DISTS). 
+
+ Furthermore, two no-reference metrics, MUSIQ [ 16 ] and MANIQA [ 56 ] , are introduced to provide a more holistic evaluation of overall performance. In terms of efficiency, we consider inference time and model size (number of parameters). The inference time is measured in seconds for a 512 × 512 512\times 512 image on a single RTX 3090 GPU. 
+
+ 4.4 Comparison With State-of-the-Art Methods 
+
+ To comprehensively evaluate the performance of our proposed method, we compare it against eight state-of-the-art SR methods, including two recent regression-based Transformer methods (TTST [ 54 ] and TransENet [ 23 ] ), two classical GAN-based methods (ESRGAN [ 48 ] and SwinIR-GAN [ 29 ] ), three recent diffusion-based methods (EDiffSR [ 53 ] , DiffBIR [ 30 ] , and S3Diff [ 58 ] ), and one closely related lightweight diffusion-based SR method (AdcSR [ 2 ] ). For a fair comparison, all competing methods are retrained on our dataset using their original code and configurations. 
+
+ Table 2 : Quantitative comparison of different methods on the 4 × \times test datasets. The best, second-best, and third-best results are highlighted in bold red , underlined blue , and italic green , respectively. 
+
+ Category 
+ Method 
+ Image Quality Metrics 
+ Efficiency Metrics 
+ 
+ PSNR ↑ \uparrow 
+ SSIM ↑ \uparrow 
+ LPIPS ↓ \downarrow 
+ DISTS ↓ \downarrow 
+ MANIQA ↑ \uparrow 
+ MUSIQ ↑ \uparrow 
+ Time (s) ↓ \downarrow 
+ Param. (M) ↓ \downarrow 
+ 
+ Regression-based 
+ TTST 
+ 26.05 
+ 0.6663 
+ 0.5309 
+ 0.2825 
+ 0.2397 
+ 38.55 
+ 0.218 
+ 18.37 
+ 
+ TransENet 
+ 26.17 
+ 0.6651 
+ 0.5240 
+ 0.2826 
+ 0.2381 
+ 37.50 
+ 0.077 
+ 35.09 
+ 
+ GAN-based 
+ ESRGAN 
+ 24.71 
+ 0.5919 
+ 0.3888 
+ 0.2074 
+ 0.2442 
+ 48.18 
+ 0.044 
+ 16.72 
+ 
+ SwinIR-GAN 
+ 25.18 
+ 0.6100 
+ 0.3753 
+ 0.2189 
+ 0.2416 
+ 45.34 
+ 0.132 
+ 11.46 
+ 
+ Diffusion-based 
+ EDiffSR 
+ 23.19 
+ 0.4896 
+ 0.4512 
+ 0.2799 
+ 0.1839 
+ 42.55 
+ 6.745 
+ 30.37 
+ 
+ DiffBIR 
+ 21.55 
+ 0.3986 
+ 0.4738 
+ 0.2489 
+ 0.4523 
+ 60.86 
+ 8.637 
+ 1717 
+ 
+ S3Diff 
+ 23.18 
+ 0.5112 
+ 0.3511 
+ 0.1941 
+ 0.2855 
+ 51.02 
+ 0.736 
+ 1327 
+ 
+ AdcSR 
+ 24.64 
+ 0.5918 
+ 0.3935 
+ 0.2256 
+ 0.2717 
+ 44.94 
+ 0.088 
+ 456.1 
+ 
+ Ours 
+ 24.09 
+ 0.5642 
+ 0.3443 
+ 0.1819 
+ 0.2837 
+ 49.84 
+ 0.037 
+ 58.05 
+
+ 4.4.1 Quantitative Comparison 
+
+ Table 2 presents the quantitative comparison results on the test datasets for 4 × 4\times SR. Our method achieves competitive performance across various metrics while maintaining high inference efficiency. 
+
+ First, in fidelity-oriented pixel metrics such as PSNR and SSIM, regression-based methods (TTST and TransENet) achieve the best scores, as they are directly optimized toward pixel-wise losses. However, they tend to produce over-smoothed results, leading to inferior perceptual performance. Second, for perceptual full-reference metrics such as LPIPS and DISTS, our method achieves the best performance. This advantage arises from its ability to leverage the intrinsic priors of pretrained diffusion models, together with a compact architecture that facilitates efficient adaptation to the distribution of remote sensing imagery. Finally, multi-step diffusion models such as DiffBIR, as well as unpruned diffusion methods like S3Diff, exhibit the strongest generative capacity and therefore achieve superior results on no-reference metrics such as MANIQA and MUSIQ. However, they often introduce hallucinated structures, which degrade performance on full-reference metrics. Overall, our method not only preserves superior perceptual fidelity but also effectively exploits the generative capability provided by pretrained diffusion priors, achieving a well-balanced reconstruction performance across all metrics. 
+
+ In terms of inference efficiency, our method demonstrates substantial improvements over other diffusion-based approaches. For example, compared with the multi-step diffusion model DiffBIR and the single-step diffusion model S3Diff, our method achieves more than 200 × 200\times and 20 × 20\times speedups in inference time, respectively. Compared with the lightweight diffusion model AdcSR, our approach further reduces the number of parameters by nearly 10 × 10\times , thereby significantly lowering the hardware requirements for deployment. Moreover, it is worth noting that our method even surpasses ESRGAN, a classic GAN-based approach, in inference speed. This is mainly because, benefiting from the unique design of latent diffusion models, most of the computation in our method is performed in a latent space with an 8 × 8\times downsampling factor. 
+
+ Figure 10 : Visual comparison of 4 × 4\times SR results of different methods on the DIOR, DOTA, and NWPU-RESISC45 datasets. The results demonstrate that our method is capable of reconstructing more accurate structures and richer edge details. 
+
+ 4.4.2 Qualitative Comparison 
+
+ In Fig. 10 , we present a visual comparison of 4 × 4\times SR results produced by different methods. The three groups of images, from top to bottom, are sampled from the test sets of the DIOR, DOTA, and NWPU-RESISC45 datasets, respectively. It can be observed that regression-based methods such as TTST and TransENet can only generate overly smooth results, failing to faithfully reconstruct the complex structures and rich edge details in remote sensing imagery. In contrast, ESRGAN and SwinIR-GAN incorporate perceptual losses and adversarial training strategies, leading to significantly improved visual quality compared to the former methods. However, due to the highly complex degradation process in real-world remote sensing images, simple adversarial training is insufficient to introduce strong priors. As a result, although the outputs appear sharper, these methods often produce distorted structures (e.g., the ESRGAN results in the first and second groups). 
+
+ By comparison, diffusion-based methods such as DiffBIR and S3Diff effectively leverage pretrained diffusion priors and are able to generate richer details. Nevertheless, they tend to suffer from severe hallucination effects. For instance, in the third group, DiffBIR and S3Diff generate curved and cross-shaped farmland boundaries, respectively, which are inconsistent with real-world land surface structures. As a lightweight diffusion model, AdcSR produces overly smooth results. On the one hand, it heavily relies on a pretrained teacher model and is constrained only by an L2 loss in the latent space, which can lead to suboptimal performance when the teacher model is not sufficiently strong. On the other hand, AdcSR adopts uniform channel pruning across the all layers of UNet without fully considering the characteristics of the SR task. In contrast, our method, while remaining highly lightweight, is still capable of reconstructing competitive structures and fine details, thereby providing a more balanced trade-off between efficiency and reconstruction quality. 
+
+ 4.4.3 Results of 8 × 8\times SR 
+
+ Table 3 presents the quantitative comparison of different methods on the 8 × 8\times test set. Since pixel-level metrics (PSNR and SSIM) become less informative at higher scaling factors [ 60 ] , we primarily adopt four perceptual metrics (LPIPS, DISTS, MANIQA and MUSIQ) to evaluate reconstruction quality. It can be observed that our method still maintains satisfactory performance under the more challenging 8 × 8\times SR setting. However, compared with the 4 × 4\times case, unpruned models such as S3Diff and DiffBIR demonstrate stronger performance than our approach. This is because, under more severe degradation, the pretrained diffusion priors play a more critical role in improving reconstruction quality. In Fig. 11 , we present a visual comparison between our method and other diffusion-based approaches. The results show that under the challenging 8 × 8\times SR setting, DiffBIR suffers from severe hallucination artifacts, producing distorted and unrealistic structures. In contrast, S3Diff, as a single-step diffusion model, enables direct supervision in the pixel space, leading to more realistic and faithful details. Similar to the observations in the 4 × 4\times setting, AdcSR exhibits noticeable blurring in its reconstructions. By comparison, our method achieves reconstruction quality comparable to S3Diff while significantly improving inference efficiency, demonstrating both its effectiveness and efficiency. 
+
+ Table 3 : Quantitative comparison of different methods on the 8 × \times test datasets. The best, second-best, and third-best results are highlighted in bold red , underlined blue , and italic green , respectively. 
+
+ Category 
+ Method 
+ LPIPS ↓ \downarrow 
+ DISTS ↓ \downarrow 
+ MANIQA ↑ \uparrow 
+ MUSIQ ↑ \uparrow 
+ 
+ Regression-based 
+ TTST 
+ 0.6387 
+ 0.3430 
+ 0.1968 
+ 30.74 
+ 
+ TransENet 
+ 0.6240 
+ 0.3399 
+ 0.1979 
+ 31.21 
+ 
+ GAN-based 
+ ESRGAN 
+ 0.4901 
+ 0.2715 
+ 0.2526 
+ 44.00 
+ 
+ SwinIR-GAN 
+ 0.4865 
+ 0.2718 
+ 0.2199 
+ 39.94 
+ 
+ Diffusion-based 
+ EDiffSR 
+ 0.5117 
+ 0.3118 
+ 0.1842 
+ 43.47 
+ 
+ DiffBIR 
+ 0.5270 
+ 0.2764 
+ 0.4524 
+ 60.34 
+ 
+ S3Diff 
+ 0.3995 
+ 0.2172 
+ 0.2832 
+ 52.79 
+ 
+ AdcSR 
+ 0.5026 
+ 0.3113 
+ 0.2535 
+ 39.42 
+ 
+ Ours 
+ 0.4423 
+ 0.2461 
+ 0.3043 
+ 55.32 
+
+ Figure 11 : Visual comparison of 8 × 8\times SR results of different methods on the DIOR, DOTA, and NWPU-RESISC45 datasets. 
+
+ 4.4.4 Results of Real-World Dataset 
+
+ To further validate effectiveness in real-world scenarios, we evaluate SlimDiffSR on the Real-RefRSSRD dataset [ 45 ] . It is important to note that we do not use the cross-sensor paired data provided by Real-RefRSSRD for training. Therefore, the model is not expected to generate SR outputs with NAIP-specific radiometric characteristics. NAIP images are used only as visual references rather than strict radiometric supervision targets. 
+
+ Table 4 presents the quantitative comparison using NIQE, CLIPIQA, MANIQA, and MUSIQ metrics. DiffBIR achieves the best performance by leveraging multi-step denoising and strong priors. Our method achieves second-best results on most metrics while maintaining significant efficiency advantages. Qualitatively, as shown in Fig. 12 , our lightweight model balances reconstruction fidelity and efficiency effectively. While DiffBIR produces visually sharp results, it suffers from hallucination artifacts. In contrast, our method generates faithful spatial structures, preserved boundaries, and rich details comparable to S3Diff while achieving substantially faster inference. These results indicate that the proposed lightweight student is not merely overfitted to the synthetic degradation pipeline, but can generalize to real-world remote sensing degradations while maintaining stable structural reconstruction. 
+
+ Table 4 : Quantitative comparison of different methods on the 8 × 8\times Sentinel-2 test set. The best, second-best, and third-best results are highlighted in bold red , underlined blue , and italic green , respectively. 
+
+ Category 
+ Method 
+ NIQE ↓ \downarrow 
+ CLIPIQA ↑ \uparrow 
+ MANIQA ↑ \uparrow 
+ MUSIQ ↑ \uparrow 
+ 
+ Regression-based 
+ TTST 
+ 10.34 
+ 0.1929 
+ 0.2076 
+ 22.33 
+ 
+ TransENet 
+ 9.442 
+ 0.1742 
+ 0.1993 
+ 22.67 
+ 
+ GAN-based 
+ ESRGAN 
+ 4.229 
+ 0.5092 
+ 0.2428 
+ 37.84 
+ 
+ SwinIR-GAN 
+ 5.365 
+ 0.2995 
+ 0.1940 
+ 28.62 
+ 
+ Diffusion-based 
+ EDiffSR 
+ 3.651 
+ 0.3567 
+ 0.1840 
+ 39.69 
+ 
+ DiffBIR 
+ 4.059 
+ 0.7010 
+ 0.4243 
+ 58.90 
+ 
+ S3Diff 
+ 4.914 
+ 0.3363 
+ 0.2425 
+ 35.57 
+ 
+ AdcSR 
+ 6.540 
+ 0.2652 
+ 0.1871 
+ 33.12 
+ 
+ Ours 
+ 5.172 
+ 0.5100 
+ 0.2579 
+ 46.95 
+
+ Figure 12 : Visual comparison of 8 × 8\times SR results of different methods on real-world Sentinel-2 SR task. Our method produces more faithful reconstructions with better preservation of spatial structures and fine details compared to other methods. 
+
+ 4.5 Ablation Studies 
+
+ In this section, we conduct ablation studies to validate the effectiveness of our design choices for both the teacher and student models. It is worth noting that all metrics are computed on the DIOR test set. 
+
+ 4.5.1 Effectiveness of Uncertainty Guidance 
+
+ For the teacher model, we design an uncertainty guidance mechanism consisting of two key components: uncertainty estimation and timestep inversion. The former estimates the reconstruction difficulty, while the latter associates this difficulty with an optimal denoising timestep. To validate the effectiveness of this mechanism, we alternatively employ a single-step diffusion model with a fixed timestep (S3Diff) as the teacher model, and use it to supervise the student model via knowledge distillation. As shown in Fig. 13 , the proposed uncertainty guidance mechanism consistently improves the performance of the student model. This is because, compared to a fixed timestep, our improved teacher model can dynamically control the generative strength of the single-step diffusion model. 
+
+ Figure 13 : Ablation analysis of the uncertainty-guided strategy. For comparison, we retrain a simple single-step diffusion model with a fixed time step as the teacher model. The results show that the proposed teacher model achieves consistent improvements across all evaluation metrics. 
+
+ In Fig. 14 , we further visualize the intermediate features from four layers of the teacher UNet, with and without the uncertainty guidance mechanism. It can be observed that our teacher model is able to activate richer structural features, thereby providing higher-quality feature supervision for training the student model in the second stage. In Fig. 15 , we also present the uncertainty maps predicted by the uncertainty estimator UE ​ ϕ \mathrm{UE}{\phi} . The results show that the estimator can effectively capture reconstruction difficulty, with regions containing dense objects and rich textures exhibiting higher uncertainty. 
+
+ Figure 14 : Visualization of intermediate features from different layers of the teacher UNet with and without the uncertainty-guided strategy. The uncertainty guidance encourages the activation of higher-quality intermediate features, thereby providing more effective supervision for the student model. 
+
+ Figure 15 : Remote sensing images and their corresponding uncertainty maps. It can be observed that the uncertainty estimator UE ​ ϕ \mathrm{UE}{\phi} can accurately predict the reconstruction difficulty at the pixel level, where regions with rich high-frequency textures and prominent semantic content tend to exhibit higher uncertainty. 
+
+ 4.5.2 Effectiveness of Enhanced Lightweight VAE 
+
+ To evaluate the effectiveness of our enhanced lightweight VAE, we compare it against the original large VAE and an extremely lightweight VAE variant (TAESD). The original VAE provides high reconstruction quality but is computationally expensive due to its large model size. TAESD is a lightweight alternative that significantly reduces parameters and inference time but may compromise reconstruction quality due to information bottlenecks in the latent space. Our enhanced VAE addresses this by fusing convolution layers between the VAE and UNet, alleviating the information bottleneck and preserving richer structural details while maintaining efficiency. 
+
+ Table 5 presents the SR performance of the student model equipped with different variants of the VAE. Our method achieves the best MUSIQ score, indicating superior perceptual quality, while maintaining low inference time and moderate parameter count. Compared to the original VAE, it significantly reduces inference time by approximately 5 times and parameters by about 2.4 times, with only a slight drop in PSNR and LPIPS. Compared to TAESD, it improves PSNR by 0.38 and MUSIQ by 1.62, while keeping similar efficiency. This demonstrates that our enhanced VAE effectively balances reconstruction quality and computational efficiency. 
+
+ Table 5 : Ablation study on enhanced lightweight VAE. The best and second-best results are highlighted in bold red and underlined blue , respectively. 
+
+ Method 
+ Image Quality Metrics 
+ Efficiency Metrics 
+ 
+ PSNR ↑ \uparrow 
+ LPIPS ↓ \downarrow 
+ MUSIQ ↑ \uparrow 
+ Time (s) ↓ \downarrow 
+ Params (M) ↓ \downarrow 
+
+ VAE 
+ 23.95 
+ 0.3505 
+ 54.21 
+ 0.195 
+ 138.9 
+ 
+ TAESD 
+ 23.32 
+ 0.3621 
+ 53.87 
+ 0.037 
+ 57.68 
+ 
+ Ours 
+ 23.70 
+ 0.3546 
+ 55.49 
+ 0.037 
+ 58.05 
+
+ 4.5.3 Effectiveness of Module Removal Strategy 
+
+ To evaluate the effectiveness of our semantic-aware pruning (SAP) strategy, we compare it against the uniform channel pruning method adopted in AdcSR. As shown in Table 6 , our SAP strategy achieves superior performance by semantically identifying and removing redundant modules tailored to the SR task. The results demonstrate that simply removing channels uniformly (W/O SAP) leads to significantly higher parameter counts (168.3M) and inference time (0.052s), while substantially degrading perceptual quality (54.96 on MUSIQ). By contrast, our semantic-aware approach effectively reduces the model size while maintaining competitive perceptual quality, highlighting the importance of task-specific pruning strategies for remote sensing image SR. 
+
+ Table 6 : Ablation studies on module removal and module replacement strategies. The best and second-best results are highlighted in bold red and underlined blue , respectively. 
+
+ Method 
+ Image Quality Metrics 
+ Efficiency Metrics 
+ 
+ PSNR ↑ \uparrow 
+ LPIPS ↓ \downarrow 
+ MUSIQ ↑ \uparrow 
+ Time (s) ↓ \downarrow 
+ Params (M) ↓ \downarrow 
+
+ W/O SAP 
+ 23.89 
+ 0.3667 
+ 54.96 
+ 0.052 
+ 168.3 
+ 
+ W/O DSC 
+ 23.67 
+ 0.3621 
+ 55.28 
+ 0.040 
+ 93.18 
+ 
+ W/O FSC 
+ 23.44 
+ 0.3540 
+ 55.44 
+ 0.042 
+ 99.46 
+ 
+ W/O QGAM 
+ 23.34 
+ 0.3526 
+ 55.57 
+ 0.057 
+ 81.11 
+ 
+ Ours 
+ 23.70 
+ 0.3546 
+ 55.49 
+ 0.037 
+ 58.05 
+
+ 4.5.4 Effectiveness of Module Replacement Strategy 
+
+ Beyond module removal, we further enhance efficiency through replacing standard convolutional and self-attention layers with our proposed lightweight alternatives. The purpose of modules are not to surpass the original heavy modules in reconstruction accuracy, but to serve as lightweight substitutes that retain comparable SR performance with substantially lower model complexity. The ablation results in Table 6 progressively demonstrate the impact of each design choice. When removing the direction-separable convolution (DSC), PSNR drops to 23.67 and the model requires 93.18M parameters with 0.040s inference time. The frequency-separable convolution (FSC) contributes significantly to maintaining fine details, as removing it yields PSNR of 23.44 and slightly increases inference time to 0.042s. The query-driven global aggregation module (QGAM) provides crucial global context, and its absence results in the lowest PSNR (23.34) and highest inference time (0.057s) among the ablated variants. We observe that incorporating QGAM leads to slight decreases in LPIPS and MUSIQ. This behavior can be attributed to the global smoothing effect of the proposed global aggregation mechanism. Specifically, QGAM may reduce the diversity of high-frequency details, leading to less pronounced texture variations. Overall, these results demonstrate that the proposed module replacement strategy achieves a favorable trade-off between efficiency and reconstruction quality. This validates that RS-aware lightweight design can serve as an effective alternative to standard modules in diffusion-based SR models without incurring significant performance loss. 
+
+ The proposed QGAM enables global token interaction through two cross-attention operations, effectively alleviating the high computational cost of global self-attention. Since remote sensing images are typically composed of a limited set of land-cover categories, each learnable query token in QGAM can act as a semantic proxy to extract specific types of information from the image. In Fig. 16 , we visualize the attention maps corresponding to different learnable query tokens. It can be observed that, across various scenes, these queries are able to aggregate rich semantic information and respond to specific land-cover types, such as storage tanks, background regions, roads, and grassland. Therefore, QGAM serves as an efficient alternative to computationally expensive self-attention modules while maintaining lightweight inference efficiency. 
+
+ Figure 16 : Visualization of the attention scores in the proposed QGAM module. Attn N \text{Attn}_{N} denotes the attention map corresponding to the N N -th learnable query token. It can be observed that, across different scenes, the learnable queries are able to aggregate semantically rich information and respond to specific land-cover types, such as storage tanks, background regions, roads, and grassland. Therefore, this design enables global token interaction with linear computational complexity. 
+
+ Table 7 : Ablation study on knowledge distillation losses. The best and second-best results are highlighted in bold red and underlined blue , respectively. 
+
+ Method 
+ PSNR ↑ \uparrow 
+ LPIPS ↓ \downarrow 
+ MUSIQ ↑ \uparrow 
+
+ No-Dis 
+ 22.69 
+ 0.4370 
+ 57.66 
+ 
+ No-MMD 
+ 23.47 
+ 0.3574 
+ 53.99 
+ 
+ Ours 
+ 23.70 
+ 0.3546 
+ 55.49 
+
+ Figure 17 : Visual comparison for the ablation study on knowledge distillation. The inclusion of the distillation loss and the MMD loss significantly improves the semantic fidelity of the reconstructed results. 
+
+ 4.5.5 Effectiveness of Knowledge Distillation 
+
+ To verify the contribution of the distillation objective, we compare three variants:
+ No-Dis (without any distillation loss), No-MMD (using only MSE distillation), and Ours (using both MSE and MMD losses). As shown in Table 7 , introducing distillation significantly improves reconstruction fidelity. Compared with No-Dis, the No-MMD variant improves PSNR from 22.69 to 23.47 and reduces LPIPS from 0.4370 to 0.3574, demonstrating that feature-level supervision from the teacher model is essential for preserving faithful structures and textures. It is worth noting that the No-Dis variant achieves a relatively high MUSIQ score. This is because, without any feature-level constraints, the model tends to generate excessive textures. However, these textures are often unrealistic and inconsistent with the ground truth, which leads to a significant degradation in full-reference metrics such as PSNR and LPIPS. 
+
+ Furthermore, adding the proposed MMD loss on top of MSE leads to consistent gains across all metrics. Specifically, our full method further improves PSNR to 23.70, reduces LPIPS to 0.3546, and increases MUSIQ to 55.49 compared with No-MMD. These results indicate that MSE-based point-wise alignment alone is insufficient to fully transfer teacher knowledge, while the additional MMD constraint effectively reduces the distribution gap between teacher and student features. Consequently, the student model can achieve a better balance between perceptual quality and reconstruction fidelity without introducing additional inference overhead. In Fig. 17 , we present a visual comparison of reconstruction results from different ablation variants. As observed in the first two rows, the introduction of the distillation loss and the MMD loss significantly improves the semantic consistency of the reconstruction results, as evidenced by clearer building boundaries. From the last row, it can be seen that our method effectively reduces artifacts in the SR images. These results further demonstrate the effectiveness of the proposed knowledge distillation strategy. 
+
+ 5 Conclusion 
+
+ In this paper, we propose SlimDiffSR, a lightweight and efficient diffusion framework for real-world remote sensing image super-resolution. The method follows a two-stage paradigm, where an uncertainty-guided single-step teacher model is first constructed, followed by a compact student model obtained via structured pruning and knowledge distillation. Specifically, we introduce dynamic timestep assignment through uncertainty estimation and timestep inversion, develop an enhanced lightweight VAE and a semantic-aware UNet pruning strategy, and incorporate direction- and frequency-separable operators together with a query-driven global aggregation module to improve efficiency. Moreover, we combine MSE and MMD losses to enhance distribution-level feature alignment during distillation, enabling the student model to better approximate the teacher. 
+
+ Extensive experiments on multiple remote sensing benchmarks demonstrate that SlimDiffSR achieves a favorable balance between reconstruction quality and efficiency, delivering strong perceptual performance with significantly reduced inference cost compared to existing diffusion-based methods. Ablation studies further validate the effectiveness of each component. While the method remains competitive under more challenging settings such as 8 × 8\times SR and real-world SR, improving robustness under severe degradations and cross-sensor domain gaps remains an important direction. Future work will explore stronger degradation-aware priors, arbitrary-scale SR, and more general lightweight diffusion frameworks for large-scale Earth observation applications.
+
+ References 
+
+ [1] 
+ M. Caron, H. Touvron, I. Misra, H. Jégou, J. Mairal, P. Bojanowski, and A. Joulin (2021) 
+ 
+ Emerging properties in self-supervised vision transformers .
+ 
+ In Proceedings of the IEEE/CVF international conference on computer vision ,
+ 
+ pp. 9650–9660 .
+ 
+ Cited by: §3.5.1 .
+ 
+ [2] 
+ B. Chen, G. Li, R. Wu, X. Zhang, J. Chen, J. Zhang, and L. Zhang (2025) 
+ 
+ Adversarial diffusion compression for real-world image super-resolution .
+ 
+ In Proceedings of the Computer Vision and Pattern Recognition Conference ,
+ 
+ pp. 28208–28220 .
+ 
+ Cited by: item 1 ,
+ §1 ,
+ §2.2 ,
+ §3.3.2 ,
+ §4.4 .
+ 
+ [3] 
+ X. Chen, X. Wang, J. Zhou, Y. Qiao, and C. Dong (2023) 
+ 
+ Activating more pixels in image super-resolution transformer .
+ 
+ In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition ,
+ 
+ pp. 22367–22377 .
+ 
+ Cited by: §1 .
+ 
+ [4] 
+ Y. Chen, T. Liu, and K. Liu (2022) 
+ 
+ Super-resolution of satellite images based on two-dimensional rrdb and edge-enhanced generative adversarial network .
+ 
+ In 2022 IEEE International Conference on Consumer Electronics (ICCE) ,
+ 
+ pp. 1–4 .
+ 
+ Cited by: §2.1 .
+ 
+ [5] 
+ G. Cheng, J. Han, and X. Lu (2017) 
+ 
+ Remote sensing image scene classification: benchmark and state of the art .
+ 
+ Proceedings of the IEEE 105 ( 10 ), pp. 1865–1883 .
+ 
+ Cited by: §4.1 .
+ 
+ [6] 
+ C. Dong, C. C. Loy, K. He, and X. Tang (2014) 
+ 
+ Learning a deep convolutional network for image super-resolution .
+ 
+ In Computer Vision–ECCV 2014: 13th European Conference, Zurich, Switzerland, September 6-12, 2014, Proceedings, Part IV 13 ,
+ 
+ pp. 184–199 .
+ 
+ Cited by: §2.1 .
+ 
+ [7] 
+ M. Figueiredo (2001) 
+ 
+ Adaptive sparseness using jeffreys prior .
+ 
+ Advances in neural information processing systems 14 .
+ 
+ Cited by: §3.2.1 .
+ 
+ [8] 
+ I. Goodfellow, J. Pouget-Abadie, M. Mirza, B. Xu, D. Warde-Farley, S. Ozair, A. Courville, and Y. Bengio (2020) 
+ 
+ Generative adversarial networks .
+ 
+ Communications of the ACM 63 ( 11 ), pp. 139–144 .
+ 
+ Cited by: §1 .
+ 
+ [9] 
+ N. Granger and M. A. el Yacoubi (2017) 
+ 
+ Comparing hybrid nn-hmm and rnn for temporal modeling in gesture recognition .
+ 
+ In Neural Information Processing: 24th International Conference, ICONIP 2017, Guangzhou, China, November 14-18, 2017, Proceedings, Part II 24 ,
+ 
+ pp. 147–156 .
+ 
+ Cited by: §2.1 .
+ 
+ [10] 
+ A. Gretton, K. M. Borgwardt, M. J. Rasch, B. Schölkopf, and A. Smola (2012) 
+ 
+ A kernel two-sample test .
+ 
+ The journal of machine learning research 13 ( 1 ), pp. 723–773 .
+ 
+ Cited by: §1 ,
+ §3.4 .
+ 
+ [11] 
+ X. Guo, J. Lao, B. Dang, Y. Zhang, L. Yu, L. Ru, L. Zhong, Z. Huang, K. Wu, D. Hu, et al. (2024) 
+ 
+ Skysense: a multi-modal remote sensing foundation model towards universal interpretation for earth observation imagery .
+ 
+ In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition ,
+ 
+ pp. 27672–27683 .
+ 
+ Cited by: §3.3.3 .
+ 
+ [12] 
+ J. Ho, A. Jain, and P. Abbeel (2020) 
+ 
+ Denoising diffusion probabilistic models .
+ 
+ Advances in neural information processing systems 33 , pp. 6840–6851 .
+ 
+ Cited by: §1 .
+ 
+ [13] 
+ E. J. Hu, Y. Shen, P. Wallis, Z. Allen-Zhu, Y. Li, S. Wang, L. Wang, W. Chen, et al. (2022) 
+ 
+ Lora: low-rank adaptation of large language models. .
+ 
+ ICLR 1 ( 2 ), pp. 3 .
+ 
+ Cited by: §3.5.1 .
+ 
+ [14] 
+ B. Huang, H. Song, H. Cui, J. Peng, and Z. Xu (2013) 
+ 
+ Spatial and spectral image fusion using sparse matrix factorization .
+ 
+ IEEE Transactions on Geoscience and Remote Sensing 52 ( 3 ), pp. 1693–1704 .
+ 
+ Cited by: §1 .
+ 
+ [15] 
+ J. Johnson, A. Alahi, and L. Fei-Fei (2016) 
+ 
+ Perceptual losses for real-time style transfer and super-resolution .
+ 
+ In Computer Vision–ECCV 2016: 14th European Conference, Amsterdam, The Netherlands, October 11-14, 2016, Proceedings, Part II 14 ,
+ 
+ pp. 694–711 .
+ 
+ Cited by: §1 .
+ 
+ [16] 
+ J. Ke, Q. Wang, Y. Wang, P. Milanfar, and F. Yang (2021) 
+ 
+ Musiq: multi-scale image quality transformer .
+ 
+ In Proceedings of the IEEE/CVF international conference on computer vision ,
+ 
+ pp. 5148–5157 .
+ 
+ Cited by: §4.3 .
+ 
+ [17] 
+ S. Khanna, P. Liu, L. Zhou, C. Meng, R. Rombach, M. Burke, D. Lobell, and S. Ermon (2023) 
+ 
+ Diffusionsat: a generative foundation model for satellite imagery .
+ 
+ arXiv preprint arXiv:2312.03606 .
+ 
+ Cited by: §2.2 .
+ 
+ [18] 
+ B. Kim, H. Song, T. Castells, and S. Choi (2024) 
+ 
+ Bk-sdm: a lightweight, fast, and cheap version of stable diffusion .
+ 
+ In European Conference on Computer Vision ,
+ 
+ pp. 381–399 .
+ 
+ Cited by: item 2 ,
+ item 3 ,
+ §1 .
+ 
+ [19] 
+ J. Kim, J. K. Lee, and K. M. Lee (2016) 
+ 
+ Accurate image super-resolution using very deep convolutional networks .
+ 
+ In Proceedings of the IEEE conference on computer vision and pattern recognition ,
+ 
+ pp. 1646–1654 .
+ 
+ Cited by: §1 ,
+ §2.1 .
+ 
+ [20] 
+ X. Kong, H. Zhao, Y. Qiao, and C. Dong (2021) 
+ 
+ Classsr: a general framework to accelerate super-resolution networks by data characteristic .
+ 
+ In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition ,
+ 
+ pp. 12016–12025 .
+ 
+ Cited by: §3.2.1 .
+ 
+ [21] 
+ C. Lanaras, J. Bioucas-Dias, S. Galliani, E. Baltsavias, and K. Schindler (2018) 
+ 
+ Super-resolution of sentinel-2 images: learning a globally applicable deep neural network .
+ 
+ ISPRS Journal of Photogrammetry and Remote Sensing 146 , pp. 305–319 .
+ 
+ Cited by: §2.1 .
+ 
+ [22] 
+ C. Ledig, L. Theis, F. Huszár, J. Caballero, A. Cunningham, A. Acosta, A. Aitken, A. Tejani, J. Totz, Z. Wang, et al. (2017) 
+ 
+ Photo-realistic single image super-resolution using a generative adversarial network .
+ 
+ In Proceedings of the IEEE conference on computer vision and pattern recognition ,
+ 
+ pp. 4681–4690 .
+ 
+ Cited by: §1 .
+ 
+ [23] 
+ S. Lei, Z. Shi, and W. Mo (2021) 
+ 
+ Transformer-based multistage enhancement for remote sensing image super-resolution .
+ 
+ IEEE Transactions on Geoscience and Remote Sensing 60 , pp. 1–11 .
+ 
+ Cited by: §4.4 .
+ 
+ [24] 
+ H. Li, Y. Yang, M. Chang, S. Chen, H. Feng, Z. Xu, Q. Li, and Y. Chen (2022) 
+ 
+ Srdiff: single image super-resolution with diffusion probabilistic models .
+ 
+ Neurocomputing 479 , pp. 47–59 .
+ 
+ Cited by: §2.2 .
+ 
+ [25] 
+ K. Li, G. Wan, G. Cheng, L. Meng, and J. Han (2020) 
+ 
+ Object detection in optical remote sensing images: a survey and a new benchmark .
+ 
+ ISPRS journal of photogrammetry and remote sensing 159 , pp. 296–307 .
+ 
+ Cited by: §1 ,
+ §4.1 .
+ 
+ [26] 
+ X. Li, J. Wu, X. Huang, C. Chen, W. Guan, X. Hua, and L. Nie (2025) 
+ 
+ MegaSR: mining customized semantics and expressive guidance for image super-resolution .
+ 
+ arXiv e-prints , pp. arXiv–2503 .
+ 
+ Cited by: §3.3.2 .
+ 
+ [27] 
+ Y. Li, S. Mavromatis, F. Zhang, Z. Du, J. Sequeira, Z. Wang, X. Zhao, and R. Liu (2021) 
+ 
+ Single-image super-resolution for remote sensing images using a deep generative adversarial network with local and global attention mechanisms .
+ 
+ IEEE Transactions on Geoscience and Remote Sensing 60 , pp. 1–24 .
+ 
+ Cited by: §2.1 .
+ 
+ [28] 
+ J. Liang, H. Zeng, and L. Zhang (2022) 
+ 
+ Details or artifacts: a locally discriminative learning approach to realistic image super-resolution .
+ 
+ In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition ,
+ 
+ pp. 5657–5666 .
+ 
+ Cited by: §1 .
+ 
+ [29] 
+ J. Liang, J. Cao, G. Sun, K. Zhang, L. Van Gool, and R. Timofte (2021) 
+ 
+ Swinir: image restoration using swin transformer .
+ 
+ In Proceedings of the IEEE/CVF international conference on computer vision ,
+ 
+ pp. 1833–1844 .
+ 
+ Cited by: §4.4 .
+ 
+ [30] 
+ X. Lin, J. He, Z. Chen, Z. Lyu, B. Dai, F. Yu, Y. Qiao, W. Ouyang, and C. Dong (2024) 
+ 
+ Diffbir: toward blind image restoration with generative diffusion prior .
+ 
+ In European Conference on Computer Vision ,
+ 
+ pp. 430–448 .
+ 
+ Cited by: §1 ,
+ §2.2 ,
+ §4.4 .
+ 
+ [31] 
+ B. Liu, H. Li, Y. Zhou, Y. Peng, A. Elazab, and C. Wang (2020) 
+ 
+ A super resolution method for remote sensing images based on cascaded conditional wasserstein gans .
+ 
+ In 2020 IEEE 3rd International Conference on Information Communication and Signal Processing (ICICSP) ,
+ 
+ pp. 284–289 .
+ 
+ Cited by: §2.1 .
+ 
+ [32] 
+ J. Liu, Q. Wang, H. Fan, Y. Wang, Y. Tang, and L. Qu (2024) 
+ 
+ Residual denoising diffusion models .
+ 
+ In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition ,
+ 
+ pp. 2773–2783 .
+ 
+ Cited by: §1 ,
+ §2.2 .
+ 
+ [33] 
+ C. Lu, Y. Zhou, F. Bao, J. Chen, C. Li, and J. Zhu (2022) 
+ 
+ Dpm-solver: a fast ode solver for diffusion probabilistic model sampling in around 10 steps .
+ 
+ Advances in Neural Information Processing Systems 35 , pp. 5775–5787 .
+ 
+ Cited by: §1 ,
+ §2.2 .
+ 
+ [34] 
+ W. Ma, Z. Pan, F. Yuan, and B. Lei (2019) 
+ 
+ Super-resolution of remote sensing images via a dense residual generative adversarial network .
+ 
+ Remote Sensing 11 ( 21 ), pp. 2578 .
+ 
+ Cited by: §2.1 .
+ 
+ [35] 
+ Q. Ning, W. Dong, X. Li, J. Wu, and G. Shi (2021) 
+ 
+ Uncertainty-driven loss for single image super-resolution .
+ 
+ Advances in Neural Information Processing Systems 34 , pp. 16398–16409 .
+ 
+ Cited by: §1 ,
+ §3.2.1 .
+ 
+ [36] 
+ R. Rombach, A. Blattmann, D. Lorenz, P. Esser, and B. Ommer (2022) 
+ 
+ High-resolution image synthesis with latent diffusion models .
+ 
+ In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition ,
+ 
+ pp. 10684–10695 .
+ 
+ Cited by: §2.2 .
+ 
+ [37] 
+ C. Saharia, J. Ho, W. Chan, T. Salimans, D. J. Fleet, and M. Norouzi (2022) 
+ 
+ Image super-resolution via iterative refinement .
+ 
+ IEEE transactions on pattern analysis and machine intelligence 45 ( 4 ), pp. 4713–4726 .
+ 
+ Cited by: §2.2 .
+ 
+ [38] 
+ J. Song, C. Meng, and S. Ermon (2020) 
+ 
+ Denoising diffusion implicit models .
+ 
+ arXiv preprint arXiv:2010.02502 .
+ 
+ Cited by: §1 ,
+ §2.2 .
+ 
+ [39] 
+ X. Tong, G. Xia, Q. Lu, H. Shen, S. Li, S. You, and L. Zhang (2020) 
+ 
+ Land-cover classification with high-resolution remote sensing images using transferable deep models .
+ 
+ Remote Sensing of Environment 237 , pp. 111322 .
+ 
+ Cited by: §1 .
+ 
+ [40] 
+ C. Tuna, G. Unal, and E. Sertel (2018) 
+ 
+ Single-frame super resolution of remote-sensing images by convolutional neural networks .
+ 
+ International journal of remote sensing 39 ( 8 ), pp. 2463–2479 .
+ 
+ Cited by: §2.1 .
+ 
+ [41] 
+ Z. S. Venter, O. Brousse, I. Esau, and F. Meier (2020) 
+ 
+ Hyperlocal mapping of urban air temperature using remote sensing and crowdsourced weather data .
+ 
+ Remote Sensing of Environment 242 , pp. 111791 .
+ 
+ Cited by: §1 .
+ 
+ [42] 
+ A. Voynov, Q. Chu, D. Cohen-Or, and K. Aberman (2023) 
+ 
+ P+: extended textual conditioning in text-to-image generation .
+ 
+ arXiv preprint arXiv:2303.09522 .
+ 
+ Cited by: §1 ,
+ §3.3.2 .
+ 
+ [43] 
+ C. Wang, Z. Hu, W. Sun, and Z. Chen (2025) 
+ 
+ Timestep-aware diffusion model for extreme image rescaling .
+ 
+ In Proceedings of the IEEE/CVF International Conference on Computer Vision ,
+ 
+ pp. 15594–15603 .
+ 
+ Cited by: §1 ,
+ §3.2.2 .
+ 
+ [44] 
+ C. Wang and W. Sun (2025) 
+ 
+ Semantic guided large scale factor remote sensing image super-resolution with generative diffusion prior .
+ 
+ ISPRS Journal of Photogrammetry and Remote Sensing 220 , pp. 125–138 .
+ 
+ Cited by: §2.2 .
+ 
+ [45] 
+ C. Wang and W. Sun (2026) 
+ 
+ Controllable reference-guided diffusion with local-global fusion for real-world remote sensing super-resolution .
+ 
+ IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing .
+ 
+ Cited by: §4.1 ,
+ §4.4.4 .
+ 
+ [46] 
+ J. Wang, Z. Yue, S. Zhou, K. C. Chan, and C. C. Loy (2024) 
+ 
+ Exploiting diffusion prior for real-world image super-resolution .
+ 
+ International Journal of Computer Vision 132 ( 12 ), pp. 5929–5949 .
+ 
+ Cited by: §1 ,
+ §1 ,
+ §2.2 .
+ 
+ [47] 
+ X. Wang, L. Xie, C. Dong, and Y. Shan (2021) 
+ 
+ Real-esrgan: training real-world blind super-resolution with pure synthetic data .
+ 
+ In Proceedings of the IEEE/CVF international conference on computer vision ,
+ 
+ pp. 1905–1914 .
+ 
+ Cited by: §4.1 .
+ 
+ [48] 
+ X. Wang, K. Yu, S. Wu, J. Gu, Y. Liu, C. Dong, Y. Qiao, and C. Change Loy (2018) 
+ 
+ Esrgan: enhanced super-resolution generative adversarial networks .
+ 
+ In Proceedings of the European conference on computer vision (ECCV) workshops ,
+ 
+ pp. 0–0 .
+ 
+ Cited by: §4.4 .
+ 
+ [49] 
+ Z. Wang, J. Chen, and S. C. Hoi (2020) 
+ 
+ Deep learning for image super-resolution: a survey .
+ 
+ IEEE transactions on pattern analysis and machine intelligence 43 ( 10 ), pp. 3365–3387 .
+ 
+ Cited by: §1 .
+ 
+ [50] 
+ R. Wu, L. Sun, Z. Ma, and L. Zhang (2024) 
+ 
+ One-step effective diffusion network for real-world image super-resolution .
+ 
+ Advances in Neural Information Processing Systems 37 , pp. 92529–92553 .
+ 
+ Cited by: item 1 ,
+ §1 ,
+ §2.2 .
+ 
+ [51] 
+ G. Xia, X. Bai, J. Ding, Z. Zhu, S. Belongie, J. Luo, M. Datcu, M. Pelillo, and L. Zhang (2018) 
+ 
+ DOTA: a large-scale dataset for object detection in aerial images .
+ 
+ In Proceedings of the IEEE conference on computer vision and pattern recognition ,
+ 
+ pp. 3974–3983 .
+ 
+ Cited by: §4.1 .
+ 
+ [52] 
+ G. Xia, J. Hu, F. Hu, B. Shi, X. Bai, Y. Zhong, L. Zhang, and X. Lu (2017) 
+ 
+ AID: a benchmark data set for performance evaluation of aerial scene classification .
+ 
+ IEEE Transactions on Geoscience and Remote Sensing 55 ( 7 ), pp. 3965–3981 .
+ 
+ Cited by: §4.1 .
+ 
+ [53] 
+ Y. Xiao, Q. Yuan, K. Jiang, J. He, X. Jin, and L. Zhang (2023) 
+ 
+ EDiffSR: an efficient diffusion probabilistic model for remote sensing image super-resolution .
+ 
+ IEEE Transactions on Geoscience and Remote Sensing 62 , pp. 1–14 .
+ 
+ Cited by: §2.2 ,
+ §4.4 .
+ 
+ [54] 
+ Y. Xiao, Q. Yuan, K. Jiang, J. He, C. Lin, and L. Zhang (2024) 
+ 
+ TTST: a top-k token selective transformer for remote sensing image super-resolution .
+ 
+ IEEE Transactions on Image Processing 33 , pp. 738–752 .
+ 
+ Cited by: §4.4 .
+ 
+ [55] 
+ W. Xu, X. Guangluan, Y. Wang, X. Sun, D. Lin, and W. Yirong (2018) 
+ 
+ High quality remote sensing image super-resolution using deep memory connected network .
+ 
+ In IGARSS 2018-2018 IEEE International Geoscience and Remote Sensing Symposium ,
+ 
+ pp. 8889–8892 .
+ 
+ Cited by: §2.1 .
+ 
+ [56] 
+ S. Yang, T. Wu, S. Shi, S. Lao, Y. Gong, M. Cao, J. Wang, and Y. Yang (2022) 
+ 
+ Maniqa: multi-dimension attention network for no-reference image quality assessment .
+ 
+ In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition ,
+ 
+ pp. 1191–1200 .
+ 
+ Cited by: §4.3 .
+ 
+ [57] 
+ Z. Yue, J. Wang, and C. C. Loy (2023) 
+ 
+ Resshift: efficient diffusion model for image super-resolution by residual shifting .
+ 
+ Advances in Neural Information Processing Systems 36 , pp. 13294–13307 .
+ 
+ Cited by: §1 ,
+ §1 ,
+ §2.2 .
+ 
+ [58] 
+ A. Zhang, Z. Yue, R. Pei, W. Ren, and X. Cao (2024) 
+ 
+ Degradation-guided one-step image super-resolution with diffusion priors .
+ 
+ arXiv preprint arXiv:2409.17058 .
+ 
+ Cited by: §1 ,
+ §2.2 ,
+ §4.4 .
+ 
+ [59] 
+ J. Zhang, T. Xu, J. Li, S. Jiang, and Y. Zhang (2022) 
+ 
+ Single-image super resolution of remote sensing images with real-world degradation modeling .
+ 
+ Remote Sensing 14 ( 12 ), pp. 2895 .
+ 
+ Cited by: §2.1 .
+ 
+ [60] 
+ K. Zhang, S. Gu, and R. Timofte (2020) 
+ 
+ Ntire 2020 challenge on perceptual extreme super-resolution: methods and results .
+ 
+ In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition workshops ,
+ 
+ pp. 492–493 .
+ 
+ Cited by: §4.4.3 .
+ 
+ [61] 
+ R. Zhang, P. Isola, A. A. Efros, E. Shechtman, and O. Wang (2018) 
+ 
+ The unreasonable effectiveness of deep features as a perceptual metric .
+ 
+ In Proceedings of the IEEE conference on computer vision and pattern recognition ,
+ 
+ pp. 586–595 .
+ 
+ Cited by: §3.5.1 .
+ 
+ [62] 
+ W. Zhang, X. Li, G. Shi, X. Chen, Y. Qiao, X. Zhang, X. Wu, and C. Dong (2023) 
+ 
+ Real-world image super-resolution as multi-task learning .
+ 
+ Advances in Neural Information Processing Systems 36 , pp. 21003–21022 .
+ 
+ Cited by: §1 .
+ 
+ [63] 
+ Y. Zhang, Y. Tian, Y. Kong, B. Zhong, and Y. Fu (2018) 
+ 
+ Residual dense network for image super-resolution .
+ 
+ In Proceedings of the IEEE conference on computer vision and pattern recognition ,
+ 
+ pp. 2472–2481 .
+ 
+ Cited by: §1 .
+
+ Experimental support, please
+ view the build logs 
+ for errors. Generated by
+
+ L
+ A 
+ T
+ E 
+ 
+ xml 
+ 
+ .
+
+ Instructions for reporting errors 
+ We are continuing to improve HTML versions of papers, and your feedback helps enhance accessibility and mobile
+ support. To report errors in the HTML that will help us improve conversion and rendering, choose any of the
+ methods listed below: 
+ 
+ Click the "Report Issue" ( 
+ 
+ ) button, located in the page header. 
+ 
+ Tip: You can select the relevant text first, to include it in your report. 
+ Our team has already identified the following issues . We appreciate your time reviewing and reporting rendering errors we
+ may not have found yet. Your efforts will help us improve the HTML versions for all readers, because disability
+ should not be a barrier to accessing research. Thank you for your continued support in championing open access for
+ all. 
+ Have a free development cycle? Help support accessibility at arXiv! Our collaborators at LaTeXML maintain a list of packages that need conversion , and welcome developer contributions . 
+
+ We gratefully acknowledge support from
+ our major funders ,
+ member institutions , ,
+ and all contributors.
+
+ About 
+ &middot; 
+ Help 
+ &middot; 
+ Contact 
+ &middot; 
+ Subscribe 
+ &middot; 
+ Copyright 
+ &middot; 
+ Privacy 
+ &middot; 
+ Accessibility 
+ &middot; 
+ Operational Status (opens in new tab) 
+
+ Major funding support from 
+

@@ -1,0 +1,861 @@
+ 
+
+ IR275K: A Benchmark for Infrared Multi-Frame Super-Resolution Toward Efficient Remote Sensing 
+
+ Report GitHub Issue 
+ × 
+
+ Title: 
+
+ Content selection saved. Describe the issue below: 
+
+ Description: 
+
+ Submit without GitHub 
+ Submit in GitHub 
+
+ arXiv is now an independent nonprofit! 
+ Learn more 
+ &times; 
+
+ Back to arXiv 
+
+ Why HTML? 
+
+ Report Issue 
+
+ Back to Abstract 
+
+ Download PDF 
+
+ Abstract 
+ I Introduction 
+ II Related Work 
+ III The IR275K Benchmark 
+ 
+ III-A Data Sources and Acquisition Diversity 
+ III-B Curation Criteria 
+ III-C Scene Diversity and Imaging Conditions 
+ III-D Benchmark Statistics and Sequence-Level Partitioning 
+ III-E Split Characterization 
+ III-F Protocol, Reproducibility, and Scope 
+ 
+ IV Lightweight SSM Reference Model: CGMamba 
+ 
+ IV-A Overall Architecture 
+ IV-B 2D Rotary Position Encoding 
+ IV-C Center-Guided CrossMamba 
+ 
+ IV-C 1 Reference-Guided Cross-Frame Gating 
+ 
+ IV-D Training Objective and Design Rationale 
+ 
+ V Experiments 
+ 
+ V-A Experimental Setup 
+ V-B Ablation Study 
+ 
+ V-B 1 Structural Design Analysis 
+ V-B 2 Network Depth Analysis 
+ 
+ V-C Initial Reference Comparison 
+ 
+ VI Conclusion 
+ References 
+
+ License: arXiv.org perpetual non-exclusive license
+
+arXiv:2607.22380v2 [cs.CV] 06 Aug 2026 
+
+ IR275K: A Benchmark for Infrared Multi-Frame Super-Resolution Toward Efficient Remote Sensing 
+
+ Jie Deng
+ 
+ Affiliation:  Hangzhou Institute for Advanced Study, Hangzhou 310024, China.
+ 
+ Affiliation:  University of Chinese Academy of Sciences, Beijing 100000, China.
+
+ Heyang Wang
+ 
+ Affiliation:  Hangzhou Institute for Advanced Study, Hangzhou 310024, China.
+ 
+ Affiliation:  University of Chinese Academy of Sciences, Beijing 100000, China.
+
+ Changxin Wang
+ 
+ Affiliation:  Hangzhou Institute for Advanced Study, Hangzhou 310024, China.
+ 
+ Affiliation:  University of Chinese Academy of Sciences, Beijing 100000, China.
+
+ Junkai Shen
+ 
+ Affiliation:  Hangzhou Institute for Advanced Study, Hangzhou 310024, China.
+ 
+ Affiliation:  University of Chinese Academy of Sciences, Beijing 100000, China.
+
+ Hongyi Chen
+ 
+ Affiliation:  Hangzhou Institute for Advanced Study, Hangzhou 310024, China.
+ 
+ Affiliation:  University of Chinese Academy of Sciences, Beijing 100000, China.
+
+ Zhiping He
+ † † thanks: *Corresponding author:
+Xudong Zhang (zhangxudong@ucas.ac.cn).
+Co-corresponding authors:
+Zhiping He (hzping@mail.sitp.ac.cn),
+Hongxing Qi (Qihongxing@ucas.ac.cn). 
+ Affiliation:  Shanghai Institute of Technical Physics of the Chinese Academy of Sciences, Shanghai 200000, China.
+ 
+ Affiliation:  University of Chinese Academy of Sciences, Beijing 100000, China.
+
+ Hongxing Qi
+ † † thanks: *Corresponding author:
+Xudong Zhang (zhangxudong@ucas.ac.cn).
+Co-corresponding authors:
+Zhiping He (hzping@mail.sitp.ac.cn),
+Hongxing Qi (Qihongxing@ucas.ac.cn). 
+ Affiliation:  Hangzhou Institute for Advanced Study, Hangzhou 310024, China.
+ 
+ Affiliation:  University of Chinese Academy of Sciences, Beijing 100000, China.
+
+ Xudong Zhang
+ 
+ Affiliation:  Hangzhou Institute for Advanced Study, Hangzhou 310024, China.
+ 
+ Affiliation:  University of Chinese Academy of Sciences, Beijing 100000, China.
+
+ Jianyu Wang
+ † † thanks: This work was supported by Intelligent Preprocessing Technology for Spaceborne Remote Sensing Spectral Data (B02006C021035), Hangzhou Institute for Advanced Study, UCAS, China. 
+ Affiliation:  Hangzhou Institute for Advanced Study, Hangzhou 310024, China.
+ 
+ Affiliation:  University of Chinese Academy of Sciences, Beijing 100000, China.
+
+ Abstract 
+ 
+ Efficient processing is becoming increasingly important in infrared remote sensing, where satellite constellations produce large volumes of observations under constrained detector resolution, power, and downlink bandwidth. Multi-frame super-resolution (MFSR) offers a software-based route to spatial enhancement, but its evaluation in infrared sensing remains fragmented across private datasets and ad-hoc protocols. Existing benchmarks do not explicitly capture the thermal contrast, sensor noise, weak texture, and platform-induced frame-to-frame variation that characterize infrared video. We introduce IR275K, a curated benchmark containing 594 infrared video sequences and 275,196 frames. It provides sequence-level train/validation/test splits and a reproducible × 4 \times 4 evaluation protocol. As an initial architectural probe, we further evaluate CGMamba, a lightweight state-space model with 10.90M parameters and 112.14G FLOPs, on IR275K. CGMamba performs implicit multi-frame reconstruction through Center-Guided CrossMamba (CGCM) fusion, in which 2D rotary position encoding (2D RoPE) provides spatial anchoring. In an initial reference comparison under the shared IR275K protocol, CGMamba achieves 33.19 dB PSNR, exceeding center-frame infrared SISR references by 0.35–0.52 dB while using substantially fewer FLOPs. Ablation results show that removing 2D RoPE from CGCM reduces PSNR by 2.23 dB and produces severe grid-like artifacts. This result suggests that explicit spatial anchoring is important for stabilizing SSM-based cross-frame gating in CGMamba under the evaluated infrared setting. IR275K provides a reproducible foundation for accuracy–efficiency evaluation of infrared MFSR methods, while the architectural analysis offers a concrete starting point for spatially aware SSM design under resource-constrained infrared sensing. The complete IR275K dataset is publicly available at: https://github.com/InfraRecon7/IR275K . 
+
+ Index Terms:  Infrared remote sensing, multi-frame super-resolution, benchmark dataset, efficient payloads, satellite constellations, state-space models, Mamba.
+
+ I Introduction 
+
+ Infrared remote sensing is expanding rapidly. Satellites, aircraft, and low-altitude platforms now carry infrared payloads for applications ranging from maritime surveillance to emergency response. These platforms, however, operate under tight constraints, including limited detector resolution, restricted power budgets, and narrow downlink bandwidth. As constellations grow, the volume of platform-acquired infrared video increasingly exceeds what can be transmitted to ground stations. Efficient processing is therefore becoming a prerequisite for timely observation  [ 1 ] . 
+
+ Multi-frame super-resolution (MFSR) is well suited to this setting. Moving platforms capture consecutive frames that contain complementary spatial information, and exploiting this temporal redundancy can recover finer spatial details without requiring detector upgrades or additional downlink bandwidth. For this strategy to be relevant to resource-constrained payloads, however, MFSR methods must be evaluated jointly in terms of reconstruction quality, computational efficiency, and reproducibility. 
+
+ Infrared multi-frame super-resolution, by contrast, still lacks a common benchmark. Widely used evaluation suites such as REDS  [ 2 ] , Vimeo-90K  [ 3 ] , and DIV2K  [ 4 ] were built for visible-light or single-frame settings. They do not capture the conditions that define infrared sensing: weak thermal contrast, pervasive sensor noise, sparse texture  [ 5 ] , and frame-to-frame variation driven by platform motion rather than scene dynamics. These conditions are not merely data nuisances. They directly affect the validity of both evaluation protocols and model design, because weak texture and irregular motion can make explicit cross-frame alignment unreliable, while noise can obscure the complementary information that MFSR is intended to exploit. As a result, published infrared MFSR results remain scattered across private datasets and ad-hoc protocols, making fair comparison and generalization analysis difficult. 
+
+ We introduce IR275K, a curated benchmark for infrared multi-frame super-resolution. It contains 594 video sequences totaling 275,196 frames, with sequence-level train, validation, and test splits; no frame from the same sequence appears in more than one partition. Unlike existing suites built for visible-light or single-frame settings, IR275K preserves infrared-specific imaging characteristics and supports evaluation under variation in contrast, noise, and motion. The benchmark is designed around a practical question: can a method reconstruct high-quality infrared frames with computational cost low enough for resource-constrained payloads while remaining robust to the failure modes that infrared deployments naturally produce? 
+
+ IR275K also raises an architectural question. If weak texture and large displacement make explicit alignment less reliable, an infrared MFSR model should be able to fuse frames implicitly. Yet implicit fusion still needs to preserve spatial correspondence; otherwise, information from neighboring frames may be gated into the wrong locations. To examine this issue, we evaluate CGMamba on IR275K as a lightweight state-space reference. CGMamba performs implicit fusion through Center-Guided CrossMamba (CGCM), which uses the central frame to gate information from neighboring frames and incorporates 2D rotary position encoding (2D RoPE) to provide spatial anchoring within the Mamba scan. The ablation shows that CGCM depends on its internal 2D RoPE for stable cross-frame fusion: removing 2D RoPE reduces PSNR by 2.23 dB and produces severe grid-like artifacts. This result provides architecture-specific evidence that spatial anchoring is important for stable implicit cross-frame fusion within CGMamba under the evaluated IR275K setting. 
+
+ Our contributions are: 
+
+ 1. 
+ 
+ IR275K, a benchmark of 594 curated infrared video sequences with standardized sequence-level splits and a reproducible × 4 \times 4 evaluation protocol. 
+ 
+ 2. 
+ 
+ An initial reference comparison between single-frame and multi-frame methods on the same infrared testbed, establishing a reproducible starting point for future infrared MFSR work. 
+ 
+ 3. 
+ 
+ A benchmark-driven architectural finding within CGMamba that spatial anchoring is important for stable SSM-based cross-frame fusion under the evaluated setting: removing 2D RoPE from CGCM reduces PSNR by 2.23 dB. 
+
+ II Related Work 
+
+ Super-resolution architectures have evolved through several overlapping modeling paradigms. Convolutional networks established the dominant early paradigm, from SRCNN-style direct reconstruction to deeper residual, dense, pyramid, and channel-attention designs  [ 6 , 7 , 8 , 9 , 10 , 11 , 12 ] . Remote sensing SR further explored hybrid-scale self-similarity and domain-specific convolutional priors  [ 13 ] . Non-local and sparse-attention mechanisms expanded contextual modeling beyond local convolutional neighborhoods  [ 14 , 15 ] . Transformer self-attention then provided a general framework for long-range dependency modeling  [ 16 ] . This paradigm extended to general vision backbones such as Swin Transformer  [ 17 ] and to image restoration and super-resolution through Restormer  [ 18 ] , SwinIR  [ 19 ] , remote-sensing multistage enhancement  [ 20 ] , HAT  [ 21 ] , and hyperspectral fusion  [ 22 ] . Standard global self-attention, however, scales quadratically with sequence length, motivating more efficient architectures for multi-frame video processing. 
+
+ More recently, state-space models have emerged as an efficient alternative to attention-based architectures. Mamba  [ 23 ] demonstrated that selective SSMs can match Transformer-level quality at linear complexity, and Vision Mamba extended this direction to visual representation learning  [ 24 ] . The idea has since spread to remote sensing. Rep-Mamba  [ 25 ] introduces re-parameterization and cross-scale state propagation for lightweight RSISR. Dynamic state-control modeling further adapts state-space mechanisms to generalized remote sensing SR  [ 26 ] . EMAN  [ 27 ] pairs a multi-scale detail extraction unit with multi-dimensional Mamba-attention, using atrous-based selective scanning to establish global correlations at low cost. FMSR  [ 28 ] , the first Mamba-based RSI-SR framework, couples frequency selection with SSM scanning. HAM adds hierarchical attention and spatial-frequency fusion  [ 29 ] . DVMSR applies knowledge distillation to Vision Mamba for efficient inference  [ 30 ] . CNMC pairs Mamba blocks with CNN units, combining global context with local inductive bias  [ 31 ] . CGMamba is positioned within this SSM family, whose efficiency advantage matters directly for the resource-constrained infrared payloads that IR275K targets. 
+
+ Infrared super-resolution has received far less attention than its visible-light counterpart. Three recent single-image methods are directly relevant. GPSMamba  [ 32 ] augments Mamba with global phase and spectral prompts, coupled with a thermal-spectral attention and phase consistency loss to enforce structural fidelity. IRSRMamba  [ 33 ] integrates wavelet transform feature modulation for multi-scale adaptation and an SSM-based semantic consistency loss to restore fragmented contextual information. DifIISR  [ 34 ] takes a different route, injecting gradients from infrared thermal-spectrum priors and visual foundation models into the diffusion reverse process for task-aware reconstruction. All three methods assume a single-frame setting and therefore do not exploit the temporal redundancy available from moving infrared platforms. DCUNet  [ 35 ] is a rare exception. It performs multi-frame infrared SR through deformable-convolution-based alignment, but such alignment-first designs can be challenged by the weak textures and large displacements often encountered in infrared video. CGMamba is designed as an implicit-fusion reference model for this setting, using Center-Guided CrossMamba gating rather than explicit motion estimation. 
+
+ For methods that exploit multiple frames, the central design choice is how frames are fused. The dominant strategy estimates motion between frames, warps them to a common reference, and then merges. VESPCN  [ 36 ] introduced spatio-temporal subpixel convolution for real-time video SR. Satellite video SR  [ 37 ] extends alignment to remote sensing via multiscale deformable convolution and temporal grouping projection. VSRM  [ 38 ] combines deformable cross-Mamba alignment with spatial-to-temporal scanning within an SSM framework. Alignment provides a strong prior when correspondences are reliable. Under infrared conditions, however, thermal smoothness deprives the motion estimator of needed texture, and frame-to-frame displacement can be large and irregular. Implicit fusion provides an alternative strategy that avoids motion estimation and allows the network to aggregate cross-frame information in feature space. Deep reparametrization of MAP-based multi-frame restoration  [ 39 ] demonstrated the effectiveness of learned latent-space fusion for burst denoising and burst SR. QMambaBSR  [ 40 ] extends this idea with a query state-space model for inter-frame querying and intra-frame scanning. MamEVSR  [ 41 ] further shows that interleaved and cross-modality Mamba blocks can support efficient spatio-temporal fusion in event-based VSR. CGMamba inherits the implicit fusion strategy and realizes it through CGCM. The central frame acts as a query to gate feature extraction from neighbors, sidestepping an alignment step that can be fragile in infrared MFSR. 
+
+ III The IR275K Benchmark 
+
+ III-A Data Sources and Acquisition Diversity 
+
+ IR275K draws from three public infrared sources: the UAV-TSR++ dataset introduced with AnyTSR++  [ 46 ] and two resources released through Science Data Bank  [ 47 , 48 ] . Relying on a single source would risk overfitting to one capture condition or motion regime. Multiple sources introduce variations in viewing geometry, platform behavior, and thermal appearance, all of which are important for evaluating the generalizability of infrared MFSR methods. Representative scenes are shown in Fig.  1 . Source identity was not used to define the partitions. 
+
+ Fig. 1: Representative scenes in IR275K, including land remote sensing, ocean remote sensing, urban remote sensing, and low-altitude urban sensing. These examples illustrate the diversity of thermal appearance, target structure, and imaging context covered by the benchmark. 
+
+ III-B Curation Criteria 
+
+ Three types of sequences were excluded. Fully static scenes offer no sub-pixel variation and cannot test multi-frame reconstruction. Severely blurred sequences are unusable because noise dominates signal and prevents reliable supervision. Sequences with extreme frame-to-frame displacement, including scene cuts and discontinuous motion, were removed because they violate the assumption that neighboring frames share recoverable spatial information. After filtering, 594 sequences remained. 
+
+ III-C Scene Diversity and Imaging Conditions 
+
+ Fig.  1 shows the four scene categories covered by IR275K: land, ocean, urban, and low-altitude urban sensing. Each stresses a different capability. Land and ocean scenes are dominated by thermal smoothness and noise, demanding reconstructions that suppress artifacts without hallucinating structure. Urban and low-altitude scenes introduce sharp thermal edges and fast platform motion, probing a method’s ability to preserve boundaries across frames. 
+
+ III-D Benchmark Statistics and Sequence-Level Partitioning 
+
+ IR275K contains 594 sequences totaling 275,196 frames, as summarized in Table  I and Fig.  2 . Sequence lengths range from 16 to 5,625 frames. The high-resolution reference frames are 640 × \times 512 pixels, and the corresponding 160 × \times 128 low-resolution inputs are generated by bicubic downsampling at × 4 \times 4 scale. 
+
+ The benchmark was partitioned by randomly shuffling complete sequences and assigning them to the training, validation, and test sets. This sequence-level procedure prevents frames from the same original sequence from appearing in different splits. Training receives 261 sequences with 192,776 frames, validation receives 111 sequences with 27,576 frames, and test receives 222 sequences with 54,844 frames. The training split contains longer sequences on average, with a mean of 738.6 frames and a median of 548. Validation and test sequences average 248.4 and 247.0 frames, respectively. 
+
+ Fig. 2: Dataset statistics of IR275K, including split sizes, frame counts, sequence-length trends, and overall benchmark settings. 
+
+ TABLE I: Summary Statistics of IR275K. HR frames are stored at 640 × \times 512 pixels, the corresponding LR frames are 160 × \times 128 pixels, and all LR-HR pairs follow a uniform × 4 \times 4 scale. 
+
+ Split 
+ Sequences 
+ Frames 
+ Min Length 
+ Max Length 
+ Mean Length 
+ Median Length 
+
+ Train 
+ 261 
+ 192,776 
+ 445 
+ 5625 
+ 738.6 
+ 548 
+ 
+ Validation 
+ 111 
+ 27,576 
+ 17 
+ 445 
+ 248.4 
+ 300 
+ 
+ Test 
+ 222 
+ 54,844 
+ 16 
+ 432 
+ 247.0 
+ 300 
+ 
+ Total 
+ 594 
+ 275,196 
+ 16 
+ 5625 
+ 463.3 
+ 400 
+
+ III-E Split Characterization 
+
+ After partitioning, we characterized the fixed training, validation, and test sets in terms of thermal contrast, temporal noise, and inter-frame displacement. These complementary statistics describe signal strength, measurement variability, and correspondence difficulty in the resulting benchmark partitions. 
+
+ Thermal contrast. 
+In infrared images, signal strength is determined by the temperature difference between target and background. Low thermal contrast makes weak scene structures more difficult to distinguish from measurement variability. Across IR275K, global thermal contrast spans more than one order of magnitude, from 0.009 to 0.32. The training, validation, and test splits have mean contrast values of 0.105, 0.116, and 0.122, respectively. These broadly comparable contrast distributions place the three splits within the same overall thermal-contrast regime, while the temporal-noise statistics in Fig.  3 show measurable split-level variation in noise. Reporting both thermal contrast and temporal noise avoids characterizing the benchmark through a single averaged imaging condition. Fifty percent of training sequences fall within a contrast IQR of [0.034, 0.170], while samples in both tails represent more difficult cases. 
+
+ Temporal noise. 
+Temporal noise, estimated as the per-pixel standard deviation over all frames within a fixed center-crop region, ranges from 0.004 to 0.26 across IR275K. The training, validation, and test splits have mean noise values of 0.074, 0.077, and 0.081, respectively, while the test split shows a heavier upper range: its upper quartile reaches 0.149, compared with 0.116 and 0.117 for the training and validation splits. The resulting test split therefore contains a larger proportion of high-noise sequences than the training split. Performance degradation on these sequences would reveal sensitivity to the observed noise-domain difference. Such variation is relevant to infrared payloads, where noise levels can change with detector temperature drift, integration-time variation, and environmental thermal interference. Related spaceborne active optical sensing studies have also emphasized waveform filtering, explicit noise modeling, and real-time denoising for low-SNR measurements  [ 42 , 43 , 44 ] . A recent lunar-sensing example illustrates the same thermal-sensitivity issue in an operational infrared instrument: the Lunar Mineral Spectrometer onboard Chang’e-6 experienced internal temperatures exceeding 74 ∘ \,{}^{\circ} C during noontime operations, causing marked signal-to-noise degradation in infrared channels that required temperature-compensated calibration to recover measurement fidelity  [ 45 ] . This operational example motivates reporting temporal-noise variation rather than relying only on an overall average. In IR275K, the training IQR of [0.025, 0.116] describes the central noise regime, while higher-noise samples in the validation and test splits provide more noise-limited reconstruction cases. 
+
+ Fig. 3: IR275K partition characteristics in terms of two infrared-specific factors. (a) Global thermal contrast distributions with per-sequence scatter overlay, showing broadly comparable thermal-contrast regimes across the splits (black diamonds denote per-split means). (b) Temporal noise distributions, showing that the test split carries heavier upper-tail noise (the separation between the mean diamond and the median bar reflects distribution skew). 
+
+ Inter-frame displacement. 
+Frame-to-frame displacement provides the physical basis for multi-frame super-resolution, but it is also one of its most fragile assumptions. Fig.  4 visualizes the inter-frame displacement distributions across the three splits. The training split concentrates on a moderate-motion regime: the mean displacement is 0.91 px, 95% of sequences fall below 4.4 px, and the median is 0.36 px. Validation and test splits cover substantially broader distributions, with means of 2.57 and 2.86 px and maxima of 25.0 and 26.4 px, respectively. This observed difference provides a setting for assessing whether reconstruction quality is maintained beyond the dominant training-motion regime. Large and irregular motion can be challenging for alignment-based methods that rely on reliable correspondences. Robustness to the observed shift is also relevant for implicit fusion methods. The train–test difference in median displacement, from 0.36 px to 0.56 px, enables evaluation under harder correspondence conditions than those dominant in the training split. 
+
+ Fig. 4: Inter-frame displacement distribution across the three IR275K splits. The training split concentrates in the sub-pixel regime, while the validation and test splits contain a wider motion envelope and provide larger-displacement cases for robustness evaluation. 
+
+ Low thermal contrast, elevated temporal noise, and large inter-frame displacements are individually well-known challenges. IR275K documents how these factors vary across its sequence-level partitions, providing statistical context for aggregate benchmark results under the fixed degradation model. 
+
+ III-F Protocol, Reproducibility, and Scope 
+
+ IR275K defines a single evaluation protocol for all methods. The task is × 4 \times 4 upscaling of the center frame from consecutive low-resolution infrared inputs. Single-image methods use one input frame, while multi-frame methods use three. All low-resolution inputs are generated by bicubic downsampling. PSNR and SSIM are computed on single-channel reconstructions after cropping 10 pixels from the image boundary. Runtime is measured with batch size 1 on an NVIDIA RTX 4090 GPU and reported as the average over full test-set inference. Reporting runtime, parameter count, and FLOPs alongside PSNR and SSIM is required, because accuracy without cost says little about practical efficiency. 
+
+ The complete IR275K dataset, including the fixed sequence-level partitions and corresponding LR–HR image pairs, is publicly available at https://github.com/InfraRecon7/IR275K . 
+
+ Two boundaries are explicit. First, IR275K uses bicubic downsampling as its sole degradation model. It does not yet incorporate real-sensor effects such as detector-specific blur, non-uniform noise, or compression artifacts. Second, evaluation is limited to PSNR, SSIM, and computational cost. Extending metrics to downstream task performance is a planned next step. These boundaries are deliberate. Standardizing a controlled setting first enables clean comparison. Adding complexity later, on the same data foundation, lets the community measure exactly what each new factor costs. 
+
+ The observed imaging characteristics of IR275K also motivate the choice of reference architecture. Weak texture and large inter-frame displacement may make explicit alignment vulnerable, while temporal variability can limit the reliability of direct frame aggregation. These observations motivate examining implicit-fusion models that can exploit neighboring frames without depending on a separately estimated motion field. They also motivate studying how such models preserve spatial correspondence under difficult infrared conditions, leading to the spatially anchored SSM design examined next. 
+
+ IV Lightweight SSM Reference Model: CGMamba 
+
+ IV-A Overall Architecture 
+
+ Fig. 5: Overall architecture of CGMamba. 
+
+ As shown in Fig.  5 , CGMamba is examined as an initial reference architecture motivated by two considerations arising from the observed IR275K characteristics: avoiding a separate explicit-alignment stage and preserving spatial correspondence during implicit fusion. It reconstructs the high-resolution central frame from a low-resolution infrared video sequence in three stages. First, a convolutional layer followed by a selective scan 4D (SS4D) module extracts intra-frame spatial features. Second, multiple Center-Guided CrossMamba Groups process the features, using CGCM to refine neighboring-frame features under the guidance of the central-frame feature. Third, lightweight channel attention blocks (CAB) refine the fused representation, and a pixel-shuffle layer upsamples it to the target resolution. 
+
+ IV-B 2D Rotary Position Encoding 
+
+ Fig. 6: 2D rotary position encoding. 
+
+ The native Mamba model flattens 2D images into 1D sequences for state-space scanning, which weakens explicit 2D spatial adjacency. To introduce spatial priors without sacrificing linear complexity, CGMamba extends rotary position encoding (RoPE)  [ 49 ] to two spatial dimensions and integrates it into the complex rotation mechanism of the SSM, as illustrated in Fig.  6 . 
+
+ For each pixel coordinate ( i , j ) (i,j) , the phase angles along the X and Y directions are computed from two independent frequency vectors ω x \omega_{x} and ω y \omega_{y} : 
+
+ { θ x ( i ) = i ⋅ ω x θ y ( j ) = j ⋅ ω y \left\{\begin{aligned} \theta_{x}^{(i)}&=i\cdot\omega_{x}\\
+\theta_{y}^{(j)}&=j\cdot\omega_{y}\end{aligned}\right. 
+ 
+ (1) 
+
+ The concatenated phase angles form the 2D spatial angle matrix θ 2 ​ D \theta_{2D} , which carries explicit absolute coordinate information. CGMamba combines this coordinate signal with the learned content-dependent positional signal from Mamba’s projection layers through a learnable mixing coefficient α \alpha : 
+
+ A ​ n ​ g ​ l ​ e ′ = A ​ n ​ g ​ l ​ e + α ⋅ θ 2 ​ D Angle^{\prime}=Angle+\alpha\cdot\theta_{2D} 
+ 
+ (2) 
+
+ The blended angle A ​ n ​ g ​ l ​ e ′ Angle^{\prime} is fed into the Mamba-3 kernel’s native rotation mechanism  [ 50 ] , so that each token in the 1D scanning sequence carries both absolute 2D coordinate information and learned contextual cues. 
+
+ In infrared imagery, thermally homogeneous regions such as water, terrain, and facades provide weak content-based position discrimination, and thermal image formation can further suppress geometric texture  [ 5 ] . Tokens from different locations may therefore be difficult to distinguish by value alone. 2D RoPE enables the SSM to separate adjacent and distant token pairs even when their thermal values are similar, consistent with the severe grid-like artifacts observed when 2D RoPE is removed (Section V-B). 
+
+ IV-C Center-Guided CrossMamba 
+
+ In infrared MFSR, explicit alignment via optical flow or deformable convolution may become unreliable under weak texture and thermal homogeneity. We therefore adopt implicit fusion through reference-guided cross-frame gating: the central frame serves as a structural reference that guides feature extraction from each neighboring frame, without estimating an explicit motion field. 
+
+ IV-C 1 Reference-Guided Cross-Frame Gating 
+
+ Fig. 7: Architecture for the Center-Guided CrossMamba. 
+
+ Fig.  7 shows the CGCM design. CGCM uses the Structured State Space Duality (SSD) theory  [ 51 ] to implement reference-guided cross-frame fusion, allowing the central frame to guide feature extraction from each neighboring frame without explicit motion estimation. 
+
+ Under the SSD framework  [ 51 ] , the output at position t t expands as: 
+
+ y t = ∑ s ≤ t C t ⊤ ​ ( ∏ k = s + 1 t A k ) ​ B s ​ x s , y_{t}=\sum_{s\leq t}C_{t}^{\top}\left(\prod_{k=s+1}^{t}A_{k}\right)B_{s}\,x_{s}, 
+ 
+ (3) 
+ 
+ where the term C t ⊤ ​ ( ∏ A k ) ​ B s C_{t}^{\top}(\prod A_{k})B_{s} is structurally analogous to Q t ⊤ ​ K s Q_{t}^{\top}K_{s} in attention, providing the basis for decoupling cross-frame interaction into query and key pathways. 
+
+ We decouple the input into a current branch (from the neighboring frame F neighbor F_{\text{neighbor}} , generating K K , V V , and the step size △ \triangle ) and a reference branch (from the central frame F center F_{\text{center}} , generating Q Q ): 
+
+ K , V , △ = Linear current ​ ( F neighbor ) K,V,\triangle=\text{Linear}_{\text{current}}\left(F_{\text{neighbor}}\right) 
+ 
+ (4) 
+
+ Q = Linear reference ​ ( F center ) Q=\text{Linear}_{\text{reference}}\left(F_{\text{center}}\right) 
+ 
+ (5) 
+
+ The hidden state update and output are computed as: 
+
+ { h t = exp ⁡ ( △ t ​ A ) ​ h t − 1 + △ t ​ K t ​ V t y t = Q t ​ h t \left\{\begin{aligned} h_{t}&=\exp\left(\triangle_{t}A\right)h_{t-1}+\triangle_{t}K_{t}V_{t}\\
+y_{t}&=Q_{t}h_{t}\end{aligned}\right. 
+ 
+ (6) 
+
+ where A A is the structured matrix governing state decay. 
+
+ This asymmetric design exploits a property of infrared video: the central and neighboring frames share the same scene structure but carry independent temporal noise realizations. With 2D RoPE, the interaction between Q Q from F center F_{\text{center}} and K K from F neighbor F_{\text{neighbor}} is biased toward spatially corresponding features, so structural cues are expected to produce stronger responses than uncorrelated noise. This provides a plausible explanation for why the hidden state may help attenuate frame-to-frame noise without an explicit denoising module. Inference uses the chunked recurrent SSM form, whose computational cost scales linearly with sequence length, avoiding the quadratic cost of the attention dual form. 
+
+ IV-D Training Objective and Design Rationale 
+
+ We adopt the Charbonnier loss  [ 52 ] : 
+
+ ℒ r ​ e ​ c = ( I S ​ R − I G ​ T ) 2 + ϵ 2 \mathcal{L}_{rec}=\sqrt{(I_{SR}-I_{GT})^{2}+\epsilon^{2}} 
+ 
+ (7) 
+
+ with ϵ = 10 − 3 \epsilon=10^{-3} . The Charbonnier loss interpolates between ℓ 2 \ell_{2} and ℓ 1 \ell_{1} , behaving quadratically near zero for stable convergence and linearly for large residuals to suppress outliers. To keep the benchmark protocol controlled, all reported models are trained with the same distortion-oriented objective, without perceptual, adversarial, or frequency-domain auxiliary losses. 
+
+ V Experiments 
+
+ V-A Experimental Setup 
+
+ All models are trained on four NVIDIA RTX 4090 GPUs using PyTorch. During training, CGMamba uses three consecutive 128 × 128 128\times 128 low-resolution patches as input, whereas the infrared SISR references use only the corresponding center-frame patch under the same × 4 \times 4 reconstruction protocol. CGMamba uses depth configuration depths = ( 3 , 3 , 3 , 3 , 3 ) \text{depths}=(3,3,3,3,3) , feature dimension embeddim = 128 \text{embeddim}=128 , and SSM state dimension cross_d_state = 32 \text{cross\_d\_state}=32 . Training uses AdamW ( β 1 = 0.9 \beta_{1}=0.9 , β 2 = 0.95 \beta_{2}=0.95 , weight decay 5 × 10 − 6 5\times 10^{-6} ), gradient clipping at 1.0, and EMA decay of 0.999. The learning rate is linearly warmed up from 0 to 1 × 10 − 4 1\times 10^{-4} over the first 20,000 iterations. This is followed by cosine annealing with three restart periods of 60,000, 30,000, and 10,000 iterations and corresponding restart weights of 1.0, 0.7, and 0.5. Training therefore runs for 120,000 iterations in total, with a minimum learning rate of 5 × 10 − 6 5\times 10^{-6} . The effective batch size is 256, with a per-GPU batch size of 64 across 4 GPUs. Charbonnier loss is used with weight 1.0. Metrics, protocols, and benchmark statistics follow Section III. 
+
+ V-B Ablation Study 
+
+ We conduct ablation studies to evaluate the contribution of each architectural component of CGMamba. All experiments use identical training configurations and are evaluated on the test set for the × 4 \times 4 task. 
+
+ V-B 1 Structural Design Analysis 
+
+ TABLE II: Ablation Study on Structural Components 
+
+ Variant 
+ 2D RoPE 
+ CGCM 
+ PSNR ↑ \uparrow 
+ SSIM ↑ \uparrow 
+
+ Base 
+ × \times 
+ × \times 
+ 32.49 
+ 0.8571 
+ 
+ +2D RoPE 
+ ✓ \checkmark 
+ × \times 
+ 32.47 
+ 0.8561 
+ 
+ +CGCM 
+ × \times 
+ ✓ \checkmark 
+ 30.96 
+ 0.8052 
+ 
+ Full Structure 
+ ✓ \checkmark 
+ ✓ \checkmark 
+ 33.19 
+ 0.8721 
+
+ Fig. 8: 
+Structural ablation study.
+ (A)  Visual comparison of GT,
+Full Structure, w/o 2D RoPE(i.e., the +CGCM variant),
+and w/o CGCM (i.e., the +2D RoPE variant).
+Each entry shows the full image with the
+ROI highlighted (left) and the cropped
+region (right).
+The w/o 2D RoPE result exhibits
+pronounced grid-like artifacts consistent with
+spatially unstable cross-frame guidance.
+ (B)  Absolute error maps computed
+over the entire image with respect to GT
+(brighter pixels indicate larger error),
+with Mean AE and PSNR annotated below.
+Full Structure achieves the lowest error,
+while removing 2D RoPE leads to
+a substantial increase in both Mean AE
+and structural artifacts.
+PSNR values are computed on this
+representative sample; averaged results
+over the full test set are reported
+in Table  II .
+
+ Table  II and Fig.  8 report the structural ablation. Neither component is sufficient on its own. Adding 2D RoPE alone produces almost no change (32.47 vs. 32.49 dB). Adding CGCM without 2D RoPE degrades performance: PSNR drops to 30.96 dB, and the output exhibits severe grid-like artifacts along structural boundaries. When combined, the two components reach 33.19 dB. 
+
+ This asymmetry indicates a dependency between spatial encoding and cross-frame gating. The failure of CGCM without 2D RoPE is not simply a loss of one auxiliary component; it suggests that implicit fusion in this architecture can become unstable when the central-frame query and neighboring-frame key do not share a reliable spatial reference. Without 2D RoPE, cross-frame gating appears spatially disordered, and the query may select features from less appropriate locations, injecting misaligned information into the reconstruction. The error maps support this interpretation: high-error regions concentrate where spatial correspondence is most important. With 2D RoPE in place, Q and K operate in a shared coordinate system, consistent with more stable spatial correspondence. The full model gains 0.70 dB over the base, suggesting that spatially anchored queries are important for making CGMamba’s SSM-based implicit fusion effective under the evaluated IR275K setting. 
+
+ V-B 2 Network Depth Analysis 
+
+ We vary the number of CGCM blocks per CrossMamba Group while keeping all other settings fixed. Table  III and Fig.  9 report the results. Performance improves as the depth increases from (1,1,1,1,1) to (4,4,4,4,4), with the latter achieving the highest PSNR of 33.53 dB. The (3,3,3,3,3) configuration achieves 33.19 dB with 10.90M parameters and 112.14G FLOPs. Shallower variants reduce accuracy: the (2,2,2,2,2) configuration loses 1.49 dB relative to this setting. Increasing depth to (4,4,4,4,4) yields an additional 0.34 dB at 23.63% higher FLOPs, while the deeper (5,5,5,5,5) configuration decreases to 32.84 dB under the same training budget. We therefore use (3,3,3,3,3) as the efficiency-oriented default reference, while (4,4,4,4,4) represents an accuracy-oriented variant. 
+
+ Fig. 9: Impact of network depth on reconstruction performance. 
+
+ TABLE III: Impact of Network Depth on Performance 
+
+ Depths 
+ Params (M)↓ 
+ FLOPs (G)↓ 
+ PSNR↑ 
+ SSIM↑ 
+
+ (1,1,1,1,1) 
+ 5.84 
+ 59.13 
+ 29.57 
+ 0.8331 
+ 
+ (2,2,2,2,2) 
+ 8.37 
+ 85.64 
+ 31.70 
+ 0.8537 
+ 
+ (3,3,3,3,3) 
+ 10.90 
+ 112.14 
+ 33.19 
+ 0.8721 
+ 
+ (4,4,4,4,4) 
+ 13.43 
+ 138.64 
+ 33.53 
+ 0.8732 
+ 
+ (5,5,5,5,5) 
+ 15.96 
+ 166.15 
+ 32.84 
+ 0.8548 
+
+ V-C Initial Reference Comparison 
+
+ As an initial reference comparison, we compare CGMamba against two infrared single-image super-resolution references, GPSMamba and IRSRMamba, and bicubic interpolation as a non-learnable baseline. All models are trained and evaluated under the same IR275K protocol. 
+
+ Table  IV reports the × 4 \times 4 quantitative comparison. Bicubic interpolation achieves 31.50 dB. GPSMamba reaches 32.84 dB with 36.9M parameters and 429.39G FLOPs. IRSRMamba reaches 32.67 dB with 26.40M parameters and 206.35G FLOPs. CGMamba obtains 33.19 dB and 0.8721 SSIM with 10.90M parameters and 112.14G FLOPs. It outperforms both SISR references by 0.35–0.52 dB while using substantially fewer FLOPs. Because the SISR references use only the center frame whereas CGMamba also uses neighboring frames, this experiment serves as an initial reference comparison under the shared IR275K protocol. The runtime difference is also substantial: CGMamba requires 340 ms, compared with 1165 ms for GPSMamba and 618 ms for IRSRMamba. 
+
+ TABLE IV: Initial Quantitative Reference Comparison on IR275K 
+
+ Type 
+ Method 
+ Time (ms)↓ 
+ Params (M)↓ 
+ FLOPs (G)↓ 
+ PSNR↑ 
+ SSIM↑ 
+
+ Interpolation 
+ Bicubic 
+ 0.229 
+ – 
+ – 
+ 31.50 
+ 0.8182 
+
+ IR-SISR 
+ GPSMamba 
+ 1165 
+ 36.9 
+ 429.39 
+ 32.84 
+ 0.8482 
+ 
+ IRSRMamba 
+ 618 
+ 26.40 
+ 206.35 
+ 32.67 
+ 0.8447 
+
+ IR-MFSR 
+ CGMamba 
+ 340 
+ 10.90 
+ 112.14 
+ 33.19 
+ 0.8721 
+
+ Fig. 10: Qualitative comparison on representative IR275K test scenes. Each example shows the reconstructed infrared image, a magnified region of interest, and the intensity profile along the marked line. The visual comparison highlights local thermal boundaries and intensity transitions, complementing the quantitative results in Table  IV . 
+
+ Fig.  10 shows qualitative results on representative test scenes. CGMamba preserves continuous thermal boundaries more faithfully than the SISR references, which occasionally produce over-smoothed or aliased intensity transitions. The intensity profiles further illustrate this difference along selected cross-sections. 
+
+ VI Conclusion 
+
+ This paper introduced IR275K, a curated benchmark of 594 infrared video sequences with sequence-level splits and a reproducible × 4 \times 4 evaluation protocol. The resulting partitions maintain broadly comparable contrast distributions while exhibiting measurable differences in noise and motion. We also evaluated CGMamba, a lightweight SSM-based multi-frame reference model whose design is motivated by these observed characteristics and uses implicit fusion rather than a separate explicit-alignment stage. CGMamba achieves 33.19 dB PSNR with 10.90M parameters, and the ablation shows that removing 2D RoPE from CGCM reduces PSNR by 2.23 dB. This result suggests that spatial anchoring is important for stabilizing SSM-based cross-frame gating in CGMamba under the evaluated setting. Together, IR275K and CGMamba provide both a reproducible evaluation foundation and an architecture-level starting point for efficient, spatially grounded implicit fusion. 
+
+ Several limitations define the agenda for immediate next steps. First, the current benchmark adopts × 4 \times 4 bicubic downsampling as the sole degradation model and does not yet incorporate real-sensor effects such as detector-specific blur kernels, non-uniform noise fields, or compression artifacts that affect operational infrared payloads. Extending the degradation pipeline to include these factors is important for translating benchmark results to operational data. Second, the CGMamba architecture, while parameter-efficient, has been evaluated only under the three-frame input setting; its behavior under longer temporal windows and its sensitivity to input frame ordering remain uncharacterized. Third, the present evaluation reports aggregate test-set performance; stress-stratified evaluation by contrast, noise, and motion remains an important next step. Fourth, the current quantitative comparison is an initial reference evaluation and does not yet include a broad set of MFSR/VSR baselines. Finally, the relationship between infrared and visible-spectrum MFSR architectures remains an open question. The benchmark is designed to support systematic investigation of whether RGB innovations such as propagation, alignment, and temporal attention require infrared-specific reformulation or whether the main bottleneck lies in data scale and pre-training strategy. 
+
+ Future versions of IR275K will incorporate at least one real-sensor degradation variant, enabling the community to measure the gap between synthetic and realistic evaluation on the same data foundation. On the model side, systematic comparisons between implicit-fusion SSM architectures and RGB-derived alignment methods would clarify which components transfer across domains and which require infrared-specific redesign. Extending metrics beyond PSNR and SSIM to downstream tasks would further connect IR-MFSR research to application needs. By documenting infrared-specific imaging conditions and supporting spatially grounded multi-frame fusion, IR275K aims to accelerate progress toward practical infrared perception under resource constraints. 
+
+ References 
+
+ [1] 
+ 
+Q. Jiang, L. Zheng, Y. Zhou, H. Liu, Q. Kong, Y. Zhang, and B. Chen, “Efficient on-orbit remote sensing imagery processing via satellite edge computing resource scheduling optimization,”
+ IEEE Trans. Geosci. Remote Sens. , vol. 63, pp. 1–19, 2025, doi: 10.1109/TGRS.2025.3528015.
+
+ [2] 
+ 
+S. Nah, S. Baik, S. Hong, G. Moon, S. Son, R. Timofte, and K. M. Lee, “NTIRE 2019 challenge on video deblurring and super-resolution: Dataset and study,”
+in Proc. IEEE/CVF Conf. Comput. Vis. Pattern Recognit. Workshops (CVPRW) , 2019, pp. 1996–2005, doi: 10.1109/CVPRW.2019.00251.
+
+ [3] 
+ 
+T. Xue, B. Chen, J. Wu, et al. , “Video enhancement with task-oriented flow,”
+ Int. J. Comput. Vis. , vol. 127, no. 8, pp. 1106–1125, 2019.
+
+ [4] 
+ 
+E. Agustsson and R. Timofte, “NTIRE 2017 challenge on single image super-resolution: Dataset and study,”
+in Proc. IEEE Conf. Comput. Vis. Pattern Recognit. Workshops (CVPRW) , 2017, pp. 126–135.
+
+ [5] 
+ 
+F. Bao, S. Jape, A. Schramka, J. Wang, T. E. McGraw, and Z. Jacob, “Why thermal images are blurry,”
+ Opt. Express , vol. 32, no. 3, pp. 3852–3865, 2024.
+
+ [6] 
+ 
+C. Dong, C. C. Loy, K. He, and X. Tang, “Image super-resolution using deep convolutional networks,”
+ IEEE Trans. Pattern Anal. Mach. Intell. , vol. 38, no. 2, pp. 295–307, 2016.
+
+ [7] 
+ 
+B. Lim, S. Son, H. Kim, S. Nah, and K. M. Lee, “Enhanced deep residual networks for single image super-resolution,”
+in Proc. IEEE Conf. Comput. Vis. Pattern Recognit. Workshops (CVPRW) , 2017, pp. 136–144.
+
+ [8] 
+ 
+Y. Zhang, Y. Tian, Y. Kong, B. Zhong, and Y. Fu, “Residual dense network for image super-resolution,”
+in Proc. IEEE Conf. Comput. Vis. Pattern Recognit. (CVPR) , 2018, pp. 2472–2481.
+
+ [9] 
+ 
+W.-S. Lai, J.-B. Huang, N. Ahuja, and M.-H. Yang, “Deep Laplacian pyramid networks for fast and accurate super-resolution,”
+in Proc. IEEE Conf. Comput. Vis. Pattern Recognit. (CVPR) , 2017, pp. 624–632.
+
+ [10] 
+ 
+J. Kim, J. K. Lee, and K. M. Lee, “Accurate image super-resolution using very deep convolutional networks,”
+in Proc. IEEE Conf. Comput. Vis. Pattern Recognit. (CVPR) , 2016, pp. 1646–1654.
+
+ [11] 
+ 
+Y. Zhang, K. Li, K. Li, L. Wang, B. Zhong, and Y. Fu, “Image super-resolution using very deep residual channel attention networks,”
+in Proc. Eur. Conf. Comput. Vis. (ECCV) , 2018, pp. 286–301.
+
+ [12] 
+ 
+T. Dai, J. Cai, Y. Zhang, S.-T. Xia, and L. Zhang, “Second-order attention network for single image super-resolution,”
+in Proc. IEEE/CVF Conf. Comput. Vis. Pattern Recognit. (CVPR) , 2019, pp. 11065–11074.
+
+ [13] 
+ 
+S. Lei and Z. Shi, “Hybrid-scale self-similarity exploitation for remote sensing image super-resolution,”
+ IEEE Trans. Geosci. Remote Sens. , vol. 60, pp. 1–10, 2022, doi: 10.1109/TGRS.2021.3069889.
+
+ [14] 
+ 
+Y. Mei, Y. Fan, and Y. Zhou, “Image super-resolution with non-local sparse attention,”
+in Proc. IEEE/CVF Conf. Comput. Vis. Pattern Recognit. (CVPR) , 2021, pp. 3517–3526.
+
+ [15] 
+ 
+X. Wang, R. Girshick, A. Gupta, and K. He, “Non-local neural networks,”
+in Proc. IEEE Conf. Comput. Vis. Pattern Recognit. (CVPR) , 2018, pp. 7794–7803.
+
+ [16] 
+ 
+A. Vaswani et al. , “Attention is all you need,”
+in Adv. Neural Inf. Process. Syst. (NeurIPS) , vol. 30, 2017, pp. 5998–6008.
+
+ [17] 
+ 
+Z. Liu, Y. Lin, Y. Cao, H. Hu, Y. Wei, Z. Zhang, S. Lin, and B. Guo, “Swin Transformer: Hierarchical vision Transformer using shifted windows,”
+in Proc. IEEE/CVF Int. Conf. Comput. Vis. (ICCV) , 2021, pp. 10012–10022.
+
+ [18] 
+ 
+S. W. Zamir, A. Arora, S. H. Khan, M. Hayat, F. S. Khan, and M.-H. Yang, “Restormer: Efficient Transformer for high-resolution image restoration,”
+in Proc. IEEE/CVF Conf. Comput. Vis. Pattern Recognit. (CVPR) , 2022, pp. 5728–5739.
+
+ [19] 
+ 
+J. Liang, J. Cao, G. Sun, K. Zhang, L. Van Gool, and R. Timofte, “SwinIR: Image restoration using Swin Transformer,”
+in Proc. IEEE/CVF Int. Conf. Comput. Vis. Workshops (ICCVW) , 2021, pp. 1833–1844.
+
+ [20] 
+ 
+S. Lei, Z. Shi, and W. Mo, “Transformer-based multistage enhancement for remote sensing image super-resolution,”
+ IEEE Trans. Geosci. Remote Sens. , vol. 60, pp. 1–11, 2022, doi: 10.1109/TGRS.2021.3136190.
+
+ [21] 
+ 
+X. Chen, X. Wang, J. Zhou, Y. Qiao, and C. Dong, “Activating more pixels in image super-resolution Transformer,”
+in Proc. IEEE/CVF Conf. Comput. Vis. Pattern Recognit. (CVPR) , 2023, pp. 22367–22377.
+
+ [22] 
+ 
+J.-F. Hu, T.-Z. Huang, L.-J. Deng, H.-X. Dou, D. Hong, and G. Vivone, “Fusformer: A Transformer-based fusion network for hyperspectral image super-resolution,”
+ IEEE Geosci. Remote Sens. Lett. , vol. 19, pp. 1–5, 2022, doi: 10.1109/LGRS.2022.3194257.
+
+ [23] 
+ 
+A. Gu and T. Dao, “Mamba: Linear-time sequence modeling with selective state spaces,”
+in Proc. 1st Conf. Lang. Model. (COLM) , 2024.
+
+ [24] 
+ 
+L. Zhu, B. Liao, Q. Zhang, X. Wang, W. Liu, and X. Wang, “Vision Mamba: Efficient visual representation learning with bidirectional state space model,”
+in Proc. 41st Int. Conf. Mach. Learn. (ICML) , 2024, pp. 62429–62442.
+
+ [25] 
+ 
+K. Jiang, M. Yang, Y. Xiao, J. Wu, G. Wang, X. Feng, and J. Jiang, “Rep-Mamba: Re-parameterization in vision Mamba for lightweight remote sensing image super-resolution,”
+ IEEE Trans. Geosci. Remote Sens. , vol. 63, pp. 1–12, 2025, doi: 10.1109/TGRS.2025.3597745.
+
+ [26] 
+ 
+C. Li, Z. Pan, and D. Hong, “Dynamic state-control modeling for generalized remote sensing image super-resolution,”
+in Proc. IEEE/CVF Conf. Comput. Vis. Pattern Recognit. Workshops (CVPRW) , 2025, pp. 3101–3109, doi: 10.1109/CVPRW67362.2025.00290.
+
+ [27] 
+ 
+T. Wu, R. Zhao, M. Lv, Z. Jia, L. Li, M. Liu, X. Zhao, H. Ma, and G. Vivone, “Efficient Mamba-attention network for remote sensing image super-resolution,”
+ IEEE Trans. Geosci. Remote Sens. , vol. 63, pp. 1–14, 2025, doi: 10.1109/TGRS.2025.3578879.
+
+ [28] 
+ 
+Y. Xiao, Q. Yuan, K. Jiang, et al. , “Frequency-assisted Mamba for remote sensing image super-resolution,”
+ IEEE Trans. Multimedia , vol. 27, pp. 1783–1796, 2025, doi: 10.1109/TMM.2024.3521798.
+
+ [29] 
+ 
+M. Li, C. Xiong, Z. Gao, and J. Ma, “HAM: Hierarchical attention Mamba with spatial-frequency fusion for remote sensing image super-resolution,”
+ IEEE Trans. Geosci. Remote Sens. , vol. 63, pp. 1–14, 2025, doi: 10.1109/TGRS.2025.3605861.
+
+ [30] 
+ 
+X. Lei, W. Zhang, and W. Cao, “DVMSR: Distillated vision Mamba for efficient super-resolution,”
+in Proc. IEEE/CVF Conf. Comput. Vis. Pattern Recognit. Workshops (CVPRW) , 2024, pp. 6536–6546.
+
+ [31] 
+ 
+X. Wang, J. Li, J. Li, S. Wang, L. Yan, and Y. Xu, “A collaborative network of Mamba and CNN for lightweight image super-resolution,”
+ IEEE Trans. Consum. Electron. , vol. 71, no. 2, pp. 3591–3604, 2025, doi: 10.1109/TCE.2025.3572477.
+
+ [32] 
+ 
+Y. Huang, T. Miyazaki, X. Liu, and S. Omachi, “GPSMamba: A global phase and spectral prompt-guided Mamba for infrared image super-resolution,”
+ arXiv preprint arXiv:2507.18998 , 2025, doi: 10.48550/arXiv.2507.18998.
+
+ [33] 
+ 
+Y. Huang, T. Miyazaki, X. Liu, and S. Omachi, “IRSRMamba: Infrared image super-resolution via Mamba-based wavelet transform feature modulation model,”
+ IEEE Trans. Geosci. Remote Sens. , vol. 63, pp. 1–16, 2025, doi: 10.1109/TGRS.2025.3584385.
+
+ [34] 
+ 
+X. Li, Z. Wang, Y. Zou, Z. Chen, J. Ma, Z. Jiang, L. Ma, and J. Liu, “DifIISR: A diffusion model with gradient guidance for infrared image super-resolution,”
+in Proc. IEEE/CVF Conf. Comput. Vis. Pattern Recognit. (CVPR) , 2025, pp. 7534–7544.
+
+ [35] 
+ 
+Y. Huang, X. Zhi, W. Chen, X. Liang, Z. Wang, and W. Zhang, “DCUNet: Deformable convolutional UNet for multi-frame infrared small target super-resolution,”
+in Proc. IEEE Int. Conf. Signal Image Data Process. (ICSIDP) , 2024, pp. 1–7, doi: 10.1109/ICSIDP62679.2024.10867882.
+
+ [36] 
+ 
+J. Caballero, C. Ledig, A. Aitken, A. Acosta, J. Totz, Z. Wang, and W. Shi, “Real-time video super-resolution with spatio-temporal networks and motion compensation,”
+in Proc. IEEE Conf. Comput. Vis. Pattern Recognit. (CVPR) , 2017, pp. 4778–4787.
+
+ [37] 
+ 
+Y. Xiao, X. Su, Q. Yuan, D. Liu, H. Shen, and L. Zhang, “Satellite video super-resolution via multiscale deformable convolution alignment and temporal grouping projection,”
+ IEEE Trans. Geosci. Remote Sens. , vol. 60, pp. 1–19, 2022, doi: 10.1109/TGRS.2021.3107352.
+
+ [38] 
+ 
+D. P. Tran, D. D. Hung, and D. Kim, “VSRM: A robust Mamba-based framework for video super-resolution,”
+in Proc. IEEE/CVF Int. Conf. Comput. Vis. (ICCV) , 2025, pp. 14711–14721.
+
+ [39] 
+ 
+G. Bhat, M. Danelljan, F. Yu, L. Van Gool, and R. Timofte, “Deep reparametrization of multi-frame super-resolution and denoising,”
+in Proc. IEEE/CVF Int. Conf. Comput. Vis. (ICCV) , 2021, pp. 2460–2470.
+
+ [40] 
+ 
+X. Di, L. Peng, P. Xia, et al. , “QMambaBSR: Burst image super-resolution with query state space model,”
+in Proc. IEEE/CVF Conf. Comput. Vis. Pattern Recognit. (CVPR) , 2025, pp. 23080–23090.
+
+ [41] 
+ 
+Z. Xiao and X. Wang, “Event-based video super-resolution via state space models,”
+in Proc. IEEE/CVF Conf. Comput. Vis. Pattern Recognit. (CVPR) , 2025, pp. 12564–12574.
+
+ [42] 
+ 
+Q. Fang, H. Wang, G.-H. He, Z.-Y. Zhou, F.-W. Cao, and Q.-H. Song, “Research on spaceborne full-waveform LiDAR filtering processing technology based on bat algorithm Gaussian sharpening,”
+ J. Infrared Millim. Waves , vol. 44, no. 6, pp. 856–864, 2025, doi: 10.11972/j.issn.1001-9014.2025.06.004.
+
+ [43] 
+ 
+J. Yang, Y. Ma, W.-B. Yu, S.-H. Li, J. Yu, Q.-Y. Wang, and S. Li, “Noise model of oceanic spaceborne photon counting LiDAR,”
+ J. Infrared Millim. Waves , vol. 43, no. 3, pp. 393–398, 2024, doi: 10.11972/j.issn.1001-9014.2024.03.013.
+
+ [44] 
+ 
+C.-T. Tan, W.-B. Yu, Y.-Y. Xiang, S.-H. Li, J. Yu, Q.-Y. Wang, and S. Li, “Real-time denoising method for spaceborne photon counting laser ranging radar,”
+ J. Infrared Millim. Waves , vol. 43, no. 2, pp. 241–253, 2024, doi: 10.11972/j.issn.1001-9014.2024.02.014.
+
+ [45] 
+ 
+J. Li, X. Shi, B. Liu, R. Wang, Z. Wang, M. Wang, G. Lv, L. Yuan, Q. Ma, G. Yuan, et al. , “High-fidelity in-situ spectroscopy under thermal extremes enables cross-scale validation of the Chang’e-6 landing area,”
+ PhotoniX , vol. 7, no. 1, p. 44, 2026, doi: 10.1186/s43074-026-00257-z.
+
+ [46] 
+ 
+M. Li, C. Fu, Z. Lu, Z. Zhang, H. Zuo, and L. Yao, “AnyTSR++: Prompt-oriented any-scale thermal super-resolution for unmanned aerial vehicle,”
+ IEEE Trans. Geosci. Remote Sens. , vol. 63, pp. 1–15, 2025, doi: 10.1109/TGRS.2025.3630597.
+
+ [47] 
+ 
+R. Li, Y. Zeng, W. Sheng, et al. , “Infrared video satellite aerial moving target detection dataset,” V2, Science Data Bank, 2025. [Online]. Available: https://cstr.cn/31253.11.sciencedb.j00240.00077 . Accessed: Jul. 23, 2026. CSTR: 31253.11.sciencedb.j00240.00077.
+
+ [48] 
+ 
+X. Sun, L. Guo, W. Zhang, et al. , “A dataset of semi-synthetic detection for small infrared moving targets under complex backgrounds,” V3, Science Data Bank, 2024. [Online]. Available: https://cstr.cn/31253.11.sciencedb.j00001.00231 . Accessed: Jul. 23, 2026. CSTR: 31253.11.sciencedb.j00001.00231.
+
+ [49] 
+ 
+J. Su, M. Ahmed, Y. Lu, S. Pan, W. Bo, and Y. Liu, “RoFormer: Enhanced Transformer with rotary position embedding,”
+ Neurocomputing , vol. 568, Art. no. 127063, 2024.
+
+ [50] 
+ 
+A. Lahoti, K. Y. Li, B. Chen, et al. , “Mamba-3: Improved sequence modeling using state space principles,”
+ arXiv preprint arXiv:2603.15569 , 2026.
+
+ [51] 
+ 
+T. Dao and A. Gu, “Transformers are SSMs: Generalized models and efficient algorithms through structured state space duality,”
+in Proc. 41st Int. Conf. Mach. Learn. (ICML) , 2024, pp. 10041–10071.
+
+ [52] 
+ 
+P. Charbonnier, L. Blanc-Féraud, G. Aubert, et al. , “Deterministic edge-preserving regularization in computed imaging,”
+ IEEE Trans. Image Process. , vol. 6, no. 2, pp. 298–311, 1997.
+
+ Jie Deng 
+Jie Deng received the B.Eng. degree from Hunan University of Technology, Zhuzhou, China. He is currently pursuing the M.Eng. degree with the Hangzhou Institute for Advanced Study, Hangzhou, China, and the University of Chinese Academy of Sciences, Beijing, China. His current research interests include computational imaging, artificial intelligence-based imaging, infrared multi-frame super-resolution, and remote sensing image preprocessing. 
+
+ Heyang Wang 
+Heyang Wang (Student Member, IEEE) received the B.Sc. degree in mathematics and applied mathematics from Harbin Normal University, Harbin, China, in 2022. She is currently pursuing the M.Sc. degree in physical electronics with the Hangzhou Institute for Advanced Study, Hangzhou, China, and the University of Chinese Academy of Sciences, Beijing, China. Her current research interests include computer vision and remote sensing image processing. 
+
+ Changxin Wang 
+Changxin Wang received the B.Eng. degree from China University of Mining and Technology, Xuzhou, China. He is currently pursuing the M.Eng. degree with the Hangzhou Institute for Advanced Study, Hangzhou, China, and the University of Chinese Academy of Sciences, Beijing, China. His current research interests include visual SLAM, LiDAR SLAM, multi-sensor fusion, and robust 3-D perception and localization in degraded environments. 
+
+ Junkai Shen 
+Junkai Shen is currently pursuing the M.Eng. degree in physical electronics with the Hangzhou Institute for Advanced Study, Hangzhou, China, and the University of Chinese Academy of Sciences, Beijing, China. His current research interests include visual SLAM and LiDAR SLAM. 
+
+ Hongyi Chen 
+Hongyi Chen received the Ph.D. degree from the School of Engineering, University of Edinburgh, Edinburgh, U.K., in 2021. He is currently a Postdoctoral Researcher with the Hangzhou Institute for Advanced Study, Hangzhou, China, and the University of Chinese Academy of Sciences, Beijing, China. His research interests include computer vision, remote sensing image processing, physics-informed machine learning, and edge computing. 
+
+ Zhiping He 
+Zhiping He received the M.S. degree in optoelectronic engineering from Zhejiang University, Zhejiang, China, in 2003, and the Ph.D. degree from the Shanghai Institute of Technical Physics, Chinese Academy of Sciences, Shanghai, China, in 2009. He has long been engaged in research on space optics and optoelectronic technology, with a focus on key technologies for space spectral sensing and active-passive composite optical systems. The instruments developed by his team have been successfully applied to China’s Chang’e-3, Chang’e-4, Chang’e-5, and Mars exploration projects. 
+
+ Hongxing Qi 
+Hongxing Qi received the Ph.D. degree in physical electronics from the Shanghai Institute of Technical Physics, Chinese Academy of Sciences, Shanghai, China, in 2007. He is currently a Researcher and Doctoral Supervisor with the Hangzhou Institute for Advanced Study, Hangzhou, China, and the University of Chinese Academy of Sciences, Beijing, China. His current research interests include optoelectronic technology and devices. 
+
+ Xudong Zhang 
+Xudong Zhang received the Ph.D. degree from the Shanghai Institute of Technical Physics, Chinese Academy of Sciences, Shanghai, China, in 2019. He is currently a Distinguished Research Fellow with the Hangzhou Institute for Advanced Study, Hangzhou, China, and the University of Chinese Academy of Sciences, Beijing, China. His research interests include spatial intelligence, 3-D reconstruction, and artificial intelligence algorithms for edge devices, such as robots, satellite payloads, and unmanned aerial vehicles. 
+
+ Experimental support, please
+ view the build logs 
+ for errors. Generated by
+
+ L
+ A 
+ T
+ E 
+ 
+ xml 
+ 
+ .
+
+ Instructions for reporting errors 
+ We are continuing to improve HTML versions of papers, and your feedback helps enhance accessibility and mobile
+ support. To report errors in the HTML that will help us improve conversion and rendering, choose any of the
+ methods listed below: 
+ 
+ Click the "Report Issue" ( 
+ 
+ ) button, located in the page header. 
+ 
+ Tip: You can select the relevant text first, to include it in your report. 
+ Our team has already identified the following issues . We appreciate your time reviewing and reporting rendering errors we
+ may not have found yet. Your efforts will help us improve the HTML versions for all readers, because disability
+ should not be a barrier to accessing research. Thank you for your continued support in championing open access for
+ all. 
+ Have a free development cycle? Help support accessibility at arXiv! Our collaborators at LaTeXML maintain a list of packages that need conversion , and welcome developer contributions . 
+
+ We gratefully acknowledge support from
+ our major funders ,
+ member institutions , ,
+ and all contributors.
+
+ About 
+ &middot; 
+ Help 
+ &middot; 
+ Contact 
+ &middot; 
+ Subscribe 
+ &middot; 
+ Copyright 
+ &middot; 
+ Privacy 
+ &middot; 
+ Accessibility 
+ &middot; 
+ Operational Status (opens in new tab) 
+
+ Major funding support from 
+

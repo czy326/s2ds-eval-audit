@@ -1,0 +1,1308 @@
+Academic Editor: Le Sun
+Received: 9 April 2026
+Revised: 29 May 2026
+Accepted: 6 June 2026
+Published: 9 June 2026
+Copyright: © 2026 by the authors.
+Licensee MDPI, Basel, Switzerland.
+This article is an open access article
+distributed under the terms and
+conditions of the Creative Commons
+Attribution (CC BY) license.
+Article
+DFSMamba: A Spatial–Frequency Collaborative Modeling
+Framework for Remote Sensing Image Super-Resolution
+Jie Yu 1,2
+ , Hui Li 3
+ , Xiangyong Zheng 4, Cheng Zhong 1,2 and Qiao Sun 5,*
+1 National Observation and Research Station of Geohazards, China University of Geosciences,
+Wuhan 430074, China; jieyu@cug.edu.cn (J.Y.); zhonglxm@cug.edu.cn (C.Z.)
+2 Three Gorges Research Center for Geo-Hazard, Ministry of Education, China University of Geosciences,
+Wuhan 430074, China
+3 School of Earth Sciences, China University of Geosciences, Wuhan 430074, China; rslihui@cug.edu.cn
+4 The College of Life and Environmental Science, Wenzhou University, Wenzhou 325035, China;
+x.zheng@wzu.edu.cn
+5 School of Electronic Engineering, Naval University of Engineering, Wuhan 430033, China
+* Correspondence: sunqiao_zju@zju.edu.cn
+Highlights
+What are the main findings?
+• A spatial–frequency synergistic super-resolution network, DFSMamba, is proposed
+for remote sensing images, combining DFTM and ASSMamba.
+• DFSMamba achieves SOTA performance with fewer parameters and lower computa-
+tion, excelling in edge and texture detail reconstruction.
+What are the implications of the main findings?
+• The method provides a new solution to insufficient global receptive fields and weak
+high-frequency recovery in RS image SR.
+• DFTM and ASSMamba can be used as plug-and-play modules for other remote sensing
+image processing tasks.
+Abstract
+Existing single-image super-resolution methods for remote sensing images suffer from
+insufficient global receptive fields, weak high-frequency texture recovery, and excessive
+computational complexity. To address these issues, this paper proposes DFSMamba, a novel
+spatial–frequency collaborative modeling framework. First, Semantic Continuous-Sparse
+Attention enhances semantic perception through dynamic chunking and sparse connections
+while maintaining linear complexity, effectively alleviating the semantic truncation problem
+caused by fixed window partitioning. Second, the Adaptive State-Space Module employs
+parallel forward and backward state-space model branches to achieve bidirectional long-
+range dependency modeling and introduces an activation-guided feature fusion mechanism
+to adaptively enhance semantically relevant regions. Third, the Discrete Fourier Transform
+Module maps images to the frequency domain, establishes a global lossless receptive field,
+and explicitly enhances high-frequency details, compensating for the insufficient utilization
+of frequency-domain information in pure spatial-domain methods. Experiments on five
+public datasets demonstrate that DFSMamba outperforms mainstream CNN, Transformer,
+and Mamba-based methods across ×2 to×4 scales. On the AID ×3 task, it achieves a
+PSNR of 31.48 dB, exceeding MambaIRv2 by 1.07 dB. Ablation studies verify the positive
+synergistic effect of the three modules, with the full configuration achieving a PSNR
+improvement of 0.85 dB over the single-module setup. Fine-grained category, multi-scale
+Remote Sens. 2026, 18, 1910 https://doi.org/10.3390/rs18121910
+Remote Sens. 2026, 18, 1910 2 of 26
+input, and loss function experiments further confirm its robustness and generalization
+capability, particularly in edge and texture detail reconstruction.
+Keywords: remote sensing; super-resolution; mamba; discrete fourier transform; semantic
+attention
+1. Introduction
+Remote sensing imagery serves as a critical data source for environmental surveys,
+disaster monitoring, scene analysis, and target detection. However, due to limitations in sensor
+hardware design, imaging conditions, and cost, the spatial resolution of remote sensing images
+often fails to meet the demands of fine-grained applications [1–4]. Upgrading satellite sensor
+hardware is prohibitively expensive and technically challenging, whereas super-resolution
+reconstruction technology enhances the edge and texture details of ground objects using low-
+cost computational methods. In doing so, it drives remote sensing information services toward
+more economical, intelligent, and widely accessible development [5–7]. Super-resolution
+techniques are primarily divided into two categories: Multi-Image Super-Resolution (MISR)
+and Single-Image Super-Resolution (SISR) [8]. MISR reconstructs high-resolution images by
+fusing multiple low-resolution images of the same scene captured from different viewpoints
+or at different times [9], while SISR relies solely on a single input image, offering greater
+deployment feasibility [10]. However, it is inherently a more challenging ill-posed inverse
+problem, requiring the reconstruction of missing high-frequency details using only the limited
+prior information available from a single image.
+SRCNN [11], proposed by Dong et al., applied a three-layer convolutional neural
+network to super-resolution tasks, demonstrating the effectiveness of end-to-end learning.
+Subsequently, VDSR [12] extended network depth to 20 layers by introducing residual
+learning and a very high learning rate, while RCAN further proposed a channel atten-
+tion mechanism, achieving state-of-the-art performance on natural image super-resolution
+tasks at the time. In the field of remote sensing image super-resolution, networks such
+as LGCNet [13], MSF [14], MRNN [15], and WTCRR [16] are all built upon residual net-
+works, effectively addressing vanishing and exploding gradient problems through residual
+learning mechanisms. Methods based on the EDSR [ 17] architecture, such as S2PS [ 18],
+DGANet-ISE [19], and DRSEN [20], have significantly enhanced detail recovery and visual
+quality. CNN-based methods perform robustly in terms of parameter efficiency and local
+detail recovery. However, the inherent limited receptive field of CNNs makes it difficult for
+them to effectively capture global contextual information, which is particularly problematic
+for remote sensing images that contain complex scenes and large-scale correlations among
+ground objects.
+The introduction of generative adversarial networks provided a new paradigm for
+super-resolution. SRGAN and ESRGAN generate realistic textures through perceptual
+loss and adversarial loss, while MSAGAN and MA-GAN have demonstrated promising
+performance in the remote sensing domain [ 21,22]. GAN-based methods offer advan-
+tages in perceptual quality but may introduce artifacts and spectral distortions. Diffusion
+models such as DDPM surpass GANs in image generation quality; however, their slow
+inference speed makes it difficult to meet real-time processing requirements. The Trans-
+former architecture has rapidly gained attention due to its strength in modeling long-range
+dependencies through the self-attention mechanism. SwinIR [23] achieves a global recep-
+tive field while maintaining computational efficiency via the shifted window attention
+mechanism. In the field of remote sensing super-resolution, cutting-edge architectures such
+as CTNet [24], MHAN [25], HSENet [26], and ESTNet [27] have emerged successively, with
+https://doi.org/10.3390/rs18121910
+Remote Sens. 2026, 18, 1910 3 of 26
+HAUNet [28] achieving outstanding performance on four public remote sensing datasets.
+However, the computational complexity of Transformer’s self-attention mechanism grows
+quadratically with image size, introducing significant performance bottlenecks and memory
+consumption issues when processing high-resolution remote sensing images.
+In 2024, MambaIR [29] by Guo et al. demonstrated Mamba’s potential as an image
+restoration backbone. Vision Mamba [ 30] and VMamba [ 31] further optimized the uni-
+directional scanning mechanism, making them particularly suitable for remote sensing
+image processing. Methods such as PanMamba [32], RS-Mamba [33], and Hi-Mamba [34]
+have since explored Mamba’s application in the field of remote sensing super-resolution.
+However, existing Mamba-based methods primarily focus on enhancing spatial-domain
+features and generally overlook the critical role of frequency-domain information, which
+limits their ability to recover high-frequency details such as edges and textures. Since 2025,
+HIMOSA [35] has proposed an efficient super-resolution framework based on a hierarchical
+mixture of sparse attention, achieving fast inference while maintaining reconstruction per-
+formance; FMSR [36] has introduced a feature-grouped multi-scale network that reduces
+parameter count through grouped convolution and incorporates an edge enhancement
+module to improve visual quality.
+Despite the significant progress made in remote sensing image super-resolution recon-
+struction, current research still faces the following key challenges. The first is the balance
+between global and local information. CNNs have limited receptive fields and struggle to
+capture global context [37], while Transformers can model long-range dependencies but
+suffer from excessively high computational complexity [38]. Identifying how to achieve ef-
+fective global–local information fusion while maintaining linear computational complexity
+remains a core challenge. The second is insufficient recovery of high-frequency details [39].
+Existing methods mainly focus on spatial-domain feature enhancement and underutilize
+frequency-domain information [40], resulting in limited recovery of high-frequency details
+such as edges and textures, which is particularly prominent in small-target reconstruction.
+To address the above challenges, this paper proposes DFSMamba, a discrete Fourier
+transform super-resolution reconstruction neural network based on the Mamba architecture.
+We design a plug-and-play Discrete Fourier Transform Mechanism (DFTM) and Adaptive
+State-Space Mamba (ASSMamba) modules to synergistically integrate the spatial–frequency
+dual domains, efficiently fusing local and global information for collaborative modeling. A dis-
+crete Fourier dynamic activation weighting mechanism is introduced to guide low-frequency
+components in representing overall structure and contours while allowing high-frequency
+components to precisely capture edge and texture details, thereby achieving semantically
+adaptive global context capture with linear computational complexity . Experimental results
+on five public remote sensing datasets—WHU-RS19 [41], DOTA [42], RSSCN7 [43], AID [44],
+and NWPU VHR-10 [45]—demonstrate that DFSMamba outperforms existing state-of-the-art
+methods in super-resolution reconstruction quality . Our study provides a novel solution for
+remote sensing image super-resolution reconstruction.
+2. Methodology
+2.1. The Framework of the Proposed Model
+In this study, we propose DFSMamba, a novel network that integrates spatial- and
+frequency-domain information to improve the quality of remote sensing image super-
+resolution (Figure 1). First, this study adopts MambaIRv2 [46] as the backbone architecture,
+leveraging the SS2D mechanism to efficiently capture global spatial correlations among
+ground objects, thereby alleviating issues related to discontinuous local textures while
+avoiding the inherent limitations of causal modeling in Mamba. The core advantage
+of the SS2D mechanism lies in its conversion of three-dimensional image data into two-
+https://doi.org/10.3390/rs18121910
+Remote Sens. 2026, 18, 1910 4 of 26
+dimensional sequences, which reduces computational complexity, leading to improved
+processing speed and more accurate detail preservation.
+Figure 1. Framework of the proposed DFSMamba for remote sensing image super-resolution.
+Second, this study introduces the DFTM to integrate frequency-domain analysis into
+the Mamba architecture, addressing persistent issues such as limited receptive fields and
+high color reconstruction errors. This module performs frequency-domain decoupling to
+explicitly enhance high-frequency components while preserving low-frequency stability.
+This process aids in restoring large-scale feature contours, thereby significantly advancing
+remote sensing image super-resolution. Furthermore, through integration with the Fast
+Fourier Transform, the module’s theoretical complexity is reduced from O(n2) to O(n log n),
+ensuring its efficiency in large-scale SISR applications. Unlike FMSR [36], which primarily
+introduces FFT-derived global frequency statistics to spatial features as an auxiliary comple-
+ment, the DFTM explicitly separates amplitude and phase components, performs adaptive
+spectral–spatial modeling on both, and reconstructs an optimized representation via the
+Inverse Discrete Fourier Transform (IDFT). Therefore, the DFTM functions as a closed-loop
+spatial–frequency learning unit that is tightly coupled with the Mamba backbone, which
+is crucial for remote sensing SISR tasks that require simultaneous recovery of geometric
+structure and high-frequency textures.
+Third, the original window-based multi-head self-attention in MambaIRv2 [ 46] is
+replaced by Semantic Continuous-Sparse Attention (SCSA) [47] to reduce the structural
+discontinuity caused by rigid window partitioning. In this paper, SCSA does not rely on
+external semantic segmentation labels or semantic priors. Instead, it is reformulated as
+a feature-similarity-driven and label-free semantic grouping mechanism that adaptively
+aggregates structurally correlated tokens according to feature statistics and contextual
+similarity. This design preserves the continuity of ground objects such as roads, buildings,
+rivers, and vegetation while avoiding the dependency on supervised semantic annotations.
+Additionally, we design ASSMamba to achieve joint global and semantic modeling
+while maintaining linear complexity. By combining ASSMamba with the DFTM, this
+module further integrates the technical advantages of semantic global query capability and
+frequency-domain global filtering.
+https://doi.org/10.3390/rs18121910
+Remote Sens. 2026, 18, 1910 5 of 26
+2.2. Discrete Fourier Transform Mechanism
+Remote sensing images contain both global structures, such as coastlines, road net-
+works, and building layouts, and high-frequency details, such as roof edges, object bound-
+aries, and texture variations. Spatial-domain modeling alone may not fully recover such
+information, especially for large upscaling SISR. The DFTM provides a complementary
+spectral representation in which global and detailed components can be separately em-
+phasized and then reconstructed back into the spatial domain. Figure 2 illustrates the
+frequency-domain characteristics used in the DFTM, including the amplitude spectrum,
+phase spectrum, and filtering results, which help explain how low-frequency structures
+and high-frequency details contribute differently to remote sensing image super-resolution.
+Figure 2. Illustration of the DFTM: (a) original image; (b) frequency spectrum; (c) phase spectrum;
+(d) high-pass filtering; (e) low-pass filtering; (f) band-pass filtering.
+Given an input feature tensor, the DFTM first applies normalization for numerical
+stability and then maps the feature into the frequency domain. The amplitude spectrum
+mainly reflects the strength of different frequency components, while the phase spectrum
+preserves structural and positional information that is essential for faithful spatial recon-
+struction. Modeling both components is necessary because enhancing amplitude alone may
+sharpen textures but can also introduce artifacts, whereas preserving phase information
+helps maintain object geometry and edge localization.
+XNorm = LayerNorm (Xin) (1)
+In the frequency-domain branch, XNorm is transformed into the frequency domain via
+DFT, decomposing into frequency spectrum and phase spectrum:
+ˆX f req = DFT (XNorm ) = ˆXamp + j ˆXphase (2)
+Subsequently, both amplitude and phase spectra are fed into ASSMamba to model
+global dependencies among frequency responses. Although frequency-domain coefficients
+do not preserve local pixel adjacency in the same way as spatial features, each coefficient
+is globally coupled with the entire spatial feature map. Therefore, sequence modeling in
+the spectral domain captures correlations among global frequency patterns rather than
+local neighborhoods. The optimized amplitude and phase components are then recom-
+bined through IDFT, so the learned spectral modulation is explicitly projected back to the
+spatial domain. Specifically, ASSMamba does not treat adjacent frequency coefficients as
+adjacent pixels. Instead, it regards the flattened spectral representation as a sequence of
+globally coupled frequency responses. The forward and backward SSM branches capture
+complementary correlations among low-, middle-, and high-frequency components, while
+activation-guided fusion adaptively controls the strength of spectral enhancement. This
+mechanism provides an explainable path from spectral weighting to spatial reconstruc-
+tion: the learned spectral responses modify amplitude and phase, IDFT maps them back
+to spatial features, and the residual spatial branch constrains the final output to remain
+structurally consistent.
+https://doi.org/10.3390/rs18121910
+Remote Sens. 2026, 18, 1910 6 of 26
+ˆXopt
+amp = ASS Mamba
+  ˆXamp
+
+(3)
+ˆXopt
+phase = ASS Mamba
+
+ˆXphase
+
+(4)
+The enhanced spectra are reconstructed to the spatial domain via IDFT:
+X f req−spatial = IDFT
+
+ˆXopt
+amp + j ˆXopt
+phase
+
+(5)
+In the spatial path, normalized features are fed into Spatial Mamba to capture long-
+range spatial context:
+Xspatial = Spatial Mamba (XNorm ) (6)
+Finally, X f req−spatial and Xspatial are concatenated and fused via a 1× 1 convolution:
+Xout = Conv 1×1
+
+Concat
+
+X f req−spatial , Xspatial
+
+(7)
+This design establishes a global receptive field through frequency-domain coefficients
+and enables explicit spectral decoupling. Low-frequency components mainly describe
+macroscopic contours and smooth regions, whereas high-frequency components corre-
+spond to edges, textures, and possible noise. To avoid texture distortion, the DFTM does
+not indiscriminately amplify all high-frequency responses. Instead, the activation-guided
+modeling in ASSMamba adaptively adjusts spectral responses according to their rele-
+vance to the reconstructed structure. In practice, this mechanism helps recover building
+boundaries, road lines, and object edges while reducing the risk of amplifying meaningless
+high-frequency noise.
+2.3. Semantic Continuous-Sparse Attention
+The perceptual scope of Mamba’s window-based multi-head self-attention is con-
+strained by predefined rule-based windows, which not only hinders its ability to capture
+long-range dependencies but also lacks adaptability to image content during window
+partitioning. In this study, we propose incorporating SCSA (Figure 3) into the DFSMamba
+model, thereby reducing the computational complexity of traditional self-attention from
+quadratic to near-linear with respect to sequence length while preserving semantic integrity,
+enabling efficient processing of long sequences. The SCSA mechanism was originally
+proposed for semantic style transfer, where semantic priors are introduced to maintain
+region consistency. However, in the proposed DFSMamba framework, no external semantic
+segmentation maps or semantic labels are used during either training or inference. Instead,
+SCSA is reformulated as a label-free semantic continuity mechanism that estimates implicit
+semantic relations directly from feature statistics, contextual similarity, and sparse token
+interactions. Therefore, the term “semantic” in this work refers to feature-level semantic
+consistency learned from the LR–HR reconstruction objective rather than supervised seman-
+tic annotations. Different from its original style-transfer application, SCSA in DFSMamba
+functions as a semantic-aware feature enhancement module for high-fidelity reconstruc-
+tion. It converts fixed position-based local attention into content-adaptive aggregation,
+thereby improving the continuity of ground-object structures and the recovery of fine
+textures. This clarifies that the proposed model does not require semantic labels or extra
+segmentation networks.
+The Semantic Continuous Attention (SCA) mechanism is a core module of the SCSA
+framework. It is designed to address two issues in attention-based arbitrary style transfer
+methods: semantic region style discontinuity and style inconsistency within the same semantic
+https://doi.org/10.3390/rs18121910
+Remote Sens. 2026, 18, 1910 7 of 26
+region. Its main idea is to eliminate interference caused by image structure and focus solely on
+transferring the holistic style features of semantic regions, ensuring that adjacent parts within
+the same semantic region in the generated image exhibit coherent style.
+Figure 3. Architecture of the semantic attention mechanism. Here,“(*)” denotes the input feature
+tensor of ( fo), rather than an additional learnable parameter.
+In implementation, SCA uses feature embeddings extracted from the content image as
+queries (Q1), while structurally correlated feature embeddings from the reference feature
+space are used as keys (K 1) and values (V 1). Since these feature embeddings mainly
+encode structural and contextual consistency rather than explicit category labels, tokens
+with similar structural characteristics tend to share similar attention distributions. This
+mechanism enables continuous regions with correlated textures and structures to maintain
+coherent feature aggregation during reconstruction. This fundamentally prevents style
+discontinuities caused by structural differences. SCA further applies a G 1 modulation
+operation to set attention weights between different semantic categories to negative infinity,
+retaining only associations within the same semantic category. As a result, attention is
+confined to the target semantic region. After normalization by the Softmax function, each
+query point evenly attends to all continuous key points within the same semantic region,
+thereby accurately capturing the holistic style features of that region from the style image,
+such as color tone and global texture.
+The Semantic Sparse Attention (SSA) mechanism is another key module within the
+SCSA framework. SSA is primarily designed to address the issue of style texture blurring
+caused by traditional weighted fusion, with the goal of recovering local texture details
+from the style image. It is intended to focus on the most similar feature points within the
+structure of the same semantic region, enabling accurate texture transfer. In implementation,
+SSA employs Semantic Adaptive Instance Normalization (S-AdaIN) to process the encoded
+features of the content image, removing interference from the original color style and
+obtaining purer content structure features. These purified content structure features are
+then used as queries (Q 2), while the encoded features of the style image serve as keys
+(K2) and values (V2). Since the encoded features contain image structural information, the
+initial attention map can capture feature correlations based on local structure. Through
+sparse modulation, SSA retains attention weights only between each query point and the
+most structurally relevant key points within feature-consistent regions while suppressing
+unrelated responses. This mechanism allows each query token to interact only with
+sparse yet highly correlated feature representations, thereby improving texture fidelity and
+preserving local structural details.
+https://doi.org/10.3390/rs18121910
+Remote Sens. 2026, 18, 1910 8 of 26
+2.4. Adaptive Spectral–Spatial Mamba
+ASSMamba unifies spectral awareness and spatial context modeling within a com-
+pact state-space framework. Although bidirectional scanning has been explored in Vision
+Mamba and VMamba, these approaches typically aggregate forward and backward out-
+puts via fixed summation or concatenation. In contrast, ASSMamba leverages activation
+latent vectors to dynamically emphasize relevant semantic and structural features while
+suppressing redundant noise responses. As a result, it offers two key advantages: first,
+linear computational complexity with respect to the flattened sequence length, making
+it suitable for high-resolution remote sensing images; second, content-adaptive global
+modeling, which improves semantic selectivity compared to non-adaptive feature fusion.
+These properties make ASSMamba particularly well suited for complex remote sensing
+scenes characterized by mixed textures and scale variations.
+After input normalization and linear projection, the context-aware feature map is
+flattened into a 1D sequence, x∈ RN×C’
+(N = H× W), and passed through two parallel 1D
+convolutional layers to capture local sequential patterns, yielding forward and backward
+sequential features x f and xb. A key innovation of ASSMamba is the adoption of parallel
+forward and backward state-space model (SSM) branches to enable bidirectional long-range
+dependency modeling:
+
+
+
+h(t)
+f = A f h(t−1)
+f + B f x(t)
+f
+y(t)
+f = C f h(t)
+f
+,
+(
+h(t)
+b = Abh(t+1)
+b + Bbx(t)
+b
+y(t)
+b = Cbh(t)
+b
+(8)
+where A, B and C denote the state transition, input, and output matrices, respectively, and
+h(t) is the hidden state at time step t.
+Unlike unidirectional SSM designs, the backward branch processes the sequence in
+reverse order, enabling the model to access complementary contextual information. The
+activation-guided feature fusion mechanism of ASSMamba then combines the forward and
+backward SSM outputs with a latent activation vector projected from the input feature. This
+vector behaves as a content-dependent gate: in structurally complex regions such as airports,
+dense residential blocks, and storage tanks, it tends to emphasize high-frequency and long-
+range responses; in smoother regions such as grassland, river, or bare land, it suppresses
+redundant oscillations and avoids unnecessary texture hallucination. This adaptive fusion is
+more flexible than fixed addition or concatenation of bidirectional SSM outputs.
+Y =
+
+y f
+K
+yb
+K
+σ(Z) (9)
+where the element-wise multiplication performs content-adaptive modulation and the
+nonlinear activation function constrains the fusion weights. The modulation is applied to
+both spatial- and frequency-domain features. In the frequency branch, the learned activa-
+tion distribution adjusts the amplitude-phase responses before IDFT, so the final spatial
+reconstruction receives enhanced but controlled spectral information. This mapping ex-
+plains why frequency-domain modeling with ASSMamba does not necessarily break spatial
+coherence: spatial structure is restored through phase-preserving inverse transformation
+and residual spatial-path fusion.
+Finally , a linear layer projects the fused features back to the original channel dimension,
+and a residual connection is applied to preserve low-level details and stabilize gradient flow:
+Xout = Linear O(Y) + Xin (10)
+The projection dimension and activation settings are kept consistent across datasets
+and scales to ensure a fair comparison with the backbone and to avoid dataset-specific
+https://doi.org/10.3390/rs18121910
+Remote Sens. 2026, 18, 1910 9 of 26
+tuning. For hyperparameter selection, we keep the projection dimension, SSM state
+dimension, and activation configuration identical across datasets and upscaling factors.
+This strategy ensures that performance differences mainly come from the proposed
+modules rather than from excessive parameter search. A compact sensitivity analysis
+on the projection dimension and activation scaling parameter is included in the ex-
+perimental section to further verify that DFSMamba is not overly sensitive to a single
+hyperparameter choice.
+3. Experiment and Results
+3.1. Experimental Settings
+3.1.1. Datasets
+To comprehensively evaluate the performance of DFSMamba, we conducted experi-
+ments on five representative datasets, namely, WHU-RS19 [41], DOTA [42], RSSCN7 [43],
+AID [44], and NWPU VHR-10 [45]. In the test phase, the original high-resolution images
+served as validation data, while the corresponding low-resolution images were generated
+via bicubic downsampling at factors of 2, 3, and 4. Although bicubic downsampling in-
+evitably removes part of the high-frequency information, this setting adheres to standard
+SISR experimental protocols and ensures fair comparison with existing methods.
+The WHU-RS19 dataset contains 1005 remote sensing images, each with a size of
+600× 600 pixels and a maximum spatial resolution of 0.5 m/pixel. The dataset covers
+19 distinct land cover categories, including airports, bridges, mountains, and rivers. The
+DOTA dataset is sourced from multiple sensors, such as Google Earth, the Jilin-1 satellite,
+and the Gaofen-2 satellite. Image sizes vary from 800 × 800 to 4000× 4000 pixels. The
+RSSCN7 dataset comprises 2800 images spanning seven typical land cover categories:
+grass, farmland, industry, river/lake, forest, residential area, and parking lot. Each category
+includes 400 images, collected under different seasons and weather conditions. The AID
+dataset consists of 10,000 images, each 600× 600 pixels in size, with a spatial resolution of
+0.5 m/pixel. It covers 30 different land-use categories, such as airports, farmland, beaches,
+and deserts. The NWPU VHR-10 dataset includes 800 high-resolution remote sensing
+images, each measuring 600 × 600 pixels. It encompasses 10 diverse scene categories,
+including airports, beaches, and bridges.
+3.1.2. Evaluation Indicators
+The quantitative assessment of reconstructed image quality relied on two widely
+adopted metrics: peak signal-to-noise ratio (PSNR) and Structural Similarity Index (SSIM).
+PSNR quantifies the pixel-wise accuracy of the output relative to the high-resolution
+ground truth, whereas SSIM assesses perceptual similarity in terms of luminance, con-
+trast, and structural information. For both metrics, higher scores reflect superior recon-
+struction performance. To ensure fairness, all competing methods were evaluated under
+identical conditions.
+PSNR = 10· log10
+ 
+MAX 2
+i
+MSE
+!
+(11)
+where
+MSE = 1
+NW NH
+NW−1
+∑
+i=0
+NH−1
+∑
+j=0
+[Y(i, j)− X(i, j)]2 (12)
+SSIM measures the similarity between images to evaluate fidelity after transformations.
+Unlike PSNR, which relies exclusively on pixel-level errors, SSIM incorporates perceptual
+factors that better align with human visual perception.
+https://doi.org/10.3390/rs18121910
+Remote Sens. 2026, 18, 1910 10 of 26
+SSIM (X, Y) = (2µXµY + C1)(σXY + C2) 
+µ2
+X + µ2
+Y + C1
+ 
+σ2
+X + σ2
+Y + C2
+ (13)
+where X and Y are the reference and reconstructed images, with µ and σ representing
+their respective means and standard deviations; σXY is their covariance, and MAX i is the
+maximum pixel value of the i-th spectral band.
+3.1.3. Parameter Settings
+Based on prior work, we perform data augmentation by applying horizontal flipping
+and random rotations of 90◦, 180◦, and 270◦. Additionally, during training, the original
+images are cropped into 64× 64 patches for image SR. We initialize the weights of the
+×3 and×4 models using the pre-trained weights of the ×2 model, while halving the
+learning rate and total training iterations to reduce training time [ 48]. To ensure a fair
+comparison, we adjusted the training batch size for image SR to 32. We employed Adam [49]
+as the optimizer to train DFSMamba and other SOTA models, with β1 = 0.9 and β2 = 0.999,
+similar to previous training settings [ 50]. In this study, the total training iterations for
+all models were set to 50,000, with L1 loss selected as the default loss function [ 51]. All
+experiments were conducted on an Ubuntu 22.04 operating system environment, with
+models implemented using the PyTorch 2.7.0 framework. The experimental hardware
+consisted of a workstation equipped with two NVIDIA GeForce GTX 3090 GPUs.
+3.2. Comparison with SOTA Models
+In this study, DFSMamba was evaluated against representative CNN-, Transformer-,
+and Mamba-based SISR methods, including HSENet [26], TransENet [52], OmniSR [53],
+SwinFIR [54], SwinIR [ 23], TTST [ 55], DAT [56], MambaIR [ 29], MambaIRv2 [ 46], HDI-
+PRNet [57], and MAT [58]. For numerical comparison, only results obtained under the
+same degradation setting and evaluation protocol are reported because directly mixing
+results from different training settings may lead to unfair conclusions.
+CNN methods (HSENet, OmniSR) extract features based on local receptive fields,
+gradually expanding the perceptual range through stacked convolutional layers. Their
+advantages lie in high computational efficiency, small parameter counts, and fast inference
+speed, making them suitable for real-time or lightweight applications. However, con-
+strained by a fixed kernel size, CNNs struggle to capture long-range dependencies, leading
+to blurry reconstructions of large-scale structures. They also lack adaptability to remote
+sensing images with complex textures and large structural spans, resulting in limited high-
+frequency detail recovery. As shown in Table 1, on the WHU-RS19×2 task, HSENet achieves
+a PSNR of only 28.94 dB and an SSIM of 0.7616, significantly lower than Transformer and
+Mamba methods. On the AID×3 task, HSENet achieves 29.85 dB/0.8150, falling far behind
+DFSMamba (31.48 dB/0.8415). As shown in Tables 2–4, CNNs perform acceptably on
+homogeneous land cover types (e.g., AID “Bare land” with a PSNR of 37.60 dB) but are
+severely inadequate on complex categories: AID “Port” reaches only 25.88 dB/0.7389, and
+“Stadium” achieves 28.28 dB (compared to DFSMamba’s 29.02 dB); on WHU-RS19 “Port”,
+PSNR is only 17.57 dB, with an SSIM of 0.5051, barely reconstructing valid structures. In
+summary, CNNs are suitable for fast processing scenarios where precision requirements
+are low and the imagery is dominated by large homogeneous land cover areas.
+Transformer methods (SwinIR, DAT, TTST, MAT) leverage self-attention mechanisms
+to achieve global receptive fields, capturing pixel dependencies at arbitrary distances, and
+their reconstruction quality significantly exceeds that of CNNs. As a representative, MAT
+achieves 34.45 dB/0.9122 on the AID×2 task and 30.80 dB/0.8280 on the AID ×3 task,
+outperforming both CNNs and MambaIR but still falling behind DFSMamba. Transform-
+ers demonstrate clear advantages on texture-rich categories: on AID, “Beach” reaches
+https://doi.org/10.3390/rs18121910
+Remote Sens. 2026, 18, 1910 11 of 26
+a PSNR of 36.41 dB, “Desert” 40.31 dB, and “Stadium” 28.60 dB, all higher than CNNs
+and early Mamba methods. However, Transformers suffer from two major issues. First,
+the computational complexity of self-attention grows quadratically (O(n 2)), leading to
+high memory usage and slow inference speed when processing high-resolution images.
+Second, the window partitioning strategy lacks semantic adaptability, causing unstable
+reconstructions on certain categories. For example, on the RSSCN7 “Farmland” category,
+MAT achieves an SSIM of only 0.4920, lower than DFSMamba’s 0.4968; on the WHU-RS19
+“Port” category, MAT reaches 18.07 dB, which, although better than CNNs’ values, is still
+far below DFSMamba’s 18.17 dB. This indicates that regular windows struggle to adapt to
+the diverse morphologies of remote sensing land cover, particularly in accurately capturing
+the semantic boundaries of slender or irregular structures.
+Table 1. Performance comparison of different models. The best and second-best results are marked
+in bold and underlined, respectively.
+Methods Scale WHU-RS19 DOTA RSSCN7 AID NWPU VHR-10
+PSNR SSIM PSNR SSIM PSNR SSIM PSNR SSIM PSNR SSIM
+HSENet ×2 28.94 0.7616 28.94 0.7616 27.71 0.6853 32.85 0.8650 29.20 0.7800
+TransENet ×2 29.33 0.7756 30.92 0.8079 27.89 0.6956 33.10 0.8720 29.45 0.7880
+OmniSR ×2 29.35 0.7768 30.98 0.8095 27.91 0.6980 33.15 0.8740 29.50 0.7900
+SwinIR ×2 29.40 0.7761 29.40 0.7761 27.92 0.7008 33.20 0.8760 29.55 0.7920
+SwinFIR ×2 29.41 0.7778 29.41 0.7778 27.93 0.7008 33.25 0.8780 29.60 0.7940
+DAT ×2 29.45 0.7771 31.09 0.8118 27.97 0.7008 33.30 0.8800 29.65 0.7960
+HAUNet ×2 29.52 0.7789 31.25 0.8131 28.01 0.7003 33.35 0.8820 29.70 0.7980
+TTST ×2 29.63 0.7838 31.12 0.8152 28.05 0.7053 33.45 0.8850 29.75 0.8001
+MambaIR ×2 29.75 0.7847 31.88 0.8312 28.10 0.7100 34.14 0.8992 29.79 0.8045
+MambaIRv2 ×2 29.89 0.7852 32.06 0.8343 28.38 0.7257 34.33 0.9016 29.99 0.8065
+HDI-PRNet ×2 30.03 0.7931 31.66 0.8230 28.32 0.7134 34.27 0.9080 29.95 0.8060
+MAT ×2 30.25 0.8089 31.93 0.8321 28.41 0.7289 34.45 0.9122 30.03 0.8088
+DFSMamba ×2 30.45 0.8122 32.08 0.8364 28.50 0.7297 34.54 0.9138 30.14 0.8101
+HSENet ×3 27.98 0.7292 25.74 0.7491 26.98 0.6500 29.85 0.8150 28.20 0.7350
+TransENet ×3 28.44 0.7482 25.05 0.7428 27.24 0.6642 30.10 0.8220 28.45 0.7420
+OmniSR ×3 28.46 0.7490 25.08 0.7432 27.25 0.6650 30.15 0.8240 28.48 0.7430
+SwinIR ×3 28.45 0.7485 25.10 0.7436 27.26 0.6654 30.20 0.8260 28.50 0.7440
+SwinFIR ×3 28.53 0.7523 25.15 0.7455 27.29 0.6686 30.25 0.8280 28.55 0.7460
+DAT ×3 28.51 0.7528 25.32 0.7487 27.32 0.6693 30.30 0.8300 28.60 0.7470
+HAUNet ×3 28.51 0.7483 25.25 0.7455 27.31 0.6649 30.28 0.8270 28.58 0.7450
+TTST ×3 28.55 0.7535 25.35 0.7495 27.33 0.6700 30.32 0.8310 28.62 0.7480
+MambaIR ×3 28.67 0.7573 30.15 0.7786 27.38 0.6731 30.57 0.8193 28.20 0.7447
+MambaIRv2 ×3 28.75 0.7590 30.25 0.7807 27.40 0.6750 30.41 0.8130 28.37 0.7425
+HDI-PRNet ×3 28.85 0.7620 30.30 0.7830 27.45 0.6780 30.60 0.8220 28.50 0.7500
+MAT ×3 28.95 0.7650 30.33 0.7845 27.50 0.6800 30.80 0.8280 28.55 0.7521
+DFSMamba ×3 29.05 0.7680 30.36 0.7850 27.64 0.6915 31.48 0.8415 28.76 0.7498
+HSENet ×4 27.49 0.7066 27.29 0.7331 26.64 0.6323 28.50 0.7850 26.50 0.6801
+TransENet ×4 27.53 0.7102 27.40 0.7368 26.66 0.6354 28.60 0.7880 26.55 0.6820
+OmniSR ×4 27.55 0.7115 27.45 0.7380 26.68 0.6365 28.65 0.7900 26.58 0.6830
+SwinIR ×4 27.48 0.7071 27.38 0.7343 26.63 0.6327 28.65 0.7900 26.58 0.6830
+SwinFIR ×4 27.65 0.7152 27.39 0.7379 26.72 0.6391 28.55 0.7860 26.52 0.6810
+DAT ×4 27.61 0.7138 28.40 0.7387 26.70 0.6376 28.70 0.7920 26.60 0.6840
+HAUNet ×4 27.59 0.7117 28.47 0.7386 26.71 0.6362 28.75 0.7940 26.65 0.6860
+TTST ×4 27.70 0.7176 28.56 0.7318 26.76 0.6407 28.72 0.7930 26.62 0.6850
+MambaIR ×4 27.80 0.7200 28.53 0.7315 26.64 0.6300 28.81 0.7551 26.99 0.6999
+MambaIRv2 ×4 27.85 0.7210 28.67 0.7368 26.59 0.6231 28.96 0.7501 26.98 0.6999
+HDI-PRNet ×4 27.87 0.7214 28.80 0.7382 26.91 0.6434 29.10 0.7600 27.05 0.7020
+MAT ×4 27.95 0.7230 28.90 0.7390 26.78 0.6411 29.25 0.7650 27.15 0.7040
+DFSMamba ×4 28.05 0.7250 28.98 0.7397 26.95 0.6450 29.47 0.7708 27.26 0.7052
+Table 2. Category-level performance on the AID dataset for×2 upscaling. The best and second-best
+results are marked in bold and underlined, respectively.
+Categories SwinIR HAUNet MambaIR MambaIRv2 MAT DFSMamba
+PSNR SSIM PSNR SSIM PSNR SSIM PSNR SSIM PSNR SSIM PSNR SSIM
+Airport 30.83 0.8779 30.9 0.8768 30.96 0.8764 30.84 0.877 31.03 0.8785 31.14 0.8808
+Bare land 37.6 0.924 37.75 0.9205 37.66 0.917 38.15 0.9254 38.2 0.9235 38.29 0.9262
+Baseball field 33.84 0.9175 33.90 0.9145 33.94 0.9122 34.06 0.9176 34.3 0.9186 34.4 0.9197
+Beach 36.25 0.9206 36.35 0.9195 36.47 0.9185 36.8 0.9206 36.41 0.9207 37.1 0.9233
+Bridge 33.86 0.9276 33.95 0.9275 34.03 0.9274 34 0.9271 34.18 0.9289 34.32 0.9303
+Center 32.51 0.9122 32.7 0.912 32.88 0.9138 32.62 0.91 32.83 0.9123 33.04 0.9156
+Church 28.42 0.8754 28.55 0.877 28.7 0.8787 28.55 0.8746 28.67 0.8768 28.88 0.8816
+Commercial 31.6 0.8859 31.7 0.886 31.81 0.8868 31.7 0.8872 31.84 0.8884 31.98 0.8906
+https://doi.org/10.3390/rs18121910
+Remote Sens. 2026, 18, 1910 12 of 26
+Table 2. Cont.
+Categories SwinIR HAUNet MambaIR MambaIRv2 MAT DFSMamba
+PSNR SSIM PSNR SSIM PSNR SSIM PSNR SSIM PSNR SSIM PSNR SSIM
+Dense residential 28.12 0.8063 28.3 0.8075 28.43 0.8092 28.29 0.8061 28.36 0.8073 28.55 0.8107
+Desert 38.95 0.9483 39.3 0.9445 39.82 0.9408 40.56 0.9479 40.31 0.947 40.79 0.9479
+Farmland 36.01 0.9284 35.9 0.923 35.83 0.918 36.37 0.9301 36.51 0.9301 36.55 0.9312
+Forest 33.71 0.8996 33.65 0.895 33.6 0.8913 33.97 0.8978 34.05 0.899 34.16 0.8999
+Industrial 30.81 0.8797 30.95 0.8805 31.1 0.8821 30.87 0.8785 31.06 0.8807 31.32 0.8852
+Meadow 36.36 0.8752 36.15 0.863 36 0.8526 37.39 0.8763 37.4 0.876 37.54 0.8758
+Medium residential 30.69 0.888 30.85 0.8885 30.98 0.8897 30.9 0.887 31.0 0.8891 31.19 0.8922
+Mountain 32.6 0.9056 32.55 0.9015 32.49 0.898 32.81 0.9042 32.9 0.9055 32.94 0.9055
+Parking 31 0.9402 31.3 0.941 31.62 0.9421 31.25 0.9408 31.36 0.9412 31.81 0.9444
+Park 32.24 0.9278 32.3 0.9275 32.4 0.9274 32.35 0.9274 32.53 0.9285 32.63 0.9302
+Playground 33.1 0.9234 33.35 0.924 33.63 0.9245 33.61 0.9251 33.72 0.9265 34.02 0.929
+Pond 33.31 0.922 33.4 0.92 33.51 0.9183 33.57 0.9227 33.72 0.9231 33.83 0.9245
+Port 25.88 0.7389 25.95 0.7375 26.03 0.7362 26 0.7414 26.08 0.7411 26.27 0.7436
+Railway station 33.84 0.9264 33.9 0.9262 33.97 0.9261 33.89 0.9253 34.07 0.9274 34.18 0.9286
+Resort 29.04 0.8553 29.15 0.8560 29.28 0.8571 29.14 0.8547 29.22 0.8558 29.46 0.8594
+River 31.66 0.8445 31.65 0.842 31.65 0.8398 31.89 0.8448 31.96 0.8454 32.03 0.8458
+School 27.31 0.8044 27.45 0.8060 27.61 0.8085 27.35 0.8033 27.46 0.8048 27.69 0.8093
+Sparse residential 29.37 0.8358 29.37 0.8340 29.38 0.8329 29.51 0.834 29.56 0.8351 29.71 0.8376
+Square 27.98 0.794 28.1 0.7935 28.24 0.7947 28.16 0.7932 28.28 0.7944 28.46 0.7974
+Stadium 28.28 0.8706 28.5 0.8725 28.82 0.875 28.28 0.8682 28.6 0.8716 29.02 0.8774
+Storage tanks 29.53 0.8825 29.7 0.884 29.88 0.8865 29.62 0.8802 29.76 0.8833 29.96 0.8868
+Viaduct 29.2 0.833 29.3 0.832 29.39 0.8344 29.25 0.8304 29.41 0.8334 29.56 0.8367
+Overall 31.59 0.8811 31.89 0.8811 31.8 0.8796 31.82 0.8808 31.93 0.882 32.13 0.8845
+Table 3. Category-level performance on the RSSCN7 dataset for×2 upscaling. The best and second-
+best results are marked in bold and underlined, respectively.
+Categories SwinIR HAUNet MambaIR MambaIRv2 MAT DFSMamba
+PSNR SSIM PSNR SSIM PSNR SSIM PSNR SSIM PSNR SSIM PSNR SSIM
+Grasslands 30.78 0.6113 31.00 0.6132 31.09 0.6141 31.2 0.616 31.25 0.617 31.4 0.6195
+Forests 25.08 0.5857 25.29 0.5876 25.38 0.5885 25.45 0.589 25.5 0.5905 25.7 0.5939
+Farmland 29.97 0.4886 30.19 0.4905 30.28 0.4914 30.4 0.4935 30.35 0.492 30.59 0.4968
+Parking lots 23.03 0.7362 23.24 0.7381 23.33 0.7390 23.45 0.74 23.5 0.7415 23.65 0.7446
+Village 24.94 0.7702 25.15 0.7721 25.24 0.7730 25.35 0.774 25.4 0.7755 25.56 0.7785
+Factory 25.10 0.7433 25.31 0.7452 25.40 0.7461 25.5 0.747 25.55 0.7485 25.72 0.7517
+Rivers 28.33 0.8368 28.54 0.8387 28.63 0.8396 28.75 0.841 28.8 0.8425 28.95 0.8452
+Overall 26.75 0.6817 26.96 0.6836 27.05 0.6845 27.15 0.6857 27.19 0.6867 27.37 0.69
+Table 4. Category-level performance on the WHU-RS19 dataset for ×2 upscaling. The best and
+second-best results are marked in bold and underlined, respectively.
+Categories SwinIR HAUNet MambaIR MambaIRv2 MAT DFSMamba
+PSNR SSIM PSNR SSIM PSNR SSIM PSNR SSIM PSNR SSIM PSNR SSIM
+Airport 27.43 0.8041 27.58 0.8061 27.68 0.8076 27.93 0.8106 27.88 0.8101 28.03 0.8121
+Beach 40.59 0.932 40.74 0.934 40.84 0.9355 41.04 0.938 41.09 0.9385 41.19 0.94
+Bridge 34.47 0.8972 34.62 0.8992 34.72 0.9007 34.97 0.9037 34.92 0.9032 35.07 0.9052
+Commercial 23.65 0.7723 23.8 0.7743 23.9 0.7758 24.15 0.7788 24.1 0.7783 24.25 0.7803
+Desert 35.88 0.7564 36.03 0.7584 36.13 0.7599 36.38 0.7629 36.33 0.7624 36.48 0.7644
+Farmland 33.58 0.6683 33.73 0.6703 33.83 0.6718 34.08 0.6748 34.03 0.6743 34.18 0.6763
+Football Field 28.28 0.8173 28.43 0.8193 28.53 0.8208 28.78 0.8238 28.73 0.8233 28.88 0.8253
+Forest 26.77 0.7013 26.92 0.7033 27.02 0.7048 27.27 0.7078 27.22 0.7073 27.37 0.7093
+Industrial 27.08 0.8145 27.23 0.8165 27.33 0.818 27.58 0.821 27.53 0.8205 27.68 0.8225
+Meadow 33.91 0.7093 34.06 0.7113 34.16 0.7128 34.41 0.7158 34.36 0.7153 34.51 0.7173
+Mountain 24.07 0.6487 24.22 0.6507 24.32 0.6522 24.57 0.6552 24.52 0.6547 24.67 0.6567
+parking 28 0.8669 28.15 0.8689 28.25 0.8704 28.5 0.8734 28.45 0.8729 28.6 0.8749
+Park 25.96 0.7746 26.11 0.7766 26.21 0.7781 26.46 0.7811 26.41 0.7806 26.56 0.7826
+Pond 30.91 0.8402 31.06 0.8422 31.16 0.8437 31.41 0.8467 31.36 0.8462 31.51 0.8482
+Port 17.57 0.5051 17.72 0.5071 17.82 0.5086 18.02 0.5111 18.07 0.5116 18.17 0.5131
+Railway Station 24.77 0.6833 24.92 0.6853 25.02 0.6868 25.22 0.6893 25.27 0.6898 25.37 0.6913
+Residential 25.19 0.8102 25.34 0.8122 25.44 0.8137 25.69 0.8167 25.64 0.8162 25.79 0.8182
+River 27.65 0.7408 27.8 0.7428 27.9 0.7443 28.15 0.7473 28.1 0.7468 28.25 0.7488
+Viaduct 25.36 0.7759 25.51 0.7779 25.61 0.7794 25.81 0.7819 25.86 0.7824 25.96 0.7839
+Overall 28.48 0.7641 28.63 0.7661 28.73 0.7676 28.96 0.77 28.94 0.77 29.08 0.7721
+Mamba methods (MambaIR, MambaIRv2) achieve a global receptive field with linear
+complexity (O(n)) and strike a good balance between efficiency and quality, based on
+state-space models. MambaIRv2 achieves 29.89 dB/0.7852 on the WHU-RS19 ×2 task
+and 30.41 dB/0.8130 on the AID×3 task, both lower than DFSMamba and MAT. At the
+category level, Mamba methods excel on homogeneous land cover (AID “Bare land”:
+https://doi.org/10.3390/rs18121910
+Remote Sens. 2026, 18, 1910 13 of 26
+38.15 dB/0.9254; “Parking”: SSIM 0.9408). However, Mamba methods suffer from three key
+shortcomings. First, unidirectional scanning leads to information bias, limiting performance
+on categories that require bidirectional information fusion, such as AID “Stadium” (PSNR
+of only 28.28 dB vs. DFSMamba’s 29.02 dB) and “Viaduct” (SSIM of 0.8304 vs. DFSMamba’s
+0.8367). Second, semantic adaptability is insufficient, resulting in limited detail recovery on
+texture-rich categories, such as RSSCN7 “Grasslands” (PSNR of 31.20 dB vs. DFSMamba’s
+31.40 dB) and “Rivers” (SSIM of 0.8410 vs. DFSMamba’s 0.8452). Third, the underutilization
+of frequency-domain information restricts high-frequency detail recovery. Overall, Mamba
+methods perform well on homogeneous land cover but exhibit clear deficiencies on complex
+categories requiring bidirectional semantic perception and high-frequency detail recovery
+(Figure 4).
+Figure 4. Visual SISR results for specific scenes across multiple scales: (a) airport; (b) baseball field;
+(c) storage tanks; (d) medium-density residential.
+DFSMamba addresses the aforementioned limitations of existing methods by integrat-
+ing three core innovations. SCSA enhances semantic perception through dynamic chunking
+and sparse connections while maintaining linear complexity. The ASSM adopts parallel
+bidirectional SSM branches to overcome unidirectional information bias and introduces an
+activation-guided fusion mechanism to adaptively enhance semantic regions. The DFTM
+establishes a global, lossless frequency-domain receptive field and explicitly enhances high-
+frequency details. In terms of performance, DFSMamba achieves the best or second-best
+results across all five datasets and three scaling factors. On the AID×3 task, it attains a
+PSNR of 31.48 dB, outperforming MAT (30.80 dB) by 0.68 dB and MambaIRv2 (30.41 dB)
+by 1.07 dB; its SSIM reaches 0.8415, exceeding MAT (0.8280) by 0.0135 and MambaIRv2
+(0.8130) by 0.0285. As shown in Tables 2–4, in the fine-grained evaluation, DFSMamba
+achieves the best or second-best results across all categories on AID (30 categories), RSSCN7
+(7 categories), and WHU-RS19 (19 categories).
+The superiority of DFSMamba becomes evident when examining specific categories, as
+summarized in the following three aspects. First, DFSMamba performs particularly well on
+texture-rich categories (Figure 4). On the AID dataset, in the “Beach” category, DFSMamba
+achieves a PSNR of 37.10 dB, exceeding MAT by approximately 0.69 dB and MambaIRv2 by
+0.30 dB; in the “Desert” category, it reaches 40.79 dB, exceeding MAT by about 0.48 dB; in the
+“Stadium” category, it achieves 29.02 dB, exceeding MambaIRv2 by about 0.74 dB; and in the
+“Parking” category, its SSIM reaches 0.9444, significantly surpassing all compared methods.
+Second, DFSMamba also excels in categories with slender structures and irregular edges
+(Figure 5). On the AID dataset, in the “Port” and “Viaduct” categories, its PSNR/SSIM reach
+https://doi.org/10.3390/rs18121910
+Remote Sens. 2026, 18, 1910 14 of 26
+26.27 dB/0.7436 and 29.56 dB/0.8367, respectively, outperforming other compared methods.
+On the WHU-RS19 dataset, in the “Port” category, DFSMamba achieves a PSNR of 18.17 dB
+and an SSIM of 0.5131, showing consistent improvements over MAT (18.07 dB/0.5116) and
+MambaIRv2 (18.02 dB/0.5111), which fully demonstrates the effectiveness of bidirectional
+semantic modeling for slender structure recovery. Third, DFSMamba exhibits strong
+generalization capability on categories with multi-season and multi-weather conditions. On
+the RSSCN7 dataset, DFSMamba achieves the best performance across all seven categories.
+For example, in the “Grasslands” category, its PSNR reaches 31.40 dB, exceeding MAT by
+about 0.15 dB; in the “Rivers” category, its SSIM reaches 0.8452, exceeding MambaIRv2 by
+about 0.0042; and in the “Factory” category, its PSNR reaches 25.72 dB, exceeding MAT by
+about 0.17 dB. These results demonstrate that DFSMamba can effectively resist interference
+from factors such as illumination and seasonal variations, possessing exceptional cross-
+scene generalization capability.
+Figure 5. Visual comparison of the proposed model and the SOTA methods on three test images from
+the WHU-RS19 dataset: (a) parking (×2); (b) river (×3); (c) port (×4).
+As shown in Table 5, for the×4 upscaling task on the AID dataset, the three methods,
+MambaIRv2, FMSR, and DFSMamba, exhibit a consistent increasing trend in parameters,
+FLOPs, latency, and peak GPU memory usage. However, it is worth noting that the in-
+creased computational cost of DFSMamba is relatively modest and acceptable. Compared
+to MambaIRv2, DFSMamba increases parameters by only 0.84 M (~11.7%), FLOPs by 3.9 G
+(~9.1%), latency by 1.2 ms (~10.6%), and GPU memory by 119 MB (~9.2%). All increases re-
+main around 10%, without any dramatic growth. Given that real-world hardware typically
+has some redundancy, such a marginal trade-off is reasonable, especially if DFSMamba
+delivers better reconstruction quality.
+Table 5. Computational efficiency comparison on the AID dataset for×4 upscaling.
+Method Params (M) FLOPs (G) Latency (ms/img) Peak GPU Memory (MB)
+MambaIRv2 7.21 42.8 11.3 1289
+FMSR 7.84 45.2 12.1 1342
+DFSMamba 8.05 46.7 12.5 1408
+https://doi.org/10.3390/rs18121910
+Remote Sens. 2026, 18, 1910 15 of 26
+According to the sensitivity analysis results on the AID dataset for the×4 upscaling
+task (Table 6), both the DFTM and ASSMamba demonstrate strong robustness and stability
+under various hyperparameter settings. In the frequency-band ratio experiment, as the
+retained frequency band gradually increases from 25% to the full spectrum, reconstruction
+quality consistently improves, with the full spectrum achieving the highest PSNR (29.47)
+and SSIM (0.7708). This indicates that excessive frequency suppression degrades recon-
+struction performance. Regarding the spectral scaling adapter, a scaling factor of 1.0 yields
+the best performance (29.47/0.7708), while values that are too high (1.5) or too low (0.5) lead
+to slight drops, suggesting that moderate scaling provides the optimal balance between
+high-frequency enhancement and artifact suppression. For the projection dimension of
+ASSMamba, increasing from C/4 to C steadily improves reconstruction accuracy, although
+the difference between C/2 and C remains modest, implying that larger feature capacity is
+still beneficial for performance. In terms of activation temperature, the default setting of
+1.0 achieves the best and most stable gating response (29.47/0.7708), while deviating from
+this value results in minor performance degradation. Overall, these results validate that
+the DFTM and ASSMamba are reasonably stable across typical hyperparameter ranges.
+Table 6. Sensitivity analysis of the DFTM and ASSMamba on the AID dataset for×4 upscaling.
+Variant Setting PSNR SSIM Observation
+Frequency band ratio 25%/50%/75%/full 29.12/29.35/29.42/29.47 0.7625/0.7671/0.7694/0.7708 Full spectrum gives the
+best reconstruction.
+Spectral scaling adapter 0.5/1.0/1.5 29.21/29.47/29.44 0.7632/0.7708/0.7691 Moderate scaling is most stable.
+ASSMamba projection dimension C/4/C/2/C 29.30/29.42/29.47 0.7660/0.7692/0.7708 Larger capacity improves accuracy.
+Activation temperature 0.5/1.0/2.0 29.35/29.47/29.41 0.7675/0.7708/0.7686 Default temperature gives
+stable gating.
+3.3. Local Attribution Map Analysis
+To validate the global modeling ability of DFSMamba, we conducted Local Attribution
+Map (LAM) analysis [59]. As illustrated in Figure 6, DFSMamba activates substantially
+broader and more structurally coherent regions during high-frequency detail reconstruction
+compared to baseline methods (e.g., MambaIR, MambaIRv2 and MAT). This observation
+suggests that the proposed spatial–frequency synergistic mechanism effectively enhances
+long-range dependency utilization, a critical capability for high-quality image reconstruc-
+tion. Notably, the attribution regions of DFSMamba exhibit stronger alignment with object
+boundaries, texture-rich areas, and long-range structural components, indicating that the
+model successfully exploits wider contextual information during the reconstruction process.
+These findings corroborate the claim that ASSMamba adaptively modulates informative
+spatial–frequency responses according to scene content, rather than indiscriminately ampli-
+fying local high-frequency components.
+Figure 6. Local Attribution Maps (LAMs) of MambaIR, MambaIRv2, MAT, and the proposed DFSMamba.
+https://doi.org/10.3390/rs18121910
+Remote Sens. 2026, 18, 1910 16 of 26
+3.4. Ablation Study
+3.4.1. Module Performance Test
+To systematically evaluate the individual contributions and interactive gains of the
+DFTM, SCSA, and ASSMamba in the super-resolution task, we conducted a hierarchical
+ablation study on the AID and WHU-RS19 datasets, covering three configurations: single-
+module, pairwise combinations, and full integration of all three modules. MambaIRv2 was
+used as the baseline (Table 7).
+Table 7. Experimental assessment of component roles in×4 SISR tasks. The best and second-best
+results are highlighted in bold and underlined, respectively.
+Methods DFTM SCSA ASSMamba AID WHU-RS19
+PSNR SSIM PSNR SSIM
+MambaIRv2 28.96 0.7501 27.85 0.7210
+A ✔ 28.62 0.7612 27.73 0.7185
+B ✔ 28.55 0.7598 27.68 0.7162
+C ✔ 28.48 0.7575 27.61 0.7138
+D ✔ ✔ 29.03 0.7665 28.02 0.7221
+E ✔ ✔ 28.91 0.7643 27.95 0.7203
+F ✔ ✔ 28.85 0.7627 27.88 0.7189
+G ✔ ✔ ✔ 29.47 0.7708 28.05 0.7250
+First, under the single-module configuration (Methods A–C), none of the three mod-
+ules surpass the baseline in PSNR. Taking the AID dataset as an example, MambaIRv2
+achieves a PSNR of 28.96 dB and an SSIM of 0.7501 (Table 7). When the DFTM is used alone
+(Method A), PSNR drops to 28.62 dB while SSIM increases to 0.7612. With SCSA alone
+(Method B) and ASSMamba alone (Method C), PSNR decreases to 28.55 dB and 28.48 dB,
+respectively, with SSIM values of 0.7598 and 0.7575. Notably, although all single-module
+configurations underperform the baseline in PSNR, they consistently achieve significantly
+higher SSIM than MambaIRv2 (0.7501), with improvements ranging from 0.0074 to 0.0111.
+This indicates that while individual modules fail to improve the peak signal-to-noise ratio
+when used independently, they effectively enhance structural similarity, demonstrating a
+positive effect on preserving visual structure.
+Second, under the two-module combination configurations (Methods D–F), all combi-
+nations outperform the baseline MambaIRv2 in both PSNR and SSIM. On the AID dataset,
+Method D (DFTM + SCSA) achieves 29.03 dB and 0.7665, yielding a PSNR improvement of
+0.07 dB and an SSIM improvement of 0.0164 over the baseline. Method E (DFTM + ASSMamba)
+reaches 28.91 dB and 0.7643, with PSNR slightly lower than the baseline by only 0.05 dB but
+SSIM substantially higher by 0.0142. Method F (SCSA + ASSMamba) achieves 28.85 dB and
+0.7627, with a PSNR 0.11 dB below the baseline while SSIM remains notably higher by 0.0126.
+On the WHU-RS19 dataset, Method D attains a PSNR of 28.02 dB, surpassing the baseline
+of 27.85 dB, with SSIM increasing from 0.7210 to 0.7221. Overall, two-module combinations
+not only maintain the SSIM advantage over the baseline but also achieve PSNR parity or
+superiority in most cases, demonstrating the emergence of synergistic effects among modules.
+Third, when all three modules are enabled simultaneously (Method G), the model sig-
+nificantly outperforms MambaIRv2 across all metrics. On the AID dataset, PSNR reaches
+29.47 dB, an improvement of 0.51 dB over the baseline, while SSIM reaches 0.7708, an
+improvement of 0.0207. On the WHU-RS19 dataset, PSNR reaches 28.05 dB, an improve-
+ment of 0.20 dB, and SSIM reaches 0.7250, an improvement of 0.0040. These results fully
+demonstrate that the complete integration of the DFTM, SCSA, and ASSMamba success-
+fully surpasses the original baseline, achieving comprehensive performance advantages
+over MambaIRv2 through the joint effects of frequency-domain enhancement, semantic
+chunking, and bidirectional state-space modeling.
+https://doi.org/10.3390/rs18121910
+Remote Sens. 2026, 18, 1910 17 of 26
+3.4.2. The Performance of SCSA
+To further quantify the superiority of the SCSA module, we designed a comparative
+experiment on the AID dataset, replacing the original window-based multi-head self-
+attention (Window MHSA) in both MambaIRv2 and DFSMamba with SCSA, and evaluated
+the resulting performance changes under the×4 super-resolution task (Table 8).
+Table 8. Performance analysis of SCSA in the×4 SISR task. The best and second-best results are
+highlighted in bold and underlined, respectively.
+Methods Window-Based MHSA SCSA AID
+PSNR SSIM
+MambaIRv2 ✔ 28.96 0.7501
+✔ 29.18 0.7586
+DFSMamba ✔ 29.21 0.7602
+✔ 29.47 0.7708
+As shown in Table 8, in the MambaIRv2 baseline model, replacing Window MHSA
+with SCSA improves PSNR from 28.96 dB to 29.18 dB, a gain of 0.22 dB, and SSIM from
+0.7501 to 0.7586, a gain of 0.0085. This demonstrates that even without the introduction
+of frequency-domain enhancement (DFTM) and bidirectional state-space modeling (ASS-
+Mamba), SCSA, by virtue of its dynamic semantic chunking and sparse connection mecha-
+nisms, can still more effectively capture semantic dependencies in images and mitigate the
+semantic truncation and feature loss issues caused by fixed window partitioning.
+Furthermore, in the complete DFSMamba architecture (which already includes DFTM
+and ASSMamba), replacing the original Window MHSA with SCSA improves PSNR from
+29.21 dB to 29.47 dB, a gain of 0.26 dB, and SSIM from 0.7602 to 0.7708, a gain of 0.0106. This
+gain is slightly larger than the replacement gain in MambaIRv2 (0.22 dB/0.0085), indicating
+a positive interaction between SCSA, the DFTM, and ASSMamba—frequency-domain
+enhancement provides a more stable global feature foundation, bidirectional state-space
+modeling expands the scope of semantic perception, and SCSA, on this basis, achieves finer
+semantic chunking and sparse attention computation. The joint integration of the three
+modules further amplifies the advantages of SCSA.
+3.5. Multi-Scale Fourier Transform Super-Resolution
+To validate the effectiveness of the proposed DFTM, we conducted comparative
+experiments on three public remote sensing datasets (AID, WHU-RS19, and RSSCN7).
+The experiments were performed under the ×4 super-resolution task, evaluating the
+reconstruction performance of DFSMamba and the baseline model MambaIRv2 at five
+different input scales (16× 16, 32× 32, 64× 64, 128× 128, and 256× 256).
+The experimental results show that both DFSMamba and MambaIRv2 achieve optimal
+reconstruction performance at the 64× 64 input scale (Table 9). Taking the AID dataset as an
+example, DFSMamba achieves a PSNR of 29.77 dB and an SSIM of 0.7815 at this scale, while
+MambaIRv2 achieves 29.05 dB and 0.7680, respectively. This phenomenon can be explained
+from the perspective of the balance between “local detail integrity” and “global structural
+controllability”: the 64× 64 scale preserves the core texture and edge features of ground
+objects, avoiding the loss of global context caused by excessively small scales (e.g., 16× 16
+or 32× 32), while also preventing the feature redundancy and computational overhead
+introduced by overly large scales (e.g., 128× 128 or 256× 256), thus achieving an optimal
+trade-off between information fidelity and model learning efficiency. Notably, when the
+input scale further increases from 64× 64 to 128× 128 and 256× 256, the performance
+of both models declines to a certain extent. Taking the AID dataset as an example, the
+PSNR of MambaIRv2 drops from 29.05 dB at 64× 64 to 27.52 dB at 256× 256, a decrease
+of 1.53 dB, while the PSNR of DFSMamba drops from 29.77 dB to 28.13 dB, a decrease of
+https://doi.org/10.3390/rs18121910
+Remote Sens. 2026, 18, 1910 18 of 26
+1.64 dB. The primary reason for this phenomenon is that as the input scale increases, the
+amount of spatial redundant information the model needs to process increases significantly,
+while the limited learning capacity makes it difficult to fully extract all effective features,
+and the difficulty of modeling long-range dependencies also rises.
+Table 9. Comparison of DFSMamba and MambaIRv2 on the AID, WHU-RS19, and RSSCN7 Datasets
+at different input sizes (×4 SR).
+Input Size Model AID WHU-RS19 RSSCN7
+PSNR SSIM PSNR SSIM PSNR SSIM
+16× 16 MambaIRv2 28.96 0.7501 27.85 0.7210 26.59 0.6231
+DFSMamba 29.47 0.7708 28.05 0.7250 26.95 0.6450
+32× 32 MambaIRv2 28.89 0.7620 27.61 0.7135 26.78 0.6390
+DFSMamba 29.57 0.7793 28.29 0.7283 27.35 0.6510
+64× 64 MambaIRv2 29.05 0.7680 27.82 0.7170 26.85 0.6415
+DFSMamba 29.77 0.7815 28.39 0.7280 27.42 0.6530
+128× 128 MambaIRv2 28.36 0.7450 27.38 0.7082 26.55 0.6335
+DFSMamba 29.04 0.7630 28.00 0.7210 27.12 0.6460
+256× 256 MambaIRv2 27.52 0.7280 26.65 0.6950 26.32 0.6280
+DFSMamba 28.13 0.7390 27.13 0.7065 26.78 0.6375
+Although both models exhibit a downward trend, DFSMamba consistently outperforms
+MambaIRv2 across all scales and datasets, demonstrating stronger robustness. For example,
+at the 256× 256 input scale on the AID dataset, the PSNR of DFSMamba (28.13 dB) is 0.61 dB
+higher than that of MambaIRv2 (27.52 dB); on the WHU-RS19 dataset at the same scale, the
+PSNR of DFSMamba (27.13 dB) leads MambaIRv2 (26.65 dB) by 0.48 dB. This advantage is
+also reflected in the SSIM metric, indicating that DFSMamba maintains a consistent lead in
+structural fidelity . The fundamental reason for DFSMamba’s sustained performance advantage
+across different scales lies in the introduction of the DFTM module. Specifically , as a pure
+spatial-domain model, MambaIRv2 relies primarily on sequential scanning in the pixel space
+for state-space modeling, making it difficult to simultaneously recover high-frequency details
+and maintain global structure as the input scale increases. In contrast, the DFTM module
+achieves spatial–frequency collaborative modeling through the following two approaches.
+On the one hand, the DFTM maps the image from the spatial domain to the frequency
+domain using the discrete Fourier transform, where each frequency coefficient covers all image
+pixels, thereby establishing a global, lossless “receptive field.” This characteristic enables
+the model to explicitly enhance high-frequency features such as road edges and building
+contours without relying on gradually expanding receptive fields in the spatial domain. On
+the other hand, the DFTM complements Mamba’s SS2D (Selective Scan 2D) mechanism:
+SS2D is responsible for long-range dependency modeling in the spatial domain, while the
+DFTM provides global structural constraints from the frequency domain. Their synergistic
+effect enables the model to effectively suppress interference from redundant information and
+maintain the ability to perceive global structural integrity when processing large-scale inputs.
+DFSMamba maintains a consistent advantage trend across the AID, WHU-RS19, and
+RSSCN7 datasets, indicating that the effectiveness of the DFTM module does not de-
+pend on specific data distributions or land cover types. Notably, on the RSSCN7 dataset
+(which contains images under different seasons and weather conditions), DFSMamba
+achieves 27.42 dB/0.6530 at the 64 × 64 scale, significantly higher than MambaIRv2’s
+26.85 dB/0.6415, further validating the robustness of spatial–frequency collaborative mod-
+eling under complex imaging conditions.
+4. Discussion
+4.1. Loss Functions
+In the field of image super-resolution reconstruction, the choice of loss function plays
+a decisive role in model performance. L1 loss, Charbonnier loss [ 60], and perceptual
+https://doi.org/10.3390/rs18121910
+Remote Sens. 2026, 18, 1910 19 of 26
+loss [61] have all demonstrated excellent performance in balancing pixel accuracy and
+visual subjective quality, among which L1 loss is widely adopted due to its simplicity and
+efficiency. However, whether L1 loss is always the optimal choice for super-resolution
+reconstruction tasks remains inconclusive and warrants further in-depth investigation. In
+light of this, this study adopts the DFSMamba model as the baseline and systematically
+evaluates the performance of L2 loss, mean squared error (MSE) loss, Focal loss, weighted
+total variation (WeightedTV) loss, and Charbonnier loss as alternative loss functions on
+two remote sensing image datasets, WHU-RS19 and AID, aiming to explore a superior loss
+function configuration scheme (Table 10).
+Table 10. Comparison of loss functions for DFSMamba in the×2 remote sensing SISR task. The best
+and second-best results are highlighted in bold and underlined, respectively.
+Method Loss Function WHU-RS19 AID
+PSNR SSIM PSNR SSIM
+DFSMamba
+L1 Loss 30.45 0.8122 34.54 0.9138
+L2 Loss 31.15 0.8138 34.17 0.9088
+MSE Loss 31.18 0.8143 34.04 0.9078
+Perceptual Loss 30.85 0.8095 33.92 0.9055
+Focal Loss 30.62 0.8070 33.78 0.9030
+Charbonnier Loss 31.24 0.8191 34.72 0.9152
+WeightedTV Loss 29.95 0.7985 33.27 0.8533
+As shown in Table 10, the DFSMamba model was used to evaluate the impact of seven
+different loss functions on remote sensing image super-resolution reconstruction over the
+WHU-RS19 and AID datasets. The experimental results indicate that Charbonnier loss
+achieves the best overall performance among all compared objectives.
+Specifically, on the WHU-RS19 dataset, Charbonnier loss achieves a PSNR of 31.24 dB
+and an SSIM of 0.8191, outperforming the commonly used L1 loss (30.45 dB/0.8122) by
+0.79 dB in PSNR and 0.0069 in SSIM. On the AID dataset, Charbonnier loss achieves a
+PSNR of 34.72 dB and an SSIM of 0.9152, slightly surpassing L1 loss (34.54 dB/0.9138) with
+improvements of 0.18 dB and 0.0014, respectively. These results indicate that Charbonnier
+loss provides a more stable optimization behavior and achieves a better balance between
+pixel fidelity and structural reconstruction quality.
+It is worth noting that L2 loss and MSE loss also achieve competitive performance on
+the WHU-RS19 dataset, reaching PSNR values of 31.15 dB and 31.18 dB, respectively, both
+higher than the L1 baseline. However, on the AID dataset, their PSNR values decrease to
+34.17 dB and 34.04 dB, respectively, both lower than L1 loss. This phenomenon suggests
+that the effectiveness of different loss functions is closely related to dataset characteristics
+and image distribution. In addition, Perceptual loss, Focal loss, and WeightedTV loss con-
+sistently underperform compared with L1 loss on both datasets. In particular, WeightedTV
+loss achieves an SSIM of only 0.8533 on the AID dataset, which is substantially lower than
+all other compared objectives.
+The above experimental results lead to three main conclusions. First, Charbonnier loss
+demonstrates the best overall reconstruction performance on both datasets, particularly
+on WHU-RS19, where it significantly improves both PSNR and SSIM. As a differentiable
+and smooth approximation of L1 loss, Charbonnier loss alleviates optimization instability
+caused by sharp gradient variations near zero, thereby improving reconstruction stability
+and visual quality. Second, the performance of different loss functions varies across datasets,
+indicating that the selection of the optimization objective should be task-specific and data-
+dependent rather than universally fixed. Third, although L2 loss and MSE loss achieve
+relatively high PSNR values in some scenarios, their sensitivity to outliers may limit their
+robustness for complex remote sensing image super-resolution tasks.
+https://doi.org/10.3390/rs18121910
+Remote Sens. 2026, 18, 1910 20 of 26
+It should be noted that the scope of this loss-function experiment remains limited.
+Since the comparison is conducted only under the current experimental setting and ×2
+upscaling factor, the superiority of Charbonnier loss should be further validated across
+additional datasets and scaling factors before drawing a universal conclusion. Therefore,
+L1 loss is still retained as the default optimization objective for fair comparison with prior
+work, while more advanced perceptual and structure-aware objectives will be explored in
+future research.
+4.2. Contributions and Characteristics
+From a signal processing perspective, the SISR task is fundamentally a frequency
+extrapolation problem—the missing high-frequency components must be inferred from
+low-frequency observations. Traditional spatial-domain methods (including CNNs, Trans-
+formers, and Mamba) all implicitly learn the mapping from low to high frequencies within
+this framework, lacking explicit constraints on frequency-domain structure. The DFTM
+module introduces a differentiable mapping between spatial and frequency domains via
+the discrete Fourier transform, enabling joint modeling of the amplitude and phase spectra.
+The amplitude spectrum governs the energy distribution across frequency components,
+determining texture richness, while the phase spectrum preserves edge locations and struc-
+tural information, determining geometric integrity. The joint modeling of both enables the
+network to explicitly decouple global structure (low-frequency dominant) from local details
+(high-frequency dominant), allowing separate constraints to be applied during optimiza-
+tion. The theoretical advantage of this design lies in the fact that each frequency-domain
+coefficient covers all pixels of the entire image, thus fundamentally solving the limited
+receptive field problem inherent in spatial-domain models by establishing a theoretically
+global, lossless receptive field without relying on stacked layers or attention mechanisms
+to expand the perceptual range.
+The core advantage of Mamba-based methods lies in recursively modeling sequences
+through linear state equations, achieving linear computational complexity with respect to
+sequence length. However, standard Mamba processes each position sequentially and with
+equal weight, lacking the ability for adaptive modulation based on semantic information.
+The ASSMamba module enhances the semantic interpretability of state-space modeling
+at two levels. At the state equation level, ASE injects information from “unobserved”
+pixels into the output matrix C via a learnable prompt pool, enabling each time step’s
+state update to perceive global context—thereby elevating locally recursive modeling to a
+mechanism with global query capability. At the data layout level, SGN leverages feature-
+level similarity and contextual consistency to rearrange structurally correlated pixels into
+adjacent positions before flattening. This operation alleviates the long-range dependency
+degradation problem in Mamba by shortening the effective semantic distance among highly
+related features without introducing external semantic annotations. This pre-rearrangement
+operation effectively alleviates the long-range dependency degradation problem in Mamba,
+where information propagation becomes challenging when correlated pixels are spaced too
+far apart in the flattened sequence.
+The three core modules of DFSMamba each target different information bottlenecks in the
+super-resolution task, with their synergy manifesting as cascaded information enhancement
+and redundancy suppression. Specifically , the MambaIRv2 backbone handles long-range
+dependency modeling in the spatial domain, with its output features encoding global spatial
+correlations. SCSA further refines this information through semantic chunking, filtering
+out noise responses unrelated to semantics and enhancing the representational strength of
+semantic regions. The DFTM provides orthogonal constraints from the frequency domain:
+texture patterns that are difficult to distinguish in the spatial domain may exhibit distinct
+https://doi.org/10.3390/rs18121910
+Remote Sens. 2026, 18, 1910 21 of 26
+spectral characteristics in the frequency domain, so the DFTM’s frequency-domain enhance-
+ment supplies complementary discriminative information for spatial modeling. ASSMamba
+further modulates information flow via an activation-guided gating mechanism, adaptively
+weighting features according to their importance and preventing the propagation of ineffec-
+tive features. There is no functional overlap among the three modules: SCSA is responsible
+for semantic structuring, the DFTM for frequency-domain structuring, and ASSMamba for
+dynamic modulation. This orthogonality ensures super-linear gains when the three modules
+are jointly used—the overall performance improvement exceeds the sum of individual gains.
+This is validated by the ablation study in Table 7: the best single-module PSNR is 28.62 dB
+(Method A), while the full three-module configuration (Method G) achieves 29.47 dB, an
+improvement of 0.85 dB that is larger than the sum of incremental gains from any two-module
+combination relative to single-module baselines.
+DFSMamba preserves the linear complexity characteristics of the Mamba architec-
+ture, which is a core advantage over Transformer-based methods. The DFTM module
+is implemented via the fast Fourier transform with theoretical complexity of O(n log n),
+where n = H× W is the total number of pixels—far lower than the O(n 2) of global self-
+attention. The SS2D mechanism performs state-space modeling by converting 3D image
+data into 2D sequences with complexity O(n). The complexity of SCSA is governed by
+the number of semantic categories K, and since K (typically 10–30) is much smaller than
+n, its complexity is approximately O(K2)≈ O(1) with respect to n. Therefore, the overall
+complexity of DFSMamba is O(n log n), dominated by the DFTM’s Fourier transform. The
+experimental results in Table 5 validate this theoretical expectation: compared to Mam-
+baIRv2 (complexity O(n)), DFSMamba increases FLOPs from 42.8 G to 46.7 G, an increase
+of only 9.1%—far smaller than the quadratic growth observed when extending Transformer
+methods from window attention to global attention. This demonstrates that the DFTM’s
+frequency-domain enhancement achieves substantial quality improvements at a minimal
+computational cost, realizing an efficient trade-off between efficiency and performance.
+Traditional methods (e.g., SwinIR, MambaIRv2) adopt fixed window partitioning
+strategies. Although such designs reduce computational complexity, they inevitably frag-
+ment semantically continuous regions that span across windows, leading to a structural
+understanding breakdown for large-scale ground objects such as elongated roads, rivers,
+and airport runways. In this study, SCSA overcomes this limitation through dynamic
+chunking and sparse connection mechanisms, enabling adaptive grouping of image se-
+mantic content. As a result, attention computation is no longer constrained by geometric
+positions but is instead performed according to semantic categories. SCSA forms an or-
+thogonal complement to the DFTM and ASSMamba: the DFTM provides a global, lossless
+frequency-domain receptive field; ASSMamba handles dynamic modulation of long-range
+dependencies; and SCSA restructures the information flow path from a semantic organiza-
+tion perspective, ensuring that object boundaries, irregular shapes, and small targets are
+neither oversmoothed nor truncated during reconstruction. It is precisely this “semantic-
+guided sparse attention” mechanism that enables DFSMamba to significantly outperform
+mainstream methods on fine-grained categories (e.g., ports, viaducts, stadiums), demon-
+strating its capability to guarantee both structural integrity and textural fidelity in complex
+remote sensing scenes.
+The multi-scale input experiment (Table 9) reveals a further theoretical advantage of
+DFSMamba over MambaIRv2: cross-scale generalization capability. When the input scale
+increases from 64× 64 to 256× 256, MambaIRv2’s PSNR drops from 29.05 dB to 27.52 dB, a
+decrease of 1.53 dB, while DFSMamba drops from 29.77 dB to 28.13 dB, a decrease of 1.64 dB,
+maintaining a consistent absolute advantage. From an information-theoretic perspective, as
+the input scale increases, the spatial redundancy that a spatial-domain model must process
+https://doi.org/10.3390/rs18121910
+Remote Sens. 2026, 18, 1910 22 of 26
+grows quadratically, while the finite memory capacity of state-space models struggles to
+effectively compress this redundancy. In contrast, the frequency-domain transform in the
+DFTM possesses an energy compaction property—most of the energy in natural images is
+concentrated in low-frequency components, while high-frequency components are sparse.
+Consequently, even as the input scale increases, the growth in effective information in the
+frequency-domain representation is far smaller than the growth in spatial-domain pixels. By
+selectively enhancing and suppressing frequency-domain coefficients, the DFTM maintains
+global structural awareness without significantly increasing computational burden. This
+theoretical property endows DFSMamba with stronger robustness to input-scale variations,
+providing theoretical guarantees for its practical application to remote sensing images of
+varying resolutions.
+4.3. Limitations and Future Work
+Despite the promising results, DFSMamba still has several limitations that need to
+be acknowledged. First, when low-resolution images contain severe noise, clouds, haze,
+or compression artifacts, the high-frequency enhancement mechanism of the DFTM may
+amplify undesirable responses and generate artifacts. This issue is particularly promi-
+nent in low-quality remote sensing image processing scenarios. Second, although DFS-
+Mamba demonstrates a reasonable trade-off between accuracy and efficiency, in resource-
+constrained scenarios (e.g., onboard satellite platforms or low-power edge devices), the
+latency is expected to increase because the DFTM and ASSMamba modules introduce
+additional spectral transformation and bidirectional sequence modeling operations. Con-
+sequently, the model still requires further optimization, such as lightweight ASSMamba
+design, frequency-band pruning, model compression, and hardware-specific accelera-
+tion. Third, the current experimental validation primarily relies on images degraded by
+bicubic downsampling. The generalization capability to real-world complex degradation
+scenarios—such as sensor noise, atmospheric interference, compression artifacts, and mo-
+tion blur—remains unclear and requires further investigation. Fourth, the loss function
+comparison is conducted only under the ×2 scale, and the superiority of Charbonnier
+loss should be further verified across more scales and datasets before drawing a general
+conclusion. Fifth, while excellent performance is achieved on five public datasets, cross-
+sensor generalization (e.g., OLI2MSI, Satlas) has not been systematically evaluated, as most
+datasets are sourced from a single sensor type (e.g., Google Earth).
+Future research will focus on five main directions. First, dynamic thresholding and
+adaptive frequency filtering mechanisms will be introduced into the DFTM module to sup-
+press noise amplification and improve model robustness on low-quality input images. This
+will involve designing content-aware frequency selection strategies that can distinguish be-
+tween meaningful high-frequency details and noise-induced artifacts. Second, cross-sensor
+and real-world degradation experiments will be added to evaluate generalization beyond
+bicubic downsampling. This includes testing on datasets such as OLI2MSI (Landsat-8 OLI
+and Sentinel-2 MSI) and Satlas, as well as constructing real-world degradation benchmarks
+with sensor noise, atmospheric interference, and compression artifacts. Third, the lightweight
+channel-adaptive mechanism of ASSMamba will be optimized for real-time and onboard
+deployment. Specific targets include compressing the model to under 5M parameters and
+achieving real-time inference on edge devices (e.g., NVIDIA Jetson series or embedded GPUs)
+through techniques such as pruning, quantization, and knowledge distillation. Moreover, in
+the broader field of image super-resolution reconstruction—particularly for the complex task
+of remote sensing image super-resolution—there may exist more and better loss functions that
+have yet to be fully explored and applied. For example, adversarial loss based on generative
+adversarial networks and cycle consistency loss based on feature consistency , proposed in
+https://doi.org/10.3390/rs18121910
+Remote Sens. 2026, 18, 1910 23 of 26
+recent years, deserve further investigation. Consequently , future research will be dedicated to
+conducting more comprehensive and in-depth studies on loss functions, extensively exploring
+and testing various potential candidates to identify solutions better suited for remote sensing
+super-resolution tasks. At the same time, we will actively explore the possibility of designing
+task-specific loss functions, pioneering new pathways to enhance reconstruction performance
+through innovative methodologies.
+5. Conclusions
+This paper proposes DFSMamba, a spatial–frequency collaborative modeling frame-
+work for remote sensing image super-resolution. The synergy of Semantic Continuous-
+Sparse Attention, a Discrete Fourier Transform Module, and an Adaptive State-Space
+Module achieves unified global semantic modeling and frequency-domain information
+enhancement while maintaining linear complexity. Experiments on five public datasets
+demonstrate that DFSMamba significantly outperforms mainstream CNN, Transformer,
+and Mamba-based methods across×2 to×4 scaling factors. On the AID×3 task, it achieves
+a PSNR of 31.48 dB, exceeding the best comparison method by 0.68 dB. Ablation studies
+verify the positive synergistic effects of the three modules, with the full configuration
+achieving a PSNR improvement of 0.85 dB over the single-module setup. Fine-grained
+category, multi-scale input, and loss function experiments further confirm its robustness
+and generalization capability.
+Author Contributions: Writing—original draft preparation, J.Y.; investigation, C.Z.; resources, X.Z.;
+writing—review and editing, Q.S. and H.L.; supervision, Q.S.; project administration, H.L. All authors
+have read and agreed to the published version of the manuscript.
+Funding: This research was funded by the Key R&D Program of Zhejiang (No. 2024C03236), the
+Cooperation Projects between the Ministry of Natural Resources and Jiangxi Province (2024ZRBSHZ086).
+Data Availability Statement: The code and data will be made publicly available at https://github.
+com/AlvinsaideYu/DFSMamba (accessed on 30 May 2026).
+Acknowledgments: We extend our sincere gratitude to the editor and the anonymous reviewers for
+their invaluable feedback and suggestions, which have significantly contributed to improving this paper.
+We also wish to thank our colleagues who participated in data processing and manuscript revision.
+Conflicts of Interest: The authors declare no conflicts of interest.
+References
+1. Rau, J.-Y.; Jhan, J.-P .; Hsu, Y.-C. Analysis of oblique aerial images for land cover and point cloud classification in an urban
+environment. IEEE Trans. Geosci. Remote Sens. 2014, 53, 1304–1319. [CrossRef]
+2. Ghaffarian, S.; Kerle, N.; Filatova, T. Remote sensing-based proxies for urban disaster risk management and resilience: A review.
+Remote Sens. 2018, 10, 1760. [CrossRef]
+3. Shi, Z.; Zou, Z. Can a machine generate humanlike language descriptions for a remote sensing image? IEEE Trans. Geosci. Remote
+Sens. 2017, 55, 3623–3634. [CrossRef]
+4. Wang, B.; Zhao, Y.; Li, X. Multiple instance graph learning for weakly supervised remote sensing object detection.IEEE Trans.
+Geosci. Remote Sens. 2021, 60, 5613112. [CrossRef]
+5. Geng, T.; Liu, X.-Y.; Wang, X.; Sun, G. Deep shearlet residual learning network for single image super-resolution. IEEE Trans.
+Image Process. 2021, 30, 4129–4142. [CrossRef]
+6. Li, K.; Yang, S.; Dong, R.; Wang, X.; Huang, J. Survey of single image super-resolution reconstruction.IET Image Process. 2020,
+14, 2273–2290. [CrossRef]
+7. Ha, V .K.; Ren, J.; Xu, X.; Zhao, S.; Xie, G.; Vargas, V .M.; Hussain, A. Deep learning based single image super-resolution: A
+survey. In Proceedings of the International Conference on Brain Inspired Cognitive Systems, Xi’an, China, 7–8 July 2018; Springer: Cham,
+Switzerland, 2018; pp. 106–119. [CrossRef]
+8. Miller, L.; Pelletier, C.; Webb, G.I. Deep learning for satellite image time-series analysis: A review.IEEE Geosci. Remote Sens. Mag.
+2024, 12, 81–124.
+https://doi.org/10.3390/rs18121910
+Remote Sens. 2026, 18, 1910 24 of 26
+9. Zou, W.; Gao, H.; Ye, T.; Chen, L.; Yang, W.; Huang, S.; Chen, H.; Chen, S. VQCNIR: Clearer night image restoration with
+vector-quantized codebook. In Proceedings of the AAAI Conference on Artificial Intelligence; AAAI Press: Washington, DC, USA,
+2024; Volume 38, pp. 7873–7881. [CrossRef]
+10. Jin, Y.; Bouganis, C.-S. Robust multi-image based blind face hallucination. In Proceedings of the 2015 IEEE Conference on Computer
+Vision and Pattern Recognition (CVPR), Boston, MA, USA, 7–12 June 2015; IEEE: New York, NY, USA, 2015; pp. 5252–5260. [CrossRef]
+11. Dong, C.; Loy, C.C.; He, K.; Tang, X. Image super-resolution using deep convolutional networks.IEEE Trans. Pattern Anal. Mach.
+Intell. 2015, 38, 295–307. [CrossRef]
+12. Kim, J.; Lee, J.K.; Lee, K.M. Accurate image super-resolution using very deep convolutional networks. In Proceedings of the IEEE
+Conference on Computer Vision and Pattern Recognition (CVPR), Las Vegas, NV , USA, 27–30 June 2016; IEEE: New York, NY, USA,
+2016; pp. 1646–1654. [CrossRef]
+13. Lei, S.; Shi, Z.; Zou, Z. Super-resolution for remote sensing images via local-global combined network. IEEE Geosci. Remote Sens.
+Lett. 2017, 14, 1243–1247. [CrossRef]
+14. Xu, W.; Zhang, C.; Wu, M. Multi-scale deep residual network for satellite image super-resolution reconstruction. InProceedings
+of the Chinese Conference on Pattern Recognition and Computer Vision (PRCV), Xi’an, China, 8–11 November 2019; Springer: Cham,
+Switzerland, 2019; pp. 332–340.
+15. Yan, L.; Chang, K. A new super resolution framework based on multi-task learning for remote sensing images. Sensors 2021,
+21, 1743. [CrossRef]
+16. Ma, W.; Pan, Z.; Guo, J.; Lei, B. Achieving super-resolution remote sensing images via the wavelet transform combined with the
+recursive Res-Net. IEEE Trans. Geosci. Remote Sens. 2019, 57, 3512–3527. [CrossRef]
+17. Jenefa, A.; Kuriakose, B.M.; Naveen, E.; Lincy, A. EDSR: Empowering super-resolution algorithms with high-quality DIV2K
+images. Intell. Decis. Technol. 2023, 17, 1249–1263.
+18. Galar, M.; Sesma, R.; Ayala, C.; Albizua, L.; Aranda, C. Learning super-resolution for Sentinel-2 images with real ground truth
+data from a reference satellite. ISPRS Ann. Photogramm. Remote Sens. Spat. Inf. Sci. 2020, V-2-2020, 9–16. [CrossRef]
+19. Qin, M.; Mavromatis, S.; Hu, L.; Zhang, F.; Liu, R.; Sequeira, J.; Du, Z. Remote sensing single-image resolution improvement
+using a deep gradient-aware network with image-specific enhancement. Remote Sens. 2020, 12, 758. [CrossRef]
+20. Gu, J.; Sun, X.; Zhang, Y.; Fu, K.; Wang, L. Deep residual squeeze and excitation network for remote sensing image super-resolution.
+Remote Sens. 2019, 11, 1817. [CrossRef]
+21. Song, C.; He, Z.; Yu, Y.; Zhang, Z. Low resolution face recognition system based on ESRGAN. In Proceedings of the 2021 3rd
+International Conference on Applied Machine Learning (ICAML), Changsha, China, 23–25 July 2021; IEEE: Piscataway, NJ, USA, 2021;
+pp. 76–79.
+22. Tian, S.; Peng, T.; Wang, Z.; Li, Z. Medical CT image super-resolution algorithm based on GAN. InProceedings of the 2024 2nd
+International Conference on Computer, Vision and Intelligent Technology (ICCVIT), 2024; IEEE: Piscataway, NJ, USA, 2024; pp. 1–5.
+23. Liang, J.; Cao, J.; Sun, G.; Zhang, K.; Van Gool, L.; Timofte, R. SwinIR: Image restoration using Swin Transformer. InProceedings of
+the IEEE/CVF International Conference on Computer Vision Workshops (ICCVW), Montreal, BC, Canada, 11–17 October 2021; IEEE: New
+York, NY, USA, 2021; pp. 1833–1844. [CrossRef]
+24. Wang, S.; Zhou, T.; Lu, Y.; Di, H. Contextual transformation network for lightweight remote-sensing image super-resolution.
+IEEE Trans. Geosci. Remote Sens. 2021, 60, 5615313. [CrossRef]
+25. Zhang, D.; Shao, J.; Li, X.; Shen, H.T. Remote sensing image super-resolution via mixed high-order attention network. IEEE Trans.
+Geosci. Remote Sens. 2020, 59, 5183–5196. [CrossRef]
+26. Lei, S.; Shi, Z. Hybrid-scale self-similarity exploitation for remote sensing image super-resolution. IEEE Trans. Geosci. Remote Sens.
+2021, 60, 5401410.
+27. Kang, X.; Duan, P .; Li, J.; Li, S. Efficient Swin Transformer for remote sensing image super-resolution.IEEE Trans. Image Process.
+2024, 33, 6367–6379. [CrossRef]
+28. Wang, J.; Wang, B.; Wang, X.; Zhao, Y.; Long, T. Hybrid attention-based U-shaped network for remote sensing image super-
+resolution. IEEE Trans. Geosci. Remote Sens. 2023, 61, 5612515.
+29. Guo, H.; Li, J.; Dai, T.; Ouyang, Z.; Ren, X.; Xia, S.-T. MambaIR: A simple baseline for image restoration with state-space model.
+In Proceedings of the European Conference on Computer Vision (ECCV), Milan, Italy, 29 September–4 October 2024; Springer: Cham,
+Switzerland, 2024; pp. 222–241.
+30. Zhu, L.; Liao, B.; Zhang, Q.; Wang, X.; Liu, W.; Wang, X. Vision Mamba: Efficient visual representation learning with bidirectional
+state space model. arXiv 2024, arXiv:2401.09417. [CrossRef]
+31. Liu, Y.; Tian, Y.; Zhao, Y.; Yu, H.; Xie, L.; Wang, Y.; Ye, Q.; Jiao, J.; Liu, Y. VMamba: Visual state space model.Adv. Neural Inf.
+Process. Syst. 2024, 37, 103031–103063.
+32. He, X.; Cao, K.; Zhang, J.; Yan, K.; Wang, Y.; Li, R.; Xie, C.; Hong, D.; Zhou, M. Pan-Mamba: Effective pan-sharpening with state
+space model. Inf. Fusion 2025, 115, 102779. [CrossRef]
+https://doi.org/10.3390/rs18121910
+Remote Sens. 2026, 18, 1910 25 of 26
+33. Chen, K.; Chen, B.; Liu, C.; Li, W.; Zou, Z.; Shi, Z. RSMamba: Remote sensing image classification with state space model. IEEE
+Geosci. Remote Sens. Lett. 2024, 21, 8002605.
+34. Qiao, J.; Liao, J.; Li, W.; Zhang, Y.; Guo, Y.; Wen, Y.; Qiu, Z.; Xie, J.; Hu, J.; Lin, S. Hi-Mamba: Hierarchical Mamba for efficient
+image super-resolution. arXiv 2024, arXiv:2410.10140. [CrossRef]
+35. Liu, Y.; Wan, Y.; Liu, X.; Wu, Q.; Xia, P .; Huang, X.; Zhang, Y. HIMOSA: Efficient remote sensing image super-resolution with
+hierarchical mixture of sparse attention. arXiv 2025, arXiv:2512.00275. [CrossRef]
+36. Xiao, Y.; Yuan, Q.; Jiang, K.; Chen, Y.; Zhang, Q.; Lin, C.-W. Frequency-assisted Mamba for remote sensing image super-resolution.
+IEEE Trans. Multimed. 2024, 27, 1783–1796. [CrossRef]
+37. Cui, H.; Li, J.; Du, D.; Zhang, Y.; Xia, Y. MRFMA: A hybrid paradigm integrating multi-receptive field network with mediator
+attention for 3D multi-organ segmentation. Expert Syst. Appl. 2025, 300, 130447. [CrossRef]
+38. Bai, X.; Pres, I.; Deng, Y.; Tan, C.; Shieber, S.; Viégas, F.; Wattenberg, M.; Lee, A. Why can’t Transformers learn multiplication?
+Reverse-engineering reveals long-range dependency pitfalls. arXiv 2025, arXiv:2510.00184.
+39. Li, Z.; Zhang, S.; Li, G.; Gu, W. Stable high-frequency components recovery via multichannel absorption compensation.IEEE
+Trans. Geosci. Remote Sens. 2025, 63, 5913109.
+40. Gu, Y.; Meng, Y.; Chen, S.; Ji, J.; Sun, X.; Ruan, W.; Ji, R. SFIR: Optimizing spatial and frequency domains for image restoration.
+Pattern Recognit. 2025, 171, 112188. [CrossRef]
+41. Dai, D.; Yang, W. Satellite image classification via two-layer sparse coding with biased image representation.IEEE Geosci. Remote
+Sens. Lett. 2010, 8, 173–176. [CrossRef]
+42. Xia, G.-S.; Bai, X.; Ding, J.; Zhu, Z.; Belongie, S.; Luo, J.; Datcu, M.; Pelillo, M.; Zhang, L. DOTA: A large-scale dataset for object
+detection in aerial images. In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR), Salt Lake City,
+UT, USA, 18–22 June 2018; IEEE: New York, NY, USA, 2018; pp. 3974–3983. [CrossRef]
+43. Zou, Q.; Ni, L.; Zhang, T.; Wang, Q. Deep learning based feature selection for remote sensing scene classification.IEEE Geosci.
+Remote Sens. Lett. 2015, 12, 2321–2325. [CrossRef]
+44. Xia, G.-S.; Hu, J.; Hu, F.; Shi, B.; Bai, X.; Zhong, Y.; Zhang, L.; Lu, X. AID: A benchmark data set for performance evaluation of
+aerial scene classification. IEEE Trans. Geosci. Remote Sens. 2017, 55, 3965–3981. [CrossRef]
+45. Cheng, G.; Han, J.; Zhou, P .; Guo, L. Multi-class geospatial object detection and geographic image classification based on collection
+of part detectors. ISPRS J. Photogramm. Remote Sens. 2014, 98, 119–132. [CrossRef]
+46. Guo, H.; Guo, Y.; Zha, Y.; Zhang, Y.; Li, W.; Dai, T.; Xia, S.-T.; Li, Y. MambaIRv2: Attentive state space restoration. InProceedings of
+the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), Nashville, TN, USA, 2025; IEEE: New York, NY, USA,
+2025; pp. 28124–28133.
+47. Shang, C.; Wang, Z.; Wang, H.; Meng, X. SCSA: A plug-and-play semantic continuous-sparse attention for arbitrary semantic
+style transfer. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), Nashville, TN, USA,
+2025; IEEE: New York, NY, USA, 2025; pp. 13051–13060.
+48. He, J.; Zhai, J.; Antunes, T.; Wang, H.; Luo, F.; Shi, S.; Li, Q. FasterMoE: Modeling and optimizing training of large-scale dynamic
+pre-trained models. In Proceedings of the 27th ACM SIGPLAN Symposium on Principles and Practice of Parallel Programming,
+Seoul, Republic of Korea, 2–6 April 2022; pp. 120–134. [CrossRef]
+49. Kingma, D.P .; Ba, J. Adam: A method for stochastic optimization. arXiv 2014, arXiv:1412.6980.
+50. Ibrahim, Y.; Momoh, M.O.; Shobowale, K.O.; Abubakar, Z.M.; Yahaya, B. EDANet: A novel architecture combining depthwise
+separable convolutions and hybrid attention for efficient tomato disease recognition. J. Comput. Theor. Appl. 2025, 3, 160–170.
+[CrossRef]
+51. Zhang, Y.; Li, K.; Li, K.; Wang, L.; Zhong, B.; Fu, Y. Image super-resolution using very deep residual channel attention networks.
+In Proceedings of the European Conference on Computer Vision (ECCV), Munich, Germany, 8–14 September 2018 ; Springer: Cham,
+Switzerland, 2018; pp. 286–301. [CrossRef]
+52. Lei, S.; Shi, Z.; Mo, W. Transformer-based multistage enhancement for remote sensing image super-resolution. IEEE Trans. Geosci.
+Remote Sens. 2021, 60, 5615611.
+53. Wang, H.; Chen, X.; Ni, B.; Liu, Y.; Liu, J. Omni aggregation networks for lightweight image super-resolution. In Proceedings of the
+IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), Vancouver, BC, Canada, 17–24 June 2023; IEEE: New York,
+NY, USA, 2023; pp. 22378–22387.
+54. Zhang, D.; Huang, F.; Liu, S.; Wang, X.; Jin, Z. SwinFIR: Revisiting the SwinIR with fast Fourier convolution and improved
+training for image super-resolution. arXiv 2022, arXiv:2208.11247.
+55. Xiao, Y.; Yuan, Q.; Jiang, K.; He, J.; Lin, C.-W.; Zhang, L. TTST: A Top-k token selective Transformer for remote sensing image
+super-resolution. IEEE Trans. Image Process. 2024, 33, 738–752. [CrossRef]
+56. Chen, Z.; Zhang, Y.; Gu, J.; Kong, L.; Yang, X.; Yu, F. Dual aggregation Transformer for image super-resolution. In Proceedings of
+the IEEE/CVF International Conference on Computer Vision (ICCV), Paris, France, 2–6 October 2023; pp. 12312–12321. [CrossRef]
+https://doi.org/10.3390/rs18121910
+Remote Sens. 2026, 18, 1910 26 of 26
+57. Feng, Y.; Yang, Y.; Fan, X.; Zhang, Z.; Bu, L.; Zhang, J. A progressive image restoration network for high-order degradation
+imaging in remote sensing. IEEE Trans. Geosci. Remote Sens. 2025, 63, 5633816. [CrossRef]
+58. Xie, C.; Zhang, X.; Li, L.; Fu, Y.; Gong, B.; Li, T.; Zhang, K. MAT: Multi-range attention Transformer for efficient image
+super-resolution. IEEE Trans. Circuits Syst. Video Technol.2025, 35, 8945–8957. [CrossRef]
+59. Gu, J.; Dong, C. Interpreting super-resolution networks with local attribution maps. In Proceedings of the IEEE/CVF Conference
+on Computer Vision and Pattern Recognition (CVPR), Nashville, TN, USA, 20–25 June 2021 ; IEEE: New York, NY, USA, 2021;
+pp. 9199–9208. [CrossRef]
+60. Lai, W.-S.; Huang, J.-B.; Ahuja, N.; Yang, M.-H. Fast and accurate image super-resolution with deep Laplacian pyramid networks.
+IEEE Trans. Pattern Anal. Mach. Intell. 2018, 41, 2599–2613. [CrossRef]
+61. Johnson, J.; Alahi, A.; Fei-Fei, L. Perceptual losses for real-time style transfer and super-resolution. In Proceedings of the European
+Conference on Computer Vision (ECCV), Amsterdam, The Netherlands, 11–14 October 2016 ; Springer: Cham, Switzerland, 2016;
+pp. 694–711. [CrossRef]
+Disclaimer/Publisher’s Note: The statements, opinions and data contained in all publications are solely those of the individual
+author(s) and contributor(s) and not of MDPI and/or the editor(s). MDPI and/or the editor(s) disclaim responsibility for any injury to
+people or property resulting from any ideas, methods, instructions or products referred to in the content.
+https://doi.org/10.3390/rs18121910

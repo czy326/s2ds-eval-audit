@@ -1,0 +1,2067 @@
+ 
+
+ Super-Resolved Canopy Height Mapping from Sentinel-2 Time Series Using Airborne LiDAR HD Reference Data across Metropolitan France 
+
+ Report GitHub Issue 
+ × 
+
+ Title: 
+
+ Content selection saved. Describe the issue below: 
+
+ Description: 
+
+ Submit without GitHub 
+ Submit in GitHub 
+
+ arXiv is now an independent nonprofit! 
+ Learn more 
+ &times; 
+
+ Back to arXiv 
+
+ Why HTML? 
+
+ Report Issue 
+
+ Back to Abstract 
+
+ Download PDF 
+
+ Abstract 
+ 1 Introduction 
+ 2 Data 
+ 
+ 2.1 Study area 
+ 2.2 Training dataset 
+ 2.3 Ancillary data 
+ 
+ 3 Methodology 
+ 
+ 3.1 Model 
+ 3.2 Loss functions 
+ 3.3 Experimental Setup 
+ 
+ 3.3.1 Evaluation Metrics 
+ 3.3.2 Super-resolution quality assessment 
+ 3.3.3 Additional experiments 
+ 3.3.4 Model Configuration 
+
+ 4 Results and Discussion 
+ 
+ 4.1 Results 
+ 
+ 4.1.1 Quantitative Results 
+ 4.1.2 Qualitative Results 
+ 
+ 4.2 Ablation Study 
+ 4.3 Comparison with other methods using independent LiDAR reference map 
+ 
+ 5 Conclusion 
+ A Extended comparison with other methods using independent LiDAR reference maps 
+ B Sylvoécorégions of France 
+ C Tree growth evaluation 
+ D Disturbance detection 
+ References 
+
+ License: arXiv.org perpetual non-exclusive license
+
+arXiv:2512.11524v3 [cs.CV] 27 May 2026 
+
+ Super-Resolved Canopy Height Mapping from Sentinel-2 Time Series Using Airborne LiDAR HD Reference Data across Metropolitan France 
+
+ Ekaterina Kalinicheva
+ 
+ Affiliation:  CESBIO, 18 avenue Édouard Belin, Toulouse, 31401, France
+
+ Florian Helen
+ 
+ Affiliation:  GlobEO, Avenue Saint-Éxupery, Toulouse, 31400, France
+
+ Stéphane Mermoz
+ 
+ Affiliation:  GlobEO, Avenue Saint-Éxupery, Toulouse, 31400, France
+
+ Florian Mouret
+ 
+ Affiliation:  CESBIO, 18 avenue Édouard Belin, Toulouse, 31401, France
+
+ Milena Planells
+ 
+ Affiliation:  CESBIO, 18 avenue Édouard Belin, Toulouse, 31401, France
+
+ Abstract 
+ 
+ Fine-scale forest monitoring is essential for understanding canopy structure and its dynamics, which are key indicators of carbon stocks, biodiversity, and forest health.
+Deep learning is particularly effective for this task, as it integrates spectral, temporal, and spatial signals that jointly reflect the canopy structure. To address this need, we introduce THREASURE-Net, a novel end-to-end framework for Tree Height REgression And SUper-REsolution. The model is trained on Sentinel-2 time series using reference height metrics derived from LiDAR HD data at multiple spatial resolutions over Metropolitan France to produce annual height maps.
+We evaluate three model variants, producing tree-height predictions at 2.5 m, 5 m, and 10 m resolution.
+THREASURE-Net does not rely on any pretrained model, nor on reference very high resolution optical imagery to train its super-resolution module; instead, it learns solely from LiDAR-derived height information.
+Our approach outperforms existing state-of-the-art methods based on Sentinel data and is competitive with methods based on very high resolution imagery. It can be deployed to generate high-precision annual canopy-height maps, achieving mean absolute errors of 2.63 m, 2.70 m, and 2.89 m at 2.5 m, 5 m, and 10 m resolution, respectively.
+These results highlight the potential of THREASURE-Net for scalable and cost-effective structural monitoring of temperate forests using only freely available satellite data. The source code for THREASURE-Net is available at: https://github.com/Global-Earth-Observation/threasure-net . 
+
+ Keywords:  
+forest canopy height regression , super-resolution , Sentinel-2 time series , LiDAR HD , temporal transformer
+
+ 1 Introduction 
+
+ Forest monitoring has always been essential for the sustainable functioning of ecosystems, managing the balance between harvesting for industry, carbon storage, and species diversity   ( FAO, 2025 ) . Canopy height mapping is a key component of forest monitoring, as it provides insights into stand structure, biomass, regeneration dynamics, and disturbance impacts  ( Lang et al., 2023 ) . Since many forest processes – such as selective logging, canopy degradation, regeneration, or subtle structural changes – occur at fine spatial scales, methods and spatial resolutions have evolved substantially over time to improve the accuracy and spatial resolution of canopy height predictions. 
+
+ To monitor canopy evolution across large territories over time, researchers increasingly rely on satellite imagery as a practical source of information  ( Besic et al., 2025 ) . Initially, a statistical approach was used to combine satellite imagery with in situ measurements  ( Simard et al., 2011 ; Avitabile et al., 2016 ; Bouvet et al., 2018 ; Mermoz et al., 2024 ) . The in situ or field measurements can be national inventories carried out by the national forest agency at regular intervals (every 5 years in France) or isolated campaigns. Nevertheless, manual annotation of forest stands at large scales to obtain reference data is impractical and costly. As a result, it has become common practice to use LiDAR (Light Detection and Ranging) data – whether airborne or satellite-based – to derive reference data. Among the most widely used sources are GEDI  ( Dubayah et al., 2020 ) a spaceborne LiDAR mission providing discrete vertical profiles at 25-m resolution, and various airborne LiDAR campaigns. Today, airborne LiDAR data remains the most accurate and comprehensive source of information for forest structure monitoring and analysis ( Coops et al., 2021 ) . It provides detailed 3D point clouds whose spatial resolution – directly linked to point density – allows the precise characterization of forest vertical and horizontal structure. Many European countries have launched national LiDAR monitoring campaigns and provide Airborne laser scanning (ALS) data free of charge  ( Kakoulaki et al., 2021 ) . In France, the LiDAR HD 1 1 
+ 1 
+
+ https://geoservices.ign.fr/lidarhd national ALS campaign aims to cover the entire metropolitan territory with a minimum density of 10 pulses per m², which constitutes a key reference dataset for forest structural studies. However, despite its extensive coverage of French territory, each area is typically observed only once, which prevents any temporal analysis using LiDAR HD data alone. 
+
+ To overcome the lack of temporal information and spatial discontinuity, these LiDAR datasets are used in conjunction with satellite image series to produce temporally continuous maps. The methods and spatial resolutions involved have evolved substantially over time. While early approaches relied on coarse to medium resolution imagery combined with traditional machine learning models such as Random Forests  ( Morin et al., 2023 ; Ahmed et al., 2015 ; Wang et al., 2016 ) , more recent works have shown that deep learning methods using high resolution (HR) open access satellite data from missions such as Sentinel-1 and Sentinel-2, at 10-20 m of resolution, can predict canopy structure with greater accuracy  ( Lang et al., 2023 ; Schwartz et al., 2023 ; Becker et al., 2023 ) . These methods can produce annual maps, thereby increasing the frequency of forest monitoring. To overcome the limits of the 10 m spatial resolution, recent studies use very high-resolution (VHR) commercial imagery such as PlanetScope  ( Liu et al., 2023 ) , Maxar  ( Tolan et al., 2024 ) , or SPOT-6/7  ( Fogel et al., 2025 ) . However, acquiring VHR imagery remains expensive; therefore, training models at national scales is often impractical and costly. 
+
+ In France, several models have been proposed to map tree height across the territory using LiDAR as reference data. For instance, FORMS-T  ( Schwartz et al., 2025 ) uses yearly median composites of Sentinel-1 and Sentinel-2 imagery and GEDI LiDAR data as reference to predict canopy structure at 10 m resolution over the French metropolitan territory. In contrast, Open-Canopy  ( Fogel et al., 2025 ) relies on a single VHR SPOT-6/7 image combined with LiDAR HD to map fine-scale canopy height at 1.5 m, also over the French metropolitan territory. 
+
+ Among other recent models that could be used in France, the Global Canopy Height (GCH) Model  ( Lang et al., 2023 ) can be named. It provides global 10 m canopy height estimates using GEDI LiDAR as a reference and a single-date Sentinel-2 image, combined with coordinate encoding to identify geographical zones as an input. 
+
+ In this context, two central research questions remain open: how can prediction accuracy be further improved, and how can very high-resolution canopy height estimates be produced while keeping data acquisition costs low. To address these questions, we focus in this work on improving tree height prediction while simultaneously increasing the output resolution using only freely available remote sensing data and super-resolution deep learning methods. 
+
+ Super-resolution algorithms aim to transfer high resolution (HR) features to low resolution (LR) imagery   ( Wang et al., 2022 ) . While most studies focus solely on the super-resolution (SR)
+task  ( Salgueiro Romero et al., 2022 ; Liu et al., 2025 ; Michel et al., 2025 ; Müller et al., 2020 ) , some studies combine SR with a real-life prediction task (such as building height estimation or object segmentation) to leverage the additional spatial information from higher-resolution images  ( Lei et al., 2019 ; Abadal et al., 2021 ; Cao and Weng, 2024 ) . In these approaches, the SR component is typically supervised using either VHR images or artificially downsampled data to create LR–HR training pairs, while a separate dataset is used to supervise the downstream task. 
+
+ These methods focus on joint Single Image Super Resolution (SISR) analysis since their prediction tasks do not benefit from multi-temporal data. Today, several SISR models  ( Michel et al., 2025 ; Cresson, 2022 ) can be used to enhance Sentinel-2 satellite image time series (SITS). Therefore, the resulting VHR time series can then be directly used as input for prediction algorithms. However, processing super-resolved image series requires significantly more computational resources compared to using the original low-resolution data. Moreover, errors in image calibration and co-registration within a time series can introduce significant misalignments with the reference data, leading to substantial inconsistencies in the super-resolved input time series, potentially reducing the reliability of the prediction results. 
+
+ In contrast, Multi-Image Super-Resolution (MISR) techniques aim to jointly exploit multiple low resolution observations of the same area to reconstruct a higher resolution image. While these methods have demonstrated significant gains in domains such as video restoration or change detection  ( Wang et al., 2021 ) , they are rarely explored in the context of Earth Observation. Furthermore, they are better suited to capture phenological variation over time, which is crucial for accurate vegetation analysis ( Pelletier et al., 2018 ) . 
+
+ While we have not found any works performing MISR simultaneously with a downstream prediction task, some works focusing solely on MISR can be cited. These approaches can be generally categorized into three categories: (i) temporal-transformer models that learn shared information across time before increasing the image resolution   ( Okabayashi et al., 2024 ) , (ii) diffusion-based models that reconstruct high-resolution images by iteratively denoising samples while being guided by the low-resolution inputs  ( Luo et al., 2024 ) , and (iii) recursive fusion models  ( Deudon et al., 2020 ) , that progressively combine multiple low-resolution observations to generate a higher-resolution output. 
+
+ Motivated by these findings, we propose a novel end-to-end framework that simultaneously performs super-resolution and forest canopy height estimation using Sentinel-2 image time series. Our model, named THREASURE-Net (Tree Height REgression And SUper REsolution), allows us to generate tree height maps at 2.5, 5 and 10 m spatial resolutions. We apply our method to metropolitan France since forest monitoring in France still relies largely on field measurements and photointerpretation of high-resolution imagery, compared with Scandinavian countries, where LiDAR and satellite imagery are already integrated into national forest inventory systems. The objective of this study is therefore to provide new tools that can complement existing practices in France. To assess their relevance, we compare our approach with several state-of-the-art algorithms commonly used for forest variable estimation from satellite data. 
+
+ Our main contributions can be summarized as follows: 
+ 
+ 1. 
+ 
+ We propose a fully end-to-end model that does not rely on any pretrained super-resolution networks or any VHR reference optical image data. 
+ 
+ 2. 
+ 
+ THREASURE-Net, trained solely on Sentinel-2 data, achieves an accuracy comparable to models trained on VHR satellite data, while also providing coherent fine-scale spatial details that are not visible in predictions at the native resolution. 
+ 
+ 3. 
+ 
+ During training, model predictions are conditioned by LiDAR’s acquisition date, explicitly accounting for the seasonal variability of reference data. 
+ 
+ 4. 
+ 
+ The model is able to handle irregular Sentinel-2 time series without explicitly requiring cloud-free observations. 
+ 
+ 5. 
+ 
+ Our approach simultaneously predicts both canopy height and a tree/non-tree classification mask, whereas existing methods restrict height prediction to pre-defined forest areas using an external mask. 
+
+ Figure 1 : Distribution of train, test and validation patches. Buffers of 1 km are set around test patches to ensure reliable evaluation of model results. 
+
+ 2 Data 
+
+ 2.1 Study area 
+
+ Our area of study is mainland France (including Corsica), which spans 543,940 km². French forests cover 17.5 million hectares, accounting for nearly one-third of the territory. This makes them the fourth largest in Europe by surface area, after Sweden, Finland, and Spain. Three-quarters of these forests are privately owned. Public forests are mainly concentrated in the southern and eastern parts of the country.
+France’s geographical diversity is notable, featuring five distinct climates (oceanic, transitional oceanic, semi-continental, Mediterranean, and mountain) and 190 190 tree species, as well as various silvicultural techniques. This diversity makes it a prime example of temperate European forests. The National Forest Inventory has divided the metropolitan territory into 91 91 sections called sylvoécorégions (SER) – forest ecoregions – taking into account the bio-geographical factors that determine forest production and the distribution of major forest habitats (e.g., altitude, climate, and soil characteristics). See Figure  10 and  B . 
+
+ Table 1 : Overview of datasets used in this study. 
+
+ Data 
+
+ Time span 
+
+ Resolution 
+ 
+ Description 
+
+ Source 
+
+ Usage 
+
+ Sentinel-2 SITS 
+
+ 2018–2024 
+
+ 10 m 
+
+ Multispectral satellite imagery providing dense time series used to capture spectral and temporal information related to canopy structure. 
+
+ Copernicus 
+
+ Training / Evaluation 
+
+ LiDAR HD 
+
+ 2021–2024 
+
+ 10 pts/m 2 
+
+ Airborne LiDAR dataset providing high-resolution canopy height metrics used as reference data for model training and evaluation. 
+
+ IGN 
+
+ Training / Evaluation 
+
+ Land Parcel Identification System (RPG) 
+
+ 2024 
+
+ – 
+
+ Agricultural parcel dataset used to identify and mask non-forest areas within the study region. 
+
+ RPG – Data.gouv 
+
+ Masking 
+
+ FORMS-T Schwartz et al. (2025) 
+
+ 2018–2023 
+
+ 10 m 
+
+ Canopy height prediction maps from FORMS-T algorithm for different years, used to compare with our predictions for independent ALS and disturbance detection. 
+
+ FORMS-T 
+
+ Comparison 
+
+ Open-Canopy Fogel et al. (2025) 
+
+ 2018–2023 
+
+ 1.5 m 
+
+ Canopy height prediction maps from Open-Canopy algorithm for different years, used to compare with our predictions for independent ALS and disturbance detection. 
+
+ FORMSpoT 
+
+ Comparison 
+
+ Global Canopy Height (GCH) Lang et al. (2023) 
+
+ 2020 
+
+ 10 m 
+
+ Canopy height prediction maps from GCH model used as reference for 2020 to compare with our predictions. 
+
+ GCH Model 
+
+ Comparison 
+
+ Carcans-Hourtins 
+
+ 10/2020 
+
+ 31 pts/m 2 
+
+ ALS-derived tree height map. Coastal plain, pine forest with a few broadleaf trees in the understory. 
+
+ ONF 
+
+ Evaluation 
+
+ Déodatie 
+
+ 04/2018 
+
+ 13 pts/m 2 
+
+ ALS-derived tree height map. Hilly terrain, mixed forest: beech, oak, hornbeam, spruce, and pine. 
+
+ ONF 
+
+ Evaluation 
+
+ Lajoux-Lafresse 
+
+ 06/2019 
+
+ 31 pts/m 2 
+
+ ALS-derived tree height map. Mountainous terrain, spruce, pine, and beech. 
+
+ ONF 
+
+ Evaluation 
+
+ Mouterhouse 
+
+ 02/2019 
+
+ 17 pts/m 2 
+
+ ALS-derived tree height map. Flat plain with small hills, beech, oak, hornbeam, and pine. 
+
+ ONF 
+
+ Evaluation 
+
+ 2.2 Training dataset 
+
+ To train THREASURE-Net, a dataset composed of Sentinel-2 SITS and corresponding LiDAR HD patches was generated. 
+
+ The French territory is covered by 80 80 Sentinel-2 tiles following the Military Grid Reference System (MGRS). To build Sentinel-2 SITS, we choose images acquired from May to October, on the same year as the reference LiDAR HD patch. We filter out images with cloud coverage and missing data superior to 50% and 10%, respectively. 
+
+ Sentinel-2 image time series correspond to the Level 2A product, processed from L1C by MAJA  2 2 
+ 2 
+
+ https://www.cesbio.cnrs.fr/maja/ . MAJA stands for MACCS-ATCOR Joint Algorithm, where MACCS refers to Multi-sensor Atmospheric Correction and Cloud Screening, and ATCOR to Atmospheric/Topographic Correction. algorithm developed by Theia, the French land data center for Earth observation. We select 10 spectral bands (B02, B03, B04, B05, B06, B07, B08, B8A, B11, B12), Cloud Mask, as well as acquisition angles: Sun azimuth and zenith angles - θ S a \theta_{S_{a}} and θ S z \theta_{S_{z}} respectively, satellite mean view azimuth θ V a \theta_{V_{a}} and zenith angles θ V z \theta_{V_{z}} . All bands and angles are resampled at 10 m. The acquisition angles are encoded using trigonometric transformations to respect angular periodicity: 
+
+ [ cos ⁡ ( θ S z ) , cos ⁡ ( θ S a ) , sin ⁡ ( θ S a ) , cos ⁡ ( θ V z ) , cos ⁡ ( θ V a ) , sin ⁡ ( θ V a ) ] . \bigl[\cos(\theta_{S_{z}}),\hskip 5.0pt\cos(\theta_{S_{a}}),\hskip 5.0pt\sin(\theta_{S_{a}}),\hskip 5.0pt\cos(\theta_{V_{z}}),\hskip 5.0pt\cos(\theta_{V_{a}}),\hskip 5.0pt\sin(\theta_{V_{a}})\bigr]. 
+
+ Due to the coarse resolution of the available angle data (5 km pixel size), the angle values are extracted as vectors corresponding to the center of each patch. 
+
+ The reference data are derived from the Institut Geographique National (IGN)’s LiDAR HD open dataset, with patches acquired between 2021 and 2024. This consists of a national airborne LiDAR campaign that aims to cover the entire French territory with a minimum density of 10 pts/m². Patches have already been acquired over 2021-2025 years, and the campaign is ongoing. The 3D point clouds are transformed into height rasters in a fully-automatic way: point cloud values are spatially projected onto a regular pixel grid with a chosen spatial resolution (10 m, 5 m or 2.5 m), from which the 95 t ​ h 95^{th} percentile of elevation values is computed for the ensemble of points falling within each pixel.
+The LiDAR HD product is provided with point-wise classification into multiple land cover categories. Tree height values are only derived for pixels corresponding to vegetation higher than 1.5 m, while the remaining pixels are set to zero. However, tall crop vegetation, such as corn, may be incorrectly classified as forest vegetation. This introduces potential bias into model training, as crop vegetation does not exhibit the same structural or phenological characteristics as trees. To solve this issue, we apply a crop mask derived from Land Parcel Identification System ( Le Registre Parcellaire Graphique (RPG)), the French national graphic crop register.
+All vegetation within crop parcels with height below 5 m is considered non-permanent, and its height values are excluded from the annotations. 
+
+ To ensure a spatially robust and statistically representative dataset, we implemented a stratified sampling strategy on the LiDAR HD tiles, taking into account forest coverage and canopy height variance in the SER regions. First, a subset of 15% of LiDAR HD tiles was assigned to the test dataset, providing an independent evaluation dataset. To reduce spatial autocorrelation and prevent information leakage, all LiDAR tiles adjacent to the test tiles, including diagonal neighbors, were designated as buffer zones and excluded from the training and validation sets. The remaining tiles were randomly split into training (90%) and validation (10%) subsets. Within this stratified dataset, samples were randomly selected to obtain 179945 179945 patches for training, 19133 19133 for validation, and 35639 35639 for testing. This approach ensures the spatial independence of the test dataset while preserving regional representativeness in model development. 
+
+ 2.3 Ancillary data 
+
+ To compare our canopy height estimates with independent reference ALS data, we use four height maps with 1 m resolution, derived from various high-density LiDAR campaigns conducted by the Office National des Forêts (ONF). 
+
+ To compare our algorithm with the concurrent approaches, we equally use canopy height prediction maps
+provided by the authors of FORMS-T  ( Schwartz et al., 2025 ) at 10 m resolution, Open-Canopy  ( Fogel et al., 2025 ) at 1.5 m resolution for different years, and the Global Canopy Height Model  ( Lang et al., 2023 ) at 10 m resolution for 2020 year. 
+
+ A summary of all datasets used in this study is provided in Table  1 . 
+
+ 3 Methodology 
+
+ 3.1 Model 
+
+ Figure 2 : THREASURE-Net model architecture. 
+
+ In this work, we propose an end-to-end model, named THREASURE-Net, that performs super-resolution and regression tasks simultaneously. Additionally, our model produces a tree/non-tree classification mask, based on tree height regression features.
+Given a Sentinel-2 SITS s = [ s t 1 , s t 2 , … , s T ] ∈ ℝ T × C × H × W s=[s_{t_{1}},s_{t_{2}},\dots,s_{T}]\in\mathbb{R}^{T\times C\times H\times W} acquired at dates t = [ t 1 , t 2 , … , t T ] ∈ ℝ T t=[t_{1},t_{2},\dots,t_{T}]\in\mathbb{R}^{T} , the model aims to predict the tree height 95 th 95^{\text{th}} percentile corresponding to the reference date t L t_{L} , producing an output of shape f ⋅ H × f ⋅ W f\cdot H\times f\cdot W , where f f denotes the SR factor.
+Here, T T , C C , H H , and W W represent the number of acquisition dates, spectral channels, image height, and image width in pixels, respectively.
+Note that for the sake of simplicity, we omit batch dimension in the model description. 
+
+ THREASURE-Net model is composed of several blocks, as shown in Figure  2 : 
+
+ Spatio-spectral (SS) feature extraction module. 
+First, we extracted features independently for each SITS image with Residual Dense Blocks-based Feature Extraction module (here referred to as RDB-FE). This produces a new feature time series f = [ f 1 t 1 , f 1 t 1 , … , f 1 T ] ∈ ℝ T × F 1 × H × W f=[f_{1_{t_{1}}},f_{1_{t_{1}}},\dots,f_{1_{T}}]\in\mathbb{R}^{T\times F_{1}\times H\times W} , where the new feature dimension F 1 F_{1} is a hyperparameter. 
+
+ The RDB-FE module is extracted from Residual Dense network (RDN) ( Zhang et al., 2018 ) , which is mainly used for natural image SISR task and originally consists of four parts:
+shallow feature extraction net (SFENet), residual dense blocks (RDBs), dense feature fusion (DFF) and finally the up-sampling net (UPNet). Given the multi-temporal nature of our model, at this stage, we only deploy the feature extraction modules (SFENet, RDBs, and DFF). The up-sampling module is applied later to the temporally encoded features, rather than to each image individually. 
+
+ While alternative architectures such as ResNet ( He et al., 2015 ) or Residual-in-Residual Dense Blocks (RRDB) ( Wang et al., 2018 ) could also be employed for feature extraction, we selected RDBs as a balanced choice.
+RDBs offer improved feature reuse compared to ResNet, thanks to dense connections that help capture fine-grained spatial details in Sentinel-2 imagery. At the same time, RDBs are significantly lighter than RRDBs, making them particularly well suited for our multi-temporal super-resolution task. 
+
+ Temporal feature extraction block. 
+To extract a unique set of temporal features for each Sentinel-2 series, we exploit the Lightweight Temporal Self-Attention mechanism proposed by Garnot and Landrieu (2020) .
+The module(here referred to as Temporal Encoder) captures dependencies across the multi-temporal Sentinel-2 time series and allows the network to dynamically weight the contribution of each timestamp, by combining keys K K , queries Q Q and values V V to produce a self-attention mask..
+The simplified version of this algorithm can be summarized as follows: 
+
+ Let 𝐟 = [ 𝐟 1 , 𝐟 2 , … , 𝐟 T ] ∈ ℝ T × F 1 \mathbf{f}=[\mathbf{f}_{1},\mathbf{f}_{2},\dots,\mathbf{f}_{T}]\in\mathbb{R}^{T\times F_{1}} 
+be the sequence of encoded Sentinel-2 observations at times { t 1 , … , t T } \{t_{1},\dots,t_{T}\} . Each timestamp is associated with a temporal positional encoding
+ 𝐩 i ∈ ℝ d \mathbf{p}_{i}\in\mathbb{R}^{d} using a sinusoidal function from the Positional Encoding (PE) module: 
+
+ 𝐩 i ( 2 ​ k ) = sin ⁡ ( t i τ 2 ​ k / d ) , 𝐩 i ( 2 ​ k + 1 ) = cos ⁡ ( t i τ 2 ​ k / d ) , \mathbf{p}_{i}^{(2k)}=\sin\!\left(\frac{t_{i}}{\tau^{2k/d}}\right),\quad\mathbf{p}_{i}^{(2k+1)}=\cos\!\left(\frac{t_{i}}{\tau^{2k/d}}\right), 
+ 
+ (1) 
+
+ with τ \tau a scaling constant and k k indexing the embedding dimensions. The positional encoding is added to the input features: 
+
+ 𝐟 ~ i = 𝐟 i + 𝐩 i . \tilde{\mathbf{f}}_{i}=\mathbf{f}_{i}+\mathbf{p}_{i}. 
+ 
+ (2) 
+
+ The attention mechanism computes keys 𝐊 \mathbf{K} and values 𝐕 \mathbf{V} as linear projections of 𝐟 ~ \tilde{\mathbf{f}} , while 𝐐 \mathbf{Q} is a learnable parameter. The resulting aggregated temporal representation has a final size T × F 2 × H × W T\times F_{2}\times H\times W ,
+where F 2 F_{2} is the feature dimension after encoding and H × W H\times W are the spatial dimensions. For full details on the Lightweight Temporal Transformer, we refer the reader to Garnot and Landrieu (2020) . 
+
+ However, since LiDAR HD reference data are acquired on different days of the year, the prediction quality may be affected by seasonal growth and on/off-leaf specificity of 3D LiDAR data. Therefore, we replace learnable queries from the original algorithm by temporal queries 𝐪 t ​ e ​ m ​ p \mathbf{q}_{temp} that condition the predicted temporal features by LiDAR acquisition day, by projecting them onto a temporally-aware latent space. 
+
+ 𝐪 t ​ e ​ m ​ p = W Q ​ 𝐞 t L , \mathbf{q}_{temp}=W_{Q}\,\mathbf{e}_{t_{L}}, 
+ 
+ (3) 
+
+ where 𝐞 t L \mathbf{e}_{t_{L}} is encoded LiDAR dates, and W Q ∈ ℝ d × d a W_{Q}\in\mathbb{R}^{d\times d_{a}} are learnable weights. 
+
+ The LiDAR date t L t_{L} is encoded using the same sinusoidal positional encoding (eq.  1 ) as the Sentinel-2 acquisition dates t t , ensuring that both modalities share a common temporal representation space.
+Finally, f t ​ e ​ m ​ p f_{temp} serves as the temporally fused feature used for downstream regression. 
+
+ As described previously, we encode both the Sentinel-2 acquisition dates t t and the reference LiDAR acquisition date t L t_{L} .
+The dates are expressed as day-of-year (DOY) values,
+ t = [ t 1 , … , t i , … , t T ] ∈ ℝ T t=[t_{1},\dots,t_{i},\dots,t_{T}]\in\mathbb{R}^{T} and t L ∈ ℝ t_{L}\in\mathbb{R} ,
+in “DD–MM” format, with the year omitted to ensure generalization across unseen years.
+Before applying the sinusoidal positional encoding, the DOY values are normalized as follows: 
+
+ t i = t i − t ref , S2 , with  ​ t ref , S2 = January 1st . t_{i}=t_{i}-t_{\mathrm{ref,S2}},\qquad\text{with }t_{\mathrm{ref,S2}}=\text{January 1st}. 
+ 
+ (4) 
+
+ t L = t L − t ref , L , with  ​ t ref , L = July 1st . t_{L}=t_{L}-t_{\mathrm{ref,L}},\qquad\text{with }t_{\mathrm{ref,L}}=\text{July 1st}. 
+ 
+ (5) 
+
+ As shown in Equations  4 and  5 ,
+the resulting DOYs represent relative time offsets (in days) from the beginning and the middle of the year, respectively.
+This preprocessing highlights the seasonal relationship between the LiDAR reference date and the Sentinel-2 time series,
+allowing the model to better capture phenological phase alignment.
+During inference, predictions are by default conditioned on July 1st, whereas during training the DOY representation preserves temporal offsets around this date, enabling the model to encode whether an observation occurs earlier or later in the seasonal cycle. 
+
+ Moreover, we use time series padding along the temporal dimension within each batch, which allows us to process SITS of various length. 
+
+ Upsampling block. The upsampling step is applied after the temporal encoding rather than before, in order to reduce memory consumption—since a single shared temporally encoded feature map is upsampled instead of multiple individual ones—and to take advantage of the common temporal representation rather than processing separate temporal features independently. 
+
+ Figure 3 : Sub-pixel convolution. Example of factor 2 upsampling. A LR image with C C feature channels and H × W H\times W spatial dimensions is passed through 2D convolution layer to obtain 2 2 ⋅ C 2^{2}\cdot C feature channels where each group of 2 2 2^{2} consecutive channels form a sub-pixel group that is reorganized by pixel shuffle operation to a SR image with C C channels and 2 ⋅ H × 2 ⋅ W 2\cdot H\times 2\cdot W spatial dimensions. 
+
+ The upsampling module employs a sub-pixel convolution (pixel shuffle) method  ( Shi et al., 2016 ) , which reconstructs high-resolution outputs by rearranging low-resolution feature channels into spatial dimensions (see Figure  3 ). The SR is performed progressively by increasing the feature map resolution by a factor of 2 until the desired resolution is achieved.
+Therefore, the super-resolution hyperparameter r r is constrained to be a power of 2 2 . In each SR block with r = 2 r=2 , the input feature map’s feature dimension F 2 F_{2} is increased by factor 2² with a 2D convolution operation, then the resulted feature map is rearranged by a pixel shuffle operation, producing a new feature map of size F 2 × 2 ​ H × 2 ​ W F_{2}\times 2H\times 2W :
+ C ​ o ​ n ​ v ​ 2 ​ D ​ ( F 2 , 4 ⋅ F 2 ) → P ​ i ​ x ​ e ​ l ​ S ​ h ​ u ​ f ​ l ​ e ​ ( 2 ) Conv2D(F_{2},4\cdot F_{2})\rightarrow PixelShufle(2) .
+The sequence of those blocks is followed by another 2D convolution operation with ReLU activation, without changing the feature map size. 
+
+ However, the sub-pixel convolutions are known to produce checkerboard artifacts ( Aitken et al., 2017 ) , due to random weight initialization across sub-pixel groups. To mitigate this issue, the weights are initialized following the approach presented by Aitken et al. (2017) , where identical initialization is applied within each sub-pixel group to ensure smooth and artifact-free textures. A small amount of random noise is then added to break the symmetry and improve optimization dynamics. 
+
+ Tree height regression and classification. 
+The final tree-height predictions and tree masks are generated by a Multi-Layer Perceptron (MLP) block (referred to as MLP regression). The MLP takes the super-resolved features as input and processes them through a set of shared layers. The final layer is task-specific, with two parallel heads. Each head performs a distinct task: the regression head predicts tree height, while the classification head outputs a tree/non-tree map at the chosen resolution. The classification head is optimized independently using detached features, preventing its gradients from affecting the shared representation. 
+
+ 3.2 Loss functions 
+
+ To optimize the model, we employ the following loss functions: the L1 loss (Mean Absolute Error, MAE) for tree height prediction, Binary Cross-Entropy (BCE) loss for the tree/non-tree classification mask, and the Weighted Gradient Difference Loss (WGDL) to enhance the texture and edges of the super-resolved features. The total loss is defined as: 
+
+ ℒ t ​ o ​ t ​ a ​ l = ω h ​ e ​ i ​ g ​ h ​ t ⋅ ℒ h ​ e ​ i ​ g ​ h ​ t + ω c ​ l ​ a ​ s ​ s ​ i ​ f ⋅ ℒ c ​ l ​ a ​ s ​ s ​ i ​ f + ω w ​ g ​ d ​ l ⋅ ℒ w ​ g ​ d ​ l . \mathcal{L}_{total}=\omega_{height}\cdot\mathcal{L}_{height}+\omega_{classif}\cdot\mathcal{L}_{classif}+\omega_{wgdl}\cdot\mathcal{L}_{wgdl}. 
+ 
+ (6) 
+
+ where ω h ​ e ​ i ​ g ​ h ​ t \omega_{height} , ω c ​ l ​ a ​ s ​ s ​ i ​ f \omega_{classif} , and ω w ​ g ​ d ​ l \omega_{wgdl} are weighting coefficients controlling the relative contribution of each loss term. 
+
+ Tree height regression Loss. By design choice, the tree classification mask extraction is based on the height regression features. For this reason, during training, the height prediction loss is computed both for tree and non-tree pixels. However, the height of non-tree pixels is set to zero. Therefore, we apply weights to balance the contribution of tree and non-tree pixels, preventing the loss from being dominated by non-trees. 
+
+ In this work, we assume that most patches exhibit low variability in pixel values due to the homogeneous forest structure, which may lead to imbalance within a batch.
+To solve this issue, instead of directly averaging pixel-wise loss values across the batch, we first average them within each patch and then across patches in the batch while applying tree/non-tree weights w tree w_{\text{tree}} and w non-tree w_{\text{non-tree}} loss as follows: 
+
+ ℒ batch = ∑ i = 1 N b w i ​ ℓ ​ ( p b , i ) ∑ i = 1 N b w i , where  ​ w i = { w tree = 1 , if pixel  ​ i ​  is tree , w non-tree , otherwise . \begin{split}\mathcal{L}_{\text{batch}}&=\frac{\sum_{i=1}^{N_{b}}w_{i}\,\ell(p_{b,i})}{\sum_{i=1}^{N_{b}}w_{i}},\\
+\text{where }w_{i}&=\begin{cases}w_{\text{tree}}=1,&\text{if pixel }i\text{ is tree},\\
+w_{\text{non-tree}},&\text{otherwise}.\end{cases}\end{split} 
+ 
+ (7) 
+
+ B B is the batch size, N b N_{b} is the number of valid pixels within a patch and ℓ ⁡ ( p b , i ) \ell(p_{b,i}) are pixel-wise loss values. For simplicity, we set w tree w_{\text{tree}} =1 for all the experiments. 
+
+ Gradient difference Loss. 
+To improve the quality of the super-resolution, we employ the WGDL, a variant of Gradient Difference Loss (GDL)  ( Nie et al., 2018 ) , which offers an effective balance between memory consumption and prediction accuracy.
+GDL loss is computed as L1 or L2 loss between the predicted and target image gradients for adjacent pixels in horizontal and vertical planes. 
+
+ We define horizontal and vertical gradients ∇ x \nabla_{x} and ∇ y \nabla_{y} for predicted and reference images X X and Y Y , respectively, as follows: 
+
+ ∇ x X i , j = X i , j − X i , j − 1 , ∇ y X i , j = X i , j − X i − 1 , j , ∇ x Y i , j = Y i , j − Y i , j − 1 , ∇ y Y i , j = Y i , j − Y i − 1 , j . \begin{split}\nabla_{x}X_{i,j}=X_{i,j}-X_{i,j-1},\quad\nabla_{y}X_{i,j}=X_{i,j}-X_{i-1,j},\\
+\nabla_{x}Y_{i,j}=Y_{i,j}-Y_{i,j-1},\quad\nabla_{y}Y_{i,j}=Y_{i,j}-Y_{i-1,j}.\end{split} 
+ 
+ (8) 
+ 
+ where ( i , j ) (i,j) are indexed pixel coordinates. 
+
+ Then the GDL loss is computed as follows: 
+
+ ℒ GDL ​ ( X , Y ) = ( CLOSE ∑ i = 1 j = 1 H , W | | ∇ x X i , j | − | ∇ x Y i , j | | α + ∑ i = 1 j = 1 H , W | | ∇ y X i , j | − | ∇ y Y i , j | | α ) / 2 , \begin{split}\mathcal{L}_{\text{GDL}}(X,Y)=(&\sum_{\begin{subarray}{c}i=1\\
+j=1\end{subarray}}^{H,W}\Big|\,|\nabla_{x}X_{i,j}|-|\nabla_{x}Y_{i,j}|\,\Big|^{\alpha}\\
+&+\sum_{\begin{subarray}{c}i=1\\
+j=1\end{subarray}}^{H,W}\Big|\,|\nabla_{y}X_{i,j}|-|\nabla_{y}Y_{i,j}|\,\Big|^{\alpha})/2,\end{split} 
+ 
+ (9) 
+ 
+ where α \alpha is the chosen loss function. In our work, L2-loss function is chosen.
+However, due to the homogeneous forest structure, the latter pixels will contribute more to the loss, while the textured/edge regions will be underrepresented. To address this issue, we propose the context-adapted pixel weighting strategy: the pixel weights are based on the target gradients normalized by the maximum gradient values m ​ a ​ x ​ ( | ∇ x Y | ) max(|\nabla_{x}Y|) and m ​ a ​ x ​ ( | ∇ y Y | ) max(|\nabla_{y}Y|) within each patch. Moreover, to prevent excluding homogeneous regions, we introduce the λ m ​ i ​ n \lambda_{min} regularization term, to ensure that the weights values are comprised in [ λ m ​ i ​ n , 1 ] [\lambda_{min},1] : 
+
+ W ∇ x ​ ( i , j ) = λ m ​ i ​ n + ( 1 − λ m ​ i ​ n ) ​ | ∇ x Y i , j | m ​ a ​ x ​ ( | ∇ x Y | ) , W ∇ y ​ ( i , j ) = λ m ​ i ​ n + ( 1 − λ m ​ i ​ n ) ​ | ∇ y Y i , j | m ​ a ​ x ​ ( | ∇ y Y | ) \begin{split}W_{\nabla_{x}}(i,j)=\lambda_{min}+(1-\lambda_{min})\frac{|\nabla_{x}Y_{i,j}|}{max(|\nabla_{x}Y|)},\\
+W_{\nabla_{y}}(i,j)=\lambda_{min}+(1-\lambda_{min})\frac{|\nabla_{y}Y_{i,j}|}{max(|\nabla_{y}Y|)}\end{split} 
+ 
+ (10) 
+
+ Finally, the Weighted Gradient Difference Loss (WGDL) can be expressed as follows: 
+
+ ℒ WGDL ​ ( X , Y ) = ( CLOSE ∑ i = 1 j = 1 H , W W ∇ x ​ ( i , j ) ⋅ | | ∇ x X i , j | − | ∇ x Y i , j | | α + ∑ i = 1 j = 1 H , W W ∇ y ( i , j ) ⋅ | | ∇ y X i , j | − | ∇ y Y i , j | | α ) / 2 \begin{split}\mathcal{L}_{\text{WGDL}}(X,Y)=(&\sum_{\begin{subarray}{c}i=1\\
+j=1\end{subarray}}^{H,W}W_{\nabla_{x}}(i,j)\cdot\Big|\,|\nabla_{x}X_{i,j}|-|\nabla_{x}Y_{i,j}|\,\Big|^{\alpha}\\
+&+\sum_{\begin{subarray}{c}i=1\\
+j=1\end{subarray}}^{H,W}W_{\nabla_{y}}(i,j)\cdot\Big|\,|\nabla_{y}X_{i,j}|-|\nabla_{y}Y_{i,j}|\,\Big|^{\alpha})/2\end{split} 
+ 
+ (11) 
+
+ Moreover, for WGDL, we apply w non-tree w_{\text{non-tree}} weight to non-tree pixels following the same principle as for L1 loss. 
+
+ 3.3 Experimental Setup 
+
+ 3.3.1 Evaluation Metrics 
+
+ To evaluate the performance of the model for tree height prediction, we report four complementary metrics: the coefficient of determination (R²), the MAE, the root mean squared error (RMSE), and the relative mean absolute error (rMAE). We additionally report Intersection over Union (IoU) to assess the quality of the tree classification mask. 
+
+ R² measures how well the predicted values follow the variability of the true heights, with higher values indicating better explanatory power.
+MAE reflects the average magnitude of the prediction errors, while RMSE emphasizes larger errors more strongly and, therefore, highlights occasional large deviations.
+The rMAE expresses the average error relative to the true values, enabling comparison across height ranges with different scales. Finally, IoU quantifies the spatial overlap between predicted and reference tree masks, measuring the ratio between their intersection and union, and thus evaluates how accurately the model delineates tree-covered areas. 
+
+ Moreover, super-resolution predictions may not be perfectly aligned with the reference data, which is a well-known issue in SR evaluation  Michel et al. (2025) . In particular, lower-resolution Sentinel-2 imagery may exhibit geolocation misalignment of several meters. While such shifts have limited impact at the native resolution, they can lead to pixel-level misalignment between SR predictions and higher-resolution reference data. Therefore, when evaluating our approach against independent LiDAR-derived height maps, we employ shifted evaluation metrics for 5 and 2.5 m models. These metrics are computed by evaluating several spatial offsets within a local neighborhood and selecting the alignment yielding the lowest MAE. The remaining evaluation metrics are subsequently computed using this optimal shift. 
+
+ 3.3.2 Super-resolution quality assessment 
+
+ To evaluate the quality of super-resolution (SR) frequency restoration, we use the Frequency Attenuation Profile (FAP) metric based on Discrete Fourier Transform (DFT)  ( Michel et al., 2025 ) , as it is not sensitive to cross-dataset distortions and provides a robust frequency-domain comparison. FAP indicates how strongly each spatial frequency component is preserved or attenuated in an image. Low frequencies correspond to large-scale structures, whereas high frequencies capture fine textures and edges. By comparing the attenuation curves of the HR reference, the SR prediction, and the lower resolution input upsampled with bicubic interpolation, we can assess how effectively the model restores or preserves spatial details. 
+
+ 3.3.3 Additional experiments 
+
+ To assess the generalizability of the proposed model, we compare its predictions against independent LiDAR-derived reference data and state-of-the-art methods. 
+
+ We also conduct an ablation study to evaluate the influence of different loss functions – specifically patch-wise averaging, the WGDL loss, and the weight assigned to non-tree pixels ( w non-tree w_{\text{non-tree}} ) – on model performance. 
+
+ 3.3.4 Model Configuration 
+
+ We evaluate THREASURE-NET at three spatial resolutions: 10 m, 5 m, and 2.5 m.
+For training we use both tree and non-tree pixels, considering the pixels with values superior to 1.5 m as trees (permanent vegetation).
+However, the tree height regression validation metrics are exclusively computed over tree pixels derived from reference data, whereas the IoU metric is evaluated separately to assess the accuracy of tree/non-tree classification. 
+
+ All models share the same high-level architecture, which includes an RDB feature extraction block, a temporal transformer for multi-temporal fusion, a super-resolution block, and an MLP prediction head.
+For the 10 m model, the super-resolution block is omitted, as no upscaling is required. Hyperparameters were chosen based on preliminary experiments and practical constraints associated with the extensive training time, with an additional objective of minimizing prediction error. 
+
+ The RDB-FE block uses 5 RBD blocks with 5 layers each in the 5 m and 2.5 m models, and 4 dense blocks with 4 layers in the 10 m model. The channel growth rate and output feature dimension are fixed at 24 and 64 across all models. The 10 m model uses a smaller RDB configuration since no super-resolution step is applied, while increasing the RDB size for the 2.5 m model did not yield performance improvements during training. 
+
+ The temporal transformer employs 4 attention heads and a hidden dimension of 16 to process the multi-temporal inputs. For positional encoding, a scaling constant of τ = 365 \tau=365 is used for both LiDAR and Sentinel-2 acquisition dates. 
+
+ The super-resolution block applies upscaling factors of r = 2 and r = 4 for the 5 m and 2.5 m models, respectively, with the convolutional filter size increasing from 64 to 256 for each upscaling step. 
+
+ Feature sizes F 1 F_{1} and F 2 F_{2} are both set to 64. Temporal transformer parameters are set to 4 heads with feature size of 16 for each head. 
+
+ Finally, the prediction head consists of an MLP with layer sizes (64, 128, 64) followed by two task-specific output heads: one producing a single-channel tree-height regression map and the other generating a binary classification mask. 
+
+ The maximum time-series length is set to 12, and all series shorter than 5 observations are discarded. During training, a random sampling strategy is applied when the time-series length exceeds 12, whereas an equal-range sampling strategy is used during validation to ensure the consistency of the validation data. 
+
+ The input Sentinel-2 patches contain 64 × 64 64\times 64 pixels ( 640 × 640 640\times 640  m²), augmented with border margins that are passed through the model but discarded from the output before loss computation and inference, in order to avoid border effects due to 2D convolution operations.
+During training, we apply a random sampling strategy within the borders of each LiDAR HD patch ( 1 × 1 1\times 1 km²), whereas during validation, the central region of the patch is systematically selected. For this reason, the initial Sentinel-2 patches were constructed with 250 m margins on each side relative to the LiDAR patches. 
+
+ As mentioned in Section  2.3 , patch-weighted L1 loss, BCE and WGDL losses are used for model optimization. The loss weights were set as follow: ω h ​ e ​ i ​ g ​ h ​ t = 1 \omega_{height}=1 , ω c ​ l ​ a ​ s ​ s ​ i ​ f = 1 \omega_{classif}=1 , and ω w ​ g ​ d ​ l = 0.33 \omega_{wgdl}=0.33 . The weight for non-tree pixels is set to w non-tree = 0.1 w_{\text{non-tree}}=0.1 for both patch-weighted L1 and wGDL losses. 
+
+ All input features were standardized to ensure stable training. 
+
+ Model training and evaluation were performed on the CNES TREX HPC cluster, equipped with NVIDIA A100 and H100 GPUs. The implementation used PyTorch 2.5.1 with CUDA 11.8. Experiments were executed in mixed-precision mode to improve computational efficiency. 
+
+ The network was trained using the Adam optimizer with a cosine annealing with warm restarts scheduler ( Loshchilov and Hutter, 2016 ) , where the learning rate decays at the beginning of each new cycle by a factor of 0.25 with the initial learning rate set to 10 − 3 10^{-3} .
+We used a batch size of 32 and accumulated gradients over 4 steps, resulting in an effective batch size of 128. 
+
+ The training took roughly 3 days for each model. 
+
+ 4 Results and Discussion 
+
+ 4.1 Results 
+
+ 4.1.1 Quantitative Results 
+
+ Table 2 : Quantitative results for our models of 10, 5 and 2.5 m resolutions at the test set. We also report the performance of two other recent state-of-the-art algorithms developed for french temperate forests: FORMS-T  ( Schwartz et al., 2025 ) at 10m and Open-Canopy  ( Fogel et al., 2025 ) at 1.5m resolution. N/R stands for “Not Reported”. Here we report the performance of concurrent methods for reference purposes only. 
+
+ Model 
+ Res., m 
+ MAE, m 
+ MAE, % 
+ R 2 R^{2} 
+ RMSE, m 
+ IoU, % 
+ 
+ THREASURE-Net 
+ 10 
+ 2.63 
+ 22.3 
+ 0.75 
+ 3.55 
+ 88.5 
+ 
+ 5 
+ 2.70 
+ 25.3 
+ 0.72 
+ 3.66 
+ 86.7 
+ 
+ 2.5 
+ 2.89 
+ 29.7 
+ 0.67 
+ 3.92 
+ 84.7 
+ 
+ Open-Canopy 
+ 1.5 
+ 2.52 
+ 22.9 
+ N/R 
+ 4.02 
+ 90.5 ∗ 
+ 
+ FORMS-T 
+ 10 
+ 3.06 
+ N/R 
+ 0.68 
+ N/R 
+ 76.8 ∗ 
+
+ ∗ The authors report tree classification within a forest mask, while we perform tree/non-tree classification for the whole test dataset. 
+
+ Figure 4 : Error distribution across canopy-height bins (1.5-5, 5-10, 10-15, 15-20, 20-25, 25-30, > > 30 m) for our models at different output resolutions in a form of box-and-whisker plots. A boxplot shows the median and the interquartile range (IQR) (from the 1st to the 3rd quartile), with whiskers extending to the most extreme values within 1.5 × \times IQR. Gray bars indicate the proportion of samples falling into each bin relative to the entire dataset. 
+
+ ((a)) 10 m 
+
+ ((b)) 5 m 
+
+ ((c)) 2.5 m 
+ 
+ Figure 5 : Prediction–target scatterplots for our 10 m, 5 m, and 2.5 m models for tree pixels. For visualization purposes, we randomly sampled an equal number of points ( ≈ \approx 96 million) from each model, corresponding to the total number of points in the 10 m dataset. The identity line is shown in white. Note that although the minimum target values in the dataset are set to 1.5 m, we report the model predictions without applying any clipping. 
+
+ In this subsection, we report the quantitative results of our model performance at different resolutions for the test set. The different metrics are reported in Table  2 .
+For reference, we report the performance of two recent state-of-the-art algorithms developed for French temperate forests, FORMS-T  ( Schwartz et al., 2025 ) and Open-Canopy  ( Fogel et al., 2025 ) , using results reported in their original publications. A direct comparison with our method on independent LiDAR data is provided in Section  4.3 . 
+
+ Our model achieves mean absolute errors of 2.63 m, 2.70 m, and 2.89 m at 2.5 m, 5 m, and 10 m resolution, respectively.
+Although Open-Canopy obtains the lowest MAE overall, its RMSE is higher than the RMSE achieved by THREASURE-Net at each of the three resolutions. This indicates that Open-Canopy performs well on average values but struggles more with the extreme ones, tending to regress predictions toward the mean.
+In our case, quantitative performance decreases as the target resolution becomes finer. Nevertheless, the 2.5 m version of our model remains competitive with Open-Canopy, despite relying exclusively on freely available 10 m Sentinel-2 imagery. By contrast, Open-Canopy is trained on 1.5 m SPOT-6/7 data, which are commercial products or accessible only through specific research agreements. This highlights an important advantage of our approach: comparable performance can be achieved without relying on costly high-resolution remote sensing input data.
+Moreover, all variants of THREASURE-Net reached better results than 10 m resolution FORMS-T, despite relying solely on Sentinel-2 data, whereas FORMS-T uses Sentinel-1 and Sentinel-2 data, which requires considerably heavier data processing. 
+
+ Figure  4 shows the error distribution across tree-height bins (1.5–5, 5–10, 10–15, 15–20, 20–25, 25–30, and > > 30 m) using box-and-whisker plots. Overall, all three resolutions exhibit similar behavior, with a slight degradation in performance for the smallest and tallest trees. In contrast, for mid-range heights (10-15 and 15-20 m), the models perform nearly identically, with median errors close to zero.
+Moreover, all models tend to overestimate low height values, while for higher values they exhibit the opposite behavior.
+The most noticeable performance differences between the models occur above 25 m, where their accuracy drops more sharply than in the mid-range bins. This may be explained by the uneven distribution of tree heights in the dataset or by the limitations of Sentinel-2 in distinguishing fine spectral differences in short and tall forest stands – an issue that could be addressed in future work. 
+
+ Figure  5 presents the prediction–target scatterplots for our models. The 10 m model produces predictions that cluster closely around the identity line, indicating strong agreement with the target values. For the 5 m and 2.5 m models, the point dispersion becomes increasingly noticeable.
+Interestingly, although the 2.5 m model exhibits the largest overall spread around the identity line, it produces fewer extreme errors than the 10 m and 5 m models. 
+
+ The superior performance of Open-Canopy in forest mask classification (IoU) at all resolutions suggests that the classification component of our model could be further optimized. 
+
+ We equally evaluate out algorithm’s performance on tree loss detection task and compare it with state-of-the-art methods FORMS-T  ( Schwartz et al., 2025 ) , Open-Canopy  ( Fogel et al., 2025 ) , and Global Canopy Height Model  ( Lang et al., 2023 ) in  D . 
+
+ 4.1.2 Qualitative Results 
+
+ In this subsection, we qualitatively evaluate the capacity of our algorithm to produce sharp and fine-grained textures at 5 and 2.5 m resolutions. Evaluating super-resolution can be a challenging task, as the evaluation metrics often do not take into account geometric distortions between two datasets  ( Michel et al., 2025 ) . Moreover, in our case, in the absence of similar algorithms, SR metrics might be difficult to interpret for our results alone. Therefore, we present visual results of our algorithm as well as Frequency Attenuation Profiles (FAP) for the SR task. 
+
+ Figure  6 illustrates the predictions obtained for a 640 × 640 640\times 640  m forest patch located in the south-west of France. A progressive gain in spatial detail can be observed when moving from the 10 m prediction (Subfigure  6(b) ) to the 5 m (Subfigure  6(c) ) and finally to the 2.5 m prediction (Subfigure  6(d) ). For comparison, we additionally provide bicubic upsampling of the 10 m and 5 m models outputs to 5 m (Subfigure  6(g) ) and 2.5 m (Subfigure  6(h) ), respectively. This allows us to highlight the benefit of deep-learning-based super-resolution compared with a classical interpolation method. 
+
+ Although the super-resolved predictions do not reach the full level of detail present in the reference image, it is nevertheless possible to distinguish tree crown shapes and fine-scale structures such as forest gaps. The improvement from 10 m to 5 m resolution is particularly noticeable, whereas the enhancement from 5 m to 2.5 m is more subtle. When comparing the bicubic 5 → \rightarrow 2.5 m upsampling with the 2.5 m super-resolved output, small gaps appear sharper in the latter, but it introduces little new structural information. This behavior is consistent with the limited amount of spatial information available in Sentinel-2 imagery, which constrains the degree of recoverable fine-scale detail. 
+
+ Figure 6 : 
+ 640 × 640 640\times 640  m tree height prediction patches centred on 44.893°N and 0.997°W.
+Subfigure (a) shows a Sentinel-2 image from the input time series acquired on 7 July 2023, and (b) provides a VHR Bing image for visual comparison.
+Subfigures (c)–(e) present the prediction results of our model at 10 m, 5 m, and 2.5 m resolutions, respectively.
+Subfigures (f) and (g) display the 10 m and 5 m predictions upsampled to 5 m and 2.5 m, respectively, using bicubic interpolation.
+Finally, (h) depicts the reference LiDAR-derived height map at 2.5 m resolution.
+Zoomed-in views (top-left corner) highlight differences in fine details between predictions. No masking is applied in these examples.
+
+ ((a)) Sentinel-2 image 
+
+ ((b)) 10m prediction 
+
+ ((c)) 5m prediction 
+
+ ((d)) 2.5m prediction 
+
+ ((e)) Bing image 
+
+ ((f)) 2.5m reference 
+
+ ((g)) 10m pred. upsampled to 5m 
+
+ ((h)) 5m pred. upsampled to 2.5m 
+
+ ((a)) 5 m 
+
+ ((b)) 2.5 m 
+ 
+ Figure 7 : Normalized log-Frequency Attenuation Profile FAP for HR reference patch, SR results obtained with THREASURE-Net and bicubic interpolation for 5 m (a) and 2.5 m (b) predictions for patch presented in Figure  6 . Bicubic interpolation profiles correspond to Subfigures  6(g) and 6(h) respectively. To maintain consistency, we used HR reference data with the same native resolution for both predictions. Spatial frequencies in x axis correspond to normalized spatial frequencies f = f n f N f=\frac{f_{n}}{f_{N}} ,
+where f N f_{N} is the maximum spatial frequency that can be represented at a given image resolution. 
+
+ Figure 7 presents the normalized log-Frequency Attenuation Profiles for the 5 m and 2.5 m SR predictions, the corresponding HR reference data, and the 10 m and 5 m THREASURE-Net predictions upsampled to 5 m and 2.5 m, respectively, using bicubic interpolation. The results are presented for the same patch as in Figure  6 .
+For both resolutions, SR predictions exhibit a progressive attenuation as frequency increases, reflecting the loss or smoothing of fine spatial details relative to the HR reference, with stronger degradation at 2.5 m. At 5 m, the SR model consistently outperforms bicubic upsampling across most of the frequency spectrum. At 2.5 m, although improvements over bicubic interpolation are modest in the mid-frequency range, the SR output still shows a clear advantage at higher frequencies. 
+
+ One potential application of the improved resolution of THREASURE-Net is the analysis of multi-year tree growth. This idea is explored further in  C . Without multi-year validation data, the results cannot be evaluated. However, the annual tree height time series shows a consistent growth trend, suggesting the potential for monitoring tree growth. 
+
+ 4.2 Ablation Study 
+
+ To justify the benefits of the selected loss functions, we assess their individual contributions relative to a baseline L1 loss. We conduct an ablation study on the 5 m resolution model considering four variants: (i) training with the standard L1 (MAE) loss only; (ii) training with the patch-average L1 loss only (here referred to as patch-weighted MAE, pwMAE); (iii) the proposed configuration combining wGDL with pwMAE; and (iv) the proposed configuration combining wGDL with pwMAE using an increased non-tree pixel weight of w non-tree = 0.5 w_{\text{non-tree}}=0.5 . Note that in both models (i) and (ii) we apply a non-tree weight of w non-tree = 0.1 w_{\text{non-tree}}=0.1 , as in our proposed configuration (iii). 
+
+ Table 3 : Ablation study of different loss functions. 
+
+ Model Variant 
+ MAE 
+ rMSE 
+ MAE (%) 
+ R 2 R^{2} 
+ IoU 
+ 
+ MAE 
+ 2.76 
+ 3.74 
+ 26.2 
+ 0.71 
+ 85.6 
+ 
+ pwMAE 
+ 2.76 
+ 3.73 
+ 25.9 
+ 0.71 
+ 86.4 
+ 
+ wGDL + pwMAE (Our) 
+ 2.70 
+ 3.66 
+ 25.3 
+ 0.72 
+ 86.7 
+ 
+ wGDL + pwMAE w non-tree = 0.5 w_{\text{non-tree}}=0.5 
+ 2.90 
+ 3.93 
+ 27.4 
+ 0.67 
+ 87.3 
+
+ Figure 8 : FAP profile for the target image, SR image produced by our model at 5 m resolution with the chosen hyperparameters and two variation of our model: the one using only MAE loss, for training, and the other using only pwMAE for training, without wGDL loss. 
+
+ The quantitative results are presented in Table  3 . We observe a slight improvement of pwMAE over MAE. Moreover, the improvement of our full model compared to the configuration without the wGDL loss is non-negligible. Finally, increasing the weight of non-tree pixels to 0.5 improves the classification mask but reduces regression performance. 
+
+ Figure  8 presents FAP profiles for configurations (i), (ii), and (iii), where we observe improved frequency reconstruction when using the wGDL loss compared to the variants without it. Those observations prove the efficacy of the proposed model configuration. 
+
+ 4.3 Comparison with other methods using independent LiDAR reference map 
+
+ We evaluate our model at different spatial resolutions and compare it with the three canopy height mapping approaches already cited in the previous sections: FORMS-T  ( Schwartz et al., 2025 ) at 10 m resolution, Open-Canopy  ( Fogel et al., 2025 ) at 1.5 m resolution, and the Global Canopy Height (GCH) Model  ( Lang et al., 2023 ) at 10 m resolution. For the competing methods, we use canopy height maps provided directly by the authors of the corresponding models. 
+
+ The evaluation presented in this subsection is conducted over the Landes region in southwestern France, where we have an independent LiDAR dataset. The reference LiDAR data cover an area of 580 ha. The site has a mean tree height of 12 ± 5 12\pm 5 m. The evaluation is also conducted for other three areas in other years for the FORMS-T and Open-Canopy maps and presented in A . 
+
+ Evaluation is performed at the native resolution of each canopy height product by reprojecting and aggregating the reference LiDAR height data to the corresponding grid. 
+
+ ((a)) Reference Height, 1 m 
+
+ ((b)) VHR Image 
+
+ ((c)) Our, 10 m 
+
+ ((d)) FORMS-T, 10 m 
+
+ ((e)) Our, 5 m 
+
+ ((f)) Lang, 10 m 
+
+ ((g)) Our, 2.5 m 
+
+ ((h)) Open-Canopy, 1.5 m 
+
+ Figure 9 : Tree height prediction of 580 ha area centered on 45.127°N and 0.901°W. Comparison of a) independent reference ALS-derived heights and our model at three resolutions – b) 10 m, c) 5 m, and d) 2.5 m – with concurrent approaches: d) FORMST-T  ( Schwartz et al., 2025 ) , e) Global Canopy Height Model  ( Lang et al., 2023 ) , and f) Open-Canopy  ( Fogel et al., 2025 ) . Zoomed-in views (top left) highlight differences in fine details among predictions on the eastern side of the study area. 
+
+ Table 4 : Quantitative results of tree height estimation for our models of 10, 5 and 2.5 m resolutions on the independent area in South-West France (site Carcans-Hourtins). We also report the performance of three recent state-of-the-art algorithms: FORMS-T  ( Schwartz et al., 2025 ) at 10 m, Open-Canopy  ( Fogel et al., 2025 ) at 1.5 m resolution, and Global Canopy Height Model  ( Lang et al., 2023 ) at 10 m resolution. 
+
+ Model 
+ Res., m 
+ MAE, m 
+ MAE, % 
+ R 2 R^{2} 
+ RMSE, m 
+ IoU, % 
+ 
+ THREASURE-Net 
+ 10 
+ 2.41 
+ 24.2 
+ 0.70 
+ 3.08 
+ 97.1 
+ 
+ 5 
+ 2.30 
+ 27.0 
+ 0.71 
+ 2.98 
+ 94.6 
+ 
+ 2.5 
+ 2.22 
+ 30.6 
+ 0.69 
+ 3.06 
+ 92.8 
+ 
+ FORMS-T 
+ 10 
+ 2.16 
+ 28.5 
+ 0.73 
+ 2.93 
+ 84.5 
+ 
+ Open-Canopy 
+ 1.5 
+ 2.49 
+ 30.4 
+ 0.60 
+ 3.44 
+ 94.0 
+ 
+ GCH 
+ 10 
+ 3.91 
+ 54.7 
+ 0.27 
+ 4.82 
+ 89.3 
+
+ Figure  9 shows the qualitative results for the study area, while Table  4 summarizes the corresponding quantitative results. For our algorithm, for tree/non-tree classification, we directly use predicted binary mask while for other algorithms, the 2 m threshold was applied to the tree height prediction to isolate “non-tree” class.
+The Global Canopy Height model gave the worst results compared to other models, likely because it was trained with global data, contrary to the other algorithms designed specifically for the French temperate forests.
+This result suggests that region-specific models provide advantages over globally trained models for local-scale studies.
+From visual observation, it can be noted that Open-Canopy underestimates high values and flattens spatial textures, providing more homogeneous values within parcels, contrary to the other algorithms. This is reflected in the higher rMSE compared to FORMS-T and our models at 5 and 10 m, confirming that the Open-Canopy model tends to predict values close to the dataset mean, which results in poorer performance for extreme values, as noted earlier.
+Moreover, for 10 m resolution, our model visually gives much sharper textures than FORMS-T, which can possibly be explained by the use of wGDL loss. 
+
+ High rMAE values are observed for our models at 5 and 2.5 m resolution, as well as for the concurrent approaches, despite their low absolute MAE. This can be explained by the prevalence of narrow gaps within the study area – often smaller than the pixel resolution – which are represented by low reference values and therefore increase the sensitivity of relative error to small absolute deviations, as the algorithms tend to smooth over these gaps at finer resolutions. As observed, our model at 10 m resolution yields the best rMSE, likely because the number of such gaps decreases at this coarser resolution. 
+
+ 5 Conclusion 
+
+ In this paper, we have introduced THREASURE-Net, a novel end-to-end framework for super-resolved tree canopy height estimation. Our approach generates high-resolution annual predictions at 2.5, 5 and 10 m directly from Sentinel-2 time series with 10 m resolution, supervised with LiDAR HD–derived canopy height data. THREASURE-Net outperforms existing Sentinel-2–based methods for forest height prediction and achieves performance comparable to approaches relying on 1.5 m SPOT-6/7 imagery. Our model achieves mean absolute errors of 2.63 m, 2.70 m, and 2.89 m at 2.5 m, 5 m, and 10 m resolution, respectively. The improved resolution of THREASURE-Net shows potential for multi-year tree loss detection and tree growth monitoring tasks. However, both tasks are complex and would require further development and refinement before achieving operational implementation. 
+
+ Among the three evaluated resolutions, the 5 m model appears to provide the best trade-off between tree height prediction accuracy and spatial detail. While the 2.5 m model improves the representation of fine-scale spatial structures, its prediction accuracy is often insufficient, particularly in more challenging sites. 
+
+ Our model achieves competitive or superior performance using Sentinel-2 data alone than state-of-the-art methods that rely on both optical and radar data, thanks to its efficient use of vegetation phenology captured in Sentinel-2 time series. Incorporating radar data could be, however, a promising direction to further improve the prediction of very small and very tall trees, as it provides complementary structural information. Further work will focus on these improvements as well as the mitigation of the imbalance across canopy height classes. 
+
+ Furthermore, it would be interesting to investigate the model’s conditioning on LiDAR acquisition in more detail, with a view to potentially extending the framework towards monthly change detection. 
+
+ Acknowledgements 
+
+ Ekaterina Kalinicheva, Florian Mouret and Milena Planells were supported by the PC ALAMOD from the PEPR FairCarbon and received government funding managed by the Agence Nationale de la Recherche under the France 2030 program. Florian Helen and Stéphane Mermoz were supported by a “R&T: Estimation annuelle de paramètres bio-géophysiques des forêts françaises et leurs changements par IA” grant from the Centre National d’Études Spatiales (CNES) (Marché n°5700013599). 
+
+ We would like to express our sincere gratitude to Julien Michel and Jordi Inglada for their assistance and valuable advice on deep learning methods, without which this work would not have been possible. We also gratefully acknowledge Jerôme Bock from ONF for providing the independent ALS-derived canopy height data used in this study for forest disturbance detection task. 
+
+ Appendix A Extended comparison with other methods using independent LiDAR reference maps 
+
+ Table 5 : 
+Quantitative results of tree height estimation for our models of 10, 5 and 2.5 m resolutions on four independent study areas in France.
+We also report the performance of recent state-of-the-art algorithms:
+FORMS-T  ( Schwartz et al., 2025 ) ,
+Open-Canopy  ( Fogel et al., 2025 ) ,
+and Global Canopy Height Model  ( Lang et al., 2023 ) (only for Carcans-Hourtins site).
+
+ Site 
+ 
+ (Tree Height, m ± \pm STD) 
+ 
+ Model 
+ Res., m 
+ MAE, m 
+ MAE, % 
+ R 2 R^{2} 
+ RMSE, m 
+ IoU, % 
+
+ Carcans-Hourtins 
+ 
+ (12 ± \pm 5 m) 
+ 
+ THREASURE-Net 
+ 10 
+ 2.41 
+ 24.2 
+ 0.70 
+ 3.08 
+ 97.1 
+ 
+ 5 
+ 2.30 
+ 27.0 
+ 0.71 
+ 2.98 
+ 94.6 
+ 
+ 2.5 
+ 2.22 
+ 30.6 
+ 0.69 
+ 3.06 
+ 92.8 
+ 
+ FORMS-T 
+ 10 
+ 2.16 
+ 28.5 
+ 0.73 
+ 2.93 
+ 84.5 
+ 
+ Open-Canopy 
+ 1.5 
+ 2.49 
+ 30.4 
+ 0.60 
+ 3.44 
+ 94.0 
+ 
+ GCH 
+ 10 
+ 3.91 
+ 54.7 
+ 0.27 
+ 4.82 
+ 89.3 
+
+ Déodatie 
+ 
+ (19 ± \pm 10 m) 
+ 
+ THREASURE-Net 
+ 10 
+ 4.04 
+ 27.9 
+ 0.73 
+ 5.34 
+ 84.3 
+ 
+ 5 
+ 4.13 
+ 33.7 
+ 0.72 
+ 5.38 
+ 90.3 
+ 
+ 2.5 
+ 4.65 
+ 38.7 
+ 0.63 
+ 6.03 
+ 87.2 
+ 
+ FORMS-T 
+ 10 
+ 4.05 
+ 30.6 
+ 0.72 
+ 5.39 
+ 95.3 
+ 
+ Open-Canopy 
+ 1.5 
+ 3.77 
+ 28.1 
+ 0.74 
+ 5.01 
+ 90.5 
+
+ Lajoux-Fresse 
+ 
+ (22 ± \pm 9 m) 
+ 
+ THREASURE-Net 
+ 10 
+ 4.10 
+ 21.3 
+ 0.65 
+ 5.35 
+ 94.4 
+ 
+ 5 
+ 4.50 
+ 28.5 
+ 0.59 
+ 5.92 
+ 94.6 
+ 
+ 2.5 
+ 5.33 
+ 38.2 
+ 0.46 
+ 6.83 
+ 93.5 
+ 
+ FORMS-T 
+ 10 
+ 3.96 
+ 22.0 
+ 0.66 
+ 5.32 
+ 93.7 
+ 
+ Open-Canopy 
+ 1.5 
+ 4.26 
+ 33.9 
+ 0.61 
+ 5.78 
+ 92.5 
+
+ Mouterhouse 
+ 
+ (22 ± \pm 8 m) 
+ 
+ THREASURE-Net 
+ 10 
+ 5.79 
+ 29.5 
+ 0.17 
+ 7.14 
+ 95.4 
+ 
+ 5 
+ 5.54 
+ 31.2 
+ 0.23 
+ 6.87 
+ 95.7 
+ 
+ 2.5 
+ 6.38 
+ 35.3 
+ -0.02 
+ 7.84 
+ 93.7 
+ 
+ FORMS-T 
+ 10 
+ 3.84 
+ 25.5 
+ 0.61 
+ 5.02 
+ 94.1 
+ 
+ Open-Canopy 
+ 1.5 
+ 5.11 
+ 28.4 
+ 0.34 
+ 6.33 
+ 92.3 
+
+ In this section, we present extended results from the comparison with independent ALS-derived tree height maps at 1 m resolution. The evaluation is conducted over four study areas: Carcans-Hourtins, Déodatie, Lajoux-Fresse and Mouterhouse (see Table  1 for site descriptions). The maps are provided by the ONF (Office National de Forêts) corresponding to one acquisition year. The four study sites represent different forest compositions and topographic contexts. Carcans-Hourtins, located in the Landes region, is characterized by flat terrain and a maritime pine ( Pinus pinaster ) dominated stand, with ONF ALS acquisition in October 2020. Mouterhouse is also located in a predominantly flat area, although it is characterized by numerous small forested hills with short but sometimes very steep slopes (over 50%) The site consists of a mixed stand dominated by oak, hornbeam, beech, and pine. The ONF ALS data were acquired in February 2019. The Deodatie site is located in a hilly landscape with a mixed forest composition of deciduous and conifers, with ONF ALS data acquired in April 2018. Finally, Lajoux-Fresse is situated in a mountainous environment, a forest dominated by spruce, Norway spruce, and beech, with ONF ALS acquisition in June 2019. For each study area, we randomly sampled a test zone of 580, 960, 520 and 520 ha respectively. 
+
+ We report the performance of our method at three spatial resolutions (10, 5, and 2.5 m), and compare it against Open-Canopy  ( Fogel et al., 2025 ) at 1.5 m resolution and FORMS-T  ( Schwartz et al., 2025 ) at 10 m resolution. For the Carcans-Hourtins site, we additionally include results from the Global Canopy Height Model  ( Lang et al., 2023 ) . To ensure a consistent comparison across resolutions, all reference ALS height maps are resampled to match the spatial resolution of the corresponding predictions. 
+
+ The quantitative results are summarized in Table  5 . Overall, for Déodatie, Lajoux-Fresse, and Carcans-Hourtins, our method at 10 m resolution performs comparably to FORMS-T, while achieving consistently lower relative MAE, despite higher MAE, indicating improved robustness with respect to site-level height variability. 
+
+ We observe that performance of the 2.5 m THREASURE-Net model decreases with increasing mean canopy height across sites, a trend already reported in Figure  4 . This effect is likely related to an imbalance in the training distribution and could be mitigated through more balanced sampling strategies, which we leave for future work. 
+
+ The 5 m model shows performance comparable to the 10 m model, suggesting that 5 m resolution provides a good trade-off between spatial detail and prediction stability. In contrast, Open-Canopy does not consistently achieve the best performance across sites, despite being trained on VHR data. 
+
+ Overall, our method achieves the strongest performance in tree/non-tree classification, as it is explicitly trained for this task across the entire French territory, rather than being restricted to forest-only regions as in other approaches. 
+
+ Finally, the Mouterhouse site presents a notable performance drop for all our models and Open-Canopy. This can be attributed to several factors. First, the site is located in a hilly area with predominantly tall forest stands, where strong topographic shading in Sentinel-2 time series may degrade the spectral signal. Second, the ALS acquisition was conducted at a higher incidence angle compared to other sites (45° versus approximately 40°), which may introduce additional geometric inconsistencies. In this challenging setting, Open-Canopy also shows reduced performance, likely due to its reliance on optical data affected by shadowing. In contrast, FORMS-T achieves the best results, potentially due to its use of radar data, which is not affected by shadowing and atmospheric conditions. Future work could explore the integration of radar data into our framework to improve robustness in such challenging environments. 
+
+ Beyond the methodological considerations inherent to deep learning, the methods compared in this study differ in terms of input data (optical only vs. optical and SAR), input spatial resolution (10 m Sentinel-2 vs. 1.5 m SPOT-6/7), and geographic scope of training (national vs. global). THREASURE-Net is specifically designed to maximize the use of freely available (globally consistent Sentinel-2 time series), and its results demonstrate that this choice does not fundamentally limit predictive accuracy for the temperate forest types considered here, while offering clear advantages in terms of accessibility and operational scalability. 
+
+ The competitive performance of THREASURE-Net (relying solely on Sentinel-2 imagery) against FORMS-T (based on Sentinel-1 and -2 imagery), can be attributed to the rich phenological information captured in dense annual time series. Seasonal variations in canopy reflectance serve as an indirect proxy for vertical forest structure. These temporal variations partially compensate for the absence of radar-derived structural information, particularly in temperate forests where phenological cycles are well-marked. In addition, a Sentinel-2-only approach offers a considerably simpler and more reproducible workflow, which is advantageous for large-scale or near-real-time applications. 
+
+ Nevertheless, the complementary nature of SAR data should not be overlooked. Sentinel-1 backscatter is sensitive to volume scattering and canopy roughness, providing structural information whatever the meteorological conditions. This is reflected in our results, where FORMS-T outperforms our approach for example on Mouterhouse site characterized by tall trees, where SAR backscatter remains more sensitive to above-ground biomass than optical data. Indeed, several recent state-of-the-art approaches  ( Zhang et al., 2024 ; Wang et al., 2025 ; Chen et al., 2025 ) exploit the complementary nature of optical and SAR observations to improve canopy height estimation. Incorporating Sentinel-1 data into THREASURE-Net is therefore a promising direction for future work, particularly to improve predictions for tall and structurally complex forest stands. 
+
+ Appendix B Sylvoécorégions of France 
+
+ In mainland France, the National Forest Inventory defines 91 91 sylvoecoregions (SERs), which are spatial units that are homogeneous in terms of the ecological factors influencing forest production and the distribution of forest habitats. Situated at an intermediate scale between forest massifs and major biomes, they provide a framework for the study and management of French forests. The SERs are based primarily on bioclimatic and pedological criteria. Their delineation is based on the analysis of numerous abiotic factors such as altitude, soil properties (texture, pH, hydromorphism, depth, bedrock, water availability) and climatic characteristics (temperatures, precipitation, water balance). The SER classification provides a coherent framework for describing the distribution and productivity of forest habitats across the country. It is widely used in forest management, ecological monitoring, and biodiversity assessments because it reflects the environmental gradients that shape tree species composition and forest dynamics. By grouping territories with similar ecological characteristics, sylvoecoregions also facilitate comparisons of forest functioning and responses to environmental change. The sylvoecoregions of France are shown in Figure  10 . 
+
+ Figure 10 : Sylvoecoregions of France, illustrating the ecological diversity of forest types across the country. 
+
+ Appendix C Tree growth evaluation 
+
+ We evaluate our algorithm on the tree regrowth analysis task. For this task, we choose an entire Sentinel-2 tile 30TXQ corresponding to the Landes of Gascogne in the South-West of France, mostly populated by Pinus Pinaster . First, we produce time series of tree height maps and associated binary tree classification masks with THREASURE-Net for 2018-2024 years for three spatial resolutions – 10, 5, and 2.5 m. We analyze tree classification masks in a temporal context to determine the test area by selecting pixels that were classified as tree in at least three timestamps. 
+
+ Second, we apply the Mann–Kendall (MK) test  Mann (1945) to the resulting time series. The Mann–Kendall test is a non-parametric statistical test used to detect monotonic trends in time series data. The test statistic varies between -1 (strong decrease) and +1 (strong increase). The MK test is applied at the parcel level using cadastral boundaries combined with the vegetation mask. Statistically insignificant results ( p v ​ a ​ l ​ u ​ e ≥ 0.05 p_{value}\geq 0.05 ) are discarded. The remaining values are grouped into three trend intervals: decreasing [ − 1 , − 0.5 ) [-1,-0.5) , stable [ − 0.5 , 0.5 ) [-0.5,0.5) , and increasing [ 0.5 , 1 ] [0.5,1] . 
+
+ Within the tree classification mask, 37.5% of pixels are statistically insignificant. This proportion is expected given the relatively short length of the time series, which may be insufficient to capture annual growth trends, especially when the mean absolute error (MAE) exceeds the typical yearly regrowth signal. These pixels may correspond to disturbed areas, height estimates with higher uncertainty, or non-vegetated surfaces. 
+
+ Furthermore, the Mann–Kendall index has limitations when interpreting forest disturbances occurring at the beginning or in the middle of the time series, as such events do not necessarily produce a monotonic trend. In practice, only disturbances occurring toward the end of the time series tend to be reflected by low index values. 
+
+ For the remaining statistically significant pixels, the results are consistent across all spatial resolutions. Approximately 8% of pixels exhibit low Mann–Kendall values, while about 92% show high values, indicating increasing trends. In contrast, the proportion of medium trends [ − 0.5 , 0.5 ) [-0.5,0.5) is extremely small ( < 0.001 % <0.001\% ). 
+
+ The near absence of medium trends suggests that almost no parcels exhibit a constant monotonic signal throughout the time series. This behavior is expected for forest vegetation, where growth dynamics are typically non-linear, and it also supports the quality of the tree classification mask. 
+
+ Figure  11 shows the tree growth of parcels exhibiting high positive trends across the three spatial resolutions. Values are reported as the median, along with the 25 th and 75 th percentiles of statistically significant pixels with high trends.
+Interestingly, the years showing weaker or negative growth in the time series coincide with extreme climatic events, which may influence vegetation physiology and leaf composition, thereby affecting canopy reflectance properties that are directly related to height estimation. In particular, 2022 was marked by a severe drought in France, while 2024 was reported as one of the hottest summers recorded in the country since 1900.
+Although the variations observed in the predicted heights remain within the expected error margins of the model, these temporary decreases may still reflect the impact of extreme climatic conditions on vegetation growth. Moreover, while the 10 m curve looks smoother, the 2.5 and 5 m curves exhibit identical behavior. Finally, the predicted growth curves align with the expected growth dynamics of young Pinus pinaster in the Landes forest  ( Chevalier et al., 2024 ) , which reaches approximately 1 m per year, depending on the climatic conditions. 
+
+ Consequently, deviations from the presented expected growth dynamics may reveal disturbance events, motivating the analysis presented in the following subsection. 
+
+ ((a)) 2.5 m 
+
+ ((b)) 5 m 
+
+ ((c)) 10 m 
+ 
+ Figure 11 : Tree height dynamics for Mann–Kendall high trend class for three spatial resolutions (2.5 m, 5 m, and 10 m). The curves show median tree height evolution over time with interquartile ranges. 
+
+ Appendix D Disturbance detection 
+
+ We evaluate the robustness of our algorithm on the disturbance detection task.
+Unlike ( Fogel et al., 2025 ) , who uses a fixed threshold of 15 m to detect tree loss, we employ an adaptive thresholding approach based on Otsu’s method  ( Otsu, 1979 ) to perform binary tree loss classification. Otsu’s method – based on histogram analysis – is commonly used in remote sensing and image analysis to automatically determine a data-driven threshold separating changed and unchanged areas  ( Kalinicheva et al., 2019 ) . This choice accounts for the fact that canopy changes can occur at more subtle levels than a fixed threshold would capture. For each site, a pixel-wise height difference map ( Δ ​ H \Delta H ) is computed between two acquisitions. To reduce noise and limit the influence of single-pixel outliers, a median filter with a 3 × 3 3\times 3 window is applied. Only negative Δ ​ H \Delta H values are considered for threshold computation to obtain disturbance maps. 
+
+ For postprocessing, as in ( Fogel et al., 2025 ) , we applied erosion and dilation with a 3-pixel kernel to regularize the binary masks, and removed connected components smaller than 200 m². This approach enabled robust detection of tree loss while preserving canopy structure and minimizing the influence of noise in the LiDAR data. 
+
+ Note that tree loss detection is not the primary objective of the proposed algorithm. The disturbance detection workflow presented here is not intended as a final end-to-end solution; in operational settings, more advanced approaches that go beyond simple height differencing are typically required to achieve robust tree loss detection. 
+
+ In this work, the threshold is computed independently for each site and for each height difference map. This strategy allows the method to be applied consistently across different areas while still producing stable results. In practical applications, some parameters may need to be adapted, such as the spatial extent over which the threshold is estimated. 
+
+ Nevertheless, we consider this approach more robust than the use of a fixed threshold, as the adaptive Otsu threshold is computed separately for each product and therefore accounts for the specific characteristics of the predicted map. For instance, if a product systematically underestimates height changes compared to the reference data, the Otsu threshold will adjust accordingly. 
+
+ We evaluate the proposed method on four different study areas: Mouterhouse, Deodatie, Lajoux-Fresse, and Carcans-Hourtins. For each site, an independent ALS-based tree height maps at 1 m resolution are provided by the ONF corresponding to one acquisition year. We match those areas with available LiDAR HD tiles to constitute an image pair for disturbance detection.
+The four study sites represent different forest compositions and topographic contexts. Carcans-Hourtins, located in the Landes region, is characterized by flat terrain and a maritime pine ( Pinus pinaster ) dominated stand, with ALS acquisition in October 2020 and LiDAR HD in September 2023. Mouterhouse is also located in a predominantly flat area, although characterized by numerous small forested hills. The ONF ALS data were acquired in February 2019 and the LiDAR HD data in February 2022. The site consists of a mixed stand dominated by oak, hornbeam, beech and pine. The Deodatie site is located in a hilly landscape with a mixed forest composition, with ONF ALS data acquired in April 2018 and LiDAR HD in March 2022. Finally, Lajoux-Fresse is situated in a mountainous environment, with ONF ALS acquisition in June 2019 and LiDAR HD in August 2022, and a forest dominated by spruce, Norway spruce, and beech. These sites therefore provide a range of structural conditions, forest types, and topographic settings for evaluating disturbance detection performance. 
+
+ We evaluate the performance of tree loss detection algorithm based on THREASURE-Net predictions at three different spatial resolutions – 10, 5, and 2.5 m, as well as Open-Canopy  ( Fogel et al., 2025 ) at 1.5 m resolution and FORMS-T  ( Schwartz et al., 2025 ) at 10 m resolution. For each resolution, the reference ALS height maps are resampled to match the resolution of the prediction in order to ensure a consistent comparison. 
+
+ The quantitative results are presented in Table  6 and the qualitative results are presented in Figure  12 .
+For each site, we report intersection over union (IoU) , precision , recall , and F1-score . Let T ​ P TP denote true positives, F ​ P FP false positives, and F ​ N FN false negatives. Then the metrics are defined as: 
+
+ IoU = T ​ P T ​ P + F ​ P + F ​ N \text{IoU}=\frac{TP}{TP+FP+FN} 
+
+ Precision = T ​ P T ​ P + F ​ P \text{Precision}=\frac{TP}{TP+FP} 
+
+ Recall = T ​ P T ​ P + F ​ N \text{Recall}=\frac{TP}{TP+FN} 
+
+ F1-score = 2 ⋅ T ​ P 2 ⋅ T ​ P + F ​ P + F ​ N \text{F1-score}=\frac{2\cdot TP}{2\cdot TP+FP+FN} 
+
+ As in the previous experiments, the quantitative performance of THREASURE-Net generally decreases as the spatial resolution becomes finer, although the visual results show an increased level of detail. This behavior can be explained by the fact that the reference ALS-derived height difference maps are resampled to match the resolution of the predictions. As a result, at coarser resolutions, the reference data contain fewer fine-scale details, which can artificially improve the quantitative metrics. 
+
+ Overall, THREASURE-Net is not systematically better or worse than the compared methods. It achieves competitive or state-of-the-art performance in terms of tree loss detection, particularly in Lajoux-Fresse and Carcans-Hourtins, where F1 scores reach 74.7% and 83.1%, respectively. In particular, all algorithms exhibit relatively poor performance at the Mouterhouse site. This may be related to the local topography, which consists of numerous small steep hills that can introduce additional errors in the height estimates. Nevertheless, at 10 m resolution, our method achieves performance comparable to that of FORMS-T. In contrast, despite using VHR input data, Open-Canopy did not show the best performance. The visual results indicate that this method tends to underestimate the magnitude of height changes. 
+
+ Table 6 : Tree loss detection performance for for different sites. We report the performance of THREASURE-Net at three different spatial resolutions, as well as Open-Canopy  ( Fogel et al., 2025 ) and FORMS-T  ( Schwartz et al., 2025 ) . 
+
+ Site (Years) 
+ Model 
+ Resolution 
+ IoU (%) 
+ Recall (%) 
+ Precision (%) 
+ F1 (%) 
+ 
+ Carcans-Hourtins (2023-2020) 
+ THREASURE-Net 
+ 10 m 
+ 69.6 
+ 74.7 
+ 91.1 
+ 82.1 
+ 
+ 5 m 
+ 71.1 
+ 76.0 
+ 91.8 
+ 83.1 
+ 
+ 2.5 m 
+ 65.1 
+ 75.7 
+ 82.3 
+ 78.9 
+ 
+ Open-Canopy 
+ 1.5 m 
+ 30.2 
+ 30.8 
+ 93.7 
+ 46.4 
+ 
+ FORMS-T 
+ 10 m 
+ 68.7 
+ 77.1 
+ 86.3 
+ 81.5 
+ 
+ Déodatie (2022-2018) 
+ THREASURE-Net 
+ 10 m 
+ 54.2 
+ 78.2 
+ 63.8 
+ 70.3 
+ 
+ 5 m 
+ 57.3 
+ 75.9 
+ 70.0 
+ 72.9 
+ 
+ 2.5 m 
+ 52.7 
+ 69.7 
+ 68.3 
+ 69.0 
+ 
+ Open-Canopy 
+ 1.5 m 
+ 67.6 
+ 79.7 
+ 81.6 
+ 80.6 
+ 
+ FORMS-T 
+ 10 m 
+ 56.5 
+ 85.6 
+ 62.4 
+ 72.2 
+ 
+ Lajoux-Fresse (2022-2019) 
+ THREASURE-Net 
+ 10 m 
+ 59.6 
+ 83.5 
+ 67.5 
+ 74.7 
+ 
+ 5 m 
+ 47.6 
+ 74.3 
+ 56.9 
+ 64.5 
+ 
+ 2.5 m 
+ 43.8 
+ 73.0 
+ 52.3 
+ 61.0 
+ 
+ Open-Canopy 
+ 1.5 m 
+ 51.4 
+ 67.9 
+ 67.9 
+ 67.9 
+ 
+ FORMS-T 
+ 10 m 
+ 53.5 
+ 84.8 
+ 59.2 
+ 69.7 
+ 
+ Mouterhouse (2022-2019) 
+ THREASURE-Net 
+ 10 m 
+ 31.7 
+ 45.3 
+ 51.2 
+ 48.1 
+ 
+ 5 m 
+ 23.5 
+ 31.9 
+ 47.0 
+ 38.0 
+ 
+ 2.5 m 
+ 18.9 
+ 22.6 
+ 54.0 
+ 31.8 
+ 
+ Open-Canopy 
+ 1.5 m 
+ 20.7 
+ 26.5 
+ 48.3 
+ 34.2 
+ 
+ FORMS-T 
+ 10 m 
+ 33.7 
+ 48.1 
+ 52.9 
+ 50.4 
+
+ Carcans-Hourtins 
+
+ Lajoux-Fresse 
+
+ Déodatie 
+
+ Mouterhouse 
+
+ ((a)) SPOT, 2019 
+
+ ((b)) SPOT, 2023 
+
+ ((c)) HDM ALS 
+
+ ((d)) CM ALS 
+
+ ((e)) Ours 10 m 
+
+ ((f)) Ours 10 m 
+
+ ((g)) Ours 5 m 
+
+ ((h)) Ours 5 m 
+
+ ((i)) Ours 2.5 m 
+
+ ((j)) Ours 2.5 m 
+
+ ((k)) Open-Canopy 
+
+ ((l)) Open-Canopy 
+
+ ((m)) FORMS-T 
+
+ ((n)) FORMS-T 
+
+ ((a)) SPOT, 2019 
+
+ ((b)) SPOT, 2022 
+
+ ((c)) HDM ALS 
+
+ ((d)) CM ALS 
+
+ ((e)) Ours 10 m 
+
+ ((f)) Ours 10 m 
+
+ ((g)) Ours 5 m 
+
+ ((h)) Ours 5 m 
+
+ ((i)) Ours 2.5 m 
+
+ ((j)) Ours 2.5 m 
+
+ ((k)) Open-Canopy 
+
+ ((l)) Open-Canopy 
+
+ ((m)) FORMS-T 
+
+ ((n)) FORMS-T 
+
+ ((a)) SPOT, 2018 
+
+ ((b)) SPOT, 2022 
+
+ ((c)) HDM ALS 
+
+ ((d)) CM ALS 
+
+ ((e)) Ours 10 m 
+
+ ((f)) Ours 10 m 
+
+ ((g)) Ours 5 m 
+
+ ((h)) Ours 5 m 
+
+ ((i)) Ours 2.5 m 
+
+ ((j)) Ours 2.5 m 
+
+ ((k)) Open-Canopy 
+
+ ((l)) Open-Canopy 
+
+ ((m)) FORMS-T 
+
+ ((n)) FORMS-T 
+
+ ((a)) SPOT, 2019 
+
+ ((b)) SPOT, 2022 
+
+ ((c)) HDM ALS 
+
+ ((d)) CM ALS 
+
+ ((e)) Ours 10 m 
+
+ ((f)) Ours 10 m 
+
+ ((g)) Ours 5 m 
+
+ ((h)) Ours 5 m 
+
+ ((i)) Ours 2.5 m 
+
+ ((j)) Ours 2.5 m 
+
+ ((k)) Open-Canopy 
+
+ ((l)) Open-Canopy 
+
+ ((m)) FORMS-T 
+
+ ((n)) FORMS-T 
+
+ Figure 12 : Change detection results across the four sites. For each row, the first two panels show SPOT-6/7 images for the change year pairs (a)-(b). Reference ALS-derived maps are shown as height difference maps (HDM) (c) and binary change maps (CM) (d) at 2.5 m resolution. Predictions from THREASURE-Net at three different resolutions are shown in pairs: HDM and CM for each resolution (e)-(f), (g)-(h), (i)-(j) for 10, 5 and 2.5 m respectively . Open-Canopy  ( Fogel et al., 2025 ) is shown as HDM and CM (k)-(l), and FORMS-T  ( Schwartz et al., 2025 ) as HDM and CM (m)-(n). The final panel in each row shows the corresponding legend. 
+
+ References 
+
+ Abadal et al. (2021) 
+ S. Abadal, L. Salgueiro, J. Marcello, and V. Vilaplana 
+ 
+ A dual network for super-resolution and semantic segmentation of sentinel-2 imagery .
+ 
+ Remote Sensing 13 ( 22 ).
+ 
+ External Links: Link ,
+ ISSN 2072-4292 ,
+ Document 
+ 
+ Cited by: §1 .
+ 
+ Ahmed et al. (2015) 
+ O. S. Ahmed, S. E. Franklin, M. A. Wulder, and J. C. White 
+ 
+ Characterizing stand-level forest canopy cover and height using landsat time series, samples of airborne lidar, and the random forest algorithm .
+ 
+ ISPRS Journal of Photogrammetry and Remote Sensing 101 , pp. 89–101 .
+ 
+ External Links: ISSN 0924-2716 ,
+ Document ,
+ Link 
+ 
+ Cited by: §1 .
+ 
+ Aitken et al. (2017) 
+ A. Aitken, C. Ledig, L. Theis, J. Caballero, Z. Wang, and W. Shi 
+ 
+ Checkerboard artifact free sub-pixel convolution: a note on sub-pixel convolution, resize convolution and convolution resize .
+ 
+ External Links: 1707.02937 ,
+ Link 
+ 
+ Cited by: §3.1 .
+ 
+ Avitabile et al. (2016) 
+ V. Avitabile, M. Herold, G. B. Heuvelink, S. L. Lewis, O. L. Phillips, G. P. Asner, J. Armston, P. S. Ashton, L. Banin, N. Bayol, et al. 
+ 
+ An integrated pan-tropical biomass map using multiple reference datasets .
+ 
+ Global change biology 22 ( 4 ), pp. 1406–1420 .
+ 
+ Cited by: §1 .
+ 
+ Becker et al. (2023) 
+ A. Becker, S. Russo, S. Puliti, N. Lang, K. Schindler, and J. D. Wegner 
+ 
+ Country-wide retrieval of forest structure from optical and sar satellite imagery with deep ensembles .
+ 
+ ISPRS Journal of Photogrammetry and Remote Sensing 195 , pp. 269–286 .
+ 
+ External Links: ISSN 0924-2716 ,
+ Document ,
+ Link 
+ 
+ Cited by: §1 .
+ 
+ Besic et al. (2025) 
+ N. Besic, N. Picard, C. Vega, J. Bontemps, L. Hertzog, J. Renaud, F. Fogel, M. Schwartz, A. Pellissier-Tanon, G. Destouet, F. Mortier, M. Planells-Rodriguez, and P. Ciais 
+ 
+ Remote-sensing-based forest canopy height mapping: some models are useful, but might they provide us with even more insights when combined? .
+ 
+ Geoscientific Model Development 18 , pp. 337–359 .
+ 
+ External Links: Document 
+ 
+ Cited by: §1 .
+ 
+ Bouvet et al. (2018) 
+ A. Bouvet, S. Mermoz, T. Le Toan, L. Villard, R. Mathieu, L. Naidoo, and G. P. Asner 
+ 
+ An above-ground biomass map of african savannahs and woodlands at 25 m resolution derived from alos palsar .
+ 
+ Remote sensing of environment 206 , pp. 156–173 .
+ 
+ Cited by: §1 .
+ 
+ Cao and Weng (2024) 
+ Y. Cao and Q. Weng 
+ 
+ A deep learning-based super-resolution method for building height estimation at 2.5 m spatial resolution in the northern hemisphere .
+ 
+ Remote Sensing of Environment 310 , pp. 114241 .
+ 
+ External Links: ISSN 0034-4257 ,
+ Document ,
+ Link 
+ 
+ Cited by: §1 .
+ 
+ Chen et al. (2025) 
+ M. Chen, W. Dong, H. Yu, I. H. Woodhouse, C. M. Ryan, H. Liu, S. Georgiou, and E. T.A. Mitchard 
+ 
+ Multimodal deep learning enables forest height mapping from patchy spaceborne lidar using sar and passive optical satellite data .
+ 
+ International Journal of Applied Earth Observation and Geoinformation 143 , pp. 104814 .
+ 
+ External Links: ISSN 1569-8432 ,
+ Document ,
+ Link 
+ 
+ Cited by: Appendix A .
+ 
+ Chevalier et al. (2024) 
+ R. Chevalier, A. Catapano, R. Pommier, and M. Montemurro 
+ 
+ A review on properties and variability of pinus pinaster ait. ssp. atlantica existing in the landes of gascogne .
+ 
+ Journal of Wood Science 70 , pp.  .
+ 
+ External Links: Document 
+ 
+ Cited by: Appendix C .
+ 
+ Coops et al. (2021) 
+ N. C. Coops, P. Tompalski, T. R.H. Goodbody, M. Queinnec, J. E. Luther, D. K. Bolton, J. C. White, M. A. Wulder, O. R. van Lier, and T. Hermosilla 
+ 
+ Modelling lidar-derived estimates of forest attributes over space and time: a review of approaches and future trends .
+ 
+ Remote Sensing of Environment 260 , pp. 112477 .
+ 
+ External Links: ISSN 0034-4257 ,
+ Document ,
+ Link 
+ 
+ Cited by: §1 .
+ 
+ Cresson (2022) 
+ R. Cresson 
+ 
+ SR4RS: a tool for super resolution of remote sensing images .
+ 
+ Journal of Open Research Software 10 ( 1 ).
+ 
+ Cited by: §1 .
+ 
+ Deudon et al. (2020) 
+ M. Deudon, A. Kalaitzis, I. Goytom, M. R. Arefin, Z. Lin, K. Sankaran, V. Michalski, S. E. Kahou, J. Cornebise, and Y. Bengio 
+ 
+ HighRes-net: recursive fusion for multi-frame super-resolution of satellite imagery .
+ 
+ CoRR abs/2002.06460 .
+ 
+ External Links: Link ,
+ 2002.06460 
+ 
+ Cited by: §1 .
+ 
+ Dubayah et al. (2020) 
+ R. Dubayah, J. B. Blair, S. Goetz, L. Fatoyinbo, M. Hansen, S. Healey, M. Hofton, G. Hurtt, J. Kellner, S. Luthcke, J. Armston, H. Tang, L. Duncanson, S. Hancock, P. Jantz, S. Marselis, P. L. Patterson, W. Qi, and C. Silva 
+ 
+ The global ecosystem dynamics investigation: high-resolution laser ranging of the earth’s forests and topography .
+ 
+ Science of Remote Sensing 1 , pp. 100002 .
+ 
+ External Links: ISSN 2666-0172 ,
+ Document ,
+ Link 
+ 
+ Cited by: §1 .
+ 
+ FAO (2025) 
+ FAO 
+ 
+ Global forest resources assessment 2025 .
+ 
+ Food and Agriculture Organization of the United Nations , Rome .
+ 
+ External Links: Link 
+ 
+ Cited by: §1 .
+ 
+ Fogel et al. (2025) 
+ F. Fogel, Y. Perron, N. Besic, L. Saint-André, A. Pellissier-Tanon, M. Schwartz, T. Boudras, I. Fayad, A. d’Aspremont, L. Landrieu, and P. Ciais 
+ 
+ Open-canopy: towards very high resolution forest monitoring .
+ 
+ In 2025 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) ,
+ 
+ Vol. , pp. 1395–1406 .
+ 
+ External Links: Document 
+ 
+ Cited by: Table 5 ,
+ Table 5 ,
+ Appendix A ,
+ Figure 12 ,
+ Figure 12 ,
+ Table 6 ,
+ Table 6 ,
+ Appendix D ,
+ Appendix D ,
+ Appendix D ,
+ §1 ,
+ §1 ,
+ §2.3 ,
+ Table 1 ,
+ Figure 9 ,
+ Figure 9 ,
+ §4.1.1 ,
+ §4.1.1 ,
+ §4.3 ,
+ Table 2 ,
+ Table 2 ,
+ Table 4 ,
+ Table 4 .
+ 
+ Garnot and Landrieu (2020) 
+ V. S. F. Garnot and L. Landrieu 
+ 
+ Lightweight temporal self-attention for classifying satellite image time series .
+ 
+ CoRR abs/2007.00586 .
+ 
+ External Links: Link ,
+ 2007.00586 
+ 
+ Cited by: §3.1 ,
+ §3.1 .
+ 
+ He et al. (2015) 
+ K. He, X. Zhang, S. Ren, and J. Sun 
+ 
+ Deep residual learning for image recognition .
+ 
+ CoRR abs/1512.03385 .
+ 
+ External Links: Link ,
+ 1512.03385 
+ 
+ Cited by: §3.1 .
+ 
+ Kakoulaki et al. (2021) 
+ G. Kakoulaki, A. Martinez, and P. Florio 
+ 
+ Non-commercial light detection and ranging (lidar) data in europe .
+ 
+ Technical Report EUR 30817 EN , Publications Office of the European Union , Luxembourg .
+ 
+ Note: JRC126223 
+ 
+ External Links: Document ,
+ ISBN 978-92-76-41150-5 
+ 
+ Cited by: §1 .
+ 
+ Kalinicheva et al. (2019) 
+ E. Kalinicheva, J. Sublime, and M. Trocan 
+ 
+ Change detection in satellite images using reconstruction errors of joint autoencoders .
+ 
+ In Artificial Neural Networks and Machine Learning – ICANN 2019: Image Processing , I. V. Tetko, V. Kůrková, P. Karpov, and F. Theis (Eds.) ,
+ 
+ Cham , pp. 637–648 .
+ 
+ External Links: ISBN 978-3-030-30508-6 
+ 
+ Cited by: Appendix D .
+ 
+ Lang et al. (2023) 
+ N. Lang, W. Jetz, K. Schindler, and J. D. Wegner 
+ 
+ A high-resolution canopy height model of the earth .
+ 
+ Nature Ecology & Evolution 7 ( 11 ), pp. 1778–1789 .
+ 
+ Cited by: Table 5 ,
+ Table 5 ,
+ Appendix A ,
+ §1 ,
+ §1 ,
+ §1 ,
+ §2.3 ,
+ Table 1 ,
+ Figure 9 ,
+ Figure 9 ,
+ §4.1.1 ,
+ §4.3 ,
+ Table 4 ,
+ Table 4 .
+ 
+ Lei et al. (2019) 
+ S. Lei, Z. Shi, X. Wu, B. Pan, X. Xu, and H. Hao 
+ 
+ Simultaneous super-resolution and segmentation for remote sensing images .
+ 
+ IGARSS 2019 - 2019 IEEE International Geoscience and Remote Sensing Symposium , pp. 3121–3124 .
+ 
+ External Links: Link 
+ 
+ Cited by: §1 .
+ 
+ Liu et al. (2025) 
+ D. Liu, L. Zhong, H. Wu, S. Li, and Y. Li 
+ 
+ Remote sensing image super-resolution reconstruction by fusing multi-scale receptive fields and hybrid transformer .
+ 
+ Scientific Reports 15 , pp.  .
+ 
+ External Links: Document 
+ 
+ Cited by: §1 .
+ 
+ Liu et al. (2023) 
+ S. Liu, M. Brandt, T. Nord-Larsen, J. Chave, F. Reiner, N. Lang, X. Tong, P. Ciais, C. Igel, A. Pascual, J. Guerra-Hernandez, S. Li, M. Mugabowindekwe, S. Saatchi, Y. Yue, Z. Chen, and R. Fensholt 
+ 
+ The overlooked contribution of trees outside forests to tree cover and woody biomass across europe .
+ 
+ Science Advances 9 ( 37 ), pp. eadh4097 .
+ 
+ External Links: Document ,
+ Link ,
+ https://www.science.org/doi/pdf/10.1126/sciadv.adh4097 
+ 
+ Cited by: §1 .
+ 
+ Loshchilov and Hutter (2016) 
+ I. Loshchilov and F. Hutter 
+ 
+ SGDR: stochastic gradient descent with warm restarts .
+ 
+ External Links: Document 
+ 
+ Cited by: §3.3.4 .
+ 
+ Luo et al. (2024) 
+ Z. Luo, B. Song, and L. Shen 
+ 
+ SatDiffMoE: A mixture of estimation method for satellite image super-resolution with latent diffusion models .
+ 
+ CoRR abs/2406.10225 .
+ 
+ External Links: Link ,
+ Document ,
+ 2406.10225 
+ 
+ Cited by: §1 .
+ 
+ Mann (1945) 
+ H. B. Mann 
+ 
+ Non-parametric test against trend .
+ 
+ Econometrica 13 ( 3 ), pp. 245–259 .
+ 
+ External Links: Link 
+ 
+ Cited by: Appendix C .
+ 
+ Mermoz et al. (2024) 
+ S. Mermoz, J. D. Prieto, M. Planells, D. Morin, T. Koleck, F. Mouret, A. Bouvet, T. Le Toan, D. Sheeren, Y. Hamrouni, et al. 
+ 
+ Submonthly assessment of temperate forest clear-cuts in mainland france .
+ 
+ IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing 17 , pp. 13743–13764 .
+ 
+ Cited by: §1 .
+ 
+ Michel et al. (2025) 
+ J. Michel, E. Kalinicheva, and J. Inglada 
+ 
+ Revisiting remote sensing cross-sensor single image super-resolution: the overlooked impact of geometric and radiometric distortion .
+ 
+ IEEE Transactions on Geoscience and Remote Sensing 63 ( ), pp. 1–22 .
+ 
+ External Links: Document 
+ 
+ Cited by: §1 ,
+ §1 ,
+ §3.3.1 ,
+ §3.3.2 ,
+ §4.1.2 .
+ 
+ Morin et al. (2023) 
+ D. Morin, M. Planells, S. Mermoz, and F. Mouret 
+ 
+ Estimation of forest height and biomass from open-access multi-sensor satellite imagery and gedi lidar data: high-resolution maps of metropolitan france .
+ 
+ arXiv preprint arXiv:2310.14662 .
+ 
+ Cited by: §1 .
+ 
+ Müller et al. (2020) 
+ M. Müller, N. Ekhtiari, R. Almeida, and C. Rieke 
+ 
+ SUPER-resolution of multispectral satellite images using convolutional neural networks .
+ 
+ ISPRS Annals of Photogrammetry, Remote Sensing and Spatial Information Sciences V-1-2020 , pp. 33–40 .
+ 
+ External Links: Document 
+ 
+ Cited by: §1 .
+ 
+ Nie et al. (2018) 
+ D. Nie, R. Trullo, J. Lian, L. Wang, C. Petitjean, S. Ruan, Q. Wang, and D. Shen 
+ 
+ Medical image synthesis with deep convolutional adversarial networks .
+ 
+ IEEE Transactions on Biomedical Engineering 65 ( 12 ), pp. 2720–2730 .
+ 
+ External Links: Document 
+ 
+ Cited by: §3.2 .
+ 
+ Okabayashi et al. (2024) 
+ A. Okabayashi, N. Audebert, S. Donike, and C. Pelletier 
+ 
+ Cross-sensor super-resolution of irregularly sampled sentinel-2 time series .
+ 
+ pp. 502–511 .
+ 
+ External Links: Document 
+ 
+ Cited by: §1 .
+ 
+ Otsu (1979) 
+ N. Otsu 
+ 
+ A threshold selection method from gray-level histograms .
+ 
+ IEEE Transactions on Systems, Man, and Cybernetics 9 ( 1 ), pp. 62–66 .
+ 
+ Cited by: Appendix D .
+ 
+ Pelletier et al. (2018) 
+ C. Pelletier, G. I. Webb, and F. Petitjean 
+ 
+ Temporal convolutional neural network for the classification of satellite image time series .
+ 
+ CoRR abs/1811.10166 .
+ 
+ External Links: Link ,
+ 1811.10166 
+ 
+ Cited by: §1 .
+ 
+ Salgueiro Romero et al. (2022) 
+ L. Salgueiro Romero, J. Marcello, and V. Vilaplana 
+ 
+ SEG-esrgan: a multi-task network for super-resolution and semantic segmentation of remote sensing images .
+ 
+ Remote Sensing 14 , pp. 5862 .
+ 
+ External Links: Document 
+ 
+ Cited by: §1 .
+ 
+ Schwartz et al. (2023) 
+ M. Schwartz, P. Ciais, A. De Truchis, J. Chave, C. Ottlé, C. Vega, J.-P. Wigneron, M. Nicolas, S. Jouaber, S. Liu, M. Brandt, and I. Fayad 
+ 
+ FORMS: forest multiple source height, wood volume, and biomass maps in france at 10 to 30 m resolution based on sentinel-1, sentinel-2, and global ecosystem dynamics investigation (gedi) data with a deep learning approach .
+ 
+ Earth System Science Data 15 ( 11 ), pp. 4927–4945 .
+ 
+ External Links: Link ,
+ Document 
+ 
+ Cited by: §1 .
+ 
+ Schwartz et al. (2025) 
+ M. Schwartz, P. Ciais, E. Sean, A. de Truchis, C. Vega, N. Besic, I. Fayad, J. Wigneron, S. Brood, A. Pelissier-Tanon, J. Pauls, G. Belouze, and Y. Xu 
+ 
+ Retrieving yearly forest growth from satellite data: a deep learning based approach .
+ 
+ Remote Sensing of Environment 330 , pp. 114959 .
+ 
+ External Links: ISSN 0034-4257 ,
+ Document ,
+ Link 
+ 
+ Cited by: Table 5 ,
+ Table 5 ,
+ Appendix A ,
+ Figure 12 ,
+ Figure 12 ,
+ Table 6 ,
+ Table 6 ,
+ Appendix D ,
+ §1 ,
+ §2.3 ,
+ Table 1 ,
+ Figure 9 ,
+ Figure 9 ,
+ §4.1.1 ,
+ §4.1.1 ,
+ §4.3 ,
+ Table 2 ,
+ Table 2 ,
+ Table 4 ,
+ Table 4 .
+ 
+ Shi et al. (2016) 
+ W. Shi, J. Caballero, F. Huszár, J. Totz, A. P. Aitken, R. Bishop, D. Rueckert, and Z. Wang 
+ 
+ Real-time single image and video super-resolution using an efficient sub-pixel convolutional neural network .
+ 
+ In 2016 IEEE Conference on Computer Vision and Pattern Recognition (CVPR) ,
+ 
+ Vol. , pp. 1874–1883 .
+ 
+ External Links: Document 
+ 
+ Cited by: §3.1 .
+ 
+ Simard et al. (2011) 
+ M. Simard, N. Pinto, J. B. Fisher, and A. Baccini 
+ 
+ Mapping forest canopy height globally with spaceborne lidar .
+ 
+ Journal of Geophysical Research: Biogeosciences 116 ( G4 ).
+ 
+ Cited by: §1 .
+ 
+ Tolan et al. (2024) 
+ J. Tolan, H. Yang, B. Nosarzewski, G. Couairon, H. V. Vo, J. Brandt, J. Spore, S. Majumdar, D. Haziza, J. Vamaraju, T. Moutakanni, P. Bojanowski, T. Johns, B. White, T. Tiecke, and C. Couprie 
+ 
+ Very high resolution canopy height maps from rgb imagery using self-supervised vision transformer and convolutional decoder trained on aerial lidar .
+ 
+ Remote Sensing of Environment 300 , pp. 113888 .
+ 
+ External Links: ISSN 0034-4257 ,
+ Document ,
+ Link 
+ 
+ Cited by: §1 .
+ 
+ Wang et al. (2025) 
+ C. Wang, C. Song, T. A. Schroeder, C. E. Woodcock, T. M. Pavelsky, Q. Han, and F. Yao 
+ 
+ Interpretable multi-sensor fusion of optical and sar data for gedi-based canopy height mapping in southeastern north carolina .
+ 
+ Remote Sensing 17 ( 9 ).
+ 
+ External Links: Link ,
+ ISSN 2072-4292 ,
+ Document 
+ 
+ Cited by: Appendix A .
+ 
+ Wang et al. (2018) 
+ X. Wang, K. Yu, S. Wu, J. Gu, Y. Liu, C. Dong, C. C. Loy, Y. Qiao, and X. Tang 
+ 
+ ESRGAN: enhanced super-resolution generative adversarial networks .
+ 
+ CoRR abs/1809.00219 .
+ 
+ External Links: Link ,
+ 1809.00219 
+ 
+ Cited by: §3.1 .
+ 
+ Wang et al. (2022) 
+ X. Wang, J. Yi, J. Guo, Y. Song, J. Lyu, J. Xu, W. Yan, J. Zhao, Q. Cai, and H. Min 
+ 
+ A review of image super-resolution approaches based on deep learning and applications in remote sensing .
+ 
+ Remote Sensing 14 ( 21 ).
+ 
+ External Links: Link ,
+ ISSN 2072-4292 ,
+ Document 
+ 
+ Cited by: §1 .
+ 
+ Wang et al. (2016) 
+ Y. Wang, G. Li, J. Ding, Z. Guo, S. Tang, C. Wang, Q. Huang, R. Liu, and J. M. Chen 
+ 
+ A combined glas and modis estimation of the global distribution of mean forest canopy height .
+ 
+ Remote Sensing of Environment 174 , pp. 24–43 .
+ 
+ External Links: ISSN 0034-4257 ,
+ Document ,
+ Link 
+ 
+ Cited by: §1 .
+ 
+ Wang et al. (2021) 
+ Z. Wang, J. Chen, and S. C. H. Hoi 
+ 
+ Deep learning for image super-resolution: a survey .
+ 
+ IEEE Transactions on Pattern Analysis and Machine Intelligence 43 ( 10 ), pp. 3365–3387 .
+ 
+ External Links: Document 
+ 
+ Cited by: §1 .
+ 
+ Zhang et al. (2024) 
+ B. Zhang, D. Gann, S. Wdowinski, C. Lin, E. Hestir, L. Lamb-Wotton, K. S. Ishtiaq, K. Smith, and Y. Li 
+ 
+ Space-based mapping of pre- and post-hurricane mangrove canopy heights using machine learning with multi-sensor observations .
+ 
+ Remote Sensing 16 ( 21 ).
+ 
+ External Links: Link ,
+ ISSN 2072-4292 ,
+ Document 
+ 
+ Cited by: Appendix A .
+ 
+ Zhang et al. (2018) 
+ Y. Zhang, Y. Tian, Y. Kong, B. Zhong, and Y. Fu 
+ 
+ Residual dense network for image super-resolution .
+ 
+ CoRR abs/1802.08797 .
+ 
+ External Links: Link ,
+ 1802.08797 
+ 
+ Cited by: §3.1 .
+
+ List of Figure Captions 
+
+ Figure 1. Distribution of train, test and validation patches. Buffers of 1 km are set around test patches to ensure reliable evaluation of model results. 
+
+ Figure 2. THREASURE-Net model architecture. 
+
+ Figure 3. Sub-pixel convolution. Example of factor 2 upsampling. A LR image with C feature channels and H × W spatial dimensions is passed through a 2D convolution layer to obtain 2 2 ⋅ C 2^{2}\cdot C feature channels, where each group of 2 2 2^{2} consecutive channels forms a sub-pixel group that is reorganized by pixel shuffle operation into an SR image with C channels and 2H × 2W spatial dimensions. 
+
+ Figure 4. Error distribution across canopy-height bins (1.5–5, 5–10, 10–15, 15–20, 20–25, 25–30, >30 m) for our models at different output resolutions in box-and-whisker plots. A boxplot shows the median and interquartile range (IQR), with whiskers extending to values within 1.5×IQR. Gray bars indicate the proportion of samples in each bin relative to the dataset. 
+
+ Figure 5. Prediction–target scatterplots for our 10 m, 5 m, and 2.5 m models for tree pixels. An equal number of points ( ≈ \approx 96 million) were randomly sampled from each model. The identity line is shown in white. Predictions are reported without clipping. 
+
+ Figure 6. 640 × 640 m tree height prediction patches centred on 44.893°N and 0.997°W. (a) Sentinel-2 image from 7 July 2023. (b) VHR Bing image. (c–e) Model predictions at 10 m, 5 m, and 2.5 m resolutions. (f–g) Upsampled predictions using bicubic interpolation. (h) Reference LiDAR-derived height map at 2.5 m resolution. Zoomed-in views highlight fine-scale differences. 
+
+ Figure 7. Normalized log-frequency attenuation profile (FAP) for HR reference patch and SR results from THREASURE-Net and bicubic interpolation at 5 m and 2.5 m resolutions for the patch in Figure 6. Spatial frequencies are normalized as f = f n / f N f=f_{n}/f_{N} , where f N f_{N} is the maximum representable spatial frequency. 
+
+ Figure 8. FAP profile for the target image and SR image produced by the model at 5 m resolution, including variants trained with MAE loss only and pwMAE only (without wGDL loss). 
+
+ Figure 9. Tree height prediction of 580 ha area centered on 45.127°N and 0.901°W. Comparison of a) independent reference ALS-derived heights and our model at three resolutions – b) 10 m, c) 5 m, and d) 2.5 m – with concurrent approaches: d) FORMST-T (Schwartz et al., 2025), e) Global Canopy Height Model (Lang et al., 2023), and f) Open-Canopy (Fogel et al., 2025). Zoomed-in views (top left) highlight differences in fine details among predictions on the eastern side of the study area. 
+
+ Figure B.10. Sylvo-ecoregions of France, illustrating the ecological diversity of forest types across the country. 
+
+ Figure C.11. Tree height dynamics for Mann–Kendall high trend class at 2.5 m, 5 m, and 10 m resolutions. Median curves with interquartile ranges are shown. 
+
+ Figure D.12. Change detection results across four sites. Each row shows SPOT-6/7 image pairs, ALS-derived reference maps (height difference and binary change maps), predictions from THREASURE-Net at three resolutions, and comparisons with Open-Canopy (Fogel et al., 2025) and FORMS-T (Schwartz et al., 2025). Zoomed views highlight spatial detail differences. 
+
+ Experimental support, please
+ view the build logs 
+ for errors. Generated by
+
+ L
+ A 
+ T
+ E 
+ 
+ xml 
+ 
+ .
+
+ Instructions for reporting errors 
+ We are continuing to improve HTML versions of papers, and your feedback helps enhance accessibility and mobile
+ support. To report errors in the HTML that will help us improve conversion and rendering, choose any of the
+ methods listed below: 
+ 
+ Click the "Report Issue" ( 
+ 
+ ) button, located in the page header. 
+ 
+ Tip: You can select the relevant text first, to include it in your report. 
+ Our team has already identified the following issues . We appreciate your time reviewing and reporting rendering errors we
+ may not have found yet. Your efforts will help us improve the HTML versions for all readers, because disability
+ should not be a barrier to accessing research. Thank you for your continued support in championing open access for
+ all. 
+ Have a free development cycle? Help support accessibility at arXiv! Our collaborators at LaTeXML maintain a list of packages that need conversion , and welcome developer contributions . 
+
+ We gratefully acknowledge support from
+ our major funders ,
+ member institutions , ,
+ and all contributors.
+
+ About 
+ &middot; 
+ Help 
+ &middot; 
+ Contact 
+ &middot; 
+ Subscribe 
+ &middot; 
+ Copyright 
+ &middot; 
+ Privacy 
+ &middot; 
+ Accessibility 
+ &middot; 
+ Operational Status (opens in new tab) 
+
+ Major funding support from 
+

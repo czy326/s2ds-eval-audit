@@ -1,0 +1,1072 @@
+ 
+
+ SyMTRS: Benchmark Multi-Task Synthetic Dataset for Depth, Domain Adaptation and Super-Resolution in Aerial Imagery 
+
+ Report GitHub Issue 
+ × 
+
+ Title: 
+
+ Content selection saved. Describe the issue below: 
+
+ Description: 
+
+ Submit without GitHub 
+ Submit in GitHub 
+
+ arXiv is now an independent nonprofit! 
+ Learn more 
+ &times; 
+
+ Back to arXiv 
+
+ Why HTML? 
+
+ Report Issue 
+
+ Back to Abstract 
+
+ Download PDF 
+
+ Abstract 
+ 1 Introduction 
+ 2 Related Work 
+ 
+ 2.1 Comparison of Datasets 
+ 
+ 3 SyMTRS Dataset 
+ 
+ 3.1 Data Design 
+ 3.2 Vision Tasks 
+ 
+ 4 Experiments 
+ 
+ 4.1 Super-resolution 
+ 4.2 Image-to-image translation 
+ 
+ 5 Results and Discussion 
+ 
+ 5.1 Super resolution 
+ 5.2 Image-to-image translation 
+ 
+ 6 Conclusion 
+ References 
+
+ License: CC BY-NC-SA 4.0
+
+arXiv:2604.21801v1 [cs.CV] 23 Apr 2026 
+
+ SyMTRS: Benchmark Multi-Task Synthetic Dataset for Depth, Domain Adaptation and Super-Resolution in Aerial Imagery 
+
+   Safouane EL GHAZOUALI* 
+ 
+ Affiliation:  TOELT LLC AI lab / HSLU
+ 
+ Affiliation:  Winterthur, Swintzerland
+ 
+ Email:  safouane.elghazouali@toelt.ai 
+ 
+ Email:  safouane.elghazouali@hslu.ai 
+
+ Nicola Venturi
+ 
+ Affiliation:  Competence Center for Artificial
+ 
+ Affiliation:  Intelligence and Simulation, armasuisse S+T,
+ 
+ Affiliation:  3602 Thun, Switzerland
+ 
+ Email:  nicola.venturi@armasuisse.ch 
+
+ Michael Rueegsegger
+ 
+ Affiliation:  Competence Center for Artificial
+ 
+ Affiliation:  Intelligence and Simulation, armasuisse S+T,
+ 
+ Affiliation:  3602 Thun, Switzerland
+ 
+ Email:  michael.rueegsegger@armasuisse.ch 
+
+  Umberto MICHELUCCI 
+ 
+ Affiliation:  TOELT LLC AI lab / HSLU
+ 
+ Affiliation:  Winterthur, Switzerland
+ 
+ Email:  umberto.michelucci@toelt.ai 
+ 
+ Email:  umberto.michelucci@hslu.ai 
+
+ Abstract 
+ 
+ Recent advances in deep learning for remote sensing rely heavily on large annotated datasets, yet acquiring high-quality ground truth for geometric, radiometric, and multi-domain tasks remains costly and often infeasible. In particular, the lack of accurate depth annotations, controlled illumination variations, and multi-scale paired imagery limits progress in monocular depth estimation, domain adaptation, and super-resolution for aerial scenes. We present SyMTRS , a large-scale synthetic dataset generated using a high-fidelity urban simulation pipeline. The dataset provides high-resolution RGB aerial imagery ( 2048 × 2048 2048\times 2048 ), pixel-perfect depth maps, night-time counterparts for domain adaptation, and aligned low-resolution variants for super-resolution at × 2 \times 2 , × 4 \times 4 , and × 8 \times 8 scales. Unlike existing remote sensing datasets that focus on a single task or modality, SyMTRS is designed as a unified multi-task benchmark enabling joint research in geometric understanding, cross-domain robustness, and resolution enhancement. We describe the dataset generation process, its statistical properties, and its positioning relative to existing benchmarks. SyMTRS aims to bridge critical gaps in remote sensing research by enabling controlled experiments with perfect geometric ground truth and consistent multi-domain supervision. The results obtained in this work can be reproduced from this Github repository: https://github.com/safouaneelg/SyMTRS . 
+
+ 1 Introduction 
+
+ Deep learning breakthroughs in remote sensing have been highly researched by large annotated datasets, still creating high-quality ground truth for diverse tasks remains a major bottleneck [ 30 , 39 ] . Tasks such as geometric depth estimation, cross-domain adaptation, and super-resolution all require precise labels that are costly or infeasible to obtain at scale in real-world aerial imagery [ 30 , 2 ] . For example, monocular depth estimation in unmanned aerial vehicle (UAV) imagery requires dense 3D ground truth. Recent studies emphasize that very few real-world UAV datasets provide accurate pixel-level depth, hence why researchers rely on synthetic data or self-supervised methods that provide only relative depth maps [ 38 , 13 ] . Synthetic simulation platforms have been used to generate aerial datasets (e.g. the Mid-Air and TartanAir datasets) with multi-modal ground truth, but this still leaves a significant sim-to-real domain gap to be addressed [ 28 ] . Even when RGB images and pose or semantic labels can be readily obtained from simulations, capturing high-fidelity depth maps for aerial scenes is cumbersome and has only been achieved in a few special cases [ 45 , 25 ] . 
+
+ Another fundamental challenge in remote sensing is domain adaptation ensuring models generalize across different geographic regions, sensors, and imaging conditions. Prior high-resolution (HR) remote sensing datasets have predominantly focused on single-domain semantic mapping, overlooking issues of model transferability [ 36 ] . For instance, models trained on one city often struggle to perform on another due to differences in landscape and data distribution. The LoveDA benchmark tackled one aspect of this problem by introducing a land-cover dataset with two distinct domains (urban and rural) to facilitate unsupervised domain adaptation (UDA) in semantic segmentation [ 36 ] . Beyond urban-vs-rural discrepancies, illumination change (daytime vs. nighttime) is another critical domain shift that has received little attention in aerial imaging. In autonomous driving, there have been concerted efforts to study day–night adaptation – e.g. the Dark Zurich and NightCity datasets, and synthetic benchmarks like SHIFT [ 34 ] – but in the remote sensing realm, obtaining truly co-registered day/night image pairs is extremely difficult. 
+
+ High-resolution imagery is another fundamental topic in Earth observation, it delivers rich details for recognition tasks, but practical constraints like bandwidth and sensor resolution mean that many collected images are low-resolution (LR). Super-resolution (SR) techniques aim to reconstruct finer details from LR inputs, yet training such models requires LR-HR image pairs that are representative of real-world degradations [ 2 ] . A recent effort to address this issue is the Real-RefRSSRD dataset, which provides cross-resolution pairs by pairing high-resolution aerial images (NAIP) with corresponding lower-resolution satellite images (Sentinel-2) [ 11 ] . While such real-world SR benchmarks are valuable, they can be limited by temporal misalignment and differences in sensor characteristics. There remains a need for datasets that supply strictly aligned multi-scale imagery to enable controlled super-resolution experiments. 
+
+ Given these limitations, we are proposing a unified multi-task datasets that can accelerate research by providing a common testbed for multiple related problems. In computer vision at large, multi-task learning has shown promise in improving generalization and efficiency by leveraging shared representations across tasks. For example, the Taskonomy and SHIFT datasets combine diverse labels such as depth, segmentation, and tracking in one benchmark [ 34 ] . Another dataset, M 3 VIR, was designed as a multi-modal, multi-view video benchmark containing synchronized RGB, depth, and segmentation maps [ 2 ] . In the remote sensing field, multi-task benchmark efforts are only beginning to emerge. One notable example is SynRS3D [ 30 ] , a synthetic dataset of 69k satellite-view images providing both land-cover segmentation and pixelwise height maps. Another example is SAMRS [ 39 ] , where supervised pre-training on segmentation, object detection, and change detection tasks yielded robust representation learning for remote sensing models. 
+
+ In this paper, we introduce SyMTRS , a synthetic multi-Task dataset for transferable aerial imagery and remote sensing. SyMTRS is built upon an existing modelized urban environment named MatrixCity [ 21 ] . It is constructed using a high-fidelity urban simulation in Unreal Engine 5, following the direction of recent synthetic benchmarks in vision [ 2 ] but tailored specifically to remote sensing needs. The dataset offers high-resolution RGB images ( 2048 × 2048 2048\times 2048 pixels) with aligned ground-truth depth maps, paired day-time and night-time renders for controlled domain adaptation, and multi-scale image sets (downsampled × 2 \times 2 , × 4 \times 4 , × 8 \times 8 ) to support super-resolution. Unlike prior benchmarks, SyMTRS ensures all annotations are spatially and temporally aligned, allowing for the study of multi-task and cross-domain models in a unified setting. 
+
+ SyMTRS can be considered as a step towards holistically comprehending scenes in aerial images through domain-adaptation-based geometrically aware and resolution enhancement approaches, which also take advantage of close-coupled supervisory information. The dataset offers an opportunity for pretraining and transfer learning, provides a benchmark for individual tasks, and also enables joint objective optimization within remote sensing vision models. 
+
+ 2 Related Work 
+
+ Deep learning in computer vision has benefited from large-scale annotated datasets spanning multiple tasks, particularly in ground-level imagery. In contrast, remote sensing datasets are typically narrower in scope, often addressing a single task and lacking in large-scale multi-modal supervision. In this section, we review prominent datasets from both domains—ground-level and remote sensing—and highlight the gaps that our proposed SyMTRS dataset aims to fill. 
+
+ Ground-Level Vision Datasets 
+ Ground-level datasets for classification, segmentation, and depth estimation are rich in scale and annotations. For example, ImageNet  [ 18 ] and Places365  [ 49 ] provide millions of images for object and scene classification. Datasets such as PASCAL VOC  [ 12 ] and MS COCO  [ 24 ] offer annotations for object detection and instance segmentation. Urban scene segmentation benchmarks like Cityscapes  [ 7 ] and multi-task datasets like KITTI  [ 14 ] and NYU Depth V2  [ 29 ] provide pixel-level depth and segmentation labels, enabling rich multi-task learning.
+Synthetic datasets such as Virtual KITTI  [ 1 ] and SYNTHIA  [ 27 ] offer pixel-perfect annotations for depth, segmentation, and optical flow. The BDD100K dataset  [ 47 ] combines object detection, semantic segmentation, and lane detection across driving videos, further enhancing the scope for multi-task perception. 
+
+ Remote Sensing Datasets
+ Remote sensing datasets have historically been fragmented across tasks. For classification, UCMerced  [ 46 ] , AID  [ 44 ] , and NWPU-RESISC45  [ 4 ] provide aerial scene categories. EuroSAT  [ 15 ] and BigEarthNet  [ 33 ] offer land-cover classification at scale, but lack pixel-level supervision.
+Semantic segmentation benchmarks include DeepGlobe  [ 8 ] , ISPRS Potsdam  [ 17 ] , and LoveDA  [ 37 ] . Object detection is addressed by DOTA  [ 43 ] , xView  [ 19 ] , and RarePlanes  [ 9 ] , though each targets a narrow domain.
+For super-resolution, recent datasets such as OLI2MSI  [ 42 ] and SEN2NAIP  [ 50 ] provide paired multi-resolution imagery. Temporal and video-based datasets, while rare, include the Jilin-1 satellite video benchmark  [ 35 ] and the multi-temporal fMoW  [ 6 ] . Most remote sensing datasets remain single-task and lack consistent supervision across modalities. 
+
+ Multi-Task Synthetic Benchmarks
+ Beyond single-task collections, several recently proposed benchmarks aim to support joint supervision across multiple vision tasks by providing aligned annotations and complex scene variations.
+ SynRS3D is a large-scale synthetic remote sensing dataset developed to facilitate 3D semantic understanding from monocular high-resolution imagery. SynRS3D comprises high-resolution optical images covering diverse urban styles and multiple land cover categories, and it provides precise annotations for height (elevation) estimation, semantic land cover mapping, and building change detection. This combination enables joint training of both geometric and semantic tasks in the context of remote sensing, addressing the scarcity of ground truth data for height and semantic labels in real satellite imagery. Synthetic annotations include pixel-aligned land cover classes and height maps, enabling models to learn 3D structure and semantics simultaneously. SynRS3D also serves as a platform for exploring unsupervised domain adaptation and transfer from synthetic to real remote sensing data through multi-task baselines, helping mitigate the gap between rendered and real scenes.
+ SAMRS (Segment Anything Model Remote Sensing) extends large-scale segmentation datasets into the remote sensing domain by leveraging the Segment Anything Model (SAM) to efficiently generate pixel-level semantic annotations from existing object detection collections. The resulting SAMRS dataset contains over 105 000 images and more than 1.6 million instance annotations, orders of magnitude larger than previous high-resolution remote sensing segmentation benchmarks. These annotations support semantic segmentation, instance segmentation, and object detection, either independently or in combination. SAMRS thereby enables pre-training and fine-tuning strategies that alleviate the annotation bottleneck in remote sensing segmentation tasks, bridging the gap between object detection and dense pixel labeling. Another multi-task dataset is M 3 VIR , or the Multi-Modality Multi-View Synthesized Benchmark, is a recent synthetic video dataset that emphasizes multi-task support in ground-level imagery. Although efforts in this area are still emerging, M 3 VIR provides multi-view imagery with precise ground truth for tasks such as depth estimation, semantic segmentation, and restoration, enabling models to learn consistent representations across views and modalities. The availability of video sequences with diverse content and aligned ground truth labels supports research into robust multi-task and multi-modal learning beyond static images, including scenarios that combine depth cues with semantic understanding and image enhancement tasks. Moreover, SHIFT (Synthetic Driving dataset for Continuous Multi-Task Domain Adaptation) focuses on continuous domain shifts in synthetic driving contexts and is particularly relevant for multitask evaluation under diverse environmental conditions. SHIFT includes comprehensive sensor streams with annotations for semantic segmentation, instance segmentation, monocular depth estimation, and optical flow. It simulates gradual variations in weather (cloudiness, rain, fog), time of day (day to night), and scene complexity, providing a controlled environment to study domain adaptation and continual performance degradation across tasks. By simulating these continuous domain transitions and offering dense ground truth for multiple perception tasks, SHIFT enables investigations into domain-robust multi-task models and continuous adaptation strategies. 
+
+ These benchmarks illustrate recent progress toward datasets that provide dense, multi-modal annotations suitable for training and evaluating deep models on numerous vision tasks simultaneously. However, most existing multi-task collections remain grounded either in terrestrial imagery (such as driving or urban scenes) or focus on subsets of relevant tasks. Remote sensing, in particular, still lacks large-scale benchmarks that jointly support depth estimation, semantic segmentation, super-resolution, and domain adaptation which motivates the design of our proposed SyMTRS dataset. 
+
+ 2.1 Comparison of Datasets 
+
+ Table  1 provides an overview of ground-level and remote sensing datasets, summarizing their scope, resolution, modality, and supported tasks. SyMTRS is designed to bridge the identified gaps by offering a synthetic, high-resolution, multi-task benchmark for aerial vision. 
+
+ Table 1: Comparison of Representative Ground-Level and Remote Sensing Datasets. 
+
+ Domain 
+ Dataset 
+ Tasks 
+ # Images 
+ Resolution 
+ Synthetic/Real 
+ Single/Multi 
+ 
+ Ground 
+ ImageNet  [ 18 ] 
+ Classification 
+ 1.28M+ 
+ Varied 
+ Real 
+ Single 
+ 
+ Ground 
+ Places365  [ 49 ] 
+ Scene Classification 
+ 1.8M+ 
+ 256 × 256 256\times 256 
+ Real 
+ Single 
+ 
+ Ground 
+ PASCAL VOC  [ 12 ] 
+ Cls/Det/Seg 
+ 11.5k 
+ 500 × 400 500\times 400 
+ Real 
+ Multi 
+ 
+ Ground 
+ MS COCO  [ 24 ] 
+ Det/Seg 
+ 118k 
+ 640 × 480 640\times 480 
+ Real 
+ Multi 
+ 
+ Ground 
+ Cityscapes  [ 7 ] 
+ Segmentation 
+ 25k 
+ 2048 × 1024 2048\times 1024 
+ Real 
+ Single 
+ 
+ Ground 
+ KITTI  [ 14 ] 
+ Det/Depth/Stereo 
+ 7.5k+ 
+ 1242 × 375 1242\times 375 
+ Real 
+ Multi 
+ 
+ Ground 
+ NYU Depth V2  [ 29 ] 
+ Depth/Segmentation 
+ 1.4k 
+ 640 × 480 640\times 480 
+ Real 
+ Multi 
+ 
+ Ground 
+ SYNTHIA  [ 27 ] 
+ Depth/Segmentation 
+ 9.4k 
+ 1280 × 760 1280\times 760 
+ Synthetic 
+ Multi 
+ 
+ Ground 
+ Virtual KITTI  [ 1 ] 
+ Multi-task 
+ 21k+ 
+ 1242 × 375 1242\times 375 
+ Synthetic 
+ Multi 
+ 
+ Ground 
+ BDD100K  [ 47 ] 
+ Det/Seg/Lane 
+ 100k 
+ 1280 × 720 1280\times 720 
+ Real 
+ Multi 
+ 
+ Ground 
+ M 3 VIR  [ 3 ] 
+ Seg/Depth/SR 
+ 100k+ 
+ Multi-Res 
+ Synthetic 
+ Multi 
+ 
+ Remote 
+ UCMerced  [ 46 ] 
+ Scene Classification 
+ 2.1k 
+ 256 × 256 256\times 256 
+ Real 
+ Single 
+ 
+ Remote 
+ AID  [ 44 ] 
+ Scene Classification 
+ 10k 
+ 600 × 600 600\times 600 
+ Real 
+ Single 
+ 
+ Remote 
+ NWPU-RESISC45  [ 4 ] 
+ Scene Classification 
+ 31.5k 
+ 256 × 256 256\times 256 
+ Real 
+ Single 
+ 
+ Remote 
+ EuroSAT  [ 15 ] 
+ Classification 
+ 27k 
+ 64 × 64 64\times 64 
+ Real 
+ Single 
+ 
+ Remote 
+ BigEarthNet  [ 33 ] 
+ Multi-label Class 
+ 590k+ 
+ 120 × 120 120\times 120 
+ Real 
+ Single 
+ 
+ Remote 
+ DeepGlobe  [ 8 ] 
+ Segmentation 
+ 803 
+ 2448 × 2448 2448\times 2448 
+ Real 
+ Single 
+ 
+ Remote 
+ ISPRS Potsdam  [ 17 ] 
+ Segmentation 
+ 38 
+ 6000 × 6000 6000\times 6000 
+ Real 
+ Single 
+ 
+ Remote 
+ LoveDA  [ 37 ] 
+ Segmentation (DA) 
+ 18k 
+ 1024 × 1024 1024\times 1024 
+ Real 
+ Single 
+ 
+ Remote 
+ DOTA  [ 43 ] 
+ Detection 
+ 2.8k 
+ 800 − − 4000 ​ p ​ x 800--4000px 
+ Real 
+ Single 
+ 
+ Remote 
+ RarePlanes  [ 9 ] 
+ Detection 
+ 50k+ 
+ 1024 × 1024 1024\times 1024 
+ Synthetic+Real 
+ Single 
+ 
+ Remote 
+ OLI2MSI  [ 42 ] 
+ Super-Resolution 
+ 5.3k 
+ 480 × 480 480\times 480 
+ Real 
+ Single 
+ 
+ Remote 
+ SEN2NAIP  [ 50 ] 
+ Super-Resolution 
+ 38k 
+ 600 × 600 600\times 600 
+ Real 
+ Single 
+ 
+ Remote 
+ Jilin-1  [ 35 ] 
+ Video SR 
+ 201 clips 
+ 128 × 128 128\times 128 (video) 
+ Real 
+ Single 
+ 
+ Remote 
+ fMoW  [ 6 ] 
+ Temporal Classification 
+ 1M+ 
+ 224 × 224 224\times 224 
+ Real 
+ Single 
+ 
+ Remote 
+ SynRS3D  [ 31 ] 
+ Segmentation/Depth 
+ 69k 
+ High-Res 
+ Synthetic 
+ Multi 
+ 
+ Remote 
+ SAMRS  [ 40 ] 
+ Detection/Change/Seg 
+ 100k+ 
+ Varied 
+ Real 
+ Multi 
+
+ 3 SyMTRS Dataset 
+
+ The SyMTRS dataset is built upon the high-fidelity MatrixCity project [ 21 ] , implemented within the Unreal Engine 5 simulation environment. MatrixCity is a photorealistic, procedural urban environment designed for testing computer vision, robotics, and AI algorithms in large-scale, dynamic cityscapes. Developed to leverage the graphical and physical realism of Unreal Engine 5, MatrixCity includes diverse city blocks populated with detailed building geometries, roads, vehicles, and ambient urban elements. This environment supports dynamic lighting, shadow rendering, and camera control, making it highly suitable for simulating aerial and ground-level views in a controllable setting. MatrixCity is particularly well-suited for synthetic dataset generation due to its scalability, deterministic rendering pipeline, and ability to produce multi-modal outputs such as RGB, depth, and semantic masks. 
+
+ 3.1 Data Design 
+
+ The dataset was generated by deploying a customized Camera Actor within the MatrixCity environment. This camera simulates a drone-mounted sensor, configured with a physical sensor size of 35 mm by 35 mm and a focal length of 36 mm to ensure accurate perspective projection and compatibility with standard camera models used in photogrammetric pipelines. No additional distortion or lens deformation effects were applied in order to preserve pixel-level geometric precision and maintain clean, artifact-free imagery. 
+
+ Figure 1: Visualization of the capturing process of the image in the MatrixCity Unreal Engine 5 environment. 
+
+ To simulate aerial observations, the camera was oriented with a fixed pitch of − 90 ∘ -90^{\circ} , capturing nadir (top-down) views of the cityscape. The motion of the camera was automated to follow a rasterized sweeping pattern, covering the entire accessible area of the MatrixCity map. This rasterization was repeated at multiple altitudes, beginning at 90,000 Unreal Engine units and descending incrementally to 30,000 units. These altitudes simulate varying drone flight heights, offering multi-scale coverage of the urban scene.
+To prevent collisions and preserve line-of-sight over the complex urban geometry, low-altitude flights were restricted from covering zones with densely packed high-rise structures. A pre-analysis of building height distribution across MatrixCity was performed, and exclusion masks were applied to regions where tall structures could occlude the camera’s view or cause unrealistic overlaps during rendering.
+For the illumination settings, we introduced variation in solar lighting by modifying the directional light source orientation across sequences. This variation introduces natural diversity in shading, highlights, and cast shadows throughout the dataset, avoiding bias from uniform lighting conditions. Rendering sequences were orchestrated using Unreal Engine’s built-in Sequencer tool, which enabled precise animation control and frame scheduling. Each sequence was rendered at a framerate of 60 FPS, producing temporally coherent and motion-stable image sequences.
+In total, over 1.5 million frames were generated during the dataset creation phase. To avoid redundancy and ensure diverse scene coverage, a sampling step of one frame every 600 intervals was applied, yielding a balanced dataset of spatially and temporally distributed samples. This subsampling also mitigated motion blur while preserving a sufficient range of camera positions for tasks like depth estimation and domain adaptation.
+Ground-truth depth maps were rendered alongside RGB images using the Movie Render Queue in Unreal Engine. The depth maps preserve real-world metric accuracy and were saved in EXR format to maintain high dynamic range and full-precision floating point values. Following rendering, the outputs were post-processed into two data streams: RGB images saved as lossless PNGs, and depth maps serialized as *.npy files in 32-bit float format, ensuring compatibility with scientific computing libraries and high-fidelity downstream processing. 
+
+ 3.2 Vision Tasks 
+
+ SyMTRS is designed to support multiple vision tasks as shown in Fig. 2 . The settings that are presented within our current benchmark protocol are: (1) Super-resolution (SR) paired LR → \rightarrow HR reconstruction at × 2 \times 2 , × 4 \times 4 , and × 8 \times 8 from perfectly aligned synthetic pairs. (2) Image-to-image translation (paired) day → \rightarrow night translation with paired supervision. (3) Unsupervised image generation to synthesis further images. For the current experiments, we use a fixed split with seed 42 42 , containing 1656 training tiles and 414 test tiles. The current release reports SR and day/night translation experiments; depth and detection benchmarks are planned for the next release stage. 
+
+ Figure 2: Sample representation of the dataset components which include: Raw RGB high resolution images ( 2048 × 2048 ) (2048\times 2048) captured at different Z Z heights of the map. Night version of the image with lit building blocks ( 2048 × 2048 ) (2048\times 2048) . Bicubic downsamples for super resolution at 3 scales ( 1024 × 1024 ) (1024\times 1024) , ( 512 × 512 ) (512\times 512) and ( 256 × 256 ) (256\times 256) . and provided depth map with metric values stored in numpy array for conversion to 3D point clouds. 
+
+ 4 Experiments 
+
+ This section reports the training setup and the first benchmark results obtained so far on SyMTRS for SR and day/night translation. All runs use a deterministic split seed ( 42 42 ). For SR, the split contains 1656 training tiles and 414 held-out test tiles. To benchmark SyMTRS dataset, we have used a Linux machine equipped with the components presented in Table 2 . 
+
+ Table 2: Computational infrastructure used during the training and evaluation of object detection models. Details on GPUs, CPU, RAM, operating system, and key software frameworks such as PyTorch, Ultralytics, and CUDA versions are described. 
+
+ Hardware 
+ Software 
+
+ GPUs: NVIDIA RTX A6000 48 GB × 3 
+ Ubuntu 20.04.6 LTS 
+ 
+ CPU: Intel(R) Core(TM) i9-10980XE @ 3.00GHz 
+ Python 3.10.15 
+ 
+ Memory: 128 GB 
+ PyTorch 1.13.1 
+
+ Ultralytics 8.3.9 
+
+ CUDA 12.4 
+
+ 4.1 Super-resolution 
+
+ Single-image super-resolution (SR) aims to reconstruct a high-resolution (HR) image from a low-resolution (LR) observation, which is an inherently ill-posed inverse problem since multiple plausible HR solutions may correspond to the same LR input. Many models have been proposed in the literature with multiple architectures with the aim of addressing this ambiguity using different architectural and optimization strategies. In our work we have tested four baseline models (Variational autoencoders [ 5 ] ; SRCNN [ 10 ] , SRGAN [ 20 ] , SwinIR [ 22 ] ) used in comparative studies for super resolution problem [ 48 , 32 , 26 , 23 ] . 
+
+ VAE-based SR [ 5 ] formulates the problem in a probabilistic generative framework. A deep hierarchical VAE is trained to model the conditional distribution p ⁡ ( 𝐱 H ​ R ∣ 𝐱 L ​ R ) p(\mathbf{x}_{HR}\mid\mathbf{x}_{LR}) by introducing latent variables and optimizing the evidence lower bound (ELBO), which combines a reconstruction term with a Kullback–Leibler (KL) divergence regularization. In this formulation, the encoder maps the LR image to a latent representation, while the decoder generates HR samples conditioned on both the latent code and LR features. This allows the model to capture uncertainty and produce diverse high-frequency details rather than a single deterministic estimate. In contrast, SRCNN [ 10 ] is a deterministic convolutional neural network that directly learns an end-to-end mapping between LR and HR images. The LR image is first upsampled using bicubic interpolation to the desired scale, after which a three-layer CNN performs (i) patch extraction and representation, (ii) nonlinear mapping between LR and HR feature spaces, and (iii) reconstruction of the final HR output. The model is trained using mean squared error (MSE) loss, which encourages pixel-wise fidelity and typically leads to high PSNR performance, although it may produce overly smooth textures at large magnification factors. SRGAN [ 20 ] extends this deterministic criterion by introducing adversarial learning to enhance perceptual quality. It consists of a deep residual generator network and a discriminator trained in a generative adversarial framework. Instead of relying solely on pixel-wise loss, SRGAN employs a perceptual loss composed of a content term (often computed in a high-level feature space such as VGG activations) and an adversarial term that pushes the generated images toward the natural image manifold. This design enables the synthesis of sharper and more realistic textures, especially at high upscaling factors, though it may not always maximize distortion-based metrics such as PSNR. Finally, SwinIR [ 22 ] leverages Transformer-based attention mechanisms for image restoration. Its architecture consists of a shallow feature extraction layer, a deep feature extraction module built from Residual Swin Transformer Blocks (RSTBs), and a reconstruction module with sub-pixel convolution for upsampling. By employing shifted window-based self-attention, SwinIR captures both local and non-local dependencies efficiently while maintaining manageable computational complexity. Typically trained with an ℓ 1 \ell_{1} or pixel-wise loss for classical SR tasks, SwinIR balances distortion minimization and structural detail recovery, achieving strong performance across multiple restoration benchmarks. 
+
+ We evaluate the four SR baselines at scales × 2 \times 2 , × 4 \times 4 , and × 8 \times 8 under a unified training protocol. For each model and scale, we train for 20 epochs using Adam (learning rate 10 − 4 10^{-4} , batch size 4 4 ) on paired LR-HR samples. The split is deterministic (seed 42 42 ) with 1656 training tiles and a held-out set of 414 tiles ( 80 / 20 80/20 ). SRCNN and the autoencoder are optimized with pixel-wise MSE after bicubic upsampling of LR inputs to HR size, SRGAN uses a weighted combination of MSE content loss and adversarial BCE loss, and SwinIR is trained with the same optimizer configuration and scale-specific LR-HR pairs. For each run, we retain the checkpoint with the best validation PSNR. Final evaluation is reported on the fixed SyMTRS test split ( n = 414 n=414 ) using MSE, PSNR expressed in Eq. 1 , and SSIM following [ 41 ] expressed in Eq. 2 . 
+
+ PSNR = 10 ​ log 10 ​ ( M ​ A ​ X I 2 MSE ) , \mathrm{PSNR}=10\log_{10}\left(\frac{MAX_{I}^{2}}{\mathrm{MSE}}\right), 
+ 
+ (1) 
+ 
+ where M ​ A ​ X I MAX_{I} is the maximum valid pixel value. 
+
+ SSIM ⁡ ( x , y ) = ( 2 ​ μ x ​ μ y + c 1 ) ​ ( 2 ​ σ x ​ y + c 2 ) ( μ x 2 + μ y 2 + c 1 ) ​ ( σ x 2 + σ y 2 + c 2 ) . \mathrm{SSIM}(x,y)=\frac{(2\mu_{x}\mu_{y}+c_{1})(2\sigma_{xy}+c_{2})}{(\mu_{x}^{2}+\mu_{y}^{2}+c_{1})(\sigma_{x}^{2}+\sigma_{y}^{2}+c_{2})}. 
+ 
+ (2) 
+
+ The training curves for all models and scaling factors are shown in Fig. 3 . At × 2 \times 2 , all methods converge rapidly, with the autoencoder and SRCNN exhibiting smooth and stable optimization, minimal train–validation gaps, and the highest PSNR/SSIM values. SwinIR demonstrates a steady but slightly slower convergence, while SRGAN presents noticeable oscillations in both loss and validation metrics. As the scaling factor increases to × 4 \times 4 and × 8 \times 8 , the super resolution problem becomes progressively more challenging, leading to lower PSNR and SSIM across all models. Nevertheless, the deterministic MSE-based approaches maintain stable convergence and consistent generalization. In contrast, SwinIR preserves relatively stable behavior with moderate performance degradation. Overall, the curves confirm the expected distortion–perception trade-off and highlight the increasing optimization difficulty as the magnification factor grows. 
+
+ Figure 3: SR quantitative comparison aggregated from the test split for × 2 \times 2 , × 4 \times 4 , and × 8 \times 8 . 
+
+ 4.2 Image-to-image translation 
+
+ One of the researched fields of generative AI is domain adaptation via image-to-image translation. Image-to-image translation aims to learn a mapping between two visual domains, either with paired supervision or from unpaired data. pix2pix [ 16 ] formulates the problem in a fully supervised setting using conditional generative adversarial networks (cGANs). Given aligned training pairs ( x , y ) (x,y) , the generator G G learns a direct mapping from input image x x to target image y y , while the discriminator D D evaluates whether the generated output is indistinguishable from real samples conditioned on the same input. Architecturally, the generator follows a U-Net encoder–decoder structure with skip connections that transfer low-level spatial information directly from encoder to decoder layers, preserving fine details during reconstruction. The discriminator is implemented as a PatchGAN, which classifies local image patches instead of the entire image, encouraging high-frequency realism. Training optimizes a composite objective (Eq. 3 ) combining an adversarial loss with an ℓ 1 \ell_{1} reconstruction term, 
+
+ ℒ = ℒ c ​ G ​ A ​ N ​ ( G , D ) + λ ​ ℒ ℓ 1 ​ ( G ) , \mathcal{L}=\mathcal{L}_{cGAN}(G,D)+\lambda\mathcal{L}_{\ell_{1}}(G), 
+ 
+ (3) 
+
+ where the ℓ 1 \ell_{1} loss enforces pixel-level fidelity to the ground-truth target while the adversarial component promotes perceptually realistic textures. 
+
+ In contrast, CycleGAN [ 51 ] addresses the more challenging unpaired translation scenario, where aligned image pairs are unavailable. It learns two mappings, G : X → Y G:X\rightarrow Y and F : Y → X F:Y\rightarrow X , together with corresponding discriminators for each domain. Since no paired supervision exists, CycleGAN introduces a cycle-consistency constraint that enforces F ⁡ ( G ⁡ ( x ) ) ≈ x F(G(x))\approx x and G ⁡ ( F ⁡ ( y ) ) ≈ y G(F(y))\approx y , ensuring that translations remain structurally consistent with the input content. The overall objective combines adversarial losses for both domains with a cycle-consistency term and, optionally, an identity loss to preserve color composition when appropriate. Generators are typically implemented using residual convolutional networks with downsampling, residual blocks, and learned upsampling, while discriminators again employ PatchGAN structures. Unlike pix2pix, which directly minimizes pixel-wise discrepancy to a known target, CycleGAN primarily matches distributions across domains while preserving invertible structure through cycle consistency, making it suitable for style and appearance transfer when paired data is not available. 
+
+ 5 Results and Discussion 
+
+ 5.1 Super resolution 
+
+ Fig. 4 represent the histogram of rankings across all magnification factors for the super-resolution. The autoencoder achieves the best distortion-oriented performance at × 2 \times 2 , × 4 \times 4 , and × 8 \times 8 , obtaining the lowest MSE together with the highest PSNR and SSIM in every setting. At × 2 \times 2 , it reaches 34.564 dB PSNR and 0.9445 SSIM, outperforming SRCNN by 1.449 dB and 0.0167 SSIM, and SRGAN by almost 6 dB and 0.17 SSIM. The same tendency remains visible at × 4 \times 4 and × 8 \times 8 , although the gap to the strongest deterministic baselines becomes smaller as the problem becomes harder. In particular, at × 8 \times 8 the margin between the autoencoder, SRCNN, and SwinIR is below 0.32 dB PSNR, suggesting that once a large amount of high-frequency content has been removed by aggressive downsampling, all distortion-minimizing models approach a similar ceiling.
+The scale-dependent degradation is also coherent with the expected difficulty of the benchmark. For the best-performing method, PSNR drops from 34.564 dB at × 2 \times 2 to 30.023 dB at × 4 \times 4 and 27.675 dB at × 8 \times 8 , while SSIM decreases from 0.9445 to 0.8622 and 0.8032 respectively. This decline indicates that the reconstruction task becomes progressively harder as the scale factor increases. Because the LR-HR pairs are perfectly aligned and generated from the same synthetic scene content, the observed performance drop can be attributed primarily to the loss of spatial detail rather than to registration noise or temporal mismatch, which often confound evaluation on real remote-sensing SR datasets. 
+
+ Among the non-adversarial architectures, SRCNN remains highly competitive, especially at × 4 \times 4 and × 8 \times 8 , where its results are very close to the autoencoder. This suggests that the benchmark is sufficiently structured for relatively shallow convolutional models to recover a substantial part of the missing information when optimized directly for pixel fidelity. SwinIR also delivers stable results, but under the present training budget it does not surpass the best convolutional baselines. A plausible interpretation is that the Transformer-based architecture requires either longer training, stronger hyperparameter tuning, or larger data diversity to fully exploit its modeling capacity. In other words, the current benchmark is already informative enough to separate architectures, while still leaving room for future gains from stronger optimization and model scaling.
+SRGAN presents the weakest numerical performance at every scale, with the gap becoming particularly large in SSIM, even though adversarial training prioritizes perceptual sharpness and texture realism over exact pixel reconstruction. The qualitative examples in Fig. 5 support this interpretation. The autoencoder and SRCNN generally preserve roof boundaries, road markings, and building outlines better, while SRGAN tends to generate visually sharper but less stable local patterns and stronger tonal deviations. SwinIR often recovers plausible structures, but still exhibits slightly softer or less consistent details than the top-performing autoencoder in these examples. 
+
+ Figure 4: SR quantitative comparison aggregated from the test split for × 2 \times 2 , × 4 \times 4 , and × 8 \times 8 . 
+
+ Figure 5: Qualitative SR comparison on examples degraded at scales × 2 \times 2 , × 4 \times 4 , and × 8 \times 8 , reconstructed by the trained Autoencoder, SRGAN, SRCNN, and SwinIR models. 
+
+ 5.2 Image-to-image translation 
+
+ Figure 6 illustrates representative day-to-night translations obtained with CycleGAN and pix2pix. A first result is that both models preserve the global scene geometry well including road layout, building footprints, lane markings, and bright window patterns remain spatially aligned with the input views.
+The visual comparison also highlights a difference between paired and unpaired training. In the day-to-night direction, pix2pix generally produces outputs that are closer to the target night domain, with darker global illumination, more localized light sources, and better preservation of scene-specific contrast transitions. CycleGAN, by contrast, often applies a more global dark surface and tends to brighten some surfaces excessively, especially roads and rooftops.
+The night-to-day direction appears more challenging for both methods, due to nighttime containing less visible information in dark regions. In the examples shown, CycleGAN often recovers daytime structure more clearly, producing a more readable road network and facade layout, albeit sometimes with a cooler tone than the ground truth. Pix2pix, despite the advantage of paired supervision, occasionally yields underexposed outputs with limited recovery in shadowed areas. This asymmetry suggests that translating from information-poor nighttime observations back to daytime appearance remains a difficult inverse problem even in a controlled synthetic setting. 
+
+ Figure 6: Qualitative comparison for day-to-night and night-to-day translation using CycleGAN and pix2pix on SyMTRS examples. 
+
+ Therefore, SyMTRS can support both paired and unpaired translation modes while keeping the scene content consistent enough for meaningful visual comparison. Additionally, they indicate that the dataset is challenging enough to expose model-specific failure modes: CycleGAN may sacrifice sample-specific fidelity for style consistency, whereas pix2pix can better exploit paired alignment but may still struggle when the source image lacks too much texture information. 
+
+ Code availability 
+
+ The dataset generated via Unreal Engine 5 and used to train the models for this paper is available at HuggingFace https://huggingface.co/datasets/safouaneelg/SyMTRS . The code and weights are available in the Github repository https://github.com/safouaneelg/SyMTRS . 
+
+ 6 Conclusion 
+
+ In this paper, we introduced SyMTRS , a synthetic multi-task remote sensing dataset designed to enable controlled research in aerial image super-resolution and day/night image translation through perfectly aligned high-resolution imagery, multi-scale low-resolution counterparts, and paired cross-domain samples generated within a unified simulation pipeline. The reported benchmarks show that SyMTRS is both reliable and sufficiently challenging: super-resolution performance degrades consistently from × 2 \times 2 to × 8 \times 8 , confirming the increasing difficulty of high-magnification reconstruction, while the compared baselines exhibit clear and stable differences, with the autoencoder achieving the strongest distortion-based performance and adversarial translation models exposing the expected trade-offs between perceptual realism and pixel fidelity. The image-to-image translation results demonstrate that the dataset preserves scene geometry across domains and can support both paired and unpaired adaptation studies. 
+
+ References 
+
+ [1] 
+ Y. Cabon, N. Murray, and M. Humenberger (2020) 
+ 
+ Virtual kitti 2 .
+ 
+ In CVPR ,
+ 
+ Cited by: Table 1 ,
+ §2 .
+ 
+ [2] 
+ X. Chen, Y. Zhang, J. Xu, and et al. (2024) 
+ 
+ M3VIR: multi-modal multi-task multi-view immersive rendering dataset .
+ 
+ In CVPR ,
+ 
+ Cited by: §1 ,
+ §1 ,
+ §1 ,
+ §1 .
+ 
+ [3] 
+ X. Chen, Y. Zhang, J. Xu, et al. (2024) 
+ 
+ M3VIR: a multi-modal multi-task multi-view immersive rendering dataset .
+ 
+ In CVPR ,
+ 
+ Cited by: Table 1 .
+ 
+ [4] 
+ G. Cheng, J. Han, and X. Lu (2017) 
+ 
+ Remote sensing image scene classification: benchmark and state of the art .
+ 
+ Proceedings of the IEEE .
+ 
+ Cited by: Table 1 ,
+ §2 .
+ 
+ [5] 
+ D. Chira, I. Haralampiev, O. Winther, A. Dittadi, and V. Liévin (2023) 
+ 
+ Image super-resolution with deep variational autoencoders .
+ 
+ In Computer Vision – ECCV 2022 Workshops , L. Karlinsky, T. Michaeli, and K. Nishino (Eds.) ,
+ 
+ Cham , pp. 395–411 .
+ 
+ External Links: ISBN 978-3-031-25063-7 
+ 
+ Cited by: §4.1 ,
+ §4.1 .
+ 
+ [6] 
+ G. Christie, N. Fendley, J. Wilson, and R. Mukherjee (2018) 
+ 
+ Functional map of the world .
+ 
+ CVPR Workshops .
+ 
+ Cited by: Table 1 ,
+ §2 .
+ 
+ [7] 
+ M. Cordts, M. Omran, S. Ramos, T. Rehfeld, M. Enzweiler, R. Benenson, U. Franke, S. Roth, and B. Schiele (2016) 
+ 
+ The cityscapes dataset for semantic urban scene understanding .
+ 
+ In CVPR ,
+ 
+ Cited by: Table 1 ,
+ §2 .
+ 
+ [8] 
+ I. Demir, K. Koperski, D. Lindenbaum, G. Pang, J. Huang, S. Basu, F. Hughes, D. Tuia, and R. Raska (2018) 
+ 
+ DeepGlobe 2018: a challenge to parse the earth through satellite images .
+ 
+ CVPR Workshops .
+ 
+ Cited by: Table 1 ,
+ §2 .
+ 
+ [9] 
+ DIU and I. C. Works (2020) 
+ 
+ RarePlanes: synthetic data to improve aircraft detection in satellite imagery .
+ 
+ https://www.cosmiqworks.org/rareplanes/ .
+ 
+ Cited by: Table 1 ,
+ §2 .
+ 
+ [10] 
+ C. Dong, C. C. Loy, K. He, and X. Tang (2016) 
+ 
+ Image super-resolution using deep convolutional networks .
+ 
+ IEEE Transactions on Pattern Analysis and Machine Intelligence 38 ( 2 ), pp. 295–307 .
+ 
+ External Links: Document 
+ 
+ Cited by: §4.1 ,
+ §4.1 .
+ 
+ [11] 
+ R. Dong, Z. Lixian, and H. Fu (2021) 
+ 
+ RRSGAN: reference-based super-resolution for remote sensing image .
+ 
+ IEEE Transactions on Geoscience and Remote Sensing PP , pp. 1–17 .
+ 
+ External Links: Document 
+ 
+ Cited by: §1 .
+ 
+ [12] 
+ M. Everingham, L. Van Gool, C. K. Williams, J. Winn, and A. Zisserman (2010) 
+ 
+ The pascal visual object classes (voc) challenge .
+ 
+ International journal of computer vision .
+ 
+ Cited by: Table 1 ,
+ §2 .
+ 
+ [13] 
+ M. Fonder J. Courbon et al. (2019) 
+ 
+ Mid-air: a multi-modal dataset for extremely low altitude drone flights .
+ 
+ In IROS ,
+ 
+ Cited by: §1 .
+ 
+ [14] 
+ A. Geiger, P. Lenz, and R. Urtasun (2013) 
+ 
+ Vision meets robotics: the kitti dataset .
+ 
+ In The International Journal of Robotics Research ,
+ 
+ Cited by: Table 1 ,
+ §2 .
+ 
+ [15] 
+ P. Helber, B. Bischke, A. Dengel, and D. Borth (2019) 
+ 
+ EuroSAT: a novel dataset and deep learning benchmark for land use and land cover classification .
+ 
+ IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing .
+ 
+ Cited by: Table 1 ,
+ §2 .
+ 
+ [16] 
+ P. Isola, J. Zhu, T. Zhou, and A. A. Efros (2017) 
+ 
+ Image-to-image translation with conditional adversarial networks .
+ 
+ In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR) ,
+ 
+ Note: arXiv:1611.07004 
+ 
+ External Links: Link 
+ 
+ Cited by: §4.2 .
+ 
+ [17] 
+ ISPRS (2018) 
+ 
+ ISPRS potsdam dataset .
+ 
+ Note: https://www2.isprs.org/commissions/comm2/wg4/potsdam-2d-semantic-labeling/ 
+ 
+ Cited by: Table 1 ,
+ §2 .
+ 
+ [18] 
+ A. Krizhevsky, I. Sutskever, and G. E. Hinton (2012) 
+ 
+ ImageNet classification with deep convolutional neural networks .
+ 
+ Communications of the ACM .
+ 
+ Cited by: Table 1 ,
+ §2 .
+ 
+ [19] 
+ D. Lam, R. Kuzma, K. McGee, S. Dooley, M. Laielli, M. Klaric, Y. Bulatov, and B. McCord (2018) 
+ 
+ XView: objects in context in overhead imagery .
+ 
+ pp.  .
+ 
+ External Links: Document 
+ 
+ Cited by: §2 .
+ 
+ [20] 
+ C. Ledig, L. Theis, F. Huszar, J. Caballero, A. Cunningham, A. Acosta, A. Aitken, A. Tejani, J. Totz, Z. Wang, and W. Shi (2017) 
+ 
+ Photo-realistic single image super-resolution using a generative adversarial network .
+ 
+ pp. 105–114 .
+ 
+ External Links: Document 
+ 
+ Cited by: §4.1 ,
+ §4.1 .
+ 
+ [21] 
+ Y. Li, L. Jiang, L. Xu, Y. Xiangli, Z. Wang, D. Lin, and B. Dai (2023) 
+ 
+ MatrixCity: a large-scale city dataset for city-scale neural rendering and beyond .
+ 
+ pp. 3182–3192 .
+ 
+ External Links: Document 
+ 
+ Cited by: §1 ,
+ §3 .
+ 
+ [22] 
+ J. Liang, J. Cao, G. Sun, K. Zhang, L. Van Gool, and R. Timofte (2021) 
+ 
+ SwinIR: image restoration using swin transformer .
+ 
+ In 2021 IEEE/CVF International Conference on Computer Vision Workshops (ICCVW) ,
+ 
+ Vol. , pp. 1833–1844 .
+ 
+ External Links: Document 
+ 
+ Cited by: §4.1 ,
+ §4.1 .
+ 
+ [23] 
+ J. Y. Lim, Y. S. Chiew, R. C.-W. Phan, and X. Wang (2024) 
+ 
+ A comparative study of deep learning models for image super-resolution .
+ 
+ In Asia Conference on Electronic Technology (ACET 2024) , X. Jiang (Ed.) ,
+ 
+ Vol. 13211 , pp. 1321105 .
+ 
+ External Links: Document ,
+ Link 
+ 
+ Cited by: §4.1 .
+ 
+ [24] 
+ T. Lin, M. Maire, S. Belongie, et al. (2014) 
+ 
+ Microsoft coco: common objects in context .
+ 
+ ECCV .
+ 
+ Cited by: Table 1 ,
+ §2 .
+ 
+ [25] 
+ F. Nex, E.K. Stathopoulou, F. Remondino, M.Y. Yang, L. Madhuanand, Y. Yogender, B. Alsadik, M. Weinmann, B. Jutzi, and R. Qin (2024) 
+ 
+ UseGeo - a uav-based multi-sensor dataset for geospatial research .
+ 
+ ISPRS Open Journal of Photogrammetry and Remote Sensing 13 , pp. 100070 .
+ 
+ External Links: ISSN 2667-3932 ,
+ Document ,
+ Link 
+ 
+ Cited by: §1 .
+ 
+ [26] 
+ F. R. Nikroo, A. Deshmukh, A. Sharma, A. Tam, K. Kumar, C. Norris, and A. Dangi (2023) 
+ 
+ A comparative analysis of srgan models .
+ 
+ External Links: 2307.09456 ,
+ Link 
+ 
+ Cited by: §4.1 .
+ 
+ [27] 
+ G. Ros, L. Sellart, J. Materzynska, D. Vazquez, and A. M. Lopez (2016) 
+ 
+ The synthia dataset: a large collection of synthetic images for semantic segmentation of urban scenes .
+ 
+ CVPR .
+ 
+ Cited by: Table 1 ,
+ §2 .
+ 
+ [28] 
+ S. Shah D. Dey et al. (2017) 
+ 
+ AirSim: high-fidelity visual and physical simulation for autonomous vehicles .
+ 
+ Field and service robotics .
+ 
+ Cited by: §1 .
+ 
+ [29] 
+ N. Silberman, D. Hoiem, P. Kohli, and R. Fergus (2012) 
+ 
+ Indoor segmentation and support inference from rgbd images .
+ 
+ In ECCV ,
+ 
+ Cited by: Table 1 ,
+ §2 .
+ 
+ [30] 
+ Y. Song, W. Zhang, T. Wang, and et al. (2024) 
+ 
+ SynRS3D: a synthetic multi-task benchmark for remote sensing 3d understanding .
+ 
+ arXiv preprint arXiv:2409.05142 .
+ 
+ Cited by: §1 ,
+ §1 .
+ 
+ [31] 
+ Y. Song, W. Zhang, T. Wang, et al. (2024) 
+ 
+ SynRS3D: a synthetic multi-task benchmark for remote sensing 3d understanding .
+ 
+ arXiv preprint arXiv:2409.05142 .
+ 
+ Cited by: Table 1 .
+ 
+ [32] 
+ J. Soni, S. Gurappa, and H. Upadhyay (2024) 
+ 
+ A comparative study of deep learning models for image super-resolution across various magnification levels .
+ 
+ In 2024 IEEE International Conference on Future Machine Learning and Data Science (FMLDS) ,
+ 
+ Vol. , pp. 395–400 .
+ 
+ External Links: Document 
+ 
+ Cited by: §4.1 .
+ 
+ [33] 
+ G. Sumbul, M. Charfuelan, B. Demir, and V. Markl (2019) 
+ 
+ BigEarthNet: a large-scale benchmark archive for remote sensing image understanding .
+ 
+ IGARSS .
+ 
+ Cited by: Table 1 ,
+ §2 .
+ 
+ [34] 
+ K. Sun, Z. Liu, and et al. (2023) 
+ 
+ SHIFT: a synthetic driving dataset for domain adaptation and generalization .
+ 
+ In CVPR ,
+ 
+ Cited by: §1 ,
+ §1 .
+ 
+ [35] 
+ K. Wang, F. Wu, X. Luo, et al. (2022) 
+ 
+ Deep satellite video super-resolution via global registration and local alignment .
+ 
+ CVPR .
+ 
+ Cited by: Table 1 ,
+ §2 .
+ 
+ [36] 
+ Y. Wang, J. Mao, and et al. (2021) 
+ 
+ LoveDA: a remote sensing land cover dataset for domain adaptive semantic segmentation .
+ 
+ In NeurIPS ,
+ 
+ Cited by: §1 .
+ 
+ [37] 
+ Y. Wang, J. Mao, X. Yu, Y. Jin, X. Li, and L. Sun (2021) 
+ 
+ LoveDA: a remote sensing land cover dataset for domain adaptive semantic segmentation .
+ 
+ In NeurIPS ,
+ 
+ Cited by: Table 1 ,
+ §2 .
+ 
+ [38] 
+ Y. Wang Y. Liu et al. (2020) 
+ 
+ TartanAir: a dataset to push the limits of visual slam .
+ 
+ arXiv preprint arXiv:2003.14338 .
+ 
+ Cited by: §1 .
+ 
+ [39] 
+ Z. Wang, Q. Liu, L. Yu, and et al. (2024) 
+ 
+ SAMRS: supervised pretraining for remote sensing foundation models .
+ 
+ arXiv preprint arXiv:2506.23801 .
+ 
+ Cited by: §1 ,
+ §1 .
+ 
+ [40] 
+ Z. Wang, Q. Liu, L. Yu, et al. (2024) 
+ 
+ SAMRS: supervised pretraining for remote sensing foundation models .
+ 
+ arXiv preprint arXiv:2506.23801 .
+ 
+ Cited by: Table 1 .
+ 
+ [41] 
+ Z. Wang, A.C. Bovik, H.R. Sheikh, and E.P. Simoncelli (2004) 
+ 
+ Image quality assessment: from error visibility to structural similarity .
+ 
+ IEEE Transactions on Image Processing 13 ( 4 ), pp. 600–612 .
+ 
+ External Links: Document 
+ 
+ Cited by: §4.1 .
+ 
+ [42] 
+ Y. Wei, H. Zhang, X. Peng, Y. Xu, Z. Wang, and Y. Li (2021) 
+ 
+ OLI2MSI: a multi-sensor super-resolution dataset for remote sensing .
+ 
+ IGARSS .
+ 
+ Cited by: Table 1 ,
+ §2 .
+ 
+ [43] 
+ G. Xia, X. Bai, J. Ding, Z. Zhu, S. Belongie, and J. Luo (2018) 
+ 
+ DOTA: a large-scale dataset for object detection in aerial images .
+ 
+ CVPR .
+ 
+ Cited by: Table 1 ,
+ §2 .
+ 
+ [44] 
+ G. Xia, J. Hu, F. Hu, B. Shi, X. Bai, Y. Zhong, L. Zhang, and X. Lu (2017) 
+ 
+ AID: a benchmark dataset for performance evaluation of aerial scene classification .
+ 
+ IEEE Transactions on Geoscience and Remote Sensing .
+ 
+ Cited by: Table 1 ,
+ §2 .
+ 
+ [45] 
+ J. Xie and et al. (2023) 
+ 
+ WildUAV: real uav flight data for aerial scene understanding .
+ 
+ Remote Sensing .
+ 
+ Cited by: §1 .
+ 
+ [46] 
+ Y. Yang and S. Newsam (2010) 
+ 
+ Bag-of-visual-words and spatial extensions for land-use classification .
+ 
+ ACM SIGSPATIAL .
+ 
+ Cited by: Table 1 ,
+ §2 .
+ 
+ [47] 
+ F. Yu, H. Chen, X. Wang, W. Xian, Y. Chen, F. Liu, V. Madhavan, and T. Darrell (2020) 
+ 
+ BDD100K: a diverse driving dataset for heterogeneous multitask learning .
+ 
+ In CVPR ,
+ 
+ Cited by: Table 1 ,
+ §2 .
+ 
+ [48] 
+ C. Zhang, Z. Mao, J. Nie, Y. Lai, and L. Deng (2025) 
+ 
+ A comparative study of deep learning methods for super-resolution of npp-viirs nighttime light images .
+ 
+ International Journal of Applied Earth Observation and Geoinformation 145 , pp. 104995 .
+ 
+ External Links: ISSN 1569-8432 ,
+ Document ,
+ Link 
+ 
+ Cited by: §4.1 .
+ 
+ [49] 
+ B. Zhou, A. Lapedriza, A. Khosla, A. Oliva, and A. Torralba (2017) 
+ 
+ Places: a 10 million image database for scene recognition .
+ 
+ In IEEE Transactions on Pattern Analysis and Machine Intelligence ,
+ 
+ Cited by: Table 1 ,
+ §2 .
+ 
+ [50] 
+ T. Zhou, Y. Wang, K. Duan, Q. Xu, and Z. Tu (2023) 
+ 
+ SEN2NAIP: a real-world benchmark for cross-sensor super-resolution .
+ 
+ arXiv preprint arXiv:2311.09756 .
+ 
+ Cited by: Table 1 ,
+ §2 .
+ 
+ [51] 
+ J. Zhu, T. Park, P. Isola, and A. A. Efros (2017) 
+ 
+ Unpaired image-to-image translation using cycle-consistent adversarial networks .
+ 
+ In Proceedings of the IEEE International Conference on Computer Vision (ICCV) ,
+ 
+ Note: arXiv:1703.10593 
+ 
+ External Links: Link 
+ 
+ Cited by: §4.2 .
+
+ Experimental support, please
+ view the build logs 
+ for errors. Generated by
+
+ L
+ A 
+ T
+ E 
+ 
+ xml 
+ 
+ .
+
+ Instructions for reporting errors 
+ We are continuing to improve HTML versions of papers, and your feedback helps enhance accessibility and mobile
+ support. To report errors in the HTML that will help us improve conversion and rendering, choose any of the
+ methods listed below: 
+ 
+ Click the "Report Issue" ( 
+ 
+ ) button, located in the page header. 
+ 
+ Tip: You can select the relevant text first, to include it in your report. 
+ Our team has already identified the following issues . We appreciate your time reviewing and reporting rendering errors we
+ may not have found yet. Your efforts will help us improve the HTML versions for all readers, because disability
+ should not be a barrier to accessing research. Thank you for your continued support in championing open access for
+ all. 
+ Have a free development cycle? Help support accessibility at arXiv! Our collaborators at LaTeXML maintain a list of packages that need conversion , and welcome developer contributions . 
+
+ We gratefully acknowledge support from
+ our major funders ,
+ member institutions , ,
+ and all contributors.
+
+ About 
+ &middot; 
+ Help 
+ &middot; 
+ Contact 
+ &middot; 
+ Subscribe 
+ &middot; 
+ Copyright 
+ &middot; 
+ Privacy 
+ &middot; 
+ Accessibility 
+ &middot; 
+ Operational Status (opens in new tab) 
+
+ Major funding support from 
+

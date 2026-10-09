@@ -1,0 +1,1491 @@
+Academic Editors: Li Fang, Jian Yang
+and Yu Feng
+Received: 19 March 2026
+Revised: 28 April 2026
+Accepted: 30 April 2026
+Published: 3 May 2026
+Copyright: © 2026 by the authors.
+Licensee MDPI, Basel, Switzerland.
+This article is an open access article
+distributed under the terms and
+conditions of the Creative Commons
+Attribution (CC BY) license.
+Article
+Assessing GAN Super-Resolution in Grasslands: The Role of
+Spatial Heterogeneity and Textural Complexity
+Efrain Noa-Yarasca 1,*
+ , Javier Osorio Leyton 1
+ , Nada Jumaa 1, Haoyu Niu 2,3 and Lonesome Malambo 4
+1 Texas A&M AgriLife Research, Blackland Research and Extension Center, Temple, TX 76502, USA;
+javier.leyton@ag.tamu.edu (J.O.L.); nada.juma@ag.tamu.edu (N.J.)
+2 Texas A&M Institute of Data Science, Texas A&M University, College Station, TX 77843, USA; hniu@tamu.edu
+3 Department of Electrical and Computer Engineering, Texas A&M University, College Station, TX 77843, USA
+4 Texas A&M AgriLife, Texas A&M Forest Service, College Station, TX 77843, USA;
+lonesome.malambo@tfs.tamu.edu
+* Correspondence: efrain.noa-yarasca@ag.tamu.edu
+Highlights
+What are the main findings?
+• Landscape heterogeneity (vegetation condition, structure, and texture) strongly con-
+trols super-resolution performance, with SRGAN degrading under high complexity
+while ESRGAN remains robust.
+• ESRGAN consistently outperforms SRGAN and bicubic interpolation across intra-sensor,
+cross-sensor, and generalization scenarios, particularly under domain transfer conditions
+What are the implications of the main findings?
+• Incorporating ecological heterogeneity into model evaluation is essential for reliable
+deployment of deep learning super-resolution in remote sensing.
+• The demonstrated robustness of ESRGAN positions it as a scalable solution for multi-
+sensor data fusion in heterogeneous ecosystems.
+Abstract
+High-resolution imagery is essential for monitoring heterogeneous grassland ecosystems,
+yet the performance of generative adversarial network (GAN) super-resolution under
+varying landscape heterogeneity and operational application scenarios remains unclear.
+This study presents a landscape-aware evaluation of super-resolution methods in semi-
+arid savanna grasslands of the Edwards Plateau (Texas, USA) using paired multispectral
+imagery from PlanetScope (3 m) and unmanned aerial vehicle (UAV) platforms (0.03 m).
+Two GAN models, SRGAN and ESRGAN, were compared with a bicubic interpolation
+baseline. Image tiles were systematically stratified along ecologically relevant gradients of
+vegetation condition (NDVI quartiles), spatial structure (woody patch-based clusters), and
+textural complexity (GLCM entropy quartiles). Model performance was evaluated across
+three operational frameworks: intra-sensor downscaling, cross-sensor downscaling, and
+intra-to-cross generalization. Reconstruction fidelity was quantified using peak signal-to-
+noise ratio (PSNR) and structural similarity index (SSIM), complemented by variability
+analysis to assess performance stability. Landscape heterogeneity strongly influenced
+downscaling outcomes. SRGAN performance declined in areas with dense vegetation,
+aggregated woody structure, and high-entropy textures, with large variability under cross-
+sensor and generalization scenarios. In contrast, ESRGAN demonstrated consistently
+robust performance across landscape gradients, whereas bicubic interpolation performed
+well only under intra-sensor conditions and drastically degraded under sensor transfer.
+Remote Sens. 2026, 18, 1419 https://doi.org/10.3390/rs18091419
+Remote Sens. 2026, 18, 1419 2 of 35
+These results demonstrate that vegetation condition, structural heterogeneity, and sensor-
+transfer scenarios jointly constrain super-resolution performance. Rather than serving as
+a model comparison exercise, this study emphasizes a landscape-aware framework for
+understanding how ecological heterogeneity and operational domain shifts jointly shape
+super-resolution behavior in grassland ecosystems, providing guidance for more reliable
+applications of deep learning-based remote sensing methods.
+Keywords: satellite image downscaling; super-resolution; generative adversarial networks
+(SRGAN; ESRGAN); multisensor remote sensing; landscape heterogeneity; texture analysis
+(GLCM entropy); sensor transfer
+1. Introduction
+Monitoring grassland ecosystems requires spatially explicit, high-resolution infor-
+mation capable of capturing fine-scale vegetation dynamics, detecting early signals of
+degradation, and supporting precision management. Recent advances in remote sens-
+ing, especially satellite platforms combined with unmanned aerial vehicles (UAVs), have
+expanded monitoring capacity across scales and seasons. However, heterogeneous grass-
+land mosaics, characterized by diffuse edges, bare patches, and micro-topography, remain
+challenging for conventional approaches that rely on coarse pixels or global accuracy
+metrics [1,2]. Landscape ecology research further emphasizes that spatial heterogeneity
+and patch structure strongly mediate the information content available to remote sensing
+analyses, reinforcing the need for evaluation protocols that reflect ecological pattern and
+scale rather than relying solely on global averages [3].
+Grasslands cover approximately 40% of Earth’s ice-free land surface and 69% of
+agricultural land, contributing nearly 20% of terrestrial productivity [4,5]. These ecosys-
+tems sustain millions of livelihoods through livestock production while providing critical
+ecosystem services, including carbon sequestration, biodiversity conservation, and soil
+stabilization [1,2,6,7]. Despite their ecological and socio-economic significance, grasslands
+are among the most threatened and least protected biomes worldwide, facing degradation
+driven by land conversion, overgrazing, and climate change; therefore, their protection and
+management is a pressing issue [8–14]
+Satellite sensors such as PlanetScope (3 m resolution) offer frequent revisit times con-
+ducive to monitoring dynamic landscapes. However, ref. [15] show that this resolution may
+be still insufficient for heterogeneous rangelands, where scattered shrubs, bare soil patches,
+and micro-topographic variations often fall below the pixel scale, leading to misclassifi-
+cation of degradation stages. Similarly, sentinel-2 imagery (10 m resolution) improves
+biomass and leaf area index estimates but struggles to characterize fragmented parcels
+and narrow management strips due to mixed pixels and edge effects [1]. In contrast, UAV
+multispectral imagery complements satellite data by providing superior spatial resolution
+for detailed species classification and biomass estimation at the field scale [16–19]. Studies
+reveal strong correlations between vegetation indices derived from PlanetScope and UAV
+data, underscoring their synergistic potential for multi-scale ecological assessments [1,20].
+In this regard, integrating these platforms that take advantage of UAVs’ precise spatial pre-
+cision and satellite data’s broad coverage is required to build robust and scalable grassland
+monitoring and management systems.
+In the past decade, deep learning-based super-resolution (SR) methods have created
+new opportunities for downscaling remote sensing imagery from low to higher spatial
+resolution [21–25]. Early convolutional neural network (CNN) approaches demonstrated
+https://doi.org/10.3390/rs18091419
+Remote Sens. 2026, 18, 1419 3 of 35
+strong capability for learning spatial features [26,27], but more recent methods based on
+Generative Adversarial Networks (GANs) have substantially improved the reconstruction
+of fine-scale textures. GANs employ an adversarial training scheme in which a gener-
+ator produces high-resolution images from low-resolution inputs while a discriminator
+evaluates their realism, encouraging the synthesis of perceptually plausible details. Super-
+resolution architectures such as SRGAN and its enhanced variant ESRGAN exploit this
+framework to learn complex non-linear mappings and generate realistic textures, often
+outperforming interpolation and conventional CNN-based models in preserving fine eco-
+logical features [28–30]. GAN-based approaches have been widely applied in domains
+including medical image enhancement, satellite image analysis, surveillance, and infras-
+tructure inspection [31]. More recently, vegetation-oriented models such as VegGAN [32]
+and extreme geospatial downscaling approaches [33] reflect growing interest in ecological
+applications. However, while SR methods have been extensively applied to structured
+landscapes, their performance in heterogeneous natural environments such as grasslands
+remains comparatively underexplored.
+While GANs have emerged as powerful tools for downscaling remote sensing imagery,
+a critical gap remains in understanding how intrinsic landscape properties—spatial hetero-
+geneity and textural complexity—influence their performance in natural ecosystems. Most
+evaluations rely on global metrics averaged across entire datasets, overlooking how algo-
+rithm performance varies under different landscape conditions [23,34]. This is problematic
+for grasslands, where ecological processes operate across multiple scales and management
+requires reliable fine-grain information [35,36]. The assumption that GANs perform uni-
+formly across landscapes remains untested; theoretical and empirical evidence suggests
+that spatial structure, vegetation density, and textural complexity strongly influence the
+information content available for resolution enhancement [3,29,37,38]. Although textures
+are critical for SR, no study has quantified how fine-scale textural complexity—reflecting
+vegetation variability—affects SR fidelity [23,39].
+In parallel, the robustness of GAN-based downscaling under different operational
+configurations—hereafter referred to as Downscaling Strategy Frameworks—remains in-
+sufficiently examined. Key scenarios, including intra-sensor downscaling, cross-sensor
+generalization, and domain adaptation, introduce substantial distribution shifts that chal-
+lenge model transferability and often lead to pronounced performance degradation [40,41].
+These scenarios are central to real-world applications, where training and deployment
+conditions rarely align; however, the absence of integrated evaluations that jointly account
+for landscape heterogeneity and operational strategy constrains both model interpretability
+and practical deployment in heterogeneous natural environments.
+Our research addresses these gaps by comparing SRGAN [ 30] and ESRGAN [ 28]
+against bicubic interpolation. We evaluate performance using PSNR and SSIM across
+stratified NDVI, structure, and texture gradients, providing the first landscape-aware as-
+sessment of GAN-based SR under Downscaling Strategy Frameworks. NDVI captures
+spectral gradients critical for image reconstruction [2]; spatial structure, quantified through
+patch metrics, reflects habitat configuration and biodiversity patterns [3,11]; and textural
+complexity, measured using GLCM entropy, captures fine-scale variability beyond spectral
+means and relates to plant richness [38]. By integrating these axes into a stratification frame-
+work, we move beyond global accuracy metrics toward ecologically informed evaluation.
+To our knowledge, this is the first study applying such a stratified approach to GAN-based
+SR in natural ecosystems, grounding methodological innovation in ecological theory and
+enhancing grassland monitoring applications.
+The objective of this study is to evaluate how landscape heterogeneity influences the
+performance and robustness of super-resolution models in grassland ecosystems under
+https://doi.org/10.3390/rs18091419
+Remote Sens. 2026, 18, 1419 4 of 35
+realistic operational conditions. Rather than conducting a broad benchmarking of com-
+peting architectures, we adopt a controlled experimental design to isolate the effects of
+ecological complexity and domain shift on reconstruction fidelity. Specifically, we examine
+how gradients in vegetation condition, spatial structure, and textural complexity affect
+model performance across three downscaling strategy frameworks: intra-sensor, cross-
+sensor, and intra-to-cross generalization. Two representative GAN-based models, SRGAN
+and ESRGAN, are selected as canonical architectures with comparable foundations but
+differing capacities for high-frequency texture reconstruction, enabling targeted assessment
+of whether increased model sophistication improves resilience to heterogeneity. A bicu-
+bic interpolation baseline is included to contextualize deep learning performance under
+varying conditions. By explicitly linking landscape characteristics with sensor-transfer
+scenarios, this study advances a landscape-aware evaluation framework that identifies
+when and why super-resolution approaches succeed or fail in heterogeneous grassland
+environments. In doing so, it shifts the focus from model-centric comparison toward
+understanding the environmental constraints that govern the reliability of super-resolution
+for ecological applications.
+2. Methodology
+To investigate how landscape heterogeneity and domain shift influence super-
+resolution performance, we adopt a controlled experimental framework that isolates
+environmental and operational factors from architectural variability. Rather than bench-
+marking multiple models, the focus is on how reconstruction behavior changes across
+ecological conditions and deployment scenarios. We therefore select two representative
+GAN architectures—SRGAN and ESRGAN—that share a common formulation but differ
+in their ability to reconstruct high-frequency textures, enabling a targeted assessment of
+robustness to landscape complexity. A bicubic interpolation approach is included as a base-
+line. Model performance is evaluated across stratified gradients of vegetation condition,
+spatial structure, and textural complexity, and under three downscaling strategy frame-
+works (intra-sensor, cross-sensor, and intra-to-cross generalization), allowing us to quantify
+how heterogeneity and domain mismatch jointly influence super-resolution fidelity in
+grassland systems.
+2.1. Study Area
+The study area is located within the Edwards Plateau ecoregion at the Carl and
+Bina Sue Martin—Texas A&M AgriLife Research Ranch (MR), Menard, Texas (30.8096◦N,
+−99.8657◦W), covering approximately 1553 ha (Figure 1). The landscape is a Mesquite-Oak
+savanna, with woody species such as honey mesquite, live oak, agarita, and Ashe juniper.
+Common grasses include sideoats grama, Texas wintergrass, and Aristida species. Soils
+are primarily of the Tarrant series, characterized by very cobbly silty clay and clay with
+1–15% slopes. The region has a humid subtropical climate, with temperatures ranging from
+7.9◦C (January) to 34.4◦C (August) and annual rainfall averaging 640 mm, peaking in June.
+Mixed herds of goats, cattle, and sheep graze year-round under a pyric herbivory regime.
+Prescribed burns are conducted annually over about 200 ha across two rotating burn units.
+https://doi.org/10.3390/rs18091419
+Remote Sens. 2026, 18, 1419 5 of 35
+
+Figure 1. Study area at Martin Ranch (yellow box) in Menard County, Texas, USA.
+2.2. Overview of the Methodological Approach
+Figure 2 provides an integrated overview of the methodological workflow imple-
+mented in this study, summarizing the end-to-end data pipeline from image acquisition to
+model evaluation. The workflow begins with data collection, followed by preprocessing
+and tile extraction. These paired tiles serve as the input to the downscaling models, which
+are trained under multiple experimental configurations. Model performance is subse-
+quently evaluated using standard image quality metrics, including Peak Signal-to-Noise
+Ratio (PSNR) and Structural Similarity Index (SSIM). The final outputs of the modeling
+phase are downscaled images with enhanced spatial detail.
+
+Figure 2. Schematic overview of the methodology, including data acquisition, preprocessing, tile
+extraction, model training, and result generation.
+To rigorously assess how downscaling performance varies across landscape hetero-
+geneity, the study employs a structured set of stratification scenarios. First, vegetation
+condition was examined by grouping images into quartiles based on NDVI. Second, land-
+scape structure was evaluated by clustering images according to patch-based metrics—total
+number of woody patches, mean patch area, and the standard deviation of patch area.
+Third, textural complexity was assessed by classifying images into quartiles based on
+entropy. Beyond stratification, three downscaling strategy frameworks were tested: intra-
+sensor downscaling, cross-sensor downscaling, and intra-to-cross generalization. Finally,
+https://doi.org/10.3390/rs18091419
+Remote Sens. 2026, 18, 1419 6 of 35
+three models were compared—SRGAN, ESRGAN, and Bicubic interpolation. The mul-
+tiple experimental configurations are shown in Figure 3 and described in detail in the
+following subsections.
+Figure 3. Experimental configuration, including (a) the three stratification scenarios, (b) the three
+downscaling strategy frameworks, and (c) the models evaluated (SRGAN, ESRGAN, and Bicubic).
+2.3. Data Sources and Preprocessing
+2.3.1. UAV and Satellite Imagery Acquisition
+High-resolution imagery was collected using an unmanned aerial vehicle (UAV)
+platform as part of a structured remote sensing campaign designed to support spatial
+downscaling analysis. UAV flights were conducted between April and June 2025 along
+predefined, overlapping flight paths—each approximately 100 m wide and varying in
+length from 800 to 5000 m. The flight paths also differed in form, including linear and
+zigzag patterns, to capture landscape heterogeneity and ensure dense spatial coverage
+(Figure 4b). Flight missions were planned and executed autonomously using WingtraHub
+1.0 software (Wingtra, Zurich, Switzerland). Image acquisition was performed using a
+WingtraOne Gen II fixed-wing UAV equipped with a MicaSense RedEdge-P multispectral
+sensor (AgEagle Aerial Systems, Seattle, WA, USA). The sensor captured five spectral
+bands: blue (B), green (G), red (R), red-edge (RE), and near-infrared (NIR). Flights were
+conducted at an altitude of 60 m with 75% forward and side overlap, ensuring sufficient
+image for accurate orthomosaic generation and reflectance consistency. The resulting UAV
+orthomosaics achieved a ground sampling resolution of approximately 0.03× 0.03 m.
+Figure 4. (a) PlanetScope satellite imagery at 3 m spatial resolution. ( b) UAV imagery samples at
+0.03 m spatial resolution, showing eight high-resolution strips covering part of the study area.
+https://doi.org/10.3390/rs18091419
+Remote Sens. 2026, 18, 1419 7 of 35
+In parallel, PlanetScope imagery was acquired to serve as the low-resolution counter-
+part in the downscaling framework (Figure 4a). PlanetScope data, with a spatial resolution
+of 3× 3 m, offers near-daily revisit capabilities and includes bands compatible with those
+captured by the UAV sensor. To reduce phenological and illumination mismatches between
+datasets, efforts were made to align acquisition dates as closely as possible between the
+UAV flights and satellite imagery.
+2.3.2. Preprocessing and Tiling Strategy
+Initial preprocessing of the UAV imagery involved radiometric calibration and or-
+thomosaic generation using manufacturer-recommended procedures. Particular attention
+was given to geometric accuracy and consistent reflectance values across tiles to ensure
+high-quality reference data. These calibrated orthomosaics formed the high-resolution
+ground truth dataset used for training and evaluation.
+A GIS-based approach was adopted to generate paired input-output datasets for model
+training. Square sampling polygons measuring 60× 60 m were randomly distributed across
+the UAV imagery, with some degree of overlap allowed to ensure comprehensive spatial
+representation (Figure 5a). For each polygon, corresponding tiles were extracted from
+both the UAV (high-resolution) and PlanetScope (low-resolution) imagery using theClip
+function in ArcGIS Pro (version 3.4), automated via Python scripting (version 3.9.23) for
+batch processing (Figure 5b). Each tile pair was assigned a unique identifier for traceability
+and model input management. As a result, a total of 5142 pairs of tiles were obtained.
+ 
+Figure 5. (a) Sampling polygons (yellow squares) (60 m× 60 m) overlaid on UAV imagery. (b) Corre-
+sponding tile pairs from PlanetScope (3 m resolution; low resolution) and UAV (0.03 m resolution;
+high resolution).
+To ensure compatibility and reduce model complexity, only the RGB bands were
+retained from both datasets. The resulting dataset of paired image tiles served as the
+input (low resolution) and ground truth (high resolution) for the deep learning-based
+super-resolution modeling workflow.
+2.4. Landscape Stratification: Tile-Based Classification for Downscaling Models
+To evaluate the influence of landscape characteristics on downscaling model perfor-
+mance, tile images were stratified into discrete classes based on vegetation health, landscape
+https://doi.org/10.3390/rs18091419
+Remote Sens. 2026, 18, 1419 8 of 35
+structure, and texture. These classifications enabled a comparative assessment of model
+behavior across gradients of ecological and spatial complexity. The rationale behind this
+stratification is grounded in the expectation that spatial heterogeneity, vegetation den-
+sity, and textural complexity may influence the capacity of super-resolution models to
+reconstruct fine-scale patterns. All stratification layers (NDVI, structure, and texture) were
+derived from the same set of image tiles, ensuring that comparisons across dimensions are
+directly comparable and not affected by differences in sampling.
+2.4.1. Vegetation Health (NDVI Quartile)
+Vegetation health condition was quantified using the Normalized Difference Vegeta-
+tion Index (NDVI), a widely used proxy for photosynthetic activity and plant vigor. NDVI
+values were computed for each of the 5142 tile images, and the distribution was divided
+into four quartiles: Q1 (lowest NDVI), Q2, Q3, and Q4 (highest NDVI). This quartile-based
+classification enabled separate evaluations of model performance across vegetation condi-
+tions, from sparsely vegetated to densely vegetated regions. Since NDVI is correlated with
+both canopy condition and spectral variability, the quartile approach allowed us to assess
+whether models perform differently in areas with low versus high biomass. Because quar-
+tiles inherently produce near-equal sample sizes, no additional resampling was required,
+and the standard 80/20 training–testing split was applied within each quartile. Quartile
+statistics (mean and standard deviation) are summarized in Table 1, and representative
+tiles illustrating vegetation differences across quartiles are shown in Figure 6.
+Table 1. Statistics and landscape characterization of NDVI-based quartile classification of image
+tiles. Quartiles were defined based on mean NDVI values computed per tile. The classified tiles
+reflect a gradient from bare or sparsely vegetated ground (Q1) to areas with dense vegetation and
+tree canopy (Q4).
+Quartile Pattern Tile Count NDVI Mean (SD) Characterization
+Q1 Very Low Vegetation
+Cover 1286 0.25
+(±0.022)
+Dominated by bare soils or sparsely
+vegetated areas; low photosynthetic activity.
+Q2 Low to Moderate Cover 1285 0.31
+(±0.014)
+Likely areas with patchy grassland or
+early-stage regrowth; slightly greener zones.
+Q3 Moderate Vegetation
+Cover 1285 0.36
+(±0.022)
+Predominantly grassland with some canopy
+presence; increased uniformity.
+Q4 Dense Vegetation
+Canopy 1286 0.47
+(±0.052)
+Likely dominated by tree-covered patches or
+mixed grassland with high biomass.
+
+Figure 6. NDVI-derived quartile classes represent increasing gradients of vegetation greenness and
+vigor: (a) Q1 (lowest), (b) Q2, (c) Q3, and (d) Q4 (highest).
+2.4.2. Landscape Structure (Clustering Using Patch Metrics)
+Landscape structure was characterized based on woody vegetation patterns using
+three patch-based metrics: total number of woody patches, mean patch area, and standard
+https://doi.org/10.3390/rs18091419
+Remote Sens. 2026, 18, 1419 9 of 35
+deviation of patch area. To extract these metrics, the 5142 UAV tile images were converted
+to binary vegetation masks using an NDVI threshold of 0.50 and a minimum patch size of
+200 pixels. These thresholds ensured consistent delineation of woody features across tiles.
+The resulting structural descriptors captured landscape fragmentation and aggrega-
+tion, which influenced spatial texture and signal complexity in remote sensing imagery.
+A k-means clustering algorithm was applied to the three patch-based metrics, and the
+optimal number of clusters (k = 3) was determined using the elbow method (Details of this
+analysis are included as Supplementary Material). The elbow curve (Figure S1) shows an
+inflection point between k = 3 and k = 4; k = 3 was selected to provide a parsimonious and
+interpretable representation of landscape structural variability.
+The identified clusters were characterized as follows:
+• Cluster 1 (C1)—Sparse and Fragmented Woody Patches: Characterized by low woody
+cover, with numerous small, isolated patches embedded in herbaceous or bare-ground
+matrices. This was the most common class in the study area.
+• Cluster 2 (C2)—Dispersed Woody Mosaics: Comprised of many small to medium
+patches forming a heterogeneous mosaic. These areas are indicative of ecotones or
+transitional savanna states.
+• Cluster 3 (C3)—Dense and Clumped Woody Dominance: Represented by large, con-
+tiguous woody patches with high canopy closure, indicative of mature stands or
+late-stage woody encroachment.
+Cluster statistics are reported in Table 2, and representative tile examples for each
+cluster are shown in Figure 7.
+Table 2. Statistics and landscape features of image tiles grouped by structure-based clustering using
+patch-level metrics: tree patch area, number of patches, and patch area variability.
+Cluster Name Tile
+Count
+Tree Patch
+Count
+Mean (SD)
+Mean Object
+Size (Pixels2)
+Mean (SD)
+Patch Size Std
+Dev (Pixels2)
+Mean (SD)
+Characterization
+C1
+Sparse &
+Fragmented
+Woody
+Patches
+3179 22.7
+(±10.9) 5212 (±3975) 11,794
+(±11,445)
+Few, small, scattered tree patches in
+bare/herbaceous matrix; high
+fragmentation; early encroachment or
+naturally sparse woody growth.
+C2
+Dispersed
+Woody
+Mosaics
+1452 58.2 ( ±16.9) 4655 ( ±2202) 15,022
+(±12,364)
+Very high number of small woody
+patches forming a mosaic; abundant
+but not dense; advanced but patchy
+encroachment or savanna structure.
+C3
+Dense &
+Clumped
+Woody
+Dominance
+511 21.1 ( ±10.2) 24,691
+(±18,294)
+78,123
+(±40,569)
+Large, contiguous woody patches;
+low count but very large and
+dominant; dense forest/shrubland or
+late-stage encroachment.
+Because the three clusters contained different numbers of tiles, we selected equal
+numbers of training and testing samples from each group to ensure a balanced evaluation.
+This stratification produced a balanced training set of 409 paired tiles (80%) and a test set
+of 102 paired tiles per cluster (20%), enabling consistent comparisons of reconstruction
+accuracy across landscape-structure classes. This balancing step was applied only to the
+structure-based stratification to mitigate class imbalance, whereas NDVI and entropy
+stratifications retained their full sample sizes due to their balanced quartile design.
+https://doi.org/10.3390/rs18091419
+Remote Sens. 2026, 18, 1419 10 of 35
+
+Figure 7. Landscape structure-derived clusters: (a) Cluster 1: Sparse and Fragmented Woody Patches,
+(b) Cluster 2: Dispersed Woody Mosaics, and (c) Cluster 3: Dense and Clumped Woody Dominance.
+2.4.3. Texture (Entropy-Based Stratification)
+Textural complexity was quantified using Gray-Level Co-occurrence Matrix (GLCM)
+Entropy on UAV tile images (high resolution imagery; cell size = 0.03 × 0.03 m). A
+33-pixel displacement (~1 m) in four directions (0◦, 45◦, 90◦, 135◦) was used to capture
+the spatial arrangement of vegetation elements (tree crowns, shrub clusters, and grass
+patches) while minimizing fine-scale pixel noise. This scale approximates the typical
+canopy size in mesquite–oak savanna, consistent with standard GLCM approaches for local
+structural variability [42]. Entropy values were divided into quartiles (Q1–Q4), yielding
+approximately equal sample sizes, and the same 80/20 training–testing split was applied
+within each quartile without additional resampling. Quartile statistics are summarized in
+Table 3, and representative tiles illustrating texture differences across quartiles are shown
+in Figure 8.
+Table 3. Summary statistics and landscape descriptions for the texture-based quartile classification of
+image tiles. Quartiles are derived from mean entropy values per tile, capturing a gradient from low
+textural disorder and simpler vegetation patterns (Q1) to highly complex and spatially disordered
+landscapes (Q4).
+Quartile Pattern Tile Count NDVI Mean (SD) Characterization
+Q1
+Lowest Spatial
+Disorder (Very
+Low Textural
+Complexity)
+1286 11.82
+(±0.47)
+Large, homogeneous tonal areas; minimal
+fine-scale variation. Represents open
+grasslands or sparsely vegetated surfaces
+with few woody elements.
+Q2
+Moderate Tonal
+Variability (Low-
+to-Moderate
+Textural
+Complexity)
+1285 12.83
+(±0.20)
+More frequent tonal changes, but still
+relatively simple patterns. Transitional zones
+with scattered shrubs or small tree patches
+beginning to break the grassland matrix.
+Q3
+High Pattern
+Complexity
+(Moderate-to-
+High Textural
+Complexity)
+1285 13.50
+(±0.17)
+Strong tonal intermixing; frequent contrast
+transitions. Heterogeneous vegetation
+mosaics with fragmented tree canopies and
+mixed grass–shrub structure.
+Q4
+Maximum Spatial
+Disorder (Highest
+Textural
+Complexity)
+1286 13.99
+(±0.16)
+Highly disordered tonal patterns with dense
+fine-scale variation. Densely vegetated areas
+with complex canopy layering, abundant
+shadows, and highly diverse plant structure.
+https://doi.org/10.3390/rs18091419
+Remote Sens. 2026, 18, 1419 11 of 35
+Figure 8. Entropy-derived quartile classes represent increasing spatial disorder levels: (a) Q1 (lowest
+spatial disorder), (b) Q2, (c) Q3, and (d) Q4 (Maximum spatial disorder).
+2.5. Downscaling Strategy Frameworks
+To evaluate the performance and generalization capability of the downscaling models,
+three distinct downscaling strategy frameworks were defined: intra-sensor downscaling,
+cross-sensor downscaling, and intra-to-cross generalization. The three downscaling strategy
+frameworks are illustrated schematically in Figure 9 to clarify differences in training and
+testing configurations. These scenarios reflect different operational contexts and data
+availability conditions in remote sensing applications.
+Figure 9. Downscaling strategy frameworks. (a) Intra-Sensor downscaling, (b) Cross-Sensor Down-
+scaling, and (c) Intra-to-Cross Generalization.
+2.5.1. Intra-Sensor Downscaling (UAV to LR + HR)
+The intra-sensor strategy involves using high-resolution (HR) and synthetically de-
+graded low-resolution (LR) imagery from the same sensor platform. In this setup, tile
+images collected by the UAV were artificially downsampled by a factor of four (×4) to
+generate LR versions. These LR-HR image pairs were then used to train and evaluate the
+downscaling models. This scenario allows for controlled testing and minimizes sensor-
+related spectral or spatial inconsistencies, providing a benchmark to assess model fidelity
+under ideal conditions.
+2.5.2. Cross-Sensor Downscaling (Planet as LR, UAV as HR)
+The cross-sensor strategy explores a more practical application where the low-
+resolution images are obtained from the PlanetScope satellite platform, while the high-
+resolution reference images come from UAV imagery. In this case, HR and LR imagery
+originate from different sensors, each with unique spatial, spectral, and radiometric char-
+acteristics. This setup introduces additional complexity due to inter-sensor differences,
+providing insight into how well the models perform in real-world multi-sensor applications.
+https://doi.org/10.3390/rs18091419
+Remote Sens. 2026, 18, 1419 12 of 35
+2.5.3. Intra-to-Cross- Generalization (Trained on UAV , Applied to Planet)
+In the intra-to-cross generalization strategy, the models were initially trained using
+the intra-sensor UAV-derived LR-HR tile pairs (as in Section 2.5.1) and then applied to
+downscale PlanetScope LR images. The resulting downscaled images were evaluated
+against co-located UAV HR images. This approach examines the potential of model general-
+ization across sensor domains, assessing whether models trained on only UAV imagery can
+effectively enhance satellite images. The scenario is particularly relevant for operational
+workflows where HR ground truth data is limited and model re-training on new sensors is
+not feasible.
+2.6. Downscaling Models
+To assess how vegetation health, landscape-structure heterogeneity, and textural
+complexity within grassland mosaics influence the performance of image downscaling, this
+study compares three methods for enhancing spatial resolution: SRGAN, ESRGAN, and
+bicubic interpolation. Bicubic interpolation, a widely used conventional technique, serves
+as a baseline, while SRGAN and ESRGAN are deep learning-based super-resolution models
+designed to reconstruct fine-scale details beyond the capabilities of traditional interpolation.
+All models were applied to RGB image tiles using a consistent×4 upscaling factor.
+2.6.1. Super-Resolution Generative Adversarial Network (SRGAN) Model
+The SRGAN, proposed by [30], is a deep learning framework designed to generate
+high-resolution (HR) images from low-resolution (LR) inputs while producing percep-
+tually realistic textures. SRGAN follows the Generative Adversarial Network (GAN)
+paradigm [43], in which two neural networks (a generator and a discriminator) are trained
+adversarially: the generator produces super-resolved images, while the discriminator learns
+to distinguish generated images from real HR examples (Figure 10).
+Figure 10. Schematic architecture of the Generative Adversarial Network (GAN) model.
+The generator G learns a mapping from LR images ILR to super-resolved outputs
+ISR, such that ISR = G(ILR ) and ISR≈ IHR. Architecturally, the generator is based on a
+deep residual network (SRResNet) consisting of an initial convolutional layer followed by
+multiple residual blocks. Each block includes two convolutional layers, batch normalization,
+and Parametric ReLU (PReLU) activations with skip connections to facilitate gradient flow.
+https://doi.org/10.3390/rs18091419
+Remote Sens. 2026, 18, 1419 13 of 35
+After the residual blocks, sub-pixel convolution (PixelShuffle) layers progressively increase
+spatial resolution (in two stages for a×4 upscaling) followed by a final convolutional layer
+producing the super-resolved image.
+The discriminator D serves as a binary classifier trained to differentiate between real
+HR images IHR and generated SR images ISR. It consists of a series of convolutional layers
+with increasing feature depth, interleaved with batch normalization and Leaky ReLU
+activations, progressively reducing spatial dimensions. The final layers are fully connected,
+culminating in a sigmoid output indicating the probability that the input image is real.
+The discriminator’s architecture resembles that of the VGG family of networks, with small
+receptive fields (e.g., 3× 3) and hierarchical feature extraction.
+D(I) =
+(
+1, i f I is a real HR image
+0, i f I is a generated SR image
+Training SRGAN involves optimizing a perceptual loss, which combines adversarial
+loss and content loss. The adversarial loss encourages the generator to produce images that
+reside on the manifold of natural images, as judged by the discriminator, and is defined as:
+Ladv =−log D(G(ILR )),
+where D(G(ILR )) is the discriminator’s estimate of the probability that G(ILR ) is a real
+image.
+The content loss—computed as the Euclidean distance between feature representations
+of ISR and IHR extracted from a pre-trained VGG network—ensures that the generated
+images preserve perceptually important structures/content from the HR image.
+Lconmtent = 1
+WHC ∥ϕ(ISR )− ϕ(IHR )∥2
+2,
+where ϕ(·) denotes the feature maps extracted from a pre-trained VGG19 network, and
+W, H, and C are the spatial dimensions and channel count of the feature maps. The total
+perceptual loss used to train the generator is:
+LG =Lcontent + λLadv,
+where λ balances perceptual fidelity and image realism.
+For this study, SRGAN was trained using co-registered PlanetScope (LR) and UAV
+(HR) image tiles. The trained model was then applied to PlanetScope imagery to generate
+×4 super-resolved outputs, which were evaluated against UAV imagery to assess spatial
+accuracy and the ability to recover ecologically relevant detail [44].
+2.6.2. Enhanced Super-Resolution Generative Adversarial Network (ESRGAN) Model
+The Enhanced Super-Resolution Generative Adversarial Network (ESRGAN), pro-
+posed by Wang et al. [28], replaces SRGAN’s residual blocks with Residual-in-Residual
+Dense Blocks (RRDB), which integrate dense connections and multi-level residual learning
+without batch normalization. This deeper and more stable generator enables the recon-
+struction of high-frequency details, which is an important advantage for remote sensing
+applications requiring fine spatial structure.
+ESRGAN also introduces a relativistic discriminator, which evaluates whether real
+images appear more realistic than generated ones, rather than classifying images indepen-
+dently. This formulation stabilizes adversarial training and encourages more naturalistic
+https://doi.org/10.3390/rs18091419
+Remote Sens. 2026, 18, 1419 14 of 35
+textures. In addition, ESRGAN improves the perceptual loss using VGG feature maps
+pre-activation, enhancing structural fidelity relative to SRGAN.
+In this study, ESRGAN was trained using the same co-registered PlanetScope–
+UAV patch pairs as SRGAN, enabling direct comparison across downscaling framework
+strategies. The super-resolved outputs were evaluated against UAV imagery to assess
+their performance.
+Both SRGAN and ESRGAN models were trained using the Adam optimizer. The
+generator was optimized with a learning rate of 1× 10−4 (β1 = 0.5), while the discriminator
+used a learning rate of 4× 10−4 (β1 = 0.9), both with gradient clipping (clipnorm = 0.1).
+Training was conducted for 30 epochs with a batch size of 1. A ReduceLROnPlateau
+scheduler was applied to the generator, with a decay factor of 0.1, patience of 5 epochs,
+and a minimum learning rate of 1× 10−6. The combined generator loss was formulated
+as L = λadv· Ladv + λvgg· Lperceptual + λpixel· Lpixel + λtv· Ltv, where the weights were
+set as: λadv = 1× 10−3, λvgg = 0.5, λpixel = 1.0, and λtv = 1× 10−6. The perceptual loss
+was computed using features extracted from layer 10 of a VGG19 network pre-trained on
+ImageNet. Table S1 in the Supplementary Material shows list all the hyperparameters.
+2.6.3. Bicubic Interpolation
+Bicubic interpolation is a classical image resampling technique based on cubic convo-
+lution, commonly used as a baseline in image super-resolution tasks [45]. It estimates the
+intensity of a new pixel by fitting a bicubic surface to the 16 nearest pixel values in a 4× 4
+neighborhood. This method assumes the image surface is continuous and differentiable,
+allowing smoother transitions in upscaled images. The interpolated pixel value I(x, y) at a
+continuous spatial location (x, y) is computed as:
+I(x, y) =
+2
+∑
+i=−1
+2
+∑
+j=−1
+w(i, j)· I
+ 
+xi, yj
+
+,
+where I
+ 
+xi, yj
+
+are the known neighboring pixel values and (i, j) are the bicubic interpola-
+tion weights, typically derived from cubic convolution kernels), given by:
+w(x) =
+
+
+
+(a + 2)|x|3− (a + 3)|x|2 + 1, if|x| < 1
+a|x|3− 5a|x|2 + 8a|x|− 4a, if 1 ≤|x| < 2
+0, otherwise
+(1)
+with a =−0.5 being a commonly used parameter (Catmull–Rom spline). In this study,
+bicubic interpolation is used as a non-learning-based benchmark to assess the performance
+of learning-based super-resolution models, particularly SRGAN and ESRGAN. Unlike
+these deep learning models, bicubic interpolation does not involve training and does not
+adapt to image content, providing a fixed reference for evaluating image reconstruction
+quality through metrics such as PSNR, SSIM, MAE, and MSE.
+2.7. Model Performance Measurement (Evaluation Metrics)
+To evaluate the performance of the super-resolution model, we employed three
+widely recognized metrics: Peak Signal-to-Noise Ratio (PSNR) and Structural Similar-
+ity Index (SSIM).
+Peak Signal-to-Noise Ratio (PSNR) is a metric that evaluates the ratio between the
+maximum possible signal power and the noise introduced by compression or prediction
+errors. A higher PSNR generally corresponds to better image quality. Commonly used
+thresholds for PSNR quality are as follows: 20 dB indicates poor quality, 30 dB represents
+https://doi.org/10.3390/rs18091419
+Remote Sens. 2026, 18, 1419 15 of 35
+acceptable quality, and values above 40 dB indicates high-quality images. PSNR is given by
+the following formula:
+PSNR = 10· log10
+ 
+MAX2
+MSE
+!
+,
+where MAX is the maximum possible pixel value (for example, 255 for 8-bit images), and
+MSE is as defined above.
+The Structural Similarity Index (SSIM) assesses the perceptual similarity between two
+images, accounting for luminance, contrast, and structural patterns. SSIM values range
+from−1 to 1, with a value of 1 indicating perfect structural similarity. The SSIM formula is
+defined as:
+SSIM(x, ˆx) = (2µxµ ˆx + C1)(2σx ˆx + C2) 
+µ2x + µ2
+ˆx + C1
+ 
+σ2x + σ2
+ˆx + C2
+ ,
+where µx and µ ˆx represents the means of the images, σ2
+x and σ2
+ˆx denote the variances, σx ˆx is
+the covariance, and C1 and C2 are constants added to stabilize the computation.
+Quantifying levels of variation (Coefficient of variation). To assess the internal vari-
+ability of image reconstruction performance within each quartile (for vegetation-health
+and entropy-based segmentation) or within each cluster (for entropy-cluster segmentation),
+we used the coefficient of variation (CV), defined as the ratio of the standard deviation to
+the mean (CV = SD/M). In this study, CV < 10% was classified as low variability and high
+consistency, 10% < CV < 20% as moderate variability, and CV≥ 20% as high variability or
+instability. CV values above ~30% were interpreted as indicating substantial dispersion
+and reduced reliability in model performance.
+Perceptual metrics such as Fréchet Inception Distance (FID) were not included, as
+they rely on feature representations learned from natural image datasets and require large
+sample sizes for stable estimation [46]. These conditions are not fully met in multispectral
+remote sensing contexts, limiting their interpretability
+3. Results
+The results are organized according to the three landscape stratification schemes
+examined in this study: vegetation health (NDVI-based), landscape structure, and land-
+scape texture. Within each scheme, downscaling performance is evaluated across the three
+downscaling frameworks (intra-sensor, cross-sensor, and intra-to-cross generalization). The
+following subsections present the results for each stratification, highlighting how vegetation
+condition, structural configuration, and texture complexity influence model performance.
+To evaluate potential redundancy among stratification variables, we examined their
+relationships. NDVI and entropy showed a moderate-to-high correlation (r = 0.79), indicat-
+ing partial overlap between spectral condition and textural variability. However, entropy
+differed significantly across NDVI quartiles (Kruskal–Wallis,p < 0.001), increasing from 9.67
+in Q1 to 11.18 in Q4, indicating that textural complexity is not solely determined by vegeta-
+tion greenness. Correlations between these variables and patch-based structural metrics
+were lower (r = 0.30–0.68). In addition, NDVI differed significantly across structure clusters
+(Kruskal–Wallis, p < 0.001), with mean NDVI values of 0.304, 0.403, and 0.465 for clusters
+C1, C2, and C3, respectively. These results indicate that the stratification variables are
+related but not redundant, capturing complementary aspects of landscape heterogeneity.
+Overall, downscaling accuracy varied across stratification schemes, downscaling
+frameworks, and algorithms. The following subsections present these results in detail,
+highlighting the influence of vegetation condition, structural configuration, and texture
+complexity on model performance.
+https://doi.org/10.3390/rs18091419
+Remote Sens. 2026, 18, 1419 16 of 35
+3.1. Downscaling Performance Across NDVI-Derived Quartiles
+The results in this subsection evaluate the performance of the proposed downscaling
+strategies using the independent testing dataset. As described in the methodology, the
+dataset was stratified into four quartiles (Q1–Q4), comprising 1286, 1285, 1285, and 1286 tile
+images, respectively. From these, 258, 257, 257, and 258 images were allocated to the testing
+subset of Q1–Q4, ensuring balanced evaluation across quartiles. Accordingly, the results
+presented here correspond to the reconstruction performance of the respective number of
+testing images in each quartile.
+3.1.1. Cross-Quartile Downscaling Performance Based on NDVI
+The evaluation of cross-quartile downscaling revealed distinct performance patterns
+across the examined models and strategy frameworks, indicating a clear influence of
+vegetation health on the downscaling process. Figure 11 illustrates comparative boxplots
+of peak signal-to-noise ratio (PSNR) values across the evaluated downscaling algorithms,
+downscaling strategy frameworks, and NDVI-based quartiles. Table 4 shows the mean,
+standard deviation, and coefficient of variation (CV) of PSNR and SSIM values across
+NDVI-based quartiles. Figure S3 of the Supplementary Material illustrates comparative
+boxplots of SSIM values.
+For the SRGAN model under the intra-sensor framework, Quartiles 1 and 2, corre-
+sponding to low NDVI values, achieved mean PSNR levels above 33 dB with relatively
+narrow distributions, indicating stable reconstructions in sparsely vegetated areas. In
+contrast, Quartiles 3 and 4, associated with moderate to high NDVI, exhibited substantial
+variability, with wide interquartile ranges, including PSNR values below 15 dB. These
+results suggest that SRGAN struggles to maintain reconstruction quality in vegetation-
+dense regions, where higher NDVI reflects greater canopy cover and structural complexity,
+including overlapping crowns and shadowing effects that increase spatial heterogeneity
+in the imagery. Normality assumptions were not satisfied, and the Kruskal–Wallis’ test
+confirmed significant differences in performance across quartiles (H(3) = 38.13, p < 0.001).
+For the SRGAN model under the cross-sensor framework, performance across quartiles
+also differed significantly (H(3) = 132.57, p < 0.001). However, the decrease in PSNR with
+increasing NDVI was less pronounced compared to the intra-sensor case. Variability re-
+mained relatively consistent across Quartiles 1–3 (CV≈ 7.5%), with a modest increase in
+Quartile 4 (CV = 11.5%), indicating some instability in vegetation-dense regions but an
+overall more controlled performance across NDVI classes. For the SRGAN model under the
+intro-to-cross generalization framework, the model performance deteriorated dramatically.
+Quartile 1 achieved a mean PSNR of only 21.07 dB, while Quartiles 2–4 recorded severely
+degraded averages of 4.45, 9.41, and 3.26 dB, respectively. These outcomes were accom-
+panied by extreme variability, with coefficients of variation of 13.5%, 101.8%, 66.8%, and
+111.4% for Quartiles 1–4, respectively. The results indicate that SRGAN fails to generalize
+effectively across sensors when applied to NDVI-derived classes. Kruskal–Wallis testing
+confirmed significant differences among quartiles in this scenario as well (H(3) = 651.04,
+p < 0.001). Overall, these findings demonstrate that SRGAN model performance is strongly
+affected by the NDVI-based vegetation density of the scene, with higher NDVI regions
+posing the greatest challenges and exhibiting the largest variability across all scenarios.
+https://doi.org/10.3390/rs18091419
+Remote Sens. 2026, 18, 1419 17 of 35
+Table 4. Mean, standard deviation, and coefficient of variation in PSNR and SSIM values across NDVI-based quartiles, reported for each algorithm (SRGAN,
+ESRGAN, and Bicubic) and by downscaling strategy framework (intra-sensor, cross-sensor, and intra-to-cross generalization).
+SR GAN model ESR GAN model BICUBIC model
+Metric Intra-Sensor Cross-Sensor Generalization Intra-Sensor Cross-Sensor Generalization Intra-Sensor Cross-Sensor
+Q1 Q2 Q3 Q4 Q1 Q2 Q3 Q4 Q1 Q2 Q3 Q4 Q1 Q2 Q3 Q4 Q1 Q2 Q3 Q4 Q1 Q2 Q3 Q4 Q1 Q2 Q3 Q4 Q1 Q2 Q3 Q4
+PSNR
+Mean 34.74 33.64 27.45 27.92 28.43 28.30 27.86 25.94 21.07 4.45 9.41 3.26 34.93 35.26 35.26 36.46 29.02 28.97 29.01 30.07 17.39 18.06 20.21 20.78 36.56 36.58 36.62 37.94 17.52 20.08 20.01 19.95
+PSNR SD 1.92 6.26 10.35 12.93 2.14 2.12 2.01 2.99 2.85 4.53 6.29 3.64 2.13 1.80 1.81 2.42 2.16 1.82 1.57 1.95 2.47 3.23 3.44 3.23 2.50 2.14 2.04 2.54 2.82 2.96 3.16 3.45
+PSNR CV 5.52 18.56 37.62 46.22 7.50 7.49 7.21 11.50 13.54 101.8 66.81 111.4 6.10 5.10 5.14 6.63 7.45 6.28 5.41 6.47 14.19 17.86 17.01 15.55 6.85 5.86 5.58 6.70 16.11 14.76 15.79 17.29
+SSIM
+Mean 0.83 0.84 0.81 0.81 0.77 0.77 0.76 0.71 0.71 0.29 0.43 0.27 0.82 0.83 0.84 0.86 0.76 0.74 0.76 0.79 0.51 0.59 0.61 0.58 0.86 0.87 0.87 0.89 0.60 0.63 0.62 0.64
+SSIM SD 0.06 0.06 0.10 0.15 0.06 0.05 0.05 0.08 0.07 0.15 0.16 0.14 0.07 0.05 0.05 0.05 0.06 0.05 0.04 0.06 0.07 0.09 0.09 0.11 0.06 0.05 0.04 0.04 0.08 0.08 0.07 0.09
+SSIM CV 7.74 7.61 11.84 18.68 7.61 6.53 5.90 10.87 9.80 49.69 36.79 52.45 8.35 6.34 5.65 6.21 8.46 6.96 5.33 7.44 14.55 15.07 14.72 18.23 7.49 5.85 4.94 4.80 13.46 12.47 11.97 14.10
+https://doi.org/10.3390/rs18091419
+Remote Sens. 2026, 18, 1419 18 of 35
+Figure 11. PSNR values across NDVI-based quartiles performed by the SRGAN, ESRGAN, and Bicu-
+bic model, grouped by downscaling strategy frameworks (intra-sensor, cross-sensor,intra-to-cross).
+For the ESRGAN model evaluated under the intra-sensor framework, downscaling
+performance showed a slight increasing trend from low to high NDVI conditions. Quartile
+4 produced marginally higher average PSNR values (36.46 dB) compared to Quartile 3
+(35.26 dB), while Quartiles 2 and 3 were virtually indistinguishable (both 35.26 dB), and
+Quartile 1 yielded the lowest average (34.93 dB). Although the mean and distributional
+ranges of PSNR values appeared visually similar across some quartiles, the Kruskal–Wallis
+test confirmed statistically significant differences among them (H(3) = 62.85, p < 0.001).
+Under the cross-sensor framework, ESRGAN performance across NDVI-derived quartiles
+was more uniform, with average PSNR values ranging narrowly from 28.97 to 30.07 dB, and
+the highest values observed in Quartile 4. Despite the small numerical separation among
+quartiles, the Kruskal–Wallis test again indicated significant differences in performance
+(H(3) = 69.32, p < 0.001). For the intra-to-cross generalization framework, ESRGAN showed
+a clear monotonic improvement from Q1 to Q4. Average PSNR values increased from
+17.39 dB (Q1) to 18.06 dB (Q2), 20.21 dB (Q3), and 20.78 dB (Q4). These differences were
+strongly significant according to the Kruskal–Wallis test (H(3) = 206.04,p < 0.001). Across all
+three evaluation frameworks, variability in ESRGAN performance remained relatively low:
+coefficients of variation ranged from 5.1–6.6% in the intra-sensor framework, 5.4–7.4% in
+the cross-sensor framework, and 14.2–17.9% in the intra-to-cross generalization framework.
+Overall, the results indicate that ESRGAN performance is generally stable across NDVI-
+derived vegetation classes and shows a gradual improvement as NDVI increases. Higher
+NDVI values correspond to denser vegetation cover and greater canopy continuity, which
+tends to produce more homogeneous spectral responses while maintaining spatial struc-
+ture associated with vegetation canopies. As a result, reconstruction accuracy improves
+slightly under greener canopy conditions across all evaluation frameworks, suggesting that
+ESRGAN is better able to preserve structured vegetation patterns even under dense canopy
+conditions, highlighting ESRGAN’s robustness in grassland-dominated environments with
+varying levels of vegetation vigor.
+The Bicubic model under the intra-sensor framework showed relatively uniform
+downscaling performance across the NDVI-derived quartiles, with average PSNR values
+ranging narrowly from 36.56 to 37.94 dB. Quartile 4 showed the highest mean PSNR,
+whereas the remaining quartiles displayed highly similar averages and distributional
+ranges. Despite these small visual differences, the Kruskal–Wallis test indicated significant
+variation in performance among quartiles (H(3) = 51.99, p < 0.001). Variability across
+quartiles was consistently low, with coefficients of variation of approximately 6.9% (Q1),
+https://doi.org/10.3390/rs18091419
+Remote Sens. 2026, 18, 1419 19 of 35
+5.86% (Q2), 5.58% (Q3), and 6.70% (Q4). Overall, greener vegetation conditions appeared to
+enhance reconstruction accuracy when utilizing the Bicubic interpolation approach. Under
+the cross-sensor framework, Bicubic performance also showed relatively uniform mean
+PSNR values across quartiles, with averages of 17.52 dB (Q1), 20.08 dB (Q2), 20.01 dB
+(Q3), and 19.95 dB (Q4). Although the quartiles exhibited similar means, their PSNR
+ranges (Figure 8a) revealed a clear ascending trend, indicating improvements under higher
+NDVI conditions. As in the intra-sensor case, the Kruskal–Wallis test confirmed significant
+differences among quartiles (H(3) = 117.10, p < 0.001). Variability was higher than in the
+intra-sensor framework but remained relatively consistent across quartiles, with coefficients
+of variation of approximately 16.11% (Q1), 14.76% (Q2), 15.79% (Q3), and 17.29% (Q4).
+Overall, Bicubic downscaling performance was relatively stable across NDVI classes, with
+slightly improved reconstruction under greener, higher-NDVI conditions. This suggests
+that even simple statistical interpolation methods benefit from stronger spectral signals
+associated with denser vegetation.
+3.1.2. Comparison of Downscaling Strategy Frameworks (NDVI-Based Quartiles)
+Model performance varied substantially across the three downscaling strategy frame-
+works for all evaluated models (SRGAN, ESRGAN, and Bicubic; Figure 12). Kruskal–Wallis
+tests confirmed significant differences among frameworks: SRGAN: H(2) = 1879.7,p < 0.001;
+ESRGAN: H(2) = 2652.8, p < 0.001; Bicubic: H(1) = 1543.6, p < 0.001. Across models, PSNR
+values consistently declined from the intra-sensor framework to the cross-sensor and
+intra-to-cross generalization settings, reflecting the increasing difficulty of transferring rep-
+resentations across heterogeneous sensor domains. While bicubic interpolation achieved
+slightly higher PSNR in the intra-sensor case due to its deterministic reconstruction, its
+performance degraded sharply under cross-sensor conditions. In contrast, GAN-based
+approaches (particularly ESRGAN) maintained more stable performance across frame-
+works, suggesting a greater capacity to learn transferable spatial representations beyond
+simple interpolation.
+Figure 12. Model performance across downscaling strategy frameworks for data stratified by NDVI.
+3.1.3. Comparison of Downscaling Algorithms
+Across evaluation frameworks, clear differences emerged among the tested down-
+scaling algorithms (Figure 11). Bicubic interpolation produced competitive results in the
+intra-sensor scenario but exhibited limited robustness when applied across sensors. Among
+the learning-based approaches, ESRGAN consistently outperformed SRGAN, showing
+higher PSNR values and reduced variability, particularly under cross-sensor and intra-
+to-cross generalization conditions. These results indicate that the enhanced adversarial
+https://doi.org/10.3390/rs18091419
+Remote Sens. 2026, 18, 1419 20 of 35
+training and feature reconstruction mechanisms of ESRGAN provide greater stability when
+applied to heterogeneous vegetation conditions.
+3.1.4. Overall Downscaling Performance Across NDVI-Based Quartiles
+The analysis highlights the influence of vegetation vigor, as captured by NDVI, on the
+performance of the different downscaling approaches. SRGAN exhibited a clear decline in
+accuracy with increasing NDVI, reflecting reduced stability in highly vegetated areas. In
+contrast, ESRGAN maintained greater robustness, with reconstruction accuracy improving
+modestly from low- to high-NDVI quartiles, suggesting that it can better capitalize on the
+stronger vegetation signal present in dense canopies. The Bicubic model also displayed
+a gradual improvement across NDVI quartiles, although its gains were more limited
+compared to ESRGAN. Collectively, these results highlight that model performance is not
+uniform across vegetation health conditions.
+Figures 13 and 14 shows a representative sample for visual comparison of downscaling
+performance for vegetation health Quartile 1 (lowest NDVI condition) and Quartile 4 (high
+NDVI condition), respectively, across the three strategy frameworks: intra-sensor, cross-
+sensor, and intra-to-cross generalization. Columns show the low-resolution (LR) input,
+bicubic interpolation, SRGAN and ESRGAN super-resolution predictions, and the high-
+resolution (HR) target reference. For each row, predictions were evaluated against the same
+HR target at identical spatial location. The bicubic model is not shown for the intra-to-cross
+framework because it does not support cross-domain generalization. Representative samples
+for visual comparison of downscaling performance for all quartiles are presented in the
+Supplementary Material (Figures S6–S9). Visual comparisons of all images in the test set (257)
+can be found in the Zenodo repository (https://doi.org/10.5281/zenodo.19697212) [47].
+ 
+Figure 13. Visual comparison of downscaling results for vegetation health Quartile 1 (lowest NDVI)
+across three strategy frameworks: intra-sensor, cross-sensor, and intra-to-cross generalization.
+https://doi.org/10.3390/rs18091419
+Remote Sens. 2026, 18, 1419 21 of 35
+
+Figure 14. Visual comparison of downscaling results for vegetation health Quartile 4 (High NDVI)
+across three strategy frameworks: intra-sensor, cross-sensor, and intra-to-cross generalization.
+3.2. Downscaling Performance Across Structure-Derived Landscape Classes
+The analysis builds on the three structure-derived landscape clusters (C1–C3) defined
+in the methodology, which represent a gradient of spatial heterogeneity. For comparability
+across models and strategies, all evaluations were conducted using a balanced set of testing
+tiles (n = 102). Figure 15 illustrates comparative boxplots of PSNR values across structure-
+derived landscape clusters for the SRGAN, ESRGAN, and Bicubic models, grouped by
+downscaling strategy frameworks (intra-sensor, cross-sensor, and intra-to-cross). Table 5
+shows the mean, standard deviation, and coefficient of variation (CV) values of PSNR and
+SSIM across Structured-based clusters. Figure S4 of the Supplementary Material illustrates
+comparative boxplots of SSIM values.
+Figure 15. PSNR values across structure-derived landscape clusters for the SRGAN, ESRGAN,
+and Bicubic models, grouped by downscaling strategy frameworks (intra-sensor, cross-sensor, and
+intra-to-cross).
+https://doi.org/10.3390/rs18091419
+Remote Sens. 2026, 18, 1419 22 of 35
+Table 5. Mean, standard deviation, and coefficient of variation in PSNR and SSIM values across Structured-based clusters (C1–C3), reported for each algorithm
+(SRGAN, ESRGAN, and Bicubic) and by downscaling strategy framework (intra-sensor, cross-sensor, and intra-to-cross generalization).
+SR GAN model ESR GAN model BICUBIC model
+Metric Intra-Sensor Cross-Sensor Generalization Intra-Sensor Cross-Sensor Generalization Intra-Sensor Cross-Sensor
+C1 C2 C3 C1 C2 C3 C1 C2 C3 C1 C2 C3 C1 C2 C3 C1 C2 C3 C1 C2 C3 C1 C2 C3
+PSNR
+Mean 32.63 33.39 30.04 27.55 26.86 26.57 16.81 22.26 14.89 32.80 32.66 32.39 27.43 27.70 26.79 18.18 21.02 20.08 33.97 34.72 35.19 17.69 22.31 21.54
+PSNR
+SD 1.53 2.35 7.65 1.48 3.12 2.10 2.98 2.84 8.38 1.67 2.25 1.82 1.35 2.88 2.26 2.87 3.15 4.05 2.06 2.62 2.19 1.56 3.85 3.97
+PSNR
+CV 4.7 7.0 25.5 5.4 11.6 7.9 17.7 12.7 56.3 5.1 6.9 5.6 4.9 10.4 8.4 15.8 15.0 20.1 6.1 7.6 6.2 8.8 17.3 18.4
+SSIM
+Mean 0.75 0.80 0.79 0.68 0.73 0.72 0.60 0.69 0.57 0.74 0.75 0.76 0.67 0.70 0.68 0.54 0.60 0.56 0.80 0.82 0.85 0.55 0.65 0.60
+SSIM SD 0.06 0.08 0.07 0.05 0.08 0.06 0.08 0.08 0.18 0.06 0.08 0.06 0.05 0.08 0.06 0.08 0.09 0.13 0.06 0.07 0.05 0.06 0.10 0.10
+SSIM CV 7.8 9.5 9.3 7.1 10.9 7.8 13.4 11.7 32.1 8.3 11.1 8.2 7.8 11.5 9.3 14.7 14.9 22.7 8.0 8.0 6.0 11.6 14.9 16.4
+C1: Cluster 1, C2: Cluster 2, C3: Cluster 3.
+https://doi.org/10.3390/rs18091419
+Remote Sens. 2026, 18, 1419 23 of 35
+3.2.1. Cross-Clusters Downscaling Performance
+Downscaling performance across the structure-derived clusters showed clear differ-
+ences depending on the model–framework combination; therefore, results are presented
+separately for each case.
+For SRGAN under the intra-sensor framework, model performance showed significant
+differences in PSNR across clusters (H(2) = 8.29, p = 0.016). Mean PSNR values were 32.63,
+33.39, and 30.04 dB for C1, C2, and C3, respectively, reflecting a clear performance decline
+from sparse to dense woody structure. Variability also increased markedly (CV = 4.7%,
+7.5%, and 25.5%), with C3 showing a wide spread of PSNR values and numerous extreme
+outliers. Although the mean PSNR for C3 remained near 30 dB, the presence of highly
+degraded predictions (<10 dB) indicates reduced model stability for dense, aggregated
+woody patterns. Under the cross-sensor framework, mean PSNR values were more uni-
+form (27.55, 26.86, and 26.57 dB for C1–C3), yet cluster differences remained significant
+(H(2) = 18.75, p < 0.001) and dispersion increased toward C3. These patterns suggest that
+cross-sensor domain shifts amplify the model’s sensitivity to structural complexity. The
+intra-to-cross generalization framework produced the most unstable results (H(2) = 85.61,
+p < 0.001), with high variability across clusters (CV = 17.7%, 12.7%, and 56.3%) and numer-
+ous predictions below 10 dB, particularly in C3. This highlights the combined difficulty
+introduced by both dense woody aggregation and the transfer from intra-sensor training
+to cross-sensor testing. Collectively, the results demonstrate that SRGAN performance
+deteriorated as woody vegetation shifted toward dense and contiguous patterns, an effect
+amplified under domain-transfer conditions. This structural sensitivity may highlight
+the limitations of SRGAN when reconstructing high-frequency spatial detail in highly
+aggregated woody environments.
+For the ESRGAN model under the intra-sensor framework, downscaling performance
+was consistent across the three structural clusters, with mean PSNR values tightly grouped
+between 32.39 and 32.80 dB and coefficients of variation of 5.1–6.9%. The Kruskal–Wallis
+test indicated no significant differences among clusters (H(2) = 5.98, p = 0.05), suggesting
+that structural heterogeneity exerted minimal influence when training and testing remained
+sensor-consistent. For ESRGAN under the cross-sensor framework, model performance
+maintained similar mean PSNR across clusters (26.79–27.70 dB), though variability in-
+creased progressively from C1 to C3. Statistical testing revealed significant cluster effects
+(H(2) = 18.31, p < 0.001), with more pronounced outliers in C3, indicating that cross-sensor
+transfer heightens the model’s sensitivity to structural complexity. The intra-to-cross gen-
+eralization scenario yielded the weakest overall performance, with mean PSNR ranging
+from 18.18 to 21.02 dB and substantially higher variability (CV = 15.0–20.1%). Cluster
+differences were highly significant (H(2) = 40.30, p < 0.001). Although C1 exhibited lower
+average PSNR, C3 showed the greatest dispersion, underscoring its elevated reconstruction
+difficulty. Overall, ESRGAN performs poorest in Cluster 3, characterized by large, contigu-
+ous woody patches with high canopy closure, indicative of mature or late-stage woody
+encroachment. This structurally complex cluster consistently challenged the model—most
+notably under cross-sensor and intra-to-cross generalization conditions, where domain
+shifts further degraded reconstruction quality. Even in the intra-sensor case, the borderline
+significance (p = 0.05) suggests that performance degradation may emerge as structural
+complexity intensifies.
+For Bicubic interpolation, intra-sensor performance was relatively high and consistent
+across clusters, with mean PSNR values of 33.97, 34.72, and 35.19 dB for C1–C3 and
+moderate variability (CV≈ 6–8%). Although cluster differences were statistically significant
+(H(2) = 15.27, p < 0.001), the trend showed a slight increase in PSNR with increasing
+woody aggregation. In contrast, cross-sensor performance declined substantially, with
+https://doi.org/10.3390/rs18091419
+Remote Sens. 2026, 18, 1419 24 of 35
+lower mean PSNR values (17.69, 22.31, and 21.54 dB for C1–C3) and markedly higher
+variability (CV = 8.8–18.4%). These differences were highly significant (H(2) = 95.25,
+p < 0.001) and indicate that bicubic interpolation is particularly sensitive to domain shifts
+and structural heterogeneity. Overall, Bicubic interpolation exhibits small performance
+gains with increasing woody structure but reduced stability, particularly under cross-sensor
+transfer where structural complexity amplifies variability and weakens reliability.
+3.2.2. Framework Comparison
+When results were aggregated across structural clusters, clear differences emerged
+among the three downscaling strategy frameworks (Figure 16). Kruskal–Wallis tests con-
+firmed significant differences for all models (SRGAN: H(2) = 626.3, ESRGAN: H(2) = 747.1,
+Bicubic: H(2) = 459.5; all p < 0.001). Across algorithms, PSNR consistently declined from
+intra-sensor to cross-sensor and further to intra-to-cross generalization frameworks, high-
+lighting the challenges introduced by sensor heterogeneity and domain transfer. While
+learning-based models partially mitigated this degradation, bicubic interpolation showed
+the strongest performance collapse under cross-sensor transfer. These results indicate that
+domain shifts between sensors represent a primary limitation for remote-sensing image
+downscaling in structurally heterogeneous grassland environments.
+Figure 16. Model performance across downscaling strategy frameworks using data stratified by
+structure-derived landscape clusters.
+3.2.3. Downscaling Algorithm Comparison
+When comparing downscaling algorithms across frameworks and structural clusters
+(Figure 15), distinct differences in robustness emerged. Bicubic interpolation produced the
+highest PSNR values in the intra-sensor scenario but showed the strongest degradation un-
+der cross-sensor transfer. In contrast, GAN-based models demonstrated greater adaptability
+to heterogeneous sensor conditions. Among them, ESRGAN consistently outperformed
+SRGAN, yielding higher average PSNR and reduced variability across clusters and frame-
+works. SRGAN exhibited unstable behavior in several scenarios, including extreme PSNR
+failures (<5 dB) under intra-to-cross generalization. These results indicate that ESRGAN
+provides the most reliable reconstruction across structurally complexgrassland landscapes.
+Overall, results indicate that woody vegetation structure exerts a systematic influence
+on downscaling performance. Reconstruction quality generally declined as landscapes tran-
+sitioned from sparse and fragmented woody patterns (Cluster 1) toward dense, aggregated
+configurations (Cluster 3). This effect was amplified under cross-sensor and intra-to-cross
+https://doi.org/10.3390/rs18091419
+Remote Sens. 2026, 18, 1419 25 of 35
+generalization frameworks, where domain shifts further degraded model performance.
+Among the evaluated approaches, ESRGAN showed the greatest resilience to these com-
+bined challenges, whereas SRGAN and bicubic interpolation were more strongly affected
+by dense woody aggregation. These findings highlight the importance of accounting
+for landscape structural heterogeneity when developing super-resolution approaches for
+grassland remote sensing. Representative samples for visual comparison of downscaling
+performance for all clusters are presented in the Supplementary Material (Figures S10–S12).
+Visual comparisons of all images in the test set (102 images) can be found in the Zenodo
+repository [47].
+3.3. Downscaling Performance Across Texture Gradients Based on Entropy-Derived Quartiles
+The analysis builds on the four entropy-based texture quartiles (Q1–Q4) defined in
+the methodology, capturing a gradient from low textural disorder and sparse vegetation
+patterns (Q1) to highly complex and spatially heterogeneous landscapes (Q4). To ensure
+comparability across models and strategy frameworks, evaluations were performed using
+a balanced testing set (n = 257). Figure 17 displays the distribution of PSNR values for the
+three downscaling algorithms (SRGAN, ESRGAN, and Bicubic) across the three strategy
+frameworks and four texture-entropy quartiles. Table 6 shows the mean, standard deviation,
+and coefficient of variation (CV) values of PSNR and SSIM across Entropy-based quartiles.
+Figure S5 of the Supplementary Material illustrates comparative boxplots of SSIM values.
+Figure 17. PSNR values across entropy-derived quartiles for the SRGAN, ESRGAN, and Bicubic
+models, grouped by downscaling strategy frameworks (intra-sensor, cross-sensor, and intra-to-cross).
+https://doi.org/10.3390/rs18091419
+Remote Sens. 2026, 18, 1419 26 of 35
+Table 6. Mean, standard deviation, and coefficient of variation in PSNR and SSIM values across Entropy-based quartiles, reported for each algorithm (SRGAN,
+ESRGAN, and Bicubic) and by downscaling strategy framework (intra-sensor, cross-sensor, and intra-to-cross generalization).
+Metric
+SR GAN model ESR GAN model BICUBIC model
+Intra-Sensor Cross-Sensor Generalization Intra-Sensor Cross-Sensor Generalization Intra-Sensor Cross-Sensor
+Q1 Q2 Q3 Q4 Q1 Q2 Q3 Q4 Q1 Q2 Q3 Q4 Q1 Q2 Q3 Q4 Q1 Q2 Q3 Q4 Q1 Q2 Q3 Q4 Q1 Q2 Q3 Q4 Q1 Q2 Q3 Q4
+PSNR
+Mean 30.99 32.76 31.53 22.48 24.41 25.71 24.03 23.40 21.63 19.10 21.98 13.56 30.44 31.78 30.24 32.62 24.84 26.22 24.98 26.12 20.65 18.31 20.67 21.45 32.07 33.53 32.87 34.14 21.95 18.77 21.46 21.33
+PSNR
+SD 2.07 2.09 1.96 11.85 2.46 1.91 2.34 3.52 3.00 1.93 3.48 8.53 2.18 1.92 1.81 2.51 2.45 1.65 1.91 2.24 2.80 2.29 3.41 3.51 2.41 2.25 2.19 2.60 2.59 2.47 3.38 3.57
+PSNR
+CV 6.7 6.4 6.2 52.7 10.1 7.4 9.8 15.0 13.9 10.1 15.8 62.9 7.2 6.0 6.0 7.7 9.8 6.3 7.7 8.6 13.6 12.5 16.5 16.4 7.5 6.7 6.7 7.6 11.8 13.2 15.7 16.7
+SSIM
+Mean 0.69 0.77 0.73 0.71 0.62 0.68 0.63 0.60 0.66 0.64 0.67 0.56 0.67 0.74 0.70 0.76 0.60 0.66 0.61 0.65 0.61 0.56 0.61 0.65 0.75 0.79 0.79 0.82 0.58 0.56 0.56 0.60
+SSIM SD 0.08 0.07 0.07 0.15 0.07 0.06 0.07 0.11 0.08 0.07 0.08 0.17 0.09 0.07 0.07 0.08 0.08 0.06 0.06 0.07 0.08 0.07 0.08 0.09 0.08 0.07 0.06 0.06 0.10 0.07 0.09 0.10
+SSIM
+CV 12.1 8.6 9.1 20.9 11.9 8.6 10.7 19.2 12.3 10.2 12.4 30.6 13.1 9.5 9.9 10.2 12.9 9.2 10.3 11.2 12.5 13.0 13.5 14.4 10.3 8.7 7.4 7.4 16.6 13.4 16.3 16.5
+https://doi.org/10.3390/rs18091419
+Remote Sens. 2026, 18, 1419 27 of 35
+3.3.1. Downscaling Model Performance Across Entropy-Based Texture Quartiles
+The performance of the three downscaling models (SRGAN, ESRGAN, and Bicu-
+bic) varied across entropy-based texture quartiles and across the three strategy frame-
+works (intra-sensor, cross-sensor, and intra-to-cross generalization). Because each model–
+framework combination exhibited distinct behaviors in relation to textural complexity,
+results are presented separately for each case.
+For the SRGAN model under the intra-sensor strategy framework, PSNR values
+exhibited pronounced quartile-dependent variation (H = 124.11, p < 0.001). Mean PSNR
+remained relatively consistent for Q1–Q3 (30.99–32.76 dB) but dropped sharply in Q4 to
+22.48 dB. The set of boxes in Figure 17 for this model-strategy setting clearly reinforces
+this pattern: Q4 shows the tallest whiskers, numerous extreme PSNR values even lower
+than 10 dB), and the largest coefficient of variation (≈53%), reflecting reduced stability
+in highly disordered tonal environments. This finding may suggest that SRGAN cannot
+preserve predictive stability under very high textural complexity, even when both training
+and testing data come from the same sensor. For the SRGAN model under the cross-
+sensor strategy framework, quartile differences were less pronounced in magnitude, yet
+remained statistically significant (H = 107.51, p < 0.001). Mean PSNR values were more
+compact (23.44–25.71 dB), but the boxplot shows a moderately wider dispersion toward
+Q4, consistent with coefficients of variation increasing from 7–8% (Q1–Q2) to >14% in Q4.
+Although cross-sensor SRGAN avoids the severe collapse observed in intra-sensor Q4, it
+still exhibits reduced robustness, suggesting that transferring information across sensors
+attenuates—but does not eliminate—instability under highly complex textures. For the
+SRGAN model under the intra-to-cross generalization framework, quartile differences were
+pronounced: Q1–Q3 showed comparable PSNR mean values (21.63, 19.10, 21.98 dB), but Q4
+dropped severely to 13.56 dB. Variability increased consistently from Q1 (CV = 13.9%) to
+Q4 (CV = 62.9%). The Kruskal–Wallis test strongly supported these differences (H = 244.84,
+p < 0.001). These results demonstrate that when SRGAN is trained only with UAV-derived
+low/high-resolution pairs, its generalization to Planet textures is highly sensitive to entropy.
+Thus, SRGAN exhibits severe limitations in its ability to generalize to Planet imagery
+with high textural disorder, reflecting restricted transferability across both sensors and
+complexity gradients.
+For the ESRGAN model under the intra-sensor framework, performance across quar-
+tiles remained relatively uniform, with mean PSNR values of 30.44–32.62 dB and low dis-
+persion (CV = 6–8%). Although statistical differences were detected (H = 192.59, p < 0.001),
+no sharp decline toward Q4 was observed. ESRGAN thus demonstrated greater resilience
+to entropy-induced heterogeneity in intra-sensor settings. Conversely, there was a slight
+trend towards an improvement in the model’s performance as it progressed from Q1
+to Q4. For the ESRGAN model under the cross-sensor framework, mean PSNR values
+ranged narrowly (24.84–26.22 dB) with moderate variability (CV = 6.3–9.8%). Significant
+differences across quartiles were confirmed (H = 103.23, p < 0.001), though visually the
+distributions were relatively stable, with no abrupt Q4 degradation. Entropy effects were
+present but less severe than in SRGAN. For the ESRGAN model under the intra-to-cross
+generalization framework, quartiles showed considerable dispersion and moderately high
+variability (CV = 12–17%), with mean PSNR values of 20.65, 18.31, 20.67, and 21.45 dB.
+The Kruskal–Wallis test indicated significant quartile differences (H = 150.0, p < 0.001).
+Although variability remained elevated, a slight upward shift in means toward Q4 suggests
+mild robustness against high-entropy textures.
+For the Bicubic model under the intra-sensor framework, performance showed a
+gradual improvement on PSNR values from Q1 (32.07 dB) to Q4 (34.14 dB), with moderate
+dispersion across quartiles (CV = 6.7–7.6%). Significant quartile differences were detected
+https://doi.org/10.3390/rs18091419
+Remote Sens. 2026, 18, 1419 28 of 35
+(H = 103.68, p < 0.001). Despite its simplicity, Bicubic displayed stable behavior with
+no high-entropy degradation. For the Bicubic model under the cross-sensor framework,
+mean PSNR values fluctuated across quartiles (21.95→ 18.77→ 21.46→ 21.33 dB), while
+variability increased progressively (CV = 11.8–16.7%). Quartile differences were statistically
+significant (H = 174.13, p < 0.001). The increasing dispersion toward Q4 suggests that
+entropy exacerbates sensitivity to spectral inconsistencies in cross-sensor conditions.
+3.3.2. Comparison of Downscaling Strategy Frameworks (Entropy-Based Quartiles)
+When results were aggregated across entropy quartiles, clear differences emerged
+among the three downscaling strategy frameworks (Figure 18). For all models, PSNR
+decreased systematically from the intra-sensor to the cross-sensor and further to the intra-
+to-cross generalization framework (SRGAN: H(2) = 1477.0; ESRGAN: H(2) = 2380.6; Bicu-
+bic: H(1) = 1530.2; p < 0.001). This trend reflects the increasing difficulty of transferring
+representations across heterogeneous sensor domains. Bicubic interpolation achieved com-
+petitive performance in the intra-sensor setting but showed pronounced degradation under
+cross-sensor transfer. In contrast, GAN-based models maintained higher PSNR values in
+cross-sensor scenarios, suggesting that adversarial learning enables the extraction of spatial
+representations that generalize more effectively across sensor domains.
+Figure 18. Model performance across downscaling strategy frameworks using data stratified by entropy .
+3.3.3. Comparison Among Downscaling Algorithms
+When comparing downscaling algorithms across frameworks and entropy quartiles
+(Figure 17), clear differences in robustness emerged. Bicubic interpolation achieved the
+highest PSNR values under the intra-sensor framework (33.15 dB), indicating strong per-
+formance when training and testing data originate from the same sensor. However, its
+performance degraded substantially under cross-sensor conditions. In contrast, GAN-
+based models demonstrated greater adaptability to sensor heterogeneity, with ESRGAN
+achieving the highest PSNR under cross-sensor conditions (25.54 dB). Under intra-to-cross
+generalization, ESRGAN also outperformed SRGAN in both mean PSNR and stability,
+whereas SRGAN exhibited extreme variability, including occasional failures with PSNR
+below 5 dB. Overall, ESRGAN showed the greatest robustness across entropy gradients
+and sensor-transfer scenarios, while SRGAN was particularly sensitive to highly disor-
+dered textures. These results highlight the importance of selecting downscaling algorithms
+capable of maintaining stable performance across heterogeneous sensors and complex
+texture environments.
+https://doi.org/10.3390/rs18091419
+Remote Sens. 2026, 18, 1419 29 of 35
+Across the three landscape descriptors examined (NDVI-based vegetation condition,
+structure-derived woody aggregation clusters, and entropy-based texture quartiles) down-
+scaling performance exhibited consistent sensitivity to increasing landscape heterogeneity.
+In general, reconstruction quality declined as scenes transitioned from spectrally uniform
+and structurally sparse conditions toward environments characterized by dense woody
+aggregation and high textural disorder. These effects were particularly evident under
+cross-sensor and intra-to-cross generalization frameworks, where domain shifts amplified
+the influence of landscape complexity on model stability. Among the evaluated algo-
+rithms, ESRGAN demonstrated the greatest robustness across all heterogeneity gradients,
+maintaining relatively stable PSNR values even under high entropy and dense woody
+configurations. In contrast, SRGAN exhibited pronounced instability in highly complex
+scenes, while bicubic interpolation performed competitively only under intra-sensor condi-
+tions but degraded markedly under sensor transfer. Collectively, these findings highlight
+that landscape heterogeneity—whether expressed through vegetation condition, spatial
+structure, or tonal complexity—represents a fundamental constraint for remote-sensing
+image downscaling and should be explicitly considered when developing and evaluating
+super-resolution models.
+Representative samples for visual comparison of downscaling performance for all
+Entropy-derived quartiles are presented in the Supplementary Material (Figures S13–S16).
+Visual comparisons of all images in the test set (257 images) can be found in the Zenodo
+repository [47].
+4. Discussion
+This study demonstrates that landscape heterogeneity and operational context jointly
+shape the performance of image downscaling models in grassland ecosystems, extending
+and contextualizing insights from prior remote sensing and ecological research. Consistent
+with landscape ecology theory, our results show that spectral condition, spatial configu-
+ration, and textural disorder influence the predictive value of coarse-resolution imagery
+and, consequently, the capacity of super-resolution algorithms to reconstruct fine-scale
+patterns [3,38]. This landscape dependence contrasts with the implicit assumption in many
+super-resolution studies that model performance is uniform across conditions [23,29,39],
+highlighting the limitations of global, dataset-averaged metrics for evaluating ecological
+remote sensing tasks.
+Three consistent patterns emerge: (i) model performance is not uniform across land-
+scape conditions, (ii) robustness to heterogeneity differs markedly among downscaling
+strategies and architectures, and (iii) operational domain shifts often amplify landscape-
+driven degradation, particularly in complex environments.
+4.1. Influence of Vegetation Condition on Downscaling Performance
+Vegetation condition, as characterized by NDVI gradients, exerted a strong and model-
+dependent influence on super-resolution fidelity. SRGAN showed pronounced sensitivity
+to increasing vegetation density, with reconstruction quality degrading and variability
+increasing under greener conditions. This behavior suggests that high-NDVI grasslands—
+characterized by dense canopies and elevated spectral variability—challenge SRGAN’s
+ability to recover stable high-frequency detail. This decline in performance aligns with
+the known limitations of the standard MSE-based and initial adversarial losses in SRGAN,
+which often struggle to recover stable high-frequency details in stochastic textures such as
+dense canopies [30].
+In addition, SRGAN incorporates Batch Normalization, which can introduce artifacts
+and instability when input statistics differ from the training distribution, particularly in
+https://doi.org/10.3390/rs18091419
+Remote Sens. 2026, 18, 1419 30 of 35
+high-NDVI regions [48]. The standard perceptual loss formulation may also be insufficient
+to capture fine-scale stochastic textures, leading to oversmoothing or inconsistent detail
+reconstruction [49].
+In contrast, ESRGAN demonstrated substantially greater robustness across NDVI
+gradients, with stable or modestly improving performance under higher vegetation vigor.
+This finding supports prior evidence that enhanced perceptual and adversarial losses in
+ESRGAN reduce texture loss and improve structural consistency [28]. ESRGAN removes
+Batch Normalization and introduces improved feature extraction and perceptual loss formu-
+lations, enhancing its ability to reconstruct complex high-frequency textures and reducing
+the artifacts observed in SRGAN [49]. The observed improvement under greener conditions
+suggests that dense vegetation provides richer and more coherent spatial patterns that
+ESRGAN can exploit more effectively than SRGAN as reported by Toosi [ 50]. Bicubic
+interpolation, while competitive under sensor-consistent conditions, showed limited adapt-
+ability and offered only marginal gains with increasing NDVI, reinforcing its reliance on
+local smoothness rather than learned spatial structure.
+Collectively, these results demonstrate that vegetation vigor is not merely a back-
+ground condition but an active determinant of downscaling success, challenging the as-
+sumption that GAN-based models perform uniformly across ecological gradients consistent
+with prior studies [32].
+4.2. Role of Landscape Structure and Spatial Configuration
+Landscape structure emerged as a dominant control on downscaling performance,
+particularly under conditions of dense and aggregated woody cover. Across all models,
+reconstruction quality declined as spatial patterns transitioned from sparse and fragmented
+to highly contiguous and clumped configurations. This effect was most pronounced for
+SRGAN, which exhibited instability and failure modes in structurally complex landscapes,
+especially when combined with cross-sensor transfer. ESRGAN again showed greater
+resilience, maintaining comparatively stable performance across structural clusters, al-
+though degradation became evident under strong domain shifts. These findings indicate
+that while advanced GAN architectures can partially mitigate the challenges posed by
+structural heterogeneity, dense woody aggregation represents a fundamental limit for
+super-resolution reconstruction in grasslands. Such patterns are dominated by abrupt
+transitions, shadowing effects, and high-frequency spatial contrasts that are difficult to
+infer reliably from coarse-resolution inputs. This finding is consistent with ecological obser-
+vations that aggregated patches and high-canopy closure reduce the distinct characteristics
+of spectral patterns within coarse pixels [1,15], thereby constraining any algorithm’s ability
+to disaggregate fine-scale information.
+Bicubic interpolation showed limited sensitivity to structural complexity under intra-
+sensor settings but suffered marked instability under cross-sensor application, underscoring
+its lack of transferability. Together, these results highlight that spatial configuration—not
+only spectral content—plays a critical role in governing downscaling fidelity and that
+structurally complex grasslands pose persistent challenges across methods.
+4.3. Effects of Textural Complexity and Entropy Gradients
+Textural complexity, quantified through entropy gradients, exerted one of the strongest
+controls on model robustness. High-entropy landscapes consistently degraded downscal-
+ing performance, particularly for SRGAN, which showed severe instability and loss of
+fidelity under highly disordered textures. This behavior suggests that SRGAN struggles
+to distinguish meaningful spatial patterns from noise when textural cues are weak or
+https://doi.org/10.3390/rs18091419
+Remote Sens. 2026, 18, 1419 31 of 35
+highly variable, leading to unreliable reconstructions. This outcome strengthens earlier
+suggestions that textural complexity influences the resolution enhancement tasks [23,29,38].
+ESRGAN exhibited markedly greater tolerance to textural disorder, maintaining stable
+performance and avoiding catastrophic degradation even under high-entropy conditions.
+This resilience likely reflects its enhanced capacity to preserve perceptual structure while
+suppressing spurious texture generation. Bicubic interpolation, although stable in sensor-
+consistent settings, became increasingly variable under cross-sensor conditions, indicating
+that entropy amplifies spectral inconsistencies that simple interpolation cannot resolve.
+These findings confirm that textural complexity is also a critical—but often overlooked—
+dimensionin evaluating super-resolution performance and that entropy-based stratifi-
+cation provides valuable insight into model limitations that are obscured by global
+performance metrics.
+4.4. Impact of Downscaling Strategy Frameworks and Domain Shifts
+Consistent with concerns raised in the recent literature on domain shifts in remote
+sensing applications [40,41], our results demonstrate that downscaling strategy frameworks
+strongly influence reconstruction fidelity. Across all stratification schemes, downscaling
+strategy frameworks exerted a systematic and dominant influence on performance. Re-
+construction accuracy consistently declined from intra-sensor to cross-sensor settings and
+further under intra-to-cross generalization, reflecting the increasing difficulty of transfer-
+ring learned representations across sensor domains. This pattern highlights the central role
+of distribution shift in constraining real-world applicability of super-resolution models.
+This pattern corroborates previous reports that naive application of models trained in one
+sensor domain may yield misleading results in another due to spectral and contextual
+differences [1,15].
+This domain mismatch is likely caused by differences in the spectral response functions
+of the MicaSense RedEdge-P and PlanetScope sensors. Variations in band placement,
+bandwidth, and radiometric sensitivity influence how surface reflectance is measured,
+which may result in discrepancies in spectral signatures even for the same target [51,52].
+These discrepancies propagate through the learning process, restricting the transferability
+of features learnt under one sensor setup to another.
+Although convolutional neural networks typically learn representations tied to the
+statistics of their training data, evaluating cross-sensor scenarios remains important for
+quantifying the practical limits of super-resolution models in multi-sensor remote-sensing
+applications. In many operational contexts, high-resolution UAV imagery is spatially
+limited, whereas satellite sensors provide the broader coverage required for landscape-
+scale monitoring.
+While bicubic interpolation performed competitively under intra-sensor conditions,
+its performance deteriorated sharply under cross-sensor transfer, emphasizing its lim-
+ited operational utility beyond controlled settings. GAN-based approaches, particularly
+ESRGAN, demonstrated superior adaptability and retained meaningful reconstruction
+capability under domain shifts, although performance losses remained unavoidable. These
+findings suggest that domain-adaptation approaches, such as transfer learning or limited
+fine-tuning with target-sensor data, may help bridge UAV-based training datasets with
+broader satellite observations.
+The combined effect of landscape heterogeneity and domain shift showed a con-
+sistent amplification of performance degradation across conditions, suggesting a non-
+additive interaction between these factors, although this relationship is inferred from
+observed patterns rather than formally quantified through interaction or variance
+decomposition analysis.
+https://doi.org/10.3390/rs18091419
+Remote Sens. 2026, 18, 1419 32 of 35
+4.5. Implications for Ecological Applications and Model Deployment
+Taken together, these results highlight that the reliability of super-resolution products
+in grassland ecosystems depends not only on model architecture but also on landscape
+context and deployment strategy. ESRGAN emerges as the most robust option across het-
+erogeneous conditions, particularly when cross-sensor generalization is required. However,
+even advanced GAN-based models exhibit limitations in landscapes characterized by dense
+woody aggregation and extreme textural disorder.
+From an applied perspective, these findings suggest that landscape-aware evalua-
+tion should be a prerequisite for operational deployment of super-resolution models in
+ecological monitoring. In homogeneous or low-structure environments, simpler methods
+may suffice, whereas heterogeneous and structurally complex landscapes require carefully
+selected architectures and realistic expectations regarding reconstruction fidelity. More
+broadly, this study demonstrates that incorporating ecological heterogeneity into model as-
+sessment is essential for bridging the gap between methodological innovation and reliable
+real-world application of GAN-based super-resolution.
+This study is not intended as a comprehensive model benchmark, but as a controlled
+analysis of how landscape heterogeneity and domain shift influence super-resolution
+behavior. While focused on grassland ecosystems, the proposed framework is transferable
+to other heterogeneous landscapes and can be extended to additional model families in
+future work.
+4.6. Limitations and Future Research Directions
+The present study was designed as a controlled landscape-aware evaluation rather
+than an exhaustive benchmark of all super-resolution architectures. Accordingly, SRGAN
+and ESRGAN were selected as representative GAN-based models to examine how eco-
+logical heterogeneity and sensor-domain shifts influence performance under comparable
+conditions. While this design enabled clear attribution of performance differences to
+landscape and transfer effects, it does not imply that GANs fully represent the broader
+super-resolution literature. Future studies should extend this framework to include non-
+adversarial approaches such as residual CNN models, transformer-based architectures, and
+diffusion models in order to determine whether the heterogeneity patterns identified here
+are model-specific or more universal. Likewise, the present analysis focused on grassland
+ecosystems, whose diffuse vegetation–soil mixtures and fine-scale transitions provide a
+distinct but not exclusive form of spatial heterogeneity. Validation across forests, deserts,
+croplands, and other landscapes would help assess the broader transferability of these
+findings. Finally, this study prioritized reconstruction-fidelity metrics (PSNR and SSIM) to
+quantify pixel-level and structural agreement under controlled transfer scenarios; however,
+perceptual and distribution-based metrics such as FID may provide complementary insight
+into visual realism and should be incorporated in future evaluations. Collectively, these
+directions would broaden the applicability of the proposed landscape-aware framework
+while preserving its central objective: identifying when environmental complexity and
+domain mismatch constrain super-resolution reliability.
+5. Conclusions
+This study presents the first landscape-aware assessment of GAN-based super-
+resolution models in natural grassland ecosystems, explicitly integrating vegetation condi-
+tion, spatial structure, and textural complexity with operational downscaling frameworks.
+Our results reveal that landscape heterogeneity substantially mediates model performance.
+SRGAN showed marked sensitivity to dense vegetation, highly aggregated woody struc-
+ture, and high textural entropy, with performance declining and variability increasing
+https://doi.org/10.3390/rs18091419
+Remote Sens. 2026, 18, 1419 33 of 35
+under these conditions. In contrast, ESRGAN maintained robust and stable performance
+across NDVI, structure, and texture gradients, suggesting that its adversarial and perceptual
+learning mechanisms enable more effective extraction of transferable spatial features. Bicu-
+bic interpolation performed competitively in intra-sensor scenarios but lacked adaptability
+to cross-sensor and domain-shift conditions, reinforcing the limitations of conventional
+interpolation approaches in heterogeneous grassland landscapes.
+These findings highlight the critical role of ecological context in guiding the applica-
+tion of super-resolution methods. By linking model performance to NDVI, patch structure,
+and texture, this study provides practical insight into the conditions under which different
+downscaling approaches remain reliable in heterogeneous grasslands. More broadly, the
+results emphasize that performance evaluation of deep learning-based remote sensing
+methods must explicitly account for ecological heterogeneity and operational domain
+shifts. Rather than serving as a benchmark comparison of architectures, this study pro-
+poses a framework for understanding how landscape complexity governs super-resolution
+behavior in natural ecosystems.
+Supplementary Materials: The following supporting information can be downloaded at: https:
+//www.mdpi.com/article/10.3390/rs18091419/s1.
+Author Contributions: Conceptualization, E.N.-Y. and J.O.L.; methodology, E.N.-Y. and J.O.L.;
+software and coding, E.N.-Y. and H.N.; model setup, E.N.-Y.; validation, E.N.-Y. and H.N., formal
+analysis, J.O.L. and E.N.-Y.; investigation, E.N.-Y. and J.O.L.; resources, J.O.L.; data collection: E.N.-Y.
+and J.O.L.; writing—original draft preparation, E.N.-Y. and N.J.; writing—review and editing, E.N.-Y.,
+J.O.L., N.J. and L.M.; supervision, J.O.L. All authors have read and agreed to the published version of
+the manuscript.
+Funding: This research was funded by Texas A&M AgriLife Research and the Texas A&M AgriLife
+Blackland Research & Extension Center at Temple, under start-up funding account numbers 203219-
+96611 and 240033-96611 and Hatch Project TEX0-9661-1023154.
+Data Availability Statement:All codes developed for data preprocessing, model implementation, and
+analysis are publicly available at: https://github.com/noayarae/Assessing-GAN-Super-Resolution-
+in-Grasslands, accessed on 21 January 2026. The repository includes documentation to support
+reproducibility of the workflow presented in this study. Complete visual comparisons for all test
+images across evaluation scenarios are available via Zenodo (v1.0) at https://doi.org/10.5281/
+zenodo.19697212.
+Acknowledgments: The authors acknowledge the assistance of both technical and non-technical
+personnel from the Texas A&M AgriLife Blackland Research & Extension Center at Temple for their
+support in conducting this research and providing access to resources and funding. The authors also
+acknowledge the assistance of both technical personnel from the Prairie Project who were involved
+in the establishment and data collection for this study (U.S. Department of Agriculture National
+Institute of Food and Agriculture; 2019-68012-29819). We would also like to express our sincere
+gratitude to the Texas A&M AgriLife Research & Extension Center at San Angelo for their support in
+conducting the fieldwork, providing access to the Martin Ranch for field data collection.
+Conflicts of Interest: The authors declare that they have no known competing financial interests or
+personal relationships that could have appeared to influence the work reported in this article.
+References
+1. Andreatta, D.; Gianelle, D.; Scotton, M.; Vescovo, L.; Dalponte, M. Detection of grassland mowing frequency using time series of
+vegetation indices from Sentinel-2 imagery. GISci. Remote Sens. 2022, 59, 481–500. [CrossRef]
+2. Qin, Q.; Xu, D.; Hou, L.; Shen, B.; Xin, X. Comparing vegetation indices from Sentinel-2 and Landsat 8 under different vegetation
+gradients based on a controlled grazing experiment. Ecol. Indic. 2021, 133, 108363. [CrossRef]
+https://doi.org/10.3390/rs18091419
+Remote Sens. 2026, 18, 1419 34 of 35
+3. Iskin, E.P .; Wohl, E. Quantifying floodplain heterogeneity with field observation, remote sensing, and landscape ecology: Methods
+and metrics. River Res. Appl. 2023, 39, 911–929. [CrossRef]
+4. Parente, L.; Sloat, L.; Mesquita, V .; Consoli, D.; Stanimirova, R.; Hengl, T.; Bonannella, C.; Teles, N.; Wheeler, I.; Hunter, M.; et al.
+Annual 30-m maps of global grassland class and extent (2000–2022) based on spatiotemporal Machine Learning. Sci. Data 2024,
+11, 1303. [CrossRef]
+5. Stevens, C.J. Recent advances in understanding grasslands. F1000Research 2018, 7, 1363. [CrossRef]
+6. Bardgett, R.D.; Bullock, J.M.; Lavorel, S.; Manning, P .; Schaffner, U.; Ostle, N.; Chomel, M.; Durigan, G.; Fry, E.L.; Johnson, D.;
+et al. Combatting global grassland degradation. Nat. Rev. Earth Environ. 2021, 2, 720–735. [CrossRef]
+7. Zhang, Y.; Zhang, C.; Wang, Z.; An, R.; Li, J. Comprehensive Research on Remote Sensing Monitoring of Grassland Degradation:
+A Case Study in the Three-River Source Region, China. Sustainability 2019, 11, 1845. [CrossRef]
+8. Bengtsson, J.; Bullock, J.M.; Egoh, B.; Everson, C.; Everson, T.; O’Connor, T.; O’Farrell, P .J.; Smith, H.G.; Lindborg, R. Grasslands—
+More important for ecosystem services than you might think. Ecosphere 2019, 10, e02582. [CrossRef]
+9. Buisson, E.; Archibald, S.; Fidelis, A.; Suding, K.N. Ancient grasslands guide ambitious goals in grassland restoration. Science
+2022, 377, 594–598. [CrossRef]
+10. Ding, J.; Eldridge, D.J. Woody encroachment: Social–ecological impacts and sustainable management. Biol. Rev. 2024, 99,
+1909–1926. [CrossRef] [PubMed]
+11. Hua, R.; Ye, G.; De Giuli, M.; Zhou, R.; Bao, D.; Hua, L.; Niu, Y. Decreased species richness along bare patch gradient in the
+degradation of Kobresia pasture on the Tibetan Plateau. Ecol. Indic. 2023, 157, 111195. [CrossRef]
+12. Kemp, D.R.; Han, G.; Hou, X.; Michalk, D.L.; Hou, F.; Wu, J.; Zhang, Y. Innovative grassland management systems for
+environmental and livelihood benefits. Proc. Natl. Acad. Sci. USA 2013, 110, 8369–8374. [CrossRef] [PubMed]
+13. Scholtz, R.; Twidwell, D. The last continuous grasslands on Earth: Identification and conservation importance. Conserv. Sci. Pract.
+2022, 4, e626. [CrossRef]
+14. Wu, G.-L.; Liu, Y.; Wang, D.; Zhao, J. Divergent successions to shrubs- and forbs-dominated meadows decrease ecosystem
+multifunctionality of hillside alpine meadow. Catena 2024, 236, 107718. [CrossRef]
+15. Silva, A.G.P .; Galvão, L.S.; Júnior, L.G.F.; Teles, N.M.; Mesquita, V .V .; Haddad, I. Discrimination of Degraded Pastures in the
+Brazilian Cerrado Using the PlanetScope SuperDove Satellite Constellation. Remote Sens. 2024, 16, 2256. [CrossRef]
+16. Lu, B.; He, Y. Species classification using Unmanned Aerial Vehicle (UAV)-acquired high spatial resolution imagery in a
+heterogeneous grassland. ISPRS J. Photogramm. Remote Sens. 2017, 128, 73–85. [CrossRef]
+17. Théau, J.; Lauzier-Hudon, É.; Aubé, L.; Devillers, N. Estimation of forage biomass and vegetation cover in grasslands using UAV
+imagery. PLoS ONE 2021, 16, e0245784. [CrossRef] [PubMed]
+18. Noa-Yarasca, E.; Leyton, J.M.O.; Hajda, C.B.; Adhikari, K.; Smith, D.R. Leveraging Spectral Neighborhood Information for Corn
+Yield Prediction with Spatial-Lagged Machine Learning Modeling: Can Neighborhood Information Outperform Vegetation
+Indices? AI 2025, 6, 58. [CrossRef]
+19. Sarkar, S.; Leyton, J.M.O.; Noa-Yarasca, E.; Adhikari, K.; Hajda, C.B.; Smith, D.R. Integrating Remote Sensing and Soil Features
+for Enhanced Machine Learning-Based Corn Yield Prediction in the Southern US. Sensors 2025, 25, 543. [CrossRef]
+20. Jiang, J.; Johansen, K.; Tu, Y.-H.; McCabe, M.F. Multi-sensor and multi-platform consistency and interoperability between UAV ,
+Planet CubeSat, Sentinel-2, and Landsat reflectance data. GIsci. Remote Sens. 2022, 59, 936–958. [CrossRef]
+21. Chauhan, K.; Patel, S.N.; Kumhar, M.; Bhatia, J.; Tanwar, S.; Davidson, I.E.; Mazibuko, T.F.; Sharma, R. Deep Learning-Based
+Single-Image Super-Resolution: A Comprehensive Review. IEEE Access 2023, 11, 21811–21830. [CrossRef]
+22. Jozdani, S.; Chen, D.; Pouliot, D.; Johnson, B.A. A review and meta-analysis of Generative Adversarial Networks and their
+applications in remote sensing. Int. J. Appl. Earth Obs. Geoinf. 2022, 108, 102734. [CrossRef]
+23. Qi, Y.; Lou, M.; Liu, Y.; Li, L.; Yang, Z.; Nie, W. Advancing image super-resolution techniques in remote sensing: A comprehensive
+survey. ISPRS J. Photogramm. Remote Sens. 2026, 231, 68–100. [CrossRef]
+24. Xiao, Y.; Yuan, Q.; Jiang, K.; He, J.; Lin, C.-W.; Zhang, L. TTST: A Top-k Token Selective Transformer for Remote Sensing Image
+Super-Resolution. IEEE Trans. Image Process. 2024, 33, 738–752. [CrossRef]
+25. Yang, W.; Zhang, X.; Tian, Y.; Wang, W.; Xue, J.-H.; Liao, Q. Deep Learning for Single Image Super-Resolution: A Brief Review.
+IEEE Trans. Multimed. 2019, 21, 3106–3121. [CrossRef]
+26. Noa-Yarasca, E.; Leyton, J.M.O.; Angerer, J.P . Extending Multi-Output Methods for Long-Term Aboveground Biomass Time
+Series Forecasting Using Convolutional Neural Networks. Mach. Learn. Knowl. Extr. 2024, 6, 1633–1652. [CrossRef]
+27. Noa-Yarasca, E.; Babbar-Sebens, M.; Jordan, C.E. Machine Learning Models for Prediction of Shade-Affected Stream Temperatures.
+J. Hydrol. Eng. 2025, 30, 04024058. [CrossRef]
+28. Wang, X.; Yu, K.; Wu, S.; Gu, J.; Liu, Y.; Dong, C.; Qiao, Y.; Loy, C.C. ESRGAN: Enhanced Super-Resolution Generative Adversarial
+Networks. arXiv 2018. [CrossRef]
+29. Wang, X.; Sun, L.; Chehri, A.; Song, Y. A Review of GAN-Based Super-Resolution Reconstruction for Optical Remote Sensing
+Images. Remote Sens. 2023, 15, 5062. [CrossRef]
+https://doi.org/10.3390/rs18091419
+Remote Sens. 2026, 18, 1419 35 of 35
+30. Ledig, C.; Theis, L.; Huszár, F.; Caballero, J.; Cunningham, A.; Acosta, A.; Aitken, A.P .; Tejani, A.; Totz, J.; Wang, Z.; et al.
+Photo-Realistic Single Image Super-Resolution Using a Generative Adversarial Network. arXiv 2017. [CrossRef]
+31. Moran, M.B.H.; Faria, M.D.B.; Giraldi, G.A.; Bastos, L.F.; Conci, A. Using super-resolution generative adversarial network models
+and transfer learning to obtain high resolution digital periapical radiographs. Comput. Biol. Med. 2021, 129, 104139. [CrossRef]
+32. Yang, Y.; Chen, H.; Cao, C.; Yang, Z.; Chen, Q.; Li, Z.; Mueller, R.; Lincoln, N.K. VegGAN: A Generative Adversarial Network for
+Downscaling JPSS/VIIRS Vegetation Indices. IEEE J. Sel. Top. Appl. Earth Obs. Remote Sens. 2025, 18, 18843–18858. [CrossRef]
+33. Li, G.; Cao, G. Generative adversarial models for extreme geospatial downscaling. Int. J. Appl. Earth Obs. Geoinf. 2025, 139, 104541.
+[CrossRef]
+34. Frazier, A.E. Landscape heterogeneity and scale considerations for super-resolution mapping. Int. J. Remote Sens. 2015, 36,
+2395–2408. [CrossRef]
+35. Hayes, S.; Cawkwell, F.; Bacon, K.L.; Wingler, A. Remote Sensing of Grassland Plant Biodiversity and Functional Traits.Ecol. Evol.
+2025, 15, e71829. [CrossRef] [PubMed]
+36. Reinermann, S.; Asam, S.; Kuenzer, C. Remote Sensing of Grassland Production and Management—A Review. Remote Sens. 2020,
+12, 1949. [CrossRef]
+37. Liu, Y.; Sun, H.; Zhang, X.; Liu, Q.; Chen, Z.; Xiao, C. TTRD3: Texture Transfer Residual Denoising Dual Diffusion Model for
+Remote Sensing Image Super-Resolution. arXiv 2025. [CrossRef]
+38. Taddeo, S.; Dronova, I.; Harris, K. Greenness, texture, and spatial relationships predict floristic diversity across wetlands of the
+conterminous United States. ISPRS J. Photogramm. Remote Sens. 2021, 175, 236–246. [CrossRef]
+39. Wang, C.; Zhang, X.; Yang, W.; Li, X.; Lu, B.; Wang, J. MSAGAN: A New Super-Resolution Algorithm for Multispectral Remote
+Sensing Image Based on a Multiscale Attention GAN Network. IEEE Geosci. Remote Sens. Lett. 2023, 20, 1–5. [CrossRef]
+40. Martins, A.; Dias, A.; Silva, F.; Sá, A.; Bos, M.; Neves, J. Assessing Cross-Device Generalization in Remote Sensing Image
+Super-Resolution. In Proceedings of the Pattern Recognition and Image Analysis, Coimbra, Portugal, 30 June–3 July 2026; pp.
+300–312. [CrossRef]
+41. Xiong, Y.; Guo, S.; Chen, J.; Deng, X.; Sun, L.; Zheng, X.; Xu, W. Improved SRGAN for Remote Sensing Image Super-Resolution
+Across Locations and Sensors. Remote Sens. 2020, 12, 1263. [CrossRef]
+42. Ansley, R.J.; Wu, X.B.; Kram, B.A. Observation: Long-term increases in mesquite canopy cover in a North Texas savanna. J. Range
+Manag. 2001, 54, 171–176. [CrossRef]
+43. Radford, A.; Metz, L.; Chintala, S. Unsupervised Representation Learning with Deep Convolutional Generative Adversarial
+Networks. arXiv 2016. [CrossRef]
+44. Puri, J.S.; Kotze, A. Evaluation of SRGAN Algorithm for Superresolution of Satellite Imagery on Different Sensors. Agil. GISci.
+Ser. 2022, 3, 57. [CrossRef]
+45. Zhao, P .; Chuan, H.T. Rational bicubic simple quadrilateral mesh surfaces. Vis. Comput. 1995, 11, 401–418. [CrossRef]
+46. Heusel, M.; Ramsauer, H.; Unterthiner, T.; Nessler, B.; Hochreiter, S. GANs Trained by a Two Time-Scale Update Rule Converge
+to a Local Nash Equilibrium. arXiv 2017. [CrossRef]
+47. Noa-Yarasca, E. Supplementary Visual Results for ’Assessing GAN Super-Resolution in Grasslands: The Role of Spatial Hetero-
+geneity and Textural Complexity.Zenodo 2026. [CrossRef]
+48. Sridhar, A.P .; Sitawarin, C.; Wagner, D. Mitigating adversarial training instability with batch normalization. In Proceedings
+of the ICLR 2021 Workshop on Security and Safety in Machine Learning Systems, Virtually, 7 May 2021; Available online:
+https://people.eecs.berkeley.edu/ daw/papers/batchnorm-aml21 (accessed on 21 April 2026).
+49. Sukesh, M.; Muthunayagam, M.; Latha, M. Super -Resolution Performance: A Comparative Analysis of SRGAN and ESRGAN
+Techniques for Single Image Restoration. In 2024 Intelligent Systems and Machine Learning Conference (ISML); IEEE: New York, NY,
+USA, 2024; pp. 128–134. [CrossRef]
+50. Toosi, A.; Samadzadegan, F.; Javan, F.D. S3-ESRGAN: Enhanced Super-Resolution Generative Adversarial Network for Remote
+Sensing Imagery Spatial Resolution Improvement—An Application Using Sentinel-2 and UAV Images. IEEE J. Sel. Top. Appl.
+Earth Obs. Remote Sens. 2026, 19, 2149–2172. [CrossRef]
+51. Moletto-Lobos, I.; Cyran, K.; Orden, L.; Sánchez-Méndez, S.; Franch, B.; Kalecinski, N.; Andreu-Rodríguez, F.J.; Mira-Urios, M.Á.;
+Saéz-Tovar, J.A.; Guillevic, P .C.; et al. Evaluating PlanetScope and UAV Multispectral Data for Monitoring Winter Wheat and
+Sustainable Fertilization Practices in Mediterranean Agroecosystems. Remote Sens. 2024, 16, 4474. [CrossRef]
+52. Gorroño, J.; Banks, A.C.; Fox, N.P .; Underwood, C. Radiometric inter-sensor cross-calibration uncertainty using a traceable high
+accuracy reference hyperspectral imager. ISPRS J. Photogramm. Remote Sens. 2017, 130, 393–417. [CrossRef]
+Disclaimer/Publisher’s Note: The statements, opinions and data contained in all publications are solely those of the individual
+author(s) and contributor(s) and not of MDPI and/or the editor(s). MDPI and/or the editor(s) disclaim responsibility for any injury to
+people or property resulting from any ideas, methods, instructions or products referred to in the content.
+https://doi.org/10.3390/rs18091419

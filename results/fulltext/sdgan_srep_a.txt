@@ -1,0 +1,1370 @@
+
+
+ 
+ 
+ 
+ Generative adversarial network-based super-resolution reconstruction of remote sensing images | Scientific Reports 
+ 
+ 
+
+
+
+ 
+
+ 
+
+ 
+ 
+ 
+ 
+
+
+
+
+
+ 
+
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+
+
+
+
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+ 
+ 
+ 
+
+ 
+
+
+
+
+
+ 
+ 
+
+
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+
+
+
+
+ 
+ 
+
+ 
+ Skip to main content 
+
+
+
+ 
+ 
+ 
+ Thank you for visiting nature.com. You are using a browser version with limited support for CSS. To obtain
+ the best experience, we recommend you use a more up to date browser (or turn off compatibility mode in
+ Internet Explorer). In the meantime, to ensure continued support, we are displaying the site without styles
+ and JavaScript. 
+
+ 
+ 
+
+ 
+
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ Advertisement 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ View all journals 
+ 
+ 
+ 
+ 
+ 
+ Saved research 
+ 
+ 
+ 
+ 
+ 
+ Search 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Account 
+ 
+ 
+ Log in 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Content 
+ Explore content 
+ 
+ 
+ 
+ 
+ 
+ 
+ About the journal 
+ 
+ 
+ 
+ 
+ 
+ Publish with us 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Sign up for alerts 
+ 
+ 
+ 
+ 
+ 
+ 
+ RSS feed 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+
+
+
+
+ 
+ 
+ 
+
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ nature 
+ 
+ 
+ 
+ scientific reports 
+ 
+ 
+ 
+ articles 
+ 
+ 
+ 
+ 
+ article 
+ 
+ 
+ 
+ 
+
+ 
+
+
+ 
+
+
+
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ Generative adversarial network-based super-resolution reconstruction of remote sensing images
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Download PDF 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Download PDF 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Article 
+ 
+ 
+ Open access 
+ 
+ 
+ 
+
+ Published: 04 March 2026 
+ 
+
+ Generative adversarial network-based super-resolution reconstruction of remote sensing images 
+ Longbao Wang 1 , 2 , LiSheng Liu 1 , Qing Yu 1 & … Dandan Yuan 3   Show authors 
+
+ 
+
+ 
+ Scientific Reports 
+ volume  16 , Article number:  11971 ( 2026 ) Cite this article 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Save article 
+ 
+ 
+ 
+ 
+ View saved research 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 3060 Accesses 
+ 
+ 
+ 
+ 
+ 
+ 
+ Metrics details 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+
+ 
+ Abstract Advances in satellite imaging have positioned remote sensing as a critical tool for resource management and urban planning. However, current systems grapple with sensor limitations and atmospheric interference that induce image defects such as blurred edges and missing textures, alongside computational inefficiencies and limited generalization of traditional super-resolution methods. This work proposes SDGAN (Super-Densely Connected Generative Adversarial Network), a lightweight framework integrating a super-dense residual module with 2D convolution kernels to enhance local feature representation and edge optimization while minimizing artifacts; a dual-discriminator system leveraging attention U-Net further improves efficiency by prioritizing critical features and reducing computational demands. Experiments on UCMerced-LandUse and WHU-RS19 datasets demonstrate state-of-the-art performance, achieving 21.72% and 14.47% runtime reductions over baselines, respectively, while effectively balancing reconstruction quality and computational efficiency in real-world remote sensing scenarios. 
+ 
+ 
+
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ Similar content being viewed by others 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Uncertainty-driven mixture convolution and transformer network for remote sensing image super-resolution
+ 
+ 
+ 
+ Article 
+ Open access 
+ 24 April 2024 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ A Real-World Benchmark for Sentinel-2 Multi-Image Super-Resolution
+ 
+ 
+ 
+ Article 
+ Open access 
+ 21 September 2023 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Remote sensing image Super-resolution reconstruction by fusing multi-scale receptive fields and hybrid transformer
+ 
+ 
+ 
+ Article 
+ Open access 
+ 16 January 2025 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Explore related subjects 
+ Discover the latest articles and news in related subjects. 
+ 
+ 
+ 
+ 
+ Engineering 
+ 
+ 
+ 
+ 
+ Mathematics and computing 
+ 
+ 
+ 
+ 
+ Image Processing Techniques for Enhanced Visual Quality 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ Introduction Advances in high-resolution satellite imaging have significantly expanded the application of remote sensing in smart city development, disaster monitoring, and ecological assessment. However, sensor physical limitations and atmospheric propagation effects often result in raw images with insufficient spatial resolution and degraded texture details, which compromise their utility in land use classification and scene interpretation. In recent years, deep learning has become a core driving force in advancing remote sensing image processing, with its powerful feature learning capabilities enabling breakthroughs across multiple tasks. For instance, in landslide extraction from aerial imagery, models leveraging context-aware features (e.g., U-Net combined with attention mechanisms) capture spatial correlations between landslide areas and surrounding terrain (vegetation-covered zones, exposed rock regions), avoiding missing small-scale landslides and blurry boundary segmentation–some even achieve an F1-score of over 90% in mountain landslide extraction, providing precise spatial references for disaster emergency assessment.This context-aware feature fusion logic inspires our focus on edge and detail preservation in super-resolution. In hyperspectral anomaly detection, deep learning methods further demonstrate innovative value: Frequency-to-Spectrum Mapping GAN (FTSGAN) 1 realizes semi-supervised detection by mapping original spectra to the fractional Fourier domain, highlighting deep learning’s strength in cross-domain feature modeling for remote sensing data; Global Feature-Injected Blind-Spot Network 2 integrates global feature injection mechanism with blind-spot network structure to make up for the “blind spot” of single-scale feature extraction, reflecting the necessity of “global-local collaboration” in adapting to complex remote sensing scenarios. Notably, multi-aspect collaborative salient object detectors integrate “localization, balance, and affinity” mechanisms to enhance recognition robustness against scale variations and background interference. This framework lays a foundation for our “detail-structure collaborative recovery” strategy, guiding the dual discriminator design that balances small-scale texture and large-scale structure.In other key tasks, progress is equally notable: cross-view intelligent person search methods solve perspective mismatches via multi-feature constraint (appearance, posture, environment), offering inspiration for balancing local details and global structure in super-resolution; Wang et al. 3 propose a Cross-Domain Detection Transformer with multi-view adaptive feature alignment for remote sensing cross-domain object detection, verifying that multi-view adaptive feature alignment can effectively address ground object scale diversity; multi-aspect collaborative salient object detectors integrate “localization, balance, and affinity” mechanisms to enhance recognition robustness, laying a foundation for “detail-structure collaborative recovery” in subsequent super-resolution tasks. In the specific field of super-resolution (SR) reconstruction–critical for mitigating resolution limitations–deep learning methods (including convolutional neural networks, generative adversarial networks, and attention-based architectures) outperform traditional interpolation or sparse representation approaches by enabling end-to-end learning of complex spatial structures and texture dependencies in remote sensing images, effectively alleviating issues caused by sensor constraints and atmospheric interference.For remote sensing SR specifically, improved residual networks have been proposed to enhance reconstruction performance 4 . Furthermore, residual dense backprojection networks have been designed to mitigate detail loss in single remote sensing image SR 5 . Recent advances further confirm the potential of lightweight GAN frameworks and multi-scale attention mechanisms in remote sensing SR: Li et al. 6 proposed a lightweight GAN with cross-scale feature fusion, achieving improved efficiency but still struggling with artifact suppression in complex urban-suburban scenes; Wang et al. 7 emphasized the importance of SR for land-use classification, yet their multi-scale attention model failed to balance global structure and local detail restoration; Chen et al. 8 designed adaptive residual blocks for UAV-borne image SR, but the model’s generalization across diverse land-use categories remains limited. While deep learning-based SR has shown substantial progress in enhancing image quality, existing methodologies still face three critical challenges: (1) artifacts such as blurred regions and anomalous textures frequently emerge in complex scenes (e.g., mixed urban-suburban areas, dense vegetation), distorting land-object boundary information; (2) inadequate adaptation to multiscale features (e.g., small-scale road edges vs. large-scale river networks) limits generalization across diverse land-use categories; (3) the growing gap between network complexity and computational efficiency hinders real-time processing in resource-constrained scenarios (e.g., UAV-mounted devices for on-site disaster monitoring). Current deep learning-based approaches exhibit further key limitations: Since the proposal of Generative Adversarial Networks (GANs) 9 , GAN-based SR methods (e.g., SRGAN 10 , EEGAN 11 ) struggle with high-frequency detail reconstruction accuracy while generating artifacts; Inspired by recurrent visual attention models 12 , attention mechanisms (e.g., MGAN 13 , TAGAN 14 ) demonstrate enhanced feature extraction but fail to address remote sensing images’ multi-scale characteristics; and driven by the success of deep residual learning 15 , residual block architectures (e.g., RDN 16 , PMSRN 17 ) achieve improved feature extraction at the cost of exponential computational complexity increases with network deepening, impeding deployment in resource-constrained environments. To address the aforementioned pain points, this study proposes a lightweight remote sensing image super-resolution framework–SDGAN (Super-Densely Connected Generative Adversarial Network). Through two core innovations, it achieves collaborative optimization of detail recovery, generalization capability, and resource utilization. Its key contributions can be summarized as follows: 
+ 
+ 1. 
+ 
+ Super-dense residual block (SDRB) for accurate detail reconstruction A super-dense residual block with 2D convolution kernels and diagonal connections is designed, establishing multi-dimensional connectivity patterns. Compared with traditional single-path skip connection architectures, it significantly improves inter-layer feature propagation and utilization efficiency, enabling more accurate capture and restoration of image details while effectively suppressing artifacts and optimizing edge performance. 
+ 
+ 
+ 
+ 2. 
+ 
+ Attention U-net dual discriminator for efficient generalization An attention U-Net dual discriminator network is constructed based on the lightweight Lite-U-Net. By combining the attention mechanism with the hierarchical structure of U-Net, it reduces computational complexity while enhancing focus on image details and high-frequency components. Through multi-scale discrimination, it balances local details and global structure, significantly improving the model’s generalization capability and computational efficiency. 
+ 
+ 
+ To verify the effectiveness of SDGAN, comprehensive experiments were conducted on three major remote sensing datasets: UCMerced-LandUse, WHU-RS19, and AID. The results show that the framework achieves runtime reductions of 21.72% and 14.47% on the UCMerced-LandUse and WHU-RS19 datasets, respectively. Meanwhile, it effectively balances reconstruction quality and computational efficiency in real-world remote sensing scenarios, providing a high-performance and lightweight new solution for remote sensing image super-resolution tasks in resource-constrained environments. The remainder of this paper is structured to elaborate on the research in a logical manner: First, the “Related Work” section will systematically review existing studies on GAN-based, attention mechanism-based, and residual block-based super-resolution methods, analyzing their limitations in remote sensing scenarios to further clarify the innovative positioning of SDGAN. Next, the “Methodology” section will detail the technical design of SDGAN, including the feature propagation mechanism of SDRB, the multi-scale discrimination logic of the dual Attention U-Net discriminator, and the formulation of the loss function tailored for remote sensing images. Then, the “Experiments” section will present in-depth validation: comparative experiments with mainstream baselines (e.g., SRGAN, Real-ESRGAN) and ablation experiments on the three datasets will be conducted, using both quantitative metrics (PSNR, SSIM, FID, NIQE) and qualitative visual analysis to demonstrate SDGAN’s superiority in reconstruction quality and computational efficiency. Finally, the “Conclusion and Future Work” section will summarize the key findings of this study and propose potential directions for further optimization, such as adapting SDGAN to complex image degradations (e.g., haze, motion blur) and exploring its deployment on edge computing devices for real-time remote sensing applications. Related work Driven by deep learning advancements, remote sensing image super-resolution (SR) research has focused on three core directions: GAN-based methods, attention mechanism-based approaches, and residual block-based architectures, with existing studies still facing gaps in artifact suppression, multi-scale adaptation, and computational efficiency. Meanwhile, deep learning progress in other remote sensing tasks (e.g., hyperspectral anomaly detection, cross-domain object detection) provides valuable technical references for addressing these SR limitations–this section integrates such insights to clarify this study’s innovation. GAN-based super-resolution reconstruction methods GAN-based SR methods excel in fine-grained detail generation via adversarial learning, but their application in remote sensing remains constrained by critical limitations. Early methods primarily optimized quantitative metrics like peak signal-to-noise ratio (PSNR) 18 by minimizing mean squared error (MSE) between original and reconstructed images, while SRGAN 10 pioneered perceptual loss for quality enhancement yet lacked cross-domain generalization. Subsequent improvements–MRMGAN 19 ’s multi-resolution networks for better generalization, EnhanceNet 20 ’s texture-matching loss for realistic textures, SRFeat 21 ’s dual-discriminator design with image/feature-level adversarial losses, ESRGAN 22 ’s residual-dense blocks (RRDB) and pre-activation features for perceptual quality, and Real-ESRGAN 23 ’s high-order models for real-world degradation simulation–addressed specific flaws but failed to resolve remote sensing-specific issues. In remote sensing scenarios, Enlighten-GAN 24 improved visual quality via self-supervised hierarchical perceptual loss but risked texture over-smoothing; EEGAN 11 strengthened edge information for robust noise reconstruction but suffered from imbalanced architecture and poor non-edge texture recovery; SG-FBGAN 25 addressed region diversity via saliency-guided feedback connections at the cost of increased computational complexity; CDGANs 26 enhanced performance by jointly optimizing generated images and ground truths but faced training instability. Li et al. 6 proposed a lightweight GAN with cross-scale feature fusion for remote sensing SR, which reduces computational overhead by 18.2% compared to Real-ESRGAN but still generates noticeable artifacts in dense vegetation and intersecting road scenes due to insufficient multi-directional feature propagation. Collectively, GAN-based remote sensing SR methods still struggle with artifact generation due to over-optimization and insufficient consideration of model stability and computational efficiency–notably, they rarely draw on the “multi-scale balance” mechanism of remote sensing salient object detection (e.g., balancing small-target localization and large-scale background adaptation), leading to common problems of over-optimized local details and distorted global structures. Relevant hyperspectral anomaly detection studies offer solutions: FTSGAN 1 proves cross-domain feature modeling (via frequency-to-spectrum mapping) can make up for single spatial-domain learning deficiencies, and Global Feature-Injected Blind-Spot Network 2 verifies the value of global feature integration with blind-spot structure in remote sensing anomaly detection. Thus, SDGAN adopts SDRB for multi-dimensional feature connections (learning from FTSGAN’s cross-domain mapping logic) and a dual discriminator for local-global verification (referencing the global-local collaboration mechanism of 2 ), alleviating traditional SR-GAN flaws. Attention mechanism-based super-resolution methods Attention mechanisms, inspired by human visual systems, enhance SR performance by prioritizing critical features (e.g., textures, edges) while suppressing irrelevant information, yet their remote sensing application is limited by trade-offs between detail preservation, stability, and efficiency. MGAN 13 integrated multi-scale strategies with attention to refine feature responses and improve SR accuracy/computational efficiency but lacked adaptation to remote sensing’s multi-scale characteristics; CAL 27 used causal inference to assess attention quality and performed well across integer/non-integer scaling factors, dynamic attention 28 generated adaptive weights for input samples to enhance magnification capabilities, and GCA-LEA global-local dual attention 29 exploited inter-layer dependencies for high-frequency recovery–yet none addressed computational redundancy in remote sensing scenarios. To balance performance and resources, EMASRN 30 reduced parameters via specialized attention blocks while maintaining image quality, hybrid channel-spatial attention 31 improved detail restoration, but fusion with GANs introduced new flaws: attention-guided GANs 32 optimized textures but underperformed in high-noise/extreme-texture scenarios; Lu and Hu’s GAN 33 combined channel/spatial attention for better feature exchange but increased parameter complexity; GDCA 34 generated sharper outputs but required complexity reduction; attention-modified SRGAN 35 improved noise robustness but lacked cross-scenario adaptability; TAGAN 14 introduced gradient-weighted loss with attention for texture recovery but compromised global quality; Wang et al. 7 developed a multi-scale attention model tailored for SR-based land-use classification, which enhances texture detail preservation but fails to resolve the conflict between local detail sharpness and global structural coherence-especially in mixed urban-farmland scenes.These gaps not only reflect the lack of attention architectures tailored to remote sensing’s heterogeneous scenes but also ignore the reference value of “multi-feature collaboration” in cross-view intelligent person search–this study draws on the idea of multi-feature constraint in cross-view tasks to design a dual-attention discriminator, balancing local detail extraction and global structure perception. Wang et al. 3 (remote sensing cross-domain object detection) further confirms the effectiveness of multi-view adaptive feature alignment in addressing ground object scale diversity. Thus, SDGAN’s dual discriminator integrates this idea: D1 focuses on small-scale details and D2 on large-scale structures, making up for existing attention-based SR methods’ multi-scale adaptation deficiency. Beyond GANs, attention mechanisms, and residual blocks, advancements in other remote sensing deep learning tasks provide critical references for addressing SR’s core challenges. Context-aware landslide extraction models from aerial imagery emphasize cross-scale feature correlation between local terrain details and global topographic context, inspiring the Super-Dense Residual Block (SDRB)’s design of bidirectional feature interaction to reduce detail loss; multi-aspect collaborative salient object detectors integrating “localization, balance, and affinity” mechanisms balance detail and structure, guiding the dual discriminator’s division of labor (local detail focus vs. global structure constraint); multi-feature constrained cross-view intelligent person search methods fuse complementary features (appearance, posture, environment) to compensate for perspective-induced information loss, informing the Attention U-Net’s feature prioritization logic. These cross-task insights–context-aware interaction, multi-scale balance, and multi-feature constraint–are universal for handling remote sensing’s complex heterogeneity, and their integration into SDGAN strengthens the model’s rationality and innovation.Notably, Chen et al. 8 attempted to address resource-constrained scenarios (e.g., UAV-mounted processing) by designing adaptive residual blocks for remote sensing SR, but their model’s generalization across 30+ land-use categories is limited by single-scale feature extraction, and the computational efficiency still lags behind practical deployment requirements. Generator network with super-dense residual connections To reduce computational overhead, lightweight residual block designs such as SRNMSM 36 , 37 have been proposed, yet they still struggle with remote sensing image detail preservation. Traditional Generative Adversarial Network (GAN) generators employ direct or skip connections to facilitate information flow in deep architectures, mitigate gradient vanishing, and enhance model expressiveness. However, these approaches primarily depend on feature concatenation for fusion, Multiple dense residual block-based GANs have also been explored in medical image SR 38 , but their high complexity limits deployment in remote sensing scenarios. which inherently incurs high computational costs and memory overheads. Additionally, increased network depth exacerbates parameter optimization challenges, potentially leading to information loss and gradient instability. These limitations become particularly pronounced in high-resolution image processing–especially for remote sensing data–where conventional connection strategies often result in generated images with incomplete details or blurred edges. To address these shortcomings, a novel generator architecture termed the Super-Dense Residual Network (SDGAN) 1 is proposed, introducing super-dense residual connections to enhance inter-layer information propagation and preserve critical image details Figure 1 Overall Architecture of the proposed SDGAN. The generator (red dashed box) takes low-resolution (LR) remote sensing images as input and adopts super-dense residual connections; the dual Attention U-Net discriminators (blue dashed boxes) perform multi-scale discrimination, with loss signals fed back to optimize the generator. Fig. 1 Full size image Overall architecture of SDGAN. Super-dense residual block (SDRB) To address the multi-directional structural complexity, detail loss, and artifact issues of remote sensing images, the SDRB is proposed. Traditional 1D planar convolution-based blocks only enable unidirectional feature transmission, failing to capture complex spatial correlations and easily losing edge/texture details in deep networks. Traditional 1D planar convolution kernels in DenseNet only enable unidirectional feature transmission between adjacent layers, similar to a “single-lane path”. Feature information can only flow in a sequential manner, which not only results in low transmission efficiency but also easily leads to the loss of critical details such as edges and textures in deep networks. This limitation is particularly prominent in remote sensing images, where complex structural features (e.g., intersecting roads, irregular farmland boundaries) require multi-directional information interaction to be accurately captured. In contrast, 2D matrix convolution kernels arrange convolutional layers in a 2D matrix form and add diagonal connections, equivalent to upgrading the “single-lane path” to a “multi-directional transportation network”. On one hand, diagonal connections directly establish feature channels between non-adjacent layers, allowing basic texture information from shallow layers and high-level semantic information from deep layers to interact across layers–this cross-layer interaction significantly reduces information loss during feature propagation. On the other hand, the 2D matrix layout expands the receptive field of convolution kernels in a “grid-like” pattern, enabling simultaneous coverage of pixel correlations in horizontal, vertical, and diagonal directions. This design is highly compatible with the multi-directional structural features of remote sensing images (such as building edges, road orientations, and farmland textures), thereby accurately capturing details that are easily overlooked by traditional 1D planar convolution structures. As illustrated in Fig. 2 , the core innovation of the SDRB lies in its adoption of a 2D matrix configuration for convolutional kernels, which differs from the 1D planar layout of traditional DenseNet. This design introduces a large number of diagonal connections, doubling the density of feature paths compared to traditional dense blocks under the same number of convolutional layers. The expansion of short-range and long-range paths not only improves the efficiency of local feature extraction but also preserves rich texture details by enhancing multi-scale information fusion. Comparative experiments show that images reconstructed by BIPNet lack sufficient smoothness, while CBAM-GAN can focus on edge details and textures while ensuring output smoothness. However, the SDRB further optimizes the ability to represent feature details and overall outperforms other algorithms in terms of visual quality and structural integrity. Fig. 2 Full size image Architecture of the super-dense residual block (SDRB). As illustrated in Fig. 3 , the SDGAN generator incorporates interactive multi-path units within SDRBs. These units fuse features extracted from parallel multi-path convolutions. Feature maps in each multi-path unit are not only shared across layers within the same unit via aggregation and dense connections but also serve as skip inputs for subsequent units. The function of the i-th unit can be expressed as: $$\begin{aligned} y_i= & H_c\bigl ([F_{i,0}(x_0), F_{i,1}(x_1), \dots , F_{i,n}(x_n)]\bigr ) \end{aligned}$$ 
+ (1)
+ $$\begin{aligned} \mathfrak {s}_{(i,n)}= & H_1\bigl ( H_c\bigl ( y_r, \mathfrak {s}_{(i-1,n)} \bigr ) \bigr ) \end{aligned}$$ 
+ (2)
+ In Eq. 1 , \(x_n\) denotes the input to the \(i\) -th path in the SDRB, while \(F_{(i,n)} (x_n)\) and \(y_i\) represent the feature maps of a single convolutional layer and the aggregated features across all layers in the \(i\) -th unit, respectively. Equation 2 defines \(\mathfrak {s}_{(i,n)}\) as the transformation output of the \(n\) -th path in the \(i\) -th unit, and \(\mathfrak {s}_{(i-1,n)}\) as the output of the \(n\) -th path in the \((i-1)\) -th unit. Functionally, a set of skip connections enhances the correlation between input and output feature maps. A transformation layer, denoted by \(H_1\) , is embedded into \(1{\times }1\) convolution kernels to reduce feature channels. By leveraging super-dense connections, features gain enhanced expressiveness through short or long range pathways. Notably, reducing filters and parameters enables a more compact and efficient architecture for remote sensing images, significantly lowering computational cost, memory pressure, and inference latency. To quantitatively verify the superiority of the SDRB in computational efficiency and reconstruction quality, Table 1 compares it with three typical existing core modules (DenseNet Dense Block, RDN (RDB), and PMSRN (MSDRB)) under the same experimental setup ( \(\times 4\) super-resolution on the UCMerced-LandUse dataset). The results show that the SDRB achieves the optimal balance between computational complexity and performance: in terms of efficiency indicators, its parameter size (0.82M) is 20.8% lower than that of RDN (RDB) (1.20M) and 20.0% lower than that of PMSRN (MSDRB) (1.12M), while its FLOPs (18.6G) are reduced by 26.5% and 18.4% compared to the two modules respectively, and the single-image inference time (0.87s) is the shortest among all compared modules, demonstrating significant advantages in lightweight design. Meanwhile, in terms of reconstruction quality, the edge detail PSNR of the SDRB (32.38 dB) is 3.7% higher than that of RDN (RDB) (31.22 dB) and 4.6% higher than that of PMSRN (MSDRB) (30.95 dB), which confirms that the SDRB can effectively improve the clarity of edge details while reducing computational overhead. This fully proves that the 2D matrix convolution kernel configuration and super-dense connection design of the SDRB can simultaneously optimize feature utilization efficiency and complexity control, overcoming the limitations of existing modules that often require a trade-off between performance and computational cost. Table 1 Comparison of computational complexity between SDRB and existing core modules ( \(\times 4\) super-resolution, UCMerced-LandUse dataset). Full size table Fig. 3 Full size image Architecture of the SDGAN generator network. Attention-based U-Net dual discriminator For remote sensing images’ multi-scale characteristics and scene heterogeneity, a dual Attention U-Net discriminator is designed. Traditional single-scale discriminators cannot balance local detail fidelity and global structural rationality, leading to artifacts or distorted macro-structures. Taking the lightweight U-Net as its foundation, Discriminator D incorporates a core attention mechanism module , which can adaptively learn the weight assignment of input feature maps during feature extraction and prioritize task-critical features,as shown in Fig. 4 . This structure consists of a downsampling encoder, an upsampling decoder, and multiple attention modules (where F, W, and H represent the number of output channels of the first convolutional layer, image height, and image width, respectively). The specific workflow is as follows: Initial features are extracted by convolutional layers. During the encoding phase, downsampling compresses the spatial dimension and increases depth complexity to capture global contextual information; During the decoding phase, upsampling gradually restores the feature maps to their original size to achieve detailed reconstruction; Skip connections fuse the feature maps of the encoder and decoder to ensure spatial coherence, ultimately enabling accurate discrimination of key features. Fig. 4 Full size image Architecture of the attention-based U-Net discriminator. The Attention Block (AB) is implemented via an Attention Gate (AG), and the Concentrate Block (CB) fuses feature maps from different network layers and scales. By combining local details from shallow layers with global context from deep layers, it enhances the ability to depict target structures in remote sensing images.As shown in Fig. 5 , the attention U-Net originally designed for 3D medical image segmentation is adapted to 2D images, significantly reducing computational costs: \(\textbf{x}^l\) denotes the input features to the U-Net, g serves as the gate control signal for feature processing, and \(F_{\text {int}}\) is a hyperparameter defining the number of output channels of the 1 \(\times\) 1 convolution in the AB. The input features \(\textbf{x}^l\) are adjusted and scaled using an attention coefficient \(\alpha\) to stabilize training, and Layer Normalization is applied for regularization. Fig. 5 Full size image Architecture of the attention block. Dual discriminator For \(D_1\) (full-resolution image processing): Traditional single-scale discriminators need to focus on both global and local information simultaneously, leading to scattered computing resources and insufficient discrimination accuracy for small-scale details such as building edges and road textures (e.g., misclassifying pseudo-textures as real features). In contrast, \(D_1\) specializes in full-resolution images, and its Attention U-Net module can specifically enhance the weight assignment for pixel-level details. For instance, in remote sensing scenarios like ’airport runway stripes’ and ’farmland ridge boundaries’, \(D_1\) can more accurately distinguish between ’real textures’ and ’generated artifacts’, directly reducing the misjudgment rate at the detail level and improving the texture fidelity of super-resolved (SR) images. For \(D_2\) (2 \(\times\) downsampled image processing): The downsampling operation compresses redundant spatial information, allowing \(D_2\) to ignore local pixel noise and focus instead on macro-structures such as urban layouts and river network continuity. Traditional discriminators often suffer from broken global structures (e.g., missing river segments or disordered building arrangements) due to overemphasis on local details. However, by learning macro-scene rules, \(D_2\) can constrain the generator to avoid the problem of ‘realistic local details but incorrect global logic’–for example, ensuring the connectivity of road networks and the rationality of vegetation distribution, thereby enhancing the structural consistency of SR images. As illustrated in Fig. 6 , the SDGAN adopts a dual discriminator architecture to enable multi-scale discrimination, allowing the network to learn hierarchical features from coarse to fine. This design includes two identical Attention-Based U-Net discriminators: Discriminator \(D_1\) processes full-resolution images to capture fine-grained details, while Discriminator \(D_2\) operates on \(2{\times }\) downsampled images to emphasize global context and structural coherence. By combining \(D_1\) and \(D_2\) , the model balances local precision with global consistency, ensuring accurate reconstruction of both fine textures and large-scale patterns. Fig. 6 Full size image Architecture of the multi-scale discriminator. To address the generalization challenge in complex remote sensing scenes (e.g., diverse land-use types, uneven texture densities, and variable illumination), \(D_1\) and \(D_2\) achieve synergistic optimization through complementary feature learning and mutual constraint. Specifically, \(D_1\) focuses on local high-frequency details (e.g., building edges, road textures, and vegetation boundaries) via the Attention-Based U-Net, avoiding the loss of critical small-scale features; \(D_2\) reduces spatial redundancy through downsampling, prioritizing global structural coherence (e.g., urban layout, river network continuity, and agricultural distribution) to learn macro-scene rules. Their synergy is reflected in two aspects: first, the local details from \(D_1\) and global structures from \(D_2\) constrain each other during training– \(D_1\) prevents \(D_2\) from ignoring local authenticity due to overemphasizing global structure, while \(D_2\) guides \(D_1\) to avoid overfitting to local noise; second, the loss information of both discriminators is jointly fed back to the generator, prompting it to balance local precision and global consistency in super-resolution reconstruction. This dual-scale complementary learning enables the model to adapt to heterogeneous remote sensing scenarios, significantly improving generalization capability. In terms of constrained feedback: \(D_1\) feeds back the discrimination errors of local details (e.g., ’blurred edges’ and ’pseudo-textures’) to the generator, forcing it to optimize small-scale features. Meanwhile, \(D_2\) synchronously feeds back the discrimination errors of global structures (e.g., ’broken rivers’ and ’disordered building arrangements’), preventing the generator from neglecting the global context due to over-optimization of local details. This ’dual-error feedback’ reduces one-sided optimization of the generator, ensuring that SR images meet standards in both ’detail clarity’ and ’structural rationality’. In terms of generalization ability: Traditional single-scale discriminators have poor adaptability to ’complex scene heterogeneity’ (e.g., mixed scenes of ’dense buildings + open farmland’ in a single image), often resulting in ’satisfactory performance in one region but failure in another’. In the dual-scale design, \(D_1\) adapts to small-scale heterogeneous details (e.g., window textures in buildings and ridge intervals in farmland), while \(D_2\) adapts to large-scale heterogeneous structures (e.g., the boundary transition between buildings and farmland). Their combination enables the model to maintain stable performance across the 21-category UCMerced-LandUse dataset and 19-category WHU-RS19 dataset, enhancing cross-scene generalization.” The discriminator outputs a \(W{\times }H\) matrix where each element represents the probability of the corresponding pixel being real. To compute the total loss, the output is normalized via a sigmoid function \(\sigma (\cdot )\) followed by binary cross-entropy loss. Let \(\mathscr {C}\) denote the output matrix, define \(D = \sigma (\mathscr {C})\) as in Equation (3-3), where \(x_r\) is real data and \(x_f\) is fake data. $$\begin{aligned} \mathscr {L}_D = \sum _{w=1}^{W} \sum _{h=1}^{H} \Bigl ( - \mathbb {E}_{x_r} \bigl [ \log \bigl (D(x_r, x_f)[w,h]\bigr ) \bigr ] - \mathbb {E}_{x_f} \bigl [ 1 - \log \bigl (D(x_f, x_r)[w,h]\bigr ) \bigr ] \Bigr ) \end{aligned}$$ 
+ (3)
+ The sigmoid function acts as the activation function, smoothly constraining the output range to avoid interference from extreme values, thereby stabilizing GAN training. The binary cross-entropy loss directly targets the real vs. fake classification task: minimizing it optimizes the discriminator’s classification accuracy. It also facilitates gradient propagation—generating larger gradients when predictions deviate significantly from ground truth to accelerate learning, and smaller gradients as predictions approach truth to aid convergence and prevent excessive oscillations. The proposed SDGAN framework consists of two core components: a generator ( \(\mathscr {G}\) ) and an Attention-Based U-Net discriminator ( \(\mathscr {D}\) ) for feature extraction. \(I_{\text {LR}}\) , \(I_{\text {SR}}\) , and \(I_{\text {HR}}\) denote the low-resolution input, super-resolution output, and ground-truth remote sensing image of SDGAN, respectively. To preserve precise details in remote sensing images and effectively address the challenges of high-frequency features and texture quality, this paper optimizes the loss function of SDGAN. A robust content loss function is constructed to force the generator \(\mathscr {G}\) to produce HR images similar to the ground truth using its given architecture, as shown in Eq. ( 4 ): $$\begin{aligned} \text {Loss}_c\bigl ( \theta _{\mathscr {G}} \bigr ) = \arg \min _{\theta _{\mathscr {G}}} \sum _{i=1}^{P} \rho \bigl ( I_{\text {HR},i} - I_{\text {SR},i} \bigr ) \end{aligned}$$ 
+ (4)
+ Here, \(\text {Loss}_c\) denotes the robust content loss, with \(\theta _{\mathscr {G}}\) representing the generator’s parameters, and \(I_{\text {SR},i}\) and \(I_{\text {HR},i}\) denoting features from the reconstructed and ground-truth images extracted by the Attention-Based U-Net discriminator, respectively. The Charbonnier penalty function \(\rho (x) = \sqrt{x^2 + \varepsilon ^2}\) — a variant of \(\ell _1\) loss — offers robustness, fidelity, and smoothness, making it suitable for remote sensing image reconstruction. Unlike pixel-wise loss (poor at handling small errors and neglecting texture quality) or \(\ell _2\) loss (overly smoothing textures by prioritizing large deviations), Charbonnier loss mitigates outliers through its formulation, enhancing detail preservation and robustness to input variations. This ensures focus on dominant content and structural features rather than noise. Here, \(\varepsilon\) is set to \(10^{-3}\) . Then, \(I_{\text {SR}}\) and \(I_{\text {HR}}\) are fed into \(D\) to determine whether they are real or fake. The discriminator is trained by minimizing the perceptual adversarial loss, which encourages the generator \(\mathscr {G}\) to produce reconstructed images \(I_{\text {SR}}\) that lie on the manifold of real images \(I_{\text {HR}}\) . The formulation for this process, as shown in Eq. ( 5 ), is as follows: $$\begin{aligned} \text {Loss}_{\text {ad}}\bigl ( \theta _{\mathscr {D}} \bigr ) = -\log \bigl ( D(I_{\text {HR}}) \bigr ) - \log \bigl ( 1 - D\bigl ( \mathscr {G}(I_{\text {LR}}) \bigr ) \bigr ) \end{aligned}$$ 
+ (5)
+ Here, \(\text {Loss}_{\text {ad}}\) denotes the perceptual adversarial loss, and \(\theta _{\mathscr {D}}\) represents the model parameters in the discriminator \(D\) . \(I_{\text {LR}}\) is the low-resolution input, \(\mathscr {G}(\cdot )\) denotes the generator network function, and \(D(\cdot )\) is the discriminator function. Given a high-resolution image \(I\) , \(D(I)\) represents the probability that \(I\) is a real high-resolution image rather than a fake super-resolution one. Therefore, the overall objective is given by Eq. ( 6 ) as follows: $$\begin{aligned} \mathscr {L}\bigl ( \theta _{\mathscr {G}}, \theta _{\mathscr {D}} \bigr ) = \text {Loss}_c\bigl ( \theta _{\mathscr {G}} \bigr ) + \lambda \, \text {Loss}_{\text {ad}}\bigl ( \theta _{\mathscr {G}}, \theta _{\mathscr {D}} \bigr ) \end{aligned}$$ 
+ (6)
+ Based on multiple experiments, this paper sets \(\lambda = 10^{-5}\) to balance the loss components. The generator \(\mathscr {G}\) and discriminator \(D\) are updated alternately, and the optimized generator is ultimately obtained when \(D\) no longer updates. Experiments Data To verify the proposed model, we trained and evaluated it on three publicly available remote sensing datasets: UCMerced-LandUse, WHU-RS19 (i.e., SIRI-WHU Dataset), and AID Dataset. All datasets are open for non-commercial academic research and can be accessed via their official repositories: UCMerced-LandUse ( https://aistudio.baidu.com/aistudio/datasetdetail/51628 ), WHU-RS19 ( https://github.com/201528014227051/WHU-RS19 ), and AID Dataset ( https://captain-whu.github.io/AID/ ). Performance was assessed using subjective visual inspection and objective metrics to validate the model’s effectiveness in diverse large-scale remote sensing scenes. The UCMerced LandUse dataset, a standard in remote sensing, includes 21 land-use classes; 15 samples per class (100 total) were used for training. WHU-RS19 (i.e., SIRI-WHU Dataset) comprises 19 high-resolution satellite categories from Google Earth, with 600 \(\times\) 600 RGB images. 15 samples per category were selected for training. AID contains 30 scene classes (about 220–420 images per class, 600 \(\times\) 600 pixels, about 10,000 total). For efficiency, 100 training images per class were used, sufficient to meet the training requirements. The AID dataset ( \(\approx 10,000\) images, 220–420 per category) would be overly large for full-scale training. With 2 NVIDIA RTX 3090 GPUs ( \(24\text {G VRAM}\) each), full data use would require batch size \(\le 16\) –prolonging iterations \(3\times\) (total training time \(> 120\) hours) and risking VRAM-induced interruptions. Selecting 100 images per category (3000 total) enables stable training at batch size \(= 48\) , balancing efficiency and hardware compatibility. AID’s uneven category sizes (e.g., 220 for “Airport”, 420 for “Forest”) would cause overfitting to large categories and poor generalization for small ones if used fully. Uniformly choosing 100 images per category eliminates such biases, ensuring balanced learning across 30 scenes. Controlled experiments (Table 2 ) show: increasing samples per category from 100 to 200 boosts PSNR by 0.12 dB/SSIM by 0.003 but raises training time by 68%; full data use only improves PSNR/SSIM by 0.08 dB/0.002. Diminishing marginal benefits confirm 100 images per category suffice–extra samples add little performance but high computational cost. Samples are chosen via “stratified random sampling”: first filtering out images with severe cloud cover/motion blur, then randomly selecting 100 from the rest. This ensures representation of category-specific features (e.g., docks/ships for “Port”, sand dunes for “Desert”) and avoids selection bias impacting generalization verification. Table 2 Performance and training cost with varying training sample sizes on AID dataset ( \(\times\) 4 super-resolution). Full size table Experimental setup Dataset preprocessing To prevent overfitting, remote sensing images from the UCMerced-LandUse, WHU-RS19, and AID datasets underwent random cropping (to 256 \(\times\) 256 patches), random rotation ( \(0^{\circ }\) , \(90^{\circ }\) , \(180^{\circ }\) , \(270^{\circ }\) ), and horizontal/vertical flipping. This process generated 4 \(\times\) 900 pairs of high- and low-resolution image pairs, significantly enhancing training data diversity. Experimental running environment The hardware and software configurations are summarized in Table 3 . Table 3 Hardware and software environment for experiment execution. Full size table Experimental parameter settings The UCMerced-LandUse, WHU-RS19, and AID datasets were used for training, with an HR patch size of 256 \(\times\) 256. Training was conducted on 2 NVIDIA RTX 3090 GPUs with a batch size of 48, using the Adam optimizer ( \(\text {lr} = 2 \times 10^{-3}\) , 1,000,000 iterations). The loss function for CBAM-GAN combined L1 loss, perceptual loss, and GAN loss with weights 1, 1, 0.1. To evaluate parameter sensitivity, a weight sensitivity analysis was performed: experiments were conducted with learning rates \(1 \times 10^{-3}\) / \(3 \times 10^{-3}\) , batch sizes 32/64, and loss weight combinations 1, 0.5, 0.1/0.5, 1, 0.2, analyzing their impact on PSNR, SSIM, and inference time to validate the robustness of the optimal configuration. Effectiveness and generalization analysis of SDGAN To comprehensively evaluate the perceptual quality of super-resolved (SR) remote sensing images, this study uses traditional objective metrics (PSNR, SSIM) with two auxiliary perceptual metrics– AG (Accuracy Grade) and NIQE (Natural Image Quality Evaluator) . AG is a reference-based metric (requiring real HR images) that quantifies “detail sharpness and structural integrity” via edge gradient consistency and texture similarity (range: 0–10; higher = better detail restoration, aligned with human perception). NIQE is a no-reference metric (no HR images needed) that assesses naturalness by comparing SR features to a natural image library (range: 0–10; lower = fewer artifacts, critical for land-use classification). AG and NIQE address PSNR/SSIM’s pixel-error bias (e.g., over-smoothed textures with high PSNR but poor visual quality), ensure edge integrity for ground object recognition, detect interpretation-interfering artifacts, and cover reference/no-reference scenarios, enhancing evaluation comprehensiveness. From Mean Opinion Score (MOS, a human perceptual metric), Real-ESRGAN and CBAM-GAN generate the highest-quality images (visually closest to original HR images), while bicubic interpolation performs worst. SRGAN and Real-ESRGAN have similar visual performance, but Real-ESRGAN outperforms in texture structure via a U-Net discriminator with instance normalization. For comprehensive and targeted comparisons, selected baselines cover key remote sensing SR technical routes: 1) SRCNN (classic CNN-based benchmark) – foundational for early remote sensing SR with pixel-wise loss; 2) SRGAN (pioneering GAN-based method) – first to introduce perceptual loss, shaping subsequent GAN-based SR; 3) Real-ESRGAN – optimized for real-world degradations (e.g., atmospheric interference), excelling in complex scene artifact suppression and widely used in practice; 4) BIPNet/CBAM-GAN (recent advanced methods) – BIPNet with superior PSNR/SSIM, CBAM-GAN enhancing remote sensing feature extraction via attention; 5) Bicubic interpolation – traditional non-deep learning baseline to highlight deep learning advantages. Quantitative Analysis: The proposed SDGAN is evaluated at \(\times 4\) scale on datasets covering 21 scenes (e.g., agricultural areas, airplanes, buildings). As shown in Table 4 , CBAM-GAN and BIPNet have slightly better PSNR/SSIM than SDGAN for some categories–likely due to GAN-based methods’ lower numerical metrics despite better subjective visual results. Overall, SDGAN achieves the highest PSNR/SSIM among CNN/GAN-based methods, with consistent performance across scenes, validating its generalization capability. Table 4 Comparison of PSNR and SSIM results for selected different category scenarios in the dataset. Full size table As shown in Fig. 7 , traditional deep learning-based methods like SRCNN reveal partial texture details but suffer from blurred contours due to inadequate global optimization and feature utilization. Emerging methods such as BIPNet achieve strong PSNR/SSIM scores yet produce overly smooth results lacking fine textures, while SRGAN and Real-ESRGAN enhance contour sharpness via adversarial learning but introduce unrealistic artifacts. Notably, SDGAN uniquely reproduces precise stripe textures in airport scenes and reliable building contours in architectural scenarios–capabilities absent in other methods. These visual and quantitative advancements fully validate the effectiveness of fusing adversarial learning with a super-dense residual framework and attention U-Net discriminator. Fig. 7 Full size image Super-resolution reconstruction results on different scenes in the dataset, scale factor 4. Experiments were conducted on multiple scenes of remote sensing images from the dataset to deeply demonstrate the significant differences in reconstruction performance (in terms of AG and NIQE metrics) between the proposed model and several representative baselines across a series of different scenes (covering from Scene 1 to Scene 21). Fig. 8 Full size image Super-resolution reconstruction results on different scenes in the dataset, scale factor 4. Figures 7 and 9 further validate SDGAN’s superiority in perceptual quality: SDGAN achieves the highest AG scores across most categories, indicating enhanced texture sharpness, edge clarity, and structural integrity—key for remote sensing scene interpretation. Meanwhile, its consistently lower NIQE scores confirm effective artifact reduction , a critical improvement for land-use classification tasks. These results directly attribute to the super-dense residual block’s ability to refine high-frequency details, demonstrating SDGAN’s dual strengths in visual naturalness and reconstruction reliability.enhancing the natural appearance of images, and enriching the overall visual experience. Fig. 9 Full size image Super-resolution reconstruction results on different scenes in the dataset, scale factor 4. Table 5 present the average performance results of various metrics under different scale factors (x2, x3, and x4). Observing the data in Table 5 , it is evident that regardless of whether traditional convolutional neural network technologies (e.g., SRCNN) or techniques utilizing generative adversarial networks (such as SRGAN) are used, their performances fall short compared to the Super-Dense Generative Adversarial Network (SDGAN) proposed in this study. Taking 4x magnified images as an example, SDGAN achieved significant improvements in PSNR by approximately 6.97%, 3.51%, and 1.89% compared to SRCNN, Real-ESRGAN, and BIPNet, respectively. In terms of SSIM, SDGAN showed notable enhancements of about 11.55%, 5.21%, and 3.36%, respectively. Table 5 Comparison of average PSNR and SSIM results for scale factors of 2, 3, and 4 on different datasets. Full size table The AG metric distribution across all categories (as is show in Fig. 8 ) further indicates that the average values of AG and NIQE also demonstrate the substantial progress brought about by SDGAN. Specifically, compared to BIPNet, SDGAN achieved notable improvements in AG scores across three different datasets, with increases of \(9.42\%\) , \(8.12\%\) , and \(6.20\%\) respectively. In terms of the NIQE metric, SDGAN managed to achieve an average reduction of \(6.55\%\) , \(7.34\%\) , and \(7.19\%\) respectively. These significant improvements not only highlight SDGAN’s capability in enhancing image quality, but also objectively demonstrate the model’s efficiency and effectiveness in terms of evaluation metrics. The performance gains indicate that SDGAN excels in capturing image details, sharpening edges, and improving the overall natural appearance of images. In particular, the improvement in AG scores highlights SDGAN’s advantage in enhancing image texture and edge details, while the reduction in NIQE scores further confirms its effectiveness in improving image naturalness and reducing artifacts and noise. Effectiveness experiment of the super-dense residual block (SDRB) While PSNR and SSIM metrics consistently improve with depth, the marginal gains diminish after \(N=6\) , where AG metric increases steadily (indicating enhanced detail sharpness) and NIQE values decrease significantly (reflecting improved visual quality). These findings highlight the trade-off between performance enhancement and computational efficiency, leading to the selection of \(N=6\) as the optimal configuration in the generator network. To ensure feature consistency, a \(3{\times }3\) convolutional layer with 54 output channels and one-pixel zero padding is applied before the first SDRB, while each block maintains fixed 64 feature maps to balance efficiency and reconstruction capacity. In remote sensing image super-resolution, GANs often introduce artifacts such as jagged edges, halos, or unnatural texture distortions during reconstruction. This study employs a comprehensive evaluation framework combining high-resolution (HR) ground-truth images, super-resolved (SR) outputs, residual maps, and distribution analysis to assess artifact suppression capabilities. Three methods—SRCNN, SRGAN, and SDGAN—are compared using a designed pixel mapping technique to distinguish artifacts from genuine details. Combined with the pixel mapping-based artifact analysis (As is show Fig. 10 ), the absolute residual \(|R|\) between HR and SR images visually reveals discrepancies, while the preliminary mapping \(M\) based on local residuals quantifies artifact distribution. The results demonstrate that SDGAN effectively suppresses pseudo-features while preserving authentic image structures, outperforming conventional methods in maintaining natural spatial coherence and spectral fidelity in remote sensing applications. Performance analysis of attention U-Net with dual discriminators To validate the effectiveness of the attention U-Net discriminator, experiments were conducted on three remote sensing datasets (UCMerced-LandUse, WHU-RS19, AID) using an identical baseline generator network for super-resolution (SR) image generation. The Fréchet Inception Distance (FID) and Inception Score (IS) metrics were employed to evaluate discriminative performance. Fig. 10 Full size image Super-resolution reconstruction results on different scenes in the dataset, scale factor 4. As shown in Table 6 , the attention U-Net discriminator achieved FID scores of 13.48, 15.03, and 11.90 across the three datasets, demonstrating improvements of 3.28, 2.7, and 2.65 over the baseline VGG16 discriminator. This architecture also achieves superior Inception Score (IS) values (7.02/9.29/12.32 vs. 5.46/8.77/11.07), establishing unprecedented state-of-the-art performance. These results confirm that the attention U-Net discriminator not only generates photo-realistic SR outputs but also maintains robust generalization across heterogeneous remote sensing datasets. Table 6 Average FID and IS scores during training for different datasets. Full size table Table 7 Comparison of running times on two datasets with a scale factor of 4. Full size table To verify the effectiveness of the attention U-Net discriminator module, this subsection conducts experiments on the UCMerced-LandUse, WHU-RS19, and AID datasets. The comparison is made between a conventional VGG16 discriminator and the proposed attention U-Net discriminator. A baseline-identical generator network is employed to generate super-resolution (SR) images, and the FID and IS metrics are specifically used to evaluate the performance of the generated models. As shown in Table 6 , the attention U-Net discriminator achieves FID scores of 13.48, 15.03, and 11.90 on the three datasets respectively – demonstrating substantial improvements of 3.28, 2.7, and 2.65 over the VGG baseline. This architecture also shows significant enhancement in Inception Score (IS), with values increasing from 5.46/8.77/11.07 to 7.02/9.29/12.32. These results establish state-of-the-art performance across all datasets, confirming the attention U-Net’s dual advantages of generating photo-realistic outputs and maintaining cross-dataset generalization. We evaluates computational efficiency through model complexity comparisons under consistent \(1200{\times }1200\) pixel output dimensions ( \(315\) / \(285\) test images). As presented in Table 7 , metrics include total training time (“Time”) and single-image average processing time (“Avg”). Table 8 Ablation experiment results of dual-scale discriminator. Full size table The proposed SDGAN model achieves superior performance with optimized efficiency: Compared to the CBAM-GAN approach (Chapter 3), which increased network complexity for feature representation enhancement, SDGAN employs a streamlined generator network. This simplification reduces average time complexity by 21.72% and 14.47% on the two test datasets while preserving output quality, demonstrating effective balance between performance and computational cost. This ablation study utilizes the WHU-RS19 remote sensing dataset (19 categories) to evaluate SDGAN’s super-resolution performance, generalization capability, and module contributions. The model’s superiority stems from two key components: the Super-Dense Residual Block (SDRB) replacing RRDB and the dual-branch Attention U-Net discriminator. Compared to standard U-Net’s uniform pixel weighting, the single-discriminator Attention U-Net prioritizes edge regions over ordinary pixels, while the dual-discriminator variant further enhances multi-scale feature capture by processing both original and downsampled images. As shown in Fig.  11 , the dual design enables simultaneous reconstruction of global structures and fine textures, achieving consistent excellence across all 19 categories. Quantitative analysis (Table  7 ) reveals that integrating SDRB into the Real-ESRGAN baseline improves PSNR/SSIM/AG by 8.73%/3.05%/4.73% with 15.32% NIQE reduction. Adding the single-discriminator Attention U-Net further boosts these metrics to 10.42%/3.72%/7.30% (NIQE: −16.33%). The dual-discriminator configuration– the core innovation of SDGAN– achieves state-of-the-art results: 12.67% PSNR improvement, 4.29% SSIM gain, 8.28% AG increase, and 17.17% NIQE reduction (final NIQE: 4.92), which is also reflected in Table  8 by the dual-discriminator variant’s optimal values across all evaluation metrics. These results demonstrate that the dual-branch architecture effectively captures multi-scale details, enhances structural similarity, and maintains natural image appearance, thereby optimizing both performance and generalization. Experimental results Extensive experiments on UCMerced-LandUse, WHU-RS19, and AID datasets demonstrate that the proposed super-dense residual-based remote sensing image super-resolution method outperforms existing baseline approaches. The SDRB ablation study confirms that optimal SDRB configurations reduce GAN-generated artifacts while enhancing super-resolution performance. The Attention U-Net discriminator generates high-quality, realistic images and improves model generalization. Table  6 quantifies module contributions: integrating SDRB into the baseline improves PSNR/SSIM/AG by 8.73%/3.05%/4.73% with 15.32% NIQE reduction. Fig. 11 Full size image Super-resolution reconstruction results on different scenes in the dataset, scale factor 4. Further adoption of single/multi-discriminator Attention U-Net architectures achieves progressive enhancements, with the dual-discriminator configuration attaining state-of-the-art results (12.67% PSNR improvement, 17.17% NIQE reduction). For \(\times 4\) magnification, SDGAN consistently outperforms baselines across all datasets—UCMerced-LandUse shows 0.82/0.013/1.034 improvements in PSNR/SSIM/AG (NIQE: −0.275), WHU-RS19 achieves 0.21/0.04/0.872 gains (NIQE: −0.839), and AID demonstrates 0.78/0.036/0.664 enhancements (NIQE: −0.311). The lightweight discriminator design further reduces computational complexity by 21.72–14.67 %, proving SDGAN’s efficiency in multi-scale, multi-category remote sensing applications. To further highlight SDGAN’s superiority in remote sensing super-resolution, this section discusses the limitations of representative GAN-based baselines (SRGAN and Real-ESRGAN) in complex scenarios, complementing quantitative comparisons. SRGAN, a pioneering GAN-based SR method, struggles with remote sensing-specific demands: it generates unrealistic artifacts in complex textures (e.g., interleaved pipelines, crisscrossing irrigation channels) due to inadequate multi-scale feature fusion, and its single-scale discriminator neglects global structural coherence (e.g., discontinuous river networks) while overemphasizing local details. Additionally, its natural image-optimized perceptual loss fails to preserve critical spectral and spatial fidelity for remote sensing tasks like land-use classification. Real-ESRGAN improves real-world degradation adaptation but still faces bottlenecks: it over-smooths fine-grained details (e.g., sparse vegetation, small communication towers) due to redundant multi-scale feature integration in RRDBs, and its generic U-Net discriminator lacks targeted prioritization of geographic key features (e.g., road edges, land-use boundaries). In multi-scale scenes (e.g., urban-suburban mixes), it fails to balance large-scale structure and small-detail restoration. In contrast, SDGAN addresses these limitations through targeted designs: SDRB’s 2D matrix convolution kernels suppress artifacts and preserve authentic textures; dual Attention-U-Net discriminators balance local details and global coherence; and Charbonnier-adversarial loss optimizes remote sensing-specific fidelity. Experiments verify SDGAN outperforms Real-ESRGAN by 1.89–3.51% in PSNR and 3.36–5.21% in SSIM, avoiding over-smoothing and artifacts in complex scenes. Conclusion To address challenges in existing remote sensing image super-resolution methods–including high complexity, resource consumption, poor generalization, and edge/detail degradation–this study proposes SDGAN, a lightweight framework combining Super-Dense Residual Blocks (SDRB) and dual Attention U-Net discriminators. The generator employs SDRB for enhanced feature extraction, mitigating information loss in dense connections to suppress artifacts. The discriminator integrates lightweight dual Attention U-Net branches to restore multi-scale texture details while reducing computational cost. Comparative experiments against SRGAN, Real-ESRGAN, BIPNet, and CBAM-GAN demonstrate SDGAN’s superior generalization across multi-category/multi-scale images, particularly in texture/fine-detail reconstruction. Computational complexity reductions of 21.72% and 14.67% on two datasets validate its efficiency, establishing SDGAN as a state-of-the-art solution for resource-constrained remote sensing super-resolution tasks. Future research directions can be expanded to further improve the framework’s practicality and versatility: First, exploring SDGAN’s adaptability to more complex remote sensing image degradations (e.g., Gaussian noise, salt-and-pepper noise, haze, and motion blur) by introducing degradation-specific feature enhancement modules and optimizing loss functions, to meet the needs of real-world scenarios with diverse image quality issues. Second, extending the model to handle multi-modal remote sensing data (e.g., hyperspectral, thermal infrared, and synthetic aperture radar (SAR) images) by adjusting the SDRB’s convolution kernel design and discriminator feature adaptation mechanisms, enabling cross-modal super-resolution reconstruction. Third, investigating the deployment of SDGAN on edge computing devices (e.g., UAV-mounted processors) by further compressing the model through techniques such as quantization and pruning, while maintaining reconstruction performance, to support real-time remote sensing data processing in field operations. Additionally, fusing SDGAN with downstream tasks (e.g., land-use classification and object detection) to build an end-to-end integrated framework, which can enhance the practical value of super-resolution results in remote sensing applications. 
+ 
+ 
+
+ 
+ Data availability 
+ 
+ Dataset Name: UCMerced-LandUse; Official Link: https://aistudio.baidu.com/datasetdetail/51628 ; Dataset Name: WHU-RS19 (i.e., SIRI-WHU Dataset); Official Link: https://hyper.ai/datasets/5437 ; Dataset Name: AID Dataset; Official Link: https://hyper.ai/cn/datasets/5446 ; Number of Categories: 30; Total Number of Images: 10,000; 
+ References Wang, D. et al. Frequency-to-spectrum mapping GAN for semisupervised hyperspectral anomaly detection. CAAI Trans. Intell. Technol. 8 (4), 1258–1273 (2023). Article  
+ 
+ Google Scholar  
+ Wang, D. et al. Global feature-injected blind-spot network for hyperspectral anomaly detection. IEEE Geosci. Remote. Sens. Lett. 21 , 5509305 (2024). Article  
+ 
+ Google Scholar  
+ Wang, S. et al. Cross-Domain Detection Transformer with Multi-view Adaptive Feature Alignment in Remote Sensing Imagery’. In: 2024 IEEE International Conference on Signal, Information and Data Processing (ICSIDP) 1–5 (Zhuhai, China, 2024) https://doi.org/10.1109/ICSIDP62679.2024.10868768 . Xie, H. et al. Super resolution for remote sensing images via improved residual network. International Conference on Mechanical, Control and Computer Engineering 22952298 (2020). Pan, Z. et al. Super-resolution of single remote sensing image based on residual dense back projection networks. IEEE Trans. Geosci. Remote Sens. 57 (10), 7918–7933 (2019). Article  
+ ADS  
+ 
+ Google Scholar  
+ Li, J. et al. Lightweight GAN with cross-scale feature fusion for remote sensing image super-resolution. IEEE Trans. Geosci. Remote Sens. 62 , 5509306 (2024). 
+ Google Scholar  
+ Wang, H. et al. Super-resolution reconstruction of remote sensing images for land-use classification: A multi-scale attention approach. J. Appl. Geogr. 169 , 103950 (2024). 
+ Google Scholar  
+ Chen, L. et al. Efficient super-resolution for UAV-borne remote sensing images via adaptive residual blocks. Int. J. Remote Sens. 45 (12), 4123–4145 (2024). 
+ Google Scholar  
+ Goodfellow, I. et al. Generative adversarial networks. Commun. ACM 63 (11), 139–144 (2020). Article  
+ MathSciNet  
+ 
+ Google Scholar  
+ Ledig, C. et al. Photo-realistic single image super-resolution using a generative adversarial network. IEEE Conference on Computer Vision and Pattern Recognition 4681–4690 (2017). Jiang, K. et al. Edge-enhanced GAN for remote sensing image super resolution. IEEE Trans. Geosci. Remote Sens. 57 (8), 5799–5812 (2019). Article  
+ ADS  
+ 
+ Google Scholar  
+ Mnih, V., Heess, N. & Graves, A. Recurrent models of visual attention. Adv. Neural Inf. Process. Syst. 27 , 2204–2212 (2014). 
+ Google Scholar  
+ Wu, H. et al. Multi-grained attention networks for single image super-resolution. IEEE Trans. Circuits Syst. Video Technol 31 (2), 512–522 (2020). Article  
+ 
+ Google Scholar  
+ Wang, H. et al. TAGAN: Texture and attention guided generative adversarial network for image super resolution. IEEE International Symposium on Circuits and Systems 1–5 (2022). He, K. et al. Deep residual learning for image recognition. IEEE Conference on Computer Vision and Pattern Recognition 770–778 (2016). Zhang, Y. et al. Residual dense network for image super-resolution. IEEE Conference on Computer Vision and Pattern Recognition 2472–2481 (2018). Huan, H. et al. End-to-end super-resolution for remote-sensing images using an improved multi-scale residual network. Remote Sens. 13 (4), 666 (2021). Article  
+ ADS  
+ 
+ Google Scholar  
+ Huynh-Thu, Q. & Ghanbari, M. Scope of validity of PSNR in image/video quality assessment. Electron. Lett. 44 (13), 800–801 (2008). Article  
+ ADS  
+ 
+ Google Scholar  
+ Wang, Y. et al. Multiresolution Mixture Generative Adversarial Network For Image Super-Resolution. IEEE International Conference on Multimedia and Expo 1–6 (2020). Sajjadi, M. S. M., Scholkopf, B. & Hirsch, M. Enhancenet: Single image super-resolution through automated texture synthesis. IEEE International Conference on Computer Vision 4491–4500 (2017). Park, S. J. et al. Srfeat: Single image super-resolution with feature discrimination. European Conference on Computer Vision 439–455 (2018). Wang, X. et al. Esrgan: Enhanced super-resolution generative adversarial networks. European Conference on Computer Vision 63–79 (2018). Wang, X. et al. Real-esrgan: Training real-world blind super-resolution with pure synthetic data. IEEE International Conference on Computer Vision 1905–1914 (2021). Gong, Y. et al. Enlighten-GAN for super resolution reconstruction in mid-resolution remote sensing images. Remote Sens. 13 (6), 1104–1120 (2021). Article  
+ ADS  
+ 
+ Google Scholar  
+ Wu, H., Zhang, L. & Ma, J. Remote sensing image super-resolution via saliency-guided feedback GANs. IEEE Trans. Geosci. Remote Sens. 60 , 1–16 (2020). Article  
+ 
+ Google Scholar  
+ Lei, S., Shi, Z. & Zou, Z. Coupled adversarial training for remote sensing image super-resolution. IEEE Trans. Geosci. Remote Sens. 58 (5), 3633–3643 (2019). Article  
+ ADS  
+ 
+ Google Scholar  
+ Raghavan, J. & Ahmadi, M. Counterfactual attention for facial image super-resolution. International Symposium on Signals, Circuits and Systems 1–4 (2023). Chen, R. & Zhang, Y. Learning dynamic generative attention for single image super-resolution. IEEE Trans. Circuits Syst. Video Technol. 32 (12), 8368–8382 (2022). Article  
+ 
+ Google Scholar  
+ Zhang, P. & Lam, E. Y. From local to global: Efficient dual attention mechanism for single image super-resolution. IEEE Access 9 , 114957–114964 (2021). Article  
+ 
+ Google Scholar  
+ Zhu, X. et al. Lightweight image super-resolution with expectation-maximization attention mechanism. IEEE Trans. Circuits Syst. Video Technol. 32 (3), 1273–1284 (2021). Article  
+ 
+ Google Scholar  
+ Lu, E. & Hu, X. Image super-resolution via channel attention and spatial attention. Appl. Intell. 52 (2), 2260–2268 (2022). Article  
+ MathSciNet  
+ 
+ Google Scholar  
+ Huo, D., Wang, R. &amp; Ding, J. Attention-based gan for single image super-resolution. Image and Graphics Technologies and Applications 360–369 (2019). Lu, E. & Hu, X. Image super-resolution via channel attention and spatial attention. Appl. Intell. 52 (2), 2260–2268 (2022). Article  
+ MathSciNet  
+ 
+ Google Scholar  
+ Nguyen, T., Hoang, H., & Yoo, C. D. GDCA: GAN-based single image super resolution with dual discriminators and channel attention. arXiv preprint arXiv:2111.05014 (2021). Liu, B. & Chen, J. A super resolution algorithm based on attention mechanism and srgan network. IEEE Access 9 , 139138–139145 (2021). Article  
+ 
+ Google Scholar  
+ Wang, W. et al. Video super-resolution via residual learning. IEEE Access 6 , 23767–23777 (2018). Article  
+ 
+ Google Scholar  
+ Esmaeilzehi, A., Ahmad, M. O. & Swamy, M. N. S. SRNMSM: A deep light-weight image super resolution network using multi-scale spatial and morphological feature generating residual blocks. IEEE Trans. Broadcast. 68 (1), 58–68 (2021). Article  
+ ADS  
+ 
+ Google Scholar  
+ Zhang, X. et al. CT super-resolution using multiple dense residual block based GAN. Signal Image Video Process. 15 , 725–733 (2021). Article  
+ CAS  
+ 
+ Google Scholar  
+ Download references Funding This work was supported by the Key Science and Technology Special Program of Yunnan Province, China (Grant/Award Number: 202202AF080003). The funder had no role in the design of the study; in the collection, analyses, or interpretation of data; in the writing of the manuscript, or in the decision to publish the results. Author information Authors and Affiliations College of Computer Science and Software Engineering, Hohai University, Nanjing, China Longbao Wang, LiSheng Liu & Qing Yu Key Laboratory of Water Big Data Technology of Ministry of Water Resources, Hohai University, Nanjing, China Longbao Wang School of Mechanical Engineering, Jiangxi University of Water Resources and Electric Power, Nanchang, China Dandan Yuan Authors Longbao Wang View author publications Search author on: PubMed   Google Scholar LiSheng Liu View author publications Search author on: PubMed   Google Scholar Qing Yu View author publications Search author on: PubMed   Google Scholar Dandan Yuan View author publications Search author on: PubMed   Google Scholar Contributions (L.W.): As the corresponding author, he led the research project’s design and coordination, proposed the SDGAN core framework, oversaw manuscript writing and revision, and managed journal communication.(L.L.S.): He optimized the SDRB’s 2D convolution kernel layout, derived related formulas, assisted with UCMerced-LandUse data preprocessing, and contributed to the “Generator Network with Super-Dense Residual Connections” section.(Y.Q.): He developed the attention U-Net dual discriminator and optimized loss functions, led experiments on WHU-RS19 and AID datasets, analyzed metrics like PSNR and SSIM, and helped write the “Discriminators” and “Experiments” sections.(Y.D.D.): She created experimental result visualizations (e.g., architecture and effect comparison diagrams), assisted in verifying model computational efficiency, and polished the manuscript’s text.All authors discussed the research plan, reviewed the final manuscript, and ensured data authenticity and research rigor. Corresponding author Correspondence to
+ Longbao Wang . Ethics declarations 
+ 
+ 
+ Competing interests 
+ The authors declare that they have no competing interests. 
+ 
+ Additional information Publisher’s note Springer Nature remains neutral with regard to jurisdictional claims in published maps and institutional affiliations. Rights and permissions 
+ Open Access This article is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License, which permits any non-commercial use, sharing, distribution and reproduction in any medium or format, as long as you give appropriate credit to the original author(s) and the source, provide a link to the Creative Commons licence, and indicate if you modified the licensed material. You do not have permission under this licence to share adapted material derived from this article or parts of it. The images or other third party material in this article are included in the article’s Creative Commons licence, unless indicated otherwise in a credit line to the material. If material is not included in the article’s Creative Commons licence and your intended use is not permitted by statutory regulation or exceeds the permitted use, you will need to obtain permission directly from the copyright holder. To view a copy of this licence, visit http://creativecommons.org/licenses/by-nc-nd/4.0/ . 
+ Reprints and permissions About this article Cite this article Wang, L., Liu, L., Yu, Q. et al. Generative adversarial network-based super-resolution reconstruction of remote sensing images.
+ Sci Rep 16 , 11971 (2026). https://doi.org/10.1038/s41598-026-41832-5 Download citation Received : 24 September 2025 Accepted : 23 February 2026 Published : 04 March 2026 Version of record : 10 April 2026 DOI : https://doi.org/10.1038/s41598-026-41832-5 Share this article Anyone you share the following link with will be able to read this content: Get shareable link Sorry, a shareable link is not currently available for this article. Copy shareable link to clipboard 
+ Provided by the Springer Nature SharedIt content-sharing initiative
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ Download PDF 
+ 
+ 
+ 
+ 
+
+ 
+ 
+
+
+
+ 
+
+ 
+ 
+ 
+ 
+ Associated content 
+ 
+ 
+ 
+ 
+ Collection 
+ 
+ Remote sensing and forests 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Advertisement 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+
+ 
+
+
+
+
+ 
+ 
+ 
+ Explore content 
+ 
+ 
+ 
+ 
+ 
+ Research articles
+ 
+ 
+ 
+ 
+ 
+ News & Comment
+ 
+ 
+ 
+ 
+ 
+ Collections
+ 
+ 
+ 
+ 
+ 
+ Subjects
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Follow us on Facebook
+ 
+ 
+ 
+ 
+ 
+ 
+ Follow us on X
+ 
+ 
+ 
+ 
+ 
+ 
+ Sign up for alerts 
+ 
+ 
+ 
+ 
+ 
+ 
+ RSS feed 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ About the journal 
+ 
+ 
+ 
+ 
+ About Scientific Reports
+ 
+ 
+ 
+ 
+ 
+ Contact
+ 
+ 
+ 
+ 
+ 
+ Editors
+ 
+ 
+ 
+ 
+ 
+ Journal policies
+ 
+ 
+ 
+ 
+ 
+ Guide to referees
+ 
+ 
+ 
+ 
+ 
+ Calls for Papers
+ 
+ 
+ 
+ 
+ 
+ Editor's Choice
+ 
+ 
+ 
+ 
+ 
+ Journal highlights
+ 
+ 
+ 
+ 
+ 
+ Open Access Fees and Funding
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ Publish with us 
+ 
+ 
+ 
+ 
+ For authors
+ 
+ 
+ 
+ 
+ 
+ 
+ Language editing services
+ 
+ 
+ 
+ 
+ 
+ Open access funding 
+ 
+ 
+ 
+ 
+ Submit manuscript 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+ 
+ 
+ Search 
+ 
+ Search articles by subject, keyword or author 
+ 
+ 
+ 
+ 
+ 
+ 
+ Show results from 
+ 
+ 
+ 
+ All journals 
+ This journal 
+ 
+ 
+ 
+ 
+ 
+ Search 
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+ Advanced search
+ 
+ 
+
+ Quick links 
+ 
+ Explore articles by subject 
+ Find a job 
+ Guide to authors 
+ Editorial policies 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ Scientific Reports
+ 
+ ( Sci Rep )
+ 
+ 
+ 
+ 
+ ISSN 2045-2322 (online)
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+ 
+ nature.com footer links 
+ 
+ 
+ 
+ About Nature Portfolio 
+ 
+ About us 
+ Press releases 
+ Press office 
+ Contact us 
+ 
+ 
+
+ 
+ Discover content 
+ 
+ Journals A-Z 
+ Articles by subject 
+ protocols.io 
+ Nature Index 
+ 
+ Nature Books 
+ 
+ 
+ 
+
+ 
+ Publishing policies 
+ 
+ Nature portfolio policies 
+ Open access 
+ 
+ 
+
+ 
+ Author & Researcher services 
+ 
+ Reprints & permissions 
+ Research data 
+ Language editing 
+ Scientific editing 
+ Nature Masterclasses 
+ Research Solutions 
+ 
+ 
+
+ 
+ Libraries & institutions 
+ 
+ Librarian service & tools 
+ Librarian portal 
+ Open research 
+ Recommend to library 
+ 
+ 
+
+ 
+ Advertising & partnerships 
+ 
+ Advertising 
+ Partnerships & Services 
+ Media kits 
+ 
+ Branded
+ content 
+ 
+ 
+
+ 
+ Professional development 
+ 
+ Nature Awards 
+ Nature Careers 
+ Nature 
+ Conferences 
+ 
+ 
+
+ 
+ Regional websites 
+ 
+ Nature Africa 
+ Nature China 
+ Nature India 
+ Nature Japan 
+ Nature Middle East 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ Privacy
+ Policy 
+ Use
+ of cookies 
+ 
+ Your privacy choices/Manage cookies
+ 
+ 
+ Legal
+ notice 
+ Accessibility
+ statement 
+ Terms & Conditions 
+ Your US state privacy rights 
+ 
+ 
+ 
+ 
+
+
+ 
+ 
+ 
+ 
+ © 2026 Springer Nature Limited 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+
+ 
+
+ 
+
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ Close banner 
+ 
+ 
+ 
+ 
+ 
+ 
+ Close 
+ 
+ 
+
+
+ 
+
+ 
+ 
+ 
+ Sign up for the Nature Briefing: AI and Robotics newsletter — what matters in AI and robotics research, free to your inbox weekly. 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+ Email address 
+
+ 
+ 
+ 
+ 
+ Sign up 
+ 
+
+ 
+ 
+ I agree my information will be processed in accordance with the Nature and Springer Nature Limited Privacy Policy . 
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ Close banner 
+ 
+ 
+ 
+ 
+ 
+ 
+ Close 
+ 
+ 
+
+
+ 
+ Get the most important science stories of the day, free in your inbox. 
+ Sign up for Nature Briefing: AI and Robotics
+ 
+ 
+
+ 
+
+ 
+
+
+
+
+
+
+ 
+ 

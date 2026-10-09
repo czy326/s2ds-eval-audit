@@ -1,0 +1,796 @@
+ 
+
+ Spatial-Frequency Gated Swin Transformer for Remote Sensing Single-Image Super-Resolution 
+
+ Report GitHub Issue 
+ × 
+
+ Title: 
+
+ Content selection saved. Describe the issue below: 
+
+ Description: 
+
+ Submit without GitHub 
+ Submit in GitHub 
+
+ arXiv is now an independent nonprofit! 
+ Learn more 
+ &times; 
+
+ Back to arXiv 
+
+ Why HTML? 
+
+ Report Issue 
+
+ Back to Abstract 
+
+ Download PDF 
+
+ Abstract 
+ 1 Introduction 
+ 2 Related Work 
+ 3 Proposed Method 
+ 
+ 3.1 Overall Architecture 
+ 3.2 Spatial-Frequency Gated Feed-Forward Network (SFG-FFN) 
+ 3.3 Swin Transformer Block with Spatial-Frequency Gated FFN 
+ 3.4 Training Objective 
+ 
+ 4 Experimental Setup 
+ 
+ 4.1 Dataset Preparation 
+ 4.2 LR Image Simulation for SpaceNet 
+ 4.3 Implementation Details 
+ 
+ 5 Results and Discussion 
+ 
+ 5.1 Quantitative Results 
+ 5.2 Ablation Study 
+ 5.3 Parameter and Complexity Analysis 
+ 5.4 Qualitative Analysis 
+ 5.5 Limitations 
+ 
+ 6 Conclusion 
+ References 
+
+ License: arXiv.org perpetual non-exclusive license
+
+arXiv:2605.09687v1 [cs.CV] 10 May 2026 
+
+ Spatial-Frequency Gated Swin Transformer for Remote Sensing Single-Image Super-Resolution 
+
+ Md Aminur Hossain
+ 
+ Affiliation:  Space Applications Centre, ISRO, Ahmedabad, India
+
+ Parekh Valkesh
+ 
+ Affiliation:  New L J Institute of Engineering and Technology, Ahmedabad, India
+
+ Ayush V. Patel
+ 
+ Affiliation:  Pandit Deendayal Energy University, Gandhinagar, India
+
+ Yogesh Jethani
+ 
+ Affiliation:  GLS University, Ahmedabad, India
+
+ Sanjay K. Singh
+ 
+ Affiliation:  Space Applications Centre, ISRO, Ahmedabad, India
+
+ Biplab Banerjee
+ 
+ Affiliation:  Centre of Studies in Resources Engineering, Indian Institute of Technology Bombay, India
+
+ Abstract 
+ 
+ Remote Sensing (RS) single-image super-resolution aims to reconstruct high-resolution imagery from low-resolution observations while preserving fine spatial structures. Recent Swin Transformer-based models, including Swin2SR, provide strong spatial context modeling through shifted-window self-attention, but their feed-forward networks remain generic channel-mixing modules and do not separate low-frequency structural content from high-frequency residual detail. To address this limitation, we propose SFG-SwinSR, a Spatial-Frequency Gated Swin Transformer for single-image super-resolution in remote sensing. SFG-SwinSR modifies the original Swin2SR attention block by replacing each transformer block’s standard feed-forward network with a lightweight Spatial-Frequency Gated Feed-Forward Network (SFG-FFN). The module estimates low-frequency content via a depthwise-blur branch, extracts high-frequency residuals by subtraction, refines them with a lightweight spatial branch, and adaptively injects detail through a bottleneck gate. Experiments on SpaceNet and SEN2VEN μ \mu S show that SFG-SwinSR improves reconstruction quality under the evaluated settings. On SpaceNet, it achieves 45.19 dB PSNR and 0.9852 SSIM, indicating effective enhancement of high-frequency details. This demonstrates that spatial-frequency transformation within the transformer feed-forward network improves detail reconstruction in RS super-resolution. 
+
+ Keywords:  Remote sensing super-resolution Swin Transformer spatial-frequency gating feed-forward network high-frequency detail recovery
+
+ 1 Introduction 
+
+ High-resolution remote sensing imagery is essential for accurate Earth observation, supporting applications such as urban mapping, precision agriculture, environmental monitoring, infrastructure analysis, and disaster management. Nevertheless, the spatial resolution of satellite images is limited by sensor characteristics, imaging optics, orbital geometry, atmospheric conditions, and sensor-induced artifacts such as stripe noise  [ 8 ] . These limitations, along with blur and downsampling, suppress high-frequency spatial details and degrade fine structures such as narrow roads, building outlines, field boundaries, and land-cover transitions. Therefore, recovering such fine spatial details through remote sensing single-image super-resolution (RS-SISR) remains an important and active research problem. Early deep learning approaches for RS-SISR predominantly relied on CNNs (Convolutional Neural Networks) [ 14 , 20 ] , but there is a current trend toward the use of transformer based architectures like Swin Transformer [ 23 , 11 , 21 ] because of their ability to capture long range dependencies efficiently. In addition, recent studies on real world RS-SISR emphasize the need for degradation aware training and robust benchmark design to allow the effective reconstruction of fine detail  [ 25 ] . 
+
+ In remote sensing imagery, high-frequency information is highly discriminative for object delineation and the preservation of land-cover boundaries. Accurate reconstruction of edges, textures, roads, rooftops, and field boundaries is therefore important for both visual quality and downstream analysis  [ 19 , 4 ] . However, although Transformer-based models improve contextual modeling, their feature transformation stages are typically implemented using generic feed-forward networks (FFNs). These FFNs do not explicitly distinguish between low-frequency structural content and high-frequency residual detail, which can limit fine-detail recovery in remote sensing super-resolution. 
+
+ To address this limitation, we propose a Spatial-Frequency Gated Swin Transformer (SFG-SwinSR). We have modified the Swin2SR  [ 2 ] self-attention block by replacing the standard FFN in each transformer block with a lightweight Spatial-Frequency Gated Feed-Forward Network (SFG-FFN) 1 1 
+ 1 
+
+ Code will be made available at: https://github.com/aminurhossain/SFG-SwinSR . The proposed module estimates low-frequency content using a depthwise blur operator, derives a high-frequency residual by subtraction, refines the residual through a lightweight spatial branch, and adaptively injects useful detail through a bottleneck gating mechanism. This localized architectural modification preserves the long-range dependency modeling capability of Swin2SR while introducing explicit spatial-frequency feature transformation inside the FFN. Experiments on SpaceNet and SEN2VEN μ \mu S test pairs show that SFG-SwinSR consistently outperforms the Swin2SR baseline and provides a modest but consistent gain over the strongest Swin2SR configuration under structure-aware supervision.
+The main contributions of this work are summarized as follows: 
+ 
+ 1. 
+ 
+ We propose a Spatial-Frequency Gated Feed-Forward Network (SFG-FFN) that separates low-frequency structural content and high-frequency residual detail inside Swin Transformer blocks for remote sensing super-resolution. 
+ 
+ 2. 
+ 
+ We introduce a lightweight residual-detail refinement and adaptive bottleneck gating mechanism that improves fine-detail reconstruction by modifying the original Swin2SR attention block. 
+ 
+ 3. 
+ 
+ We evaluate SFG-SwinSR against Swin2SR under multiple supervision settings and show consistent improvement over the L1-trained baseline and a modest gain over the strongest Swin2SR configuration. 
+
+ 2 Related Work 
+
+ CNN-based Image Super-Resolution: Single-image super-resolution (SR) has been widely explored using convolutional neural networks (CNNs). The seminal study of SRCNN [ 3 ] showed that end-to-end-trained mappings significantly surpass traditional interpolation methods. Later, models such as VDSR  [ 12 ] and EDSR  [ 16 ] leveraged deep network architectures and residual learning paradigms to enhance reconstruction performance. Further progress was made using RDN  [ 27 ] and RCAN [ 26 ] , which harnessed dense hierarchical reuse of features and channel attention, respectively. In particular, RCAN illustrated that the skip connection of rich low-frequency details via residual connections enables the network to dedicate more resources for modeling informative high-frequency details. This observation is
+closely related to the motivation of our proposed spatial-frequency feature transformation. As CNN models become highly successful, they inherently have limitations associated with their smaller receptive field sizes, limiting their effectiveness in detecting spatial dependencies at larger distances. In the case of satellite imagery, this is a critical issue to consider. 
+
+ Remote-Sensing Image Super-Resolution: The field of remote sensing SR has seen advancements through various deep learning models, from task-oriented pipelines to more advanced architectures. Various surveys have been carried out in this respect, which show that several challenges remain, namely issues associated with preserving textures, consistency of geometric features, and domain discrepancy between the synthetic degradation models used and the actual sensing process [ 5 , 19 ] . Some of the notable works in this regard involve a local-global fusion approach by Lei et al. [ 14 ] , the modified dual-luminance architecture introduced by Ren et al. [ 20 ] , the DSen2 method of Lanaras et al. [ 13 ] specifically designed for Sentinel-2 imagery, and SWCGAN [ 23 ] , an adversarial architecture based on Swin Transformer. 
+
+ Transformer-based Super-Resolution: As a solution to this problem, transformer networks have become popular recently for image restoration tasks because of the ability to learn both local and non-local interactions using shifted-window self-attention mechanisms introduced in the Swin Transformer architecture. As a result, SwinIR [ 15 ] and Swin2SR [ 2 ] architectures have set state-of-the-art benchmarks in the field of image restoration and super-resolution. Concerning transformer-based SR in the context of remote sensing, recent years have seen research along various lines of development, which include, but are not limited to, hybrid convolutional and transformer-based generator models [ 23 ] , real-world degradation-aware architectures such as KANet [ 4 ] , efficiency-oriented Swin models like ESTNet [ 11 ] , and more sophisticated alternatives like mixture-of-expert feed-forward layers [ 21 ] . Among the above-mentioned approaches, the Swin2SR architecture is of the greatest interest to our research, as it relies on the hierarchy of the Swin backbone and an efficient image restoration procedure. Nevertheless, the FFN in each transformer block is a standard two-layer MLP that does not account for frequency-based image degradation. 
+
+ Frequency-Aware Restoration: The reconstruction of high-frequency information like edges, textures, and fine structures is essential in the application domain of remote sensing. It is widely reported that the restoration of high-frequency information is an open problem under realistic sensor blur and aliasing [ 19 ] . To solve this problem, current works rely on perceptual losses, multi-branch refinement blocks, degradation-aware training processes [ 4 ] , or generative models trained on extensive datasets. In contrast, only a small number of works have attempted to inject frequency-aware inductive bias into the transformer FFN directly. Another motivation for learning frequency-aware features stems from traditional SR models such as RCAN [ 26 ] , which filter out dominant low-frequency information to focus on learning high-frequency residuals. In optical satellite imaging, degradation is mainly due to sensor blur, optical aberrations, and sampling effects. These observations motivate restoration models that incorporate frequency-aware inductive biases, even when the underlying degradation process is not explicitly modeled. 
+
+ Unlike existing methods that rely on attention refinement, SFG-SwinSR focuses on enhancing the Feed-Forward Network (FFN). We introduce a spatial frequency module that decomposes features via depthwise blurring, separating low-frequency structures from high-frequency residuals, which are then refined and gated. Our key innovation modifies the original Swin2SR attention block and improves detail recovery through FFN optimization. 
+
+ 3 Proposed Method 
+
+ 3.1 Overall Architecture 
+
+ Given a low-resolution remote sensing image I L ​ R I_{LR} , single-image super-resolution aims to learn a mapping (Eq.  1 ), that reconstructs high-frequency details while preserving large-scale structure and radiometric consistency. Our method builds on Swin2SR by modifying the feed-forward network (FFN) within each Swin Transformer block, explicitly separating low-frequency structure from the high-frequency detail. 
+
+ I ^ H ​ R = ℱ θ ​ ( I L ​ R ) , \hat{I}_{HR}=\mathcal{F}_{\theta}(I_{LR}), 
+ 
+ (1) 
+
+ Figure 1: Architecture of the proposed SFG-SwinSR. Each transformer block replaces the FFN with an SFG-FFN that performs low-pass estimation, high-frequency residual gating, and detail refinement for enhanced SR. 
+
+ The proposed SFG-SwinSR builds upon the Swin2SR framework for remote sensing single-image super-resolution. Given a low-resolution satellite image 𝐈 L ​ R ∈ ℝ B × b × H × W \mathbf{I}_{LR}\in\mathbb{R}^{B\times b\times H\times W} , the model generates a super-resolved output 𝐈 S ​ R ∈ ℝ B × b × s ​ H × s ​ W \mathbf{I}_{SR}\in\mathbb{R}^{B\times b\times sH\times sW} , where s = 2 s=2 denotes the upscaling factor and b b is the number of spectral bands ( b = 3 b=3 for SpaceNet and b = 4 b=4 for SEN2VEN μ \mu S). 
+
+ The full architecture pipeline shown in Figure  1 is composed of three major steps: a shallow convolutional embedding layer that projects the input data into a C C -dimensional feature space, followed by a deep feature extraction step that includes six Swin Transformer stages with each containing six transformer layers, and finally a pixel upsampling reconstruction head  [ 22 ] . The critical modification made in this paper is replacing the traditional two-layer multilayer perceptron feed-forward network in each Swin2SR transformer layer with the novel Spatial-Frequency Gated Feed-Forward Network (SFG-FFN) . 
+
+ 3.2 Spatial-Frequency Gated Feed-Forward Network (SFG-FFN) 
+
+ Given the input token sequence
+ 𝐱 ∈ ℝ B × H . W × C \mathbf{x}\in\mathbb{R}^{B\times H.W\times C} ,
+the module first applies a linear projection to expand the channel dimension using GELU (Gaussian Error Linear Unit) activation: 
+
+ 𝐳 = GELU ​ ( 𝐖 1 ​ 𝐱 + 𝐛 1 ) ∈ ℝ B × H . W × C h \mathbf{z}=\text{GELU}(\mathbf{W}_{1}\mathbf{x}+\mathbf{b}_{1})\in\mathbb{R}^{B\times H.W\times C_{h}} 
+ 
+ (2) 
+ 
+ where 𝐖 1 ∈ ℝ C × C h \mathbf{W}_{1}\in\mathbb{R}^{C\times C_{h}} and
+ C h = ⌊ C ⋅ r ⌋ C_{h}=\lfloor C\cdot r\rfloor is the hidden dimension determined by MLP expansion ratio r = 2.0 r=2.0 . With C = 180 C=180 , this gives C h = 360 C_{h}=360 . 
+
+ The extended token vector undergoes a transformation from its linear representation form to a 2D spatial feature map for the purpose of performing spatial convolutions as follows: 
+
+ 𝐅 = Reshape ​ ( 𝐳 ) ∈ ℝ B × C h × H × W \mathbf{F}=\text{Reshape}(\mathbf{z})\in\mathbb{R}^{B\times C_{h}\times H\times W} 
+ 
+ (3) 
+
+ The low-frequency component estimation process employs a depthwise convolution
+whose initial weights are equivalent to those of a uniform low-pass filter: 
+
+ 𝐅 L ​ F = DWConv k × k ​ ( 𝐅 ) , w i , j = 1 k 2 , k = 5 \mathbf{F}_{LF}=\text{DWConv}_{k\times k}(\mathbf{F}),\quad w_{i,j}=\frac{1}{k^{2}},\quad k=5 
+ 
+ (4) 
+ 
+ The kernel weights are initialized as w i , j = 1 / 25 w_{i,j}=1/25 for all i , j ∈ { 1 , … , 5 } i,j\in\{1,\ldots,5\} , providing a physically meaningful starting point that approximates an ideal low-pass filter  [ 6 ] while remaining trainable. 
+
+ The high-frequency residual is calculated through the difference between the input feature map and the estimated low-frequency component of the input feature map as follows: 
+
+ 𝐅 H ​ F = 𝐅 − 𝐅 L ​ F ∈ ℝ B × C h × H × W \mathbf{F}_{HF}=\mathbf{F}-\mathbf{F}_{LF}\in\mathbb{R}^{B\times C_{h}\times H\times W} 
+ 
+ (5) 
+
+ The high-frequency residual feature is then further improved by a light-weight spatial refinement branch as follows: 
+
+ 𝐅 ~ H ​ F = GELU ​ ( DWConv 3 × 3 ​ ( 𝐅 H ​ F ) ) ∈ ℝ B × C h × H × W \tilde{\mathbf{F}}_{HF}=\text{GELU}(\text{DWConv}_{3\times 3}(\mathbf{F}_{HF}))\in\mathbb{R}^{B\times C_{h}\times H\times W} 
+ 
+ (6) 
+
+ The adaptive bottleneck gate  [ 9 ] determines the level of influence of high-frequency details: 
+
+ 𝐆 = σ ⁡ ( 𝐖 g ​ 2 ⋅ GELU ​ ( 𝐖 g ​ 1 ⋅ 𝐅 ~ H ​ F ) ) ∈ ℝ B × C h × H × W \mathbf{G}=\sigma\left(\mathbf{W}_{g2}\cdot\text{GELU}(\mathbf{W}_{g1}\cdot\tilde{\mathbf{F}}_{HF})\right)\in\mathbb{R}^{B\times C_{h}\times H\times W} 
+ 
+ (7) 
+
+ where C g = max ⁡ ( C h / ρ ,  16 ) C_{g}=\max(C_{h}/\rho,\,16) with reduction
+factor ρ = 8 \rho=8   [ 9 ] , giving C g = 45 C_{g}=45 . 
+
+ High-frequency details from the gating process are added back to the original feature map  [ 7 ] , where ⊙ \odot denotes element-wise multiplication: 
+
+ 𝐅 o ​ u ​ t = 𝐅 + 𝐆 ⊙ 𝐅 ~ H ​ F \mathbf{F}_{out}=\mathbf{F}+\mathbf{G}\odot\tilde{\mathbf{F}}_{HF} 
+ 
+ (8) 
+
+ Then, the output feature map gets mapped back to the same channel space with dropout regularization  [ 17 ] : 
+
+ 𝐱 o ​ u ​ t = Dropout ​ ( 𝐖 2 ⋅ Reshape ​ ( 𝐅 o ​ u ​ t ) + 𝐛 2 ) \mathbf{x}_{out}=\text{Dropout}(\mathbf{W}_{2}\cdot\text{Reshape}(\mathbf{F}_{out})+\mathbf{b}_{2}) 
+ 
+ (9) 
+
+ 3.3 Swin Transformer Block with Spatial-Frequency Gated FFN 
+
+ Each Swin2SR transformer block performs cyclic shifts on the window-based multi-head self-attention (W-MSA) output, followed by a feed-forward transformation. For input tokens 𝐱 ∈ ℝ B × H ​ W × C \mathbf{x}\in\mathbb{R}^{B\times HW\times C} , the standard block computation is given by: 
+
+ 𝐱 ′ = 𝐱 + DropPath ​ ( LN 1 ​ ( W-MSA ​ ( 𝐱 ) ) ) \mathbf{x}^{\prime}=\mathbf{x}+\text{DropPath}(\text{LN}_{1}(\text{W-MSA}(\mathbf{x}))) 
+ 
+ (10) 
+
+ 𝐱 o ​ u ​ t = 𝐱 ′ + DropPath ​ ( LN 2 ​ ( SFG-FFN ​ ( 𝐱 ′ ) ) ) \mathbf{x}_{out}=\mathbf{x}^{\prime}+\text{DropPath}(\text{LN}_{2}(\text{SFG-FFN}(\mathbf{x}^{\prime}))) 
+ 
+ (11) 
+
+ Here, LN 1 \text{LN}_{1} and LN 2 \text{LN}_{2} denote layer normalization  [ 1 ] , and DropPath denotes stochastic depth regularization  [ 10 ] . The SFG-FFN replaces the standard feed-forward network in each block with a spatial-frequency gated module, enabling explicit separation of low-frequency structural content and high-frequency residual detail. 
+
+ 3.4 Training Objective 
+
+ The model is trained using a detail-guided composite loss, summarized in
+Table  1 , to jointly encourage pixel-level accuracy,
+structural fidelity, edge preservation, and frequency-domain consistency. The
+overall objective consists of four complementary components: pixel-wise L1 loss,
+SSIM loss, edge guidance loss, and frequency guidance loss. 
+
+ In our experiments, the weights are set to λ L ​ 1 = 1.0 \lambda_{L1}=1.0 , λ S ​ S ​ I ​ M = 0.1 \lambda_{SSIM}=0.1 , λ e ​ d ​ g ​ e = 0.1 \lambda_{edge}=0.1 , and λ f ​ r ​ e ​ q = 0.05 \lambda_{freq}=0.05 . Ablation studies confirm that incorporating all four terms yields the best performance, as the edge and frequency losses provide complementary structural and frequency-domain guidance, particularly beneficial for the proposed frequency-gated architecture on the SpaceNet and SEN2VEN μ \mu S datasets. 
+
+ Table 1: Detail-guided loss components. I ^ \hat{I} and I I denote the SR and HR images, ∇ \nabla is the spatial gradient operator, ℱ ⁡ ( ⋅ ) \mathcal{F}(\cdot) is the 2D Fourier transform, and λ L1 \lambda_{\text{L1}} , λ SSIM \lambda_{\text{SSIM}} , λ Edge \lambda_{\text{Edge}} , and λ Freq \lambda_{\text{Freq}} are weighting hyperparameters. 
+
+     Component     
+     Mathematical Formulation 
+
+    Pixel-wise (L1)    
+     ℒ L1 = 1 N ​ ∑ i = 1 N ‖ I ^ i − I i ‖ 1 \displaystyle\mathcal{L}_{\text{L1}}=\frac{1}{N}\sum_{i=1}^{N}\|\hat{I}_{i}-I_{i}\|_{1} 
+ 
+    Structural (SSIM)    
+     ℒ SSIM = 1 − SSIM ​ ( I ^ , I ) \displaystyle\mathcal{L}_{\text{SSIM}}=1-\text{SSIM}(\hat{I},I) 
+ 
+    Edge Guidance    
+     ℒ Edge = 1 N ​ ∑ i = 1 N ‖ ∇ I ^ i − ∇ I i ‖ 1 \displaystyle\mathcal{L}_{\text{Edge}}=\frac{1}{N}\sum_{i=1}^{N}\|\nabla\hat{I}_{i}-\nabla I_{i}\|_{1} 
+ 
+    Frequency Guidance    
+     ℒ Freq = 1 N ​ ∑ i = 1 N ‖ ℱ ⁡ ( I ^ i ) − ℱ ⁡ ( I i ) ‖ 1 \displaystyle\mathcal{L}_{\text{Freq}}=\frac{1}{N}\sum_{i=1}^{N}\|\mathcal{F}(\hat{I}_{i})-\mathcal{F}(I_{i})\|_{1} 
+ 
+     Total Objective     
+     ℒ Total = λ L ​ 1 ​ ℒ L1 + λ S ​ S ​ I ​ M ​ ℒ SSIM + λ e ​ d ​ g ​ e ​ ℒ Edge + λ f ​ r ​ e ​ q ​ ℒ Freq \displaystyle\mathcal{L}_{\text{Total}}=\lambda_{L1}\mathcal{L}_{\text{L1}}+\lambda_{SSIM}\mathcal{L}_{\text{SSIM}}+\lambda_{edge}\mathcal{L}_{\text{Edge}}+\lambda_{freq}\mathcal{L}_{\text{Freq}} 
+
+ 4 Experimental Setup 
+
+ 4.1 Dataset Preparation 
+
+ The proposed experimental setup employs two separate datasets to assess the performance in both simulated and realistic scenarios. 
+
+ SpaceNet (WorldView-2) . The main source of training data is the SpaceNet  [ 24 ] WorldView-2-derived
+orthorectified RGB product at approximately 30 cm spatial resolution. Given that the corresponding native low-resolution (LR) images are not provided in this dataset, the LR-HR image pairs are synthesized via the proposed degradation process outlined in Figure  2 . To conduct a robust experiment, the entire dataset is shuffled with a fixed random seed of 42. After removing fully black image pairs, we obtain 12,144 valid image pairs, comprising 10,261 training samples and 1,883 test samples. 
+
+ SEN2VEN μ \mu S Dataset . For evaluating generalization on actual cross-sensors data, we consider the SEN2VEN μ \mu S version 2 dataset  [ 18 ] . The SEN2VEN μ \mu S dataset comprises Sentinel-2 patches at resolutions of 10 m and 20 m, with their corresponding reference patches from the VEN μ \mu S satellite, acquired within a 30-minute window at 5 m resolution. In total, there are 132,955 patches present in the entire dataset; however, we randomly select subset of 20,000 images to optimize computational load. This subset is divided into 18,000 training images (10% for validation) and a fixed set of 2,000 images for final testing. 
+
+ During training, we extract random aligned spatial crops across both datasets. For SpaceNet, patch dimensions are set to 64 × 64 64\times 64 for LR and 128 × 128 128\times 128 for HR, corresponding to a 2 × 2\times scale factor. For SEN2VEN μ \mu S, we accommodate both 2 × 2\times and 4 × 4\times scale factors: 2 × 2\times super-resolution utilizes LR patches of 128 × 128 128\times 128 and HR patches of 256 × 256 256\times 256 , while 4 × 4\times super-resolution uses LR patches of 64 × 64 64\times 64 and HR patches of 256 × 256 256\times 256 . To isolate and objectively evaluate the structural representation capacity of the networks, no spatial data augmentations (such as flipping or rotation) are applied during training. 
+
+ 4.2 LR Image Simulation for SpaceNet 
+
+ Figure  2 shows a sensor-inspired degradation pipeline  [ 4 ] to synthesize low-resolution images from original high-resolution WorldView-2 imagery at 30 cm resolution, following standard single-image super-resolution protocols. A series of degradation steps that emulate the properties of the WorldView-2 sensor in order to obtain the realistic LR sample. Let the original high-resolution image be denoted by 𝐈 H ​ R \mathbf{I}_{HR} . The simulated low-resolution image 𝐈 L ​ R \mathbf{I}_{LR} is generated as: 
+
+ 𝐈 L ​ R = 𝒩 ⁡ ( 𝒟 ⁡ ( ℬ ⁡ ( 𝐈 H ​ R ) ) ) , \mathbf{I}_{LR}=\mathcal{N}\left(\mathcal{D}\left(\mathcal{B}(\mathbf{I}_{HR})\right)\right), 
+ 
+ (12) 
+
+ where ℬ ⁡ ( ⋅ ) \mathcal{B}(\cdot) denotes Gaussian blurring, 𝒟 ⁡ ( ⋅ ) \mathcal{D}(\cdot) denotes bicubic downsampling by a factor of two, and 𝒩 ⁡ ( ⋅ ) \mathcal{N}(\cdot) denotes the addition of zero-mean Gaussian noise. 
+
+ Figure 2: HR-to-LR simulation pipeline for synthetic SpaceNet pair generation. 
+
+ 4.3 Implementation Details 
+
+ Both Swin2SR and the proposed SFG-SwinSR are implemented in PyTorch and trained end-to-end on a single NVIDIA A100-PCIE-40GB GPU. Unless otherwise stated, we optimize all models using AdamW with an initial learning rate of 2 × 10 − 4 2\times 10^{-4} and weight decay of 1 × 10 − 4 1\times 10^{-4} . Training is conducted for 200 epochs with a batch size of 16 using a cosine annealing schedule (minimum learning rate of 1 × 10 − 6 1\times 10^{-6} ). For reproducibility, a fixed random seed of 42 is used for data shuffling and weight initialization. 
+
+ SFG-SwinSR adopts the Swin2SR backbone and modifies the feed-forward network (FFN) within each transformer block. The model is configured with window size 8, embedding dimension C = 180 C\!=\!180 , six stages with depths [ 6 , 6 , 6 , 6 , 6 , 6 ] [6,6,6,6,6,6] (36 blocks total), and six attention heads per block, with an MLP expansion ratio of r = 2.0 r\!=\!2.0 . In each block, the standard FFN is replaced by the proposed SFG-FFN, parameterized by a depthwise blur kernel size k = 5 k\!=\!5 and reduction ratio ρ = 8 \rho\!=\!8 . All other components like the shifted-window partitioning, and reconstruction head, are kept identical to Swin2SR to isolate the impact of the proposed frequency-gated FFN design. 
+
+ 5 Results and Discussion 
+
+ 5.1 Quantitative Results 
+
+ Experiments are evaluated on fixed test sets from SpaceNet and SEN2VEN μ \mu S. Table  2 compares the proposed SFG-SwinSR against Swin2SR and Swin2-MoSE under identical evaluation settings. On the SpaceNet dataset, SFG-SwinSR has the best overall performance with 45.19 dB PSNR, 0.9852 SSIM, and 0.0031 MAE. Compared to the Swin2SR baseline, the proposed method improves PSNR by +1.63 dB , increases SSIM by +0.0072 , and reduces MAE by approximately 25.81% . Compared with Swin2-MoSE, SFG-SwinSR achieves a +0.58 dB PSNR improvement while maintaining comparable structural similarity. These results indicate that the proposed spatial-frequency-gated FFN enhances detail reconstruction and feature refinement in remote sensing super-resolution. 
+
+ On the SEN2VEN μ \mu S benchmark, SFG-SwinSR achieves the highest PSNR values at both scaling factors, reaching 49.35 dB for × \times 2 super-resolution and 45.52 dB for × \times 4 super-resolution. The proposed model consistently outperforms Swin2SR by +0.92 dB and +1.4 dB PSNR at × \times 2 and × \times 4 scales, respectively. In terms of SSIM, SFG-SwinSR maintains competitive structural reconstruction quality while achieving lower MAE values, demonstrating improved pixel-level fidelity and cross-sensor generalization capability across different resolutions. 
+
+ Table 2: Quantitative comparison on SpaceNet and SEN2VEN μ \mu S. 
+
+ Dataset 
+ 
+ Model 
+ Params (M) 
+ PSNR (dB) 
+ SSIM 
+ MAE 
+
+ SpaceNet 
+ 
+ Bicubic 
+ - 
+ 39.61 
+ 0.9521 
+ 0.0048 
+
+ Swin2SR 
+ 12.09 
+ 43.56 
+ 0.9780 
+ 0.0039 
+
+ Swin2-MoSE 
+ 11.45 
+ 44.61 
+ 0.9816 
+ 0.0034 
+
+ SFG-SwinSR (ours) 
+ 13.73 
+ 45.19 
+ 0.9852 
+ 0.0031 
+
+ SEN2VEN μ \mu S x2 
+ 
+ Bicubic 
+ - 
+ 45.45 
+ 0.9867 
+ 0.0036 
+
+ Swin2SR 
+ 12.09 
+ 48.43 
+ 0.9932 
+ 0.0029 
+
+ Swin2-MoSE  [ 21 ] 
+ 11.45 
+ 48.97 
+ 0.9937 
+ 0.0026 
+
+ SFG-SwinSR (ours) 
+ 13.73 
+ 49.35 
+ 0.9949 
+ 0.0025 
+
+ SEN2VEN μ \mu S x4 
+ 
+ Bicubic 
+ - 
+ 41.96 
+ 0.9657 
+ 0.0059 
+
+ Swin2SR 
+ 12.09 
+ 44.12 
+ 0.9792 
+ 0.0049 
+
+ Swin2-MoSE  [ 21 ] 
+ 11.49 
+ 45.12 
+ 0.9806 
+ 0.0045 
+
+ SFG-SwinSR (ours) 
+ 13.73 
+ 45.52 
+ 0.9837 
+ 0.0042 
+
+ 5.2 Ablation Study 
+
+ Table  3 presents the ablation study of the proposed SFG-SwinSR framework and its loss components on the SpaceNet dataset. The baseline FFN backbone trained with only the L1 loss achieves 43.56 dB PSNR and 0.9780 SSIM. The incorporation of SSIM, structural, and frequency losses improves the structural information of the original network (SSIM = 0.9810), suggesting that multi-domain supervision can improve perceptual information. Next, by replacing the backbone from FFN to our proposed SFG-FFN, we observe improved performance. Although SFG-FFN backbone under L1 loss only achieves similar results compared to the previous models in terms of structure, combining L1 loss and SSIM loss significantly improves the network’s reconstruction performance (PSNR = 45.17 dB and SSIM = 0.9846), indicating the importance of structural guidance in the model. Eventually, the model using SFG-FFN backbone with all four losses produces the best results (PSNR = 45.19 dB, SSIM = 0.9852, and minimum MAE = 0.0031). 
+
+ Table 3: Ablation analysis of the proposed SFG-SwinSR architecture and loss supervision on the SpaceNet dataset. 
+
+ Backbone Model 
+ L1 
+ SSIM 
+ Edge 
+ Freq 
+ PSNR (dB) 
+ SSIM 
+ MAE 
+ 
+ FFN 
+ ✓ 
+
+ 43.56 
+ 0.9780 
+ 0.0039 
+ 
+ FFN 
+ ✓ 
+ ✓ 
+ ✓ 
+ ✓ 
+ 43.86 
+ 0.9810 
+ 0.0039 
+ 
+ SFG-FFN 
+ ✓ 
+
+ 42.63 
+ 0.9785 
+ 0.0049 
+ 
+ SFG-FFN 
+ ✓ 
+ ✓ 
+
+ 45.17 
+ 0.9846 
+ 0.0031 
+ 
+ SFG-FFN 
+ ✓ 
+ ✓ 
+ ✓ 
+ ✓ 
+ 45.19 
+ 0.9852 
+ 0.0031 
+
+ 5.3 Parameter and Complexity Analysis 
+
+ As shown from Table  2 , the proposed SFG-SwinSR comes with a small growth in terms of model complexity, with the total number of parameters growing up to 13.73M , as opposed to 12.09M and 11.45M from Swin2SR and Swin2-MoSE, correspondingly. Moreover, computational complexity grows to 117.23 GFLOPs compared to 104.06 GFLOPs and 101.98 GFLOPs for Swin2SR and Swin2-MoSE. The reason for that is the introduction of the proposed SFG-FFN modules, which comprise a depthwise blur branch, a spatial refinement branch, and an adaptive bottleneck gating function. The increase is modest because the additional operations are mainly depthwise convolutions and lightweight gating operations. This results in a consistent boost in performance metrics, with the final PSNR score +1.63 dB higher than that of Swin2SR on the SpaceNet dataset. 
+
+ Figure 3: Visual comparison on the SpaceNet dataset. From left to right: Ground Truth (HR), Bicubic, Swin2SR, Swin2-MoSE, and SFG-SwinSR . Green and red bounding boxes highlight the regions of interest for qualitative evaluation. 
+
+ 5.4 Qualitative Analysis 
+
+ The SFG-SwinSR model aims to enhance the recovery of fine structural details like road borders, roof contours, and repeating urban structures without causing unwanted noise enhancement in uniform areas (such as water surfaces and wide open spaces). The spatial-frequency gating module is introduced specifically for segregating and selectively amplifying high-frequency features, allowing for sharp yet stable reconstruction results. 
+
+ Visual inspections on the SpaceNet (Figure  3 ) and SEN2VEN μ \mu S (Figure  4 ) data confirm better building boundaries, finer edge detection, and less visual artifacts than those obtained by the base Swin2SR model. 
+
+ The experimental results support a focused and technically defensible conclusion. SFG-SwinSR with the total loss outperforms the original L1-trained Swin2SR baseline and slightly surpasses the strongest Swin2SR configuration (L1+SSIM) as well. The gain is modest but directionally consistent across all three metrics (PSNR, SSIM, and MAE). 
+
+ Figure 4: Visual comparison on the SEN2VEN μ \mu S dataset. From left to right: Ground Truth (HR), Bicubic, Swin2SR, Swin2-MoSE, and SFG-SwinSR . Bounding boxes highlight the regions of interest for qualitative evaluation. 
+
+ Two key conclusions emerge from these results. First, explicit spatial-frequency decomposition within the transformer FFN is a beneficial inductive bias for remote sensing SISR, providing a more targeted detail recovery mechanism than the FFN. Second, the architectural modification and loss function design are complementary: the full benefit of SFG-FFN is only realized under structured supervision, as plain L1 alone is insufficient for the frequency-gated FFN to converge effectively. The contribution is therefore a focused refinement of Swin2SR rather than a claim of broad architectural superiority. 
+
+ 5.5 Limitations 
+
+ This study has several limitations that warrant discussion. First, while SFG-SwinSR achieves a substantial improvement over the Swin2SR baseline (+1.63 dB on SpaceNet), the margin over Swin2-MoSE is more modest (+0.72 dB), suggesting that the frequency-gated FFN design may reach diminishing returns when competing against models that already incorporate architectural optimizations for remote sensing. Second, our evaluation relies exclusively on synthetic LR-HR degradation for SpaceNet; although the degradation pipeline approximates WorldView-2 sensor characteristics, it does not fully capture real-world atmospheric, geometric, and radiometric distortions present in operational scenarios. Third, although SFG-SwinSR achieves the best PSNR and SSIM on SEN2VEN μ \mu S under the evaluated settings, the evaluation is based on a randomly selected subset rather than the full dataset. Therefore, broader validation on the complete SEN2VEN μ \mu S benchmark and additional cross-sensor datasets is needed to further assess generalization. Fourth, we have randomly sampled a subset of 20,000 images from the full SEN2VEN μ \mu S dataset, and we have also used Version 2.0 of this dataset, which differs from [ 21 ] . 
+
+ 6 Conclusion 
+
+ This paper introduced SFG-SwinSR, a novel Spatial-Frequency Gated Swin Transformer designed for remote sensing image super-resolution. Our approach preserves the original Swin2SR attention mechanism while replacing its feed-forward network with a specialized spatial-frequency gated module that: (1) estimates low-frequency content via depthwise blurring, (2) extracts high-frequency residuals through subtraction, (3) refines these residuals using a lightweight spatial branch, and (4) adaptively reinjects details via bottleneck gating. 
+
+ Extensive experiments across two challenging benchmarks demonstrate SFG-SwinSR’s effectiveness. On SpaceNet/WorldView-2 (1,883 test pairs), our model achieves 45.19 dB PSNR and 0.9852 SSIM, surpassing Swin2SR by +1.63 dB and Swin2-MoSE by +0.72 dB . On SEN2VEN μ \mu S, SFG-SwinSR establishes new consistent improvement with 49.35 dB PSNR at × \times 2 scale and 45.52 dB PSNR at × \times 4 scale, demonstrating consistent improvements of +0.92 dB and +1.4 dB over the baseline, respectively. These results validate our core hypothesis that explicit spatial-frequency feature transformation within transformer FFNs, when combined with structured detail-guided supervision, provides an effective approach for remote sensing super-resolution across different sensors and scale factors. 
+
+ Future work will focus on evaluating SFG-SwinSR on additional real-world remote sensing datasets with diverse sensor characteristics and degradation patterns. We will also investigate dual-image remote sensing super-resolution by fusing two
+half-pixel-shifted observations to recover sub-pixel information and improve
+high-resolution reconstruction. 
+
+ References 
+
+ [1] 
+ J. L. Ba, J. R. Kiros, and G. E. Hinton (2016) 
+ 
+ Layer normalization .
+ 
+ arXiv preprint arXiv:1607.06450 .
+ 
+ Cited by: §3.3 .
+ 
+ [2] 
+ M. V. Conde, U. Choi, M. Burchi, and R. Timofte (2022) 
+ 
+ Swin2SR: swinv2 transformer for compressed image super-resolution and restoration .
+ 
+ In European Conference on Computer Vision Workshops (ECCVW) ,
+ 
+ Cited by: §1 ,
+ §2 .
+ 
+ [3] 
+ C. Dong, C. C. Loy, K. He, and X. Tang (2014) 
+ 
+ Learning a deep convolutional network for image super-resolution .
+ 
+ In European Conference on Computer Vision ,
+ 
+ pp. 184–199 .
+ 
+ Cited by: §2 .
+ 
+ [4] 
+ R. Dong, L. Mou, L. Zhang, H. Fu, and X. X. Zhu (2022) 
+ 
+ Real-world remote sensing image super-resolution via a practical degradation model and a kernel-aware network .
+ 
+ ISPRS Journal of Photogrammetry and Remote Sensing 191 , pp. 155–170 .
+ 
+ Cited by: §1 ,
+ §2 ,
+ §2 ,
+ §4.2 .
+ 
+ [5] 
+ R. Fernández-Beltrán, P. Latorre-Carmona, and F. Pla (2017) 
+ 
+ Single-frame super-resolution in remote sensing: a practical overview .
+ 
+ International Journal of Remote Sensing 38 ( 1 ), pp. 314–354 .
+ 
+ Cited by: §2 .
+ 
+ [6] 
+ R. C. Gonzalez and R. E. Woods (2002) 
+ 
+ Digital image processing .
+ 
+ 2nd edition , Prentice Hall .
+ 
+ Cited by: §3.2 .
+ 
+ [7] 
+ K. He, X. Zhang, S. Ren, and J. Sun (2016) 
+ 
+ Deep residual learning for image recognition .
+ 
+ In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR) ,
+ 
+ Cited by: §3.2 .
+ 
+ [8] 
+ M. A. Hossain, A. Ray, A. V. Patel, S. K. Singh, and B. Banerjee (2025) 
+ 
+ A weighted ℓ 1 \ell_{1} regularization method for stripe noise removal in remote sensing images .
+ 
+ In 2025 IEEE 7th International Conference on Computing, Communication and Automation (ICCCA) ,
+ 
+ pp. 1–5 .
+ 
+ Cited by: §1 .
+ 
+ [9] 
+ J. Hu, L. Shen, and G. Sun (2018) 
+ 
+ Squeeze-and-excitation networks .
+ 
+ In Proceedings of the IEEE Conference on Computer
+Vision and Pattern Recognition (CVPR) ,
+ 
+ Cited by: §3.2 ,
+ §3.2 .
+ 
+ [10] 
+ G. Huang, Y. Sun, Z. Liu, D. Sedra, and K. Q. Weinberger (2016) 
+ 
+ Deep networks with stochastic depth .
+ 
+ In European conference on computer vision ,
+ 
+ pp. 646–661 .
+ 
+ Cited by: §3.3 .
+ 
+ [11] 
+ X. Kang, P. Duan, J. Li, and S. Li (2024) 
+ 
+ Efficient swin transformer for remote sensing image super-resolution .
+ 
+ IEEE Transactions on IP 33 , pp. 6367–6379 .
+ 
+ Cited by: §1 ,
+ §2 .
+ 
+ [12] 
+ J. Kim, J. K. Lee, and K. M. Lee (2016) 
+ 
+ Accurate image super-resolution using very deep convolutional networks .
+ 
+ In Proceedings of the IEEE conference on computer vision and pattern recognition ,
+ 
+ pp. 1646–1654 .
+ 
+ Cited by: §2 .
+ 
+ [13] 
+ C. Lanaras, J. Bioucas-Dias, S. Galliani, E. Baltsavias, and K. Schindler (2018) 
+ 
+ Super-resolution of sentinel-2 images: learning a globally applicable deep neural network .
+ 
+ ISPRS Journal of Photogrammetry and Remote Sensing 146 , pp. 305–319 .
+ 
+ Cited by: §2 .
+ 
+ [14] 
+ S. Lei, Z. Shi, and Z. Zou (2017) 
+ 
+ Super-resolution for remote sensing images via local–global combined network .
+ 
+ IEEE GRSL 14 ( 8 ), pp. 1243–1247 .
+ 
+ Cited by: §1 ,
+ §2 .
+ 
+ [15] 
+ J. Liang, J. Cao, G. Sun, K. Zhang, L. Van Gool, and R. Timofte (2021) 
+ 
+ SwinIR: image restoration using swin transformer .
+ 
+ In Proceedings of the IEEE/CVF International Conference on Computer Vision Workshops ,
+ 
+ pp. 1833–1844 .
+ 
+ Cited by: §2 .
+ 
+ [16] 
+ B. Lim, S. Son, H. Kim, S. Nah, and K. Mu Lee (2017) 
+ 
+ Enhanced deep residual networks for single image super-resolution .
+ 
+ In Proceedings of the IEEE conference on computer vision and pattern recognition workshops ,
+ 
+ pp. 136–144 .
+ 
+ Cited by: §2 .
+ 
+ [17] 
+ I. Loshchilov and F. Hutter (2019) 
+ 
+ Decoupled weight decay regularization .
+ 
+ In ICLR ,
+ 
+ Cited by: §3.2 .
+ 
+ [18] 
+ J. Michel, J. Vinasco-Salinas, J. Inglada, and O. Hagolle (2022) 
+ 
+ SEN2VEN μ \mu s, a dataset for the training of sentinel-2 super-resolution algorithms .
+ 
+ Data 7 ( 7 ), pp. 96 .
+ 
+ Cited by: §4.1 .
+ 
+ [19] 
+ Y. Qi, M. Lou, Y. Liu, L. Li, Z. Yang, and W. Nie (2026) 
+ 
+ Advancing image super-resolution techniques in remote sensing: a comprehensive survey .
+ 
+ ISPRS Journal of Photogrammetry and Remote Sensing 231 , pp. 68–100 .
+ 
+ Cited by: §1 ,
+ §2 ,
+ §2 .
+ 
+ [20] 
+ C. Ren, X. He, L. Qing, Y. Wu, and Y. Pu (2021) 
+ 
+ Remote sensing image recovery via enhanced residual learning and dual-luminance scheme .
+ 
+ Knowledge-Based Systems 222 , pp. 107013 .
+ 
+ Cited by: §1 ,
+ §2 .
+ 
+ [21] 
+ L. Rossi, V. Bernuzzi, T. Fontanini, M. Bertozzi, and A. Prati (2025) 
+ 
+ Swin2-MoSE: a new single image supersolution model for remote sensing .
+ 
+ IET Image Processing 19 ( 1 ), pp. e13303 .
+ 
+ Cited by: §1 ,
+ §2 ,
+ §5.5 ,
+ Table 2 ,
+ Table 2 .
+ 
+ [22] 
+ W. Shi, J. Caballero, F. Huszár, J. Totz, A. P. Aitken, R. Bishop, D. Rueckert, and Z. Wang (2016) 
+ 
+ Real-time single image and video super-resolution using an efficient sub-pixel convolutional neural network .
+ 
+ In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR) ,
+ 
+ Cited by: §3.1 .
+ 
+ [23] 
+ J. Tu, G. Mei, Z. Ma, and F. Piccialli (2022) 
+ 
+ SWCGAN: generative adversarial network combining swin transformer and CNN for remote sensing image super-resolution .
+ 
+ IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing 15 , pp. 5662–5673 .
+ 
+ Cited by: §1 ,
+ §2 ,
+ §2 .
+ 
+ [24] 
+ A. Van Etten, D. Lindenbaum, and T. M. Bacastow (2018) 
+ 
+ SpaceNet: a remote sensing dataset and challenge series .
+ 
+ CoRR abs/1807.01232 .
+ 
+ Cited by: §4.1 .
+ 
+ [25] 
+ J. Zhang and Y. Tu (2025) 
+ 
+ SwinFR: combining swinir and fast fourier for super-resolution reconstruction of remote sensing images .
+ 
+ Digital Signal Processing 159 , pp. 105026 .
+ 
+ Cited by: §1 .
+ 
+ [26] 
+ Y. Zhang, K. Li, K. Li, L. Wang, B. Zhong, and Y. Fu (2018) 
+ 
+ Image super-resolution using very deep residual channel attention networks .
+ 
+ In Computer Vision – ECCV 2018 ,
+ 
+ pp. 294–310 .
+ 
+ Cited by: §2 ,
+ §2 .
+ 
+ [27] 
+ Y. Zhang, Y. Tian, Y. Kong, B. Zhong, and Y. Fu (2018) 
+ 
+ Residual dense network for image super-resolution .
+ 
+ In Proceedings of the IEEE conference on computer vision and pattern recognition ,
+ 
+ pp. 2472–2481 .
+ 
+ Cited by: §2 .
+
+ Experimental support, please
+ view the build logs 
+ for errors. Generated by
+
+ L
+ A 
+ T
+ E 
+ 
+ xml 
+ 
+ .
+
+ Instructions for reporting errors 
+ We are continuing to improve HTML versions of papers, and your feedback helps enhance accessibility and mobile
+ support. To report errors in the HTML that will help us improve conversion and rendering, choose any of the
+ methods listed below: 
+ 
+ Click the "Report Issue" ( 
+ 
+ ) button, located in the page header. 
+ 
+ Tip: You can select the relevant text first, to include it in your report. 
+ Our team has already identified the following issues . We appreciate your time reviewing and reporting rendering errors we
+ may not have found yet. Your efforts will help us improve the HTML versions for all readers, because disability
+ should not be a barrier to accessing research. Thank you for your continued support in championing open access for
+ all. 
+ Have a free development cycle? Help support accessibility at arXiv! Our collaborators at LaTeXML maintain a list of packages that need conversion , and welcome developer contributions . 
+
+ We gratefully acknowledge support from
+ our major funders ,
+ member institutions , ,
+ and all contributors.
+
+ About 
+ &middot; 
+ Help 
+ &middot; 
+ Contact 
+ &middot; 
+ Subscribe 
+ &middot; 
+ Copyright 
+ &middot; 
+ Privacy 
+ &middot; 
+ Accessibility 
+ &middot; 
+ Operational Status (opens in new tab) 
+
+ Major funding support from 
+

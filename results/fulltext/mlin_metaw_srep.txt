@@ -1,0 +1,1381 @@
+
+
+ 
+ 
+ 
+ Cross-domain continuous-scale remote sensing image super-resolution via meta-weight learning | Scientific Reports 
+ 
+ 
+
+
+
+ 
+
+ 
+
+ 
+ 
+ 
+ 
+
+
+
+
+
+ 
+
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+
+
+
+
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+ 
+ 
+ 
+
+ 
+
+
+
+
+
+ 
+ 
+
+
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+
+
+
+
+ 
+ 
+
+ 
+ Skip to main content 
+
+
+
+ 
+ 
+ 
+ Thank you for visiting nature.com. You are using a browser version with limited support for CSS. To obtain
+ the best experience, we recommend you use a more up to date browser (or turn off compatibility mode in
+ Internet Explorer). In the meantime, to ensure continued support, we are displaying the site without styles
+ and JavaScript. 
+
+ 
+ 
+
+ 
+
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ Advertisement 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ View all journals 
+ 
+ 
+ 
+ 
+ 
+ Saved research 
+ 
+ 
+ 
+ 
+ 
+ Search 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Account 
+ 
+ 
+ Log in 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Content 
+ Explore content 
+ 
+ 
+ 
+ 
+ 
+ 
+ About the journal 
+ 
+ 
+ 
+ 
+ 
+ Publish with us 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Sign up for alerts 
+ 
+ 
+ 
+ 
+ 
+ 
+ RSS feed 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+
+
+
+
+ 
+ 
+ 
+
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ nature 
+ 
+ 
+ 
+ scientific reports 
+ 
+ 
+ 
+ articles 
+ 
+ 
+ 
+ 
+ article 
+ 
+ 
+ 
+ 
+
+ 
+
+
+ 
+
+
+
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ Cross-domain continuous-scale remote sensing image super-resolution via meta-weight learning
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Download PDF 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Download PDF 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Article 
+ 
+ 
+ Open access 
+ 
+ 
+ 
+
+ Published: 23 January 2026 
+ 
+
+ Cross-domain continuous-scale remote sensing image super-resolution via meta-weight learning 
+ Qiyue Zhang 1 , Shunqiu Ma 2 , Yi Tang 1 & … Lingling Zheng 3   Show authors 
+
+ 
+
+ 
+ Scientific Reports 
+ volume  16 , Article number:  6073 ( 2026 ) Cite this article 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Save article 
+ 
+ 
+ 
+ 
+ View saved research 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 2936 Accesses 
+ 
+ 
+ 
+ 
+ 2 Citations 
+ 
+ 
+ 
+ 
+ 
+ Metrics details 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+
+ 
+ Abstract Continuous-scale Remote Sensing Image Super-Resolution offers significant flexibility but relies critically on spatial anchor feature aggregation. Prevailing methods utilize fixed geometry-based weighting, limiting detail recovery and causing substantial performance degradation in cross-domain scenarios where natural image pre-trained models fail to adapt. To address this, we introduce Meta-Weight Learning, a meta-learning approach featuring a novel implicit decoder that dynamically predicts content-aware weights for each anchor. These weights integrate feature representations and relative geometric positions, enabling adaptive fusion without handcrafted rules. This strategy provides superior spatial adaptability, effectively bridging the cross-domain gap without requiring encoder fine-tuning. Comprehensive experiments validate the efficacy of our proposed framework, demonstrating state-of-the-art performance and outperforming existing methods in both visual quality and quantitative metrics for continuous-scale RSISR across domains. 
+ 
+ 
+
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ Similar content being viewed by others 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Visual recognition algorithm for weakly labeled multi-source data fusion of remote sensing images
+ 
+ 
+ 
+ Article 
+ Open access 
+ 11 May 2026 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Optimized loss and self attention for enhanced domain adaptation in remote sensing image classification
+ 
+ 
+ 
+ Article 
+ Open access 
+ 17 November 2025 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Residual channel attention based sample adaptation few-shot learning for hyperspectral image classification
+ 
+ 
+ 
+ Article 
+ Open access 
+ 05 November 2024 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Explore related subjects 
+ Discover the latest articles and news in related subjects. 
+ 
+ 
+ 
+ 
+ Engineering 
+ 
+ 
+ 
+ 
+ Mathematics and computing 
+ 
+ 
+ 
+ 
+ Image Processing Techniques for Enhanced Visual Quality 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ Introduction High-resolution remote sensing images play a crucial role in various downstream applications, including object detection 1 , change detection 2 , 3 , 4 , and fine-grained land cover classification 5 , 6 . However, in practical scenarios, the spatial resolution of remote sensing images is often limited due to sensor hardware constraints, complex imaging conditions, and restricted transmission bandwidth 7 . These limitations can significantly degrade the performance of downstream applications. To overcome this challenge, Remote Sensing Image Super-Resolution (RSISR) has been extensively studied as a key image enhancement technique, which aims to reconstruct high-resolution images from low-resolution observations, thereby recovering fine spatial details and improving image utility. Most existing RSISR methods remain fixed-scale, thereby limiting flexibility and scalability. With the rapid development of deep learning in the remote sensing community 8 , 9 , RSISR has achieved remarkable improvements in reconstruction performance. For example, 10 proposed a CNN-based approach to exploit scale self-similarity, effectively enhancing the recovery of details in remote sensing images. However, the limited receptive field of CNN makes it difficult to capture long-range contextual dependencies. To address this issue, researchers have introduced Transformer-based architectures to improve global modeling capabilities. Among them, 11 selectively preserves key tokens to reduce redundancy in large-scale scenes, significantly improving both reconstruction quality and efficiency. Building on this, 12 optimizes channel allocation and window partitioning, preserving Transformer capacity while reducing computation and parameters. Beyond global modeling, researchers have further explored diffusion models, leveraging their strong generative capacity and fine-detail modeling to advance RSISR. For instance, 13 achieves high-fidelity reconstruction through efficient diffusion-based probabilistic modeling. Nevertheless, most RSISR methods are trained and applied with predefined upscaling factors (e.g., \(\times 2\) , \(\times 3\) , \(\times 4\) ). This design reduces adaptability to diverse sensors, tasks, and geographical scales. It also requires separate models for each factor, increasing storage and deployment costs. Such limitations further restrict scalability in resource-constrained applications. Continuous-scale SR methods provide a novel pathway to address fixed-scale limitations and scalability challenges. Consequently, unified SR frameworks 14 , 15 , 16 , 17 have been explored to support multiple or even continuous scaling factors. Continuous-scale SR methods 18 , 19 , 20 employ coordinate-based multi-layer perceptrons (MLPs) to learn continuous mappings from low-resolution features to high-resolution images. This approach achieves parameter efficiency and enables generalization across arbitrary scaling factors. Nevertheless, these advances have been primarily developed and validated on natural image domains, with limited exploration in remote sensing applications. Among these, LIIF 21 is one of the most representative frameworks, which predicts RGB values at arbitrary query locations by integrating spatial coordinates with local features. This enables flexible framework at any upscaling factor using a single model, offering a feasible technical pathway and reference paradigm for continuous-scale SR tasks in remote sensing applications. Continuous-scale SR methods have limited applicability to remote sensing images owing to the domain gap with natural images. Due to significant discrepancies in statistical distributions between remote sensing and natural images, interpolation-based reconstruction decoders with natural image priors often fail to generalize across domains. This failure restricts structural representation and degrades overall reconstruction quality 19 . Recently, domain adaptation techniques have provided several potential solutions. For instance, 22 achieves more stable cross-domain feature transfer by enabling shared unknown class recognition, 23 simultaneously enhances resolution and semantic feature transfer by aligning both pixel-level and output-space representations. However, existing methods require extensive supervision and domain-specific tuning, which hinders their scalability in remote sensing images. To address the mentioned limitations, this paper proposes a Meta-Learning-based Implicit Neural Network (MLIN) for cross-domain continuous-scale RSISR. Our method employs a continuous-scale SR encoder pre-trained on natural images to extract latent representations enriched with structural details. We further design a Meta-learning-based Implicit Decoder module to predict adaptive, data-driven local anchor weighting strategies. This design mitigates the domain shift problem caused by discrepancies in data distribution and imaging modalities between natural and remote sensing images. Furthermore, the module integrates relative geometric priors and a scale-aware control mechanism tailored to remote sensing image, enabling the model to independently infer soft weights of multiple anchors within the local neighborhood of each query location. Through this mechanism, the network adaptively learns the relative contribution of each anchor based on the input content, thereby enabling differentiated responses across various regions of the image. The main contributions of this article are given as follows. 
+ 
+ We address the challenge of cross-domain continuous-scale RSISR by proposing a meta-learning-based implicit framework. By leveraging meta-knowledge to bridge the domain gap, our method achieves direct generalization from natural images to remote sensing images. 
+ 
+ 
+ We propose an adaptive local anchor weighting strategy that integrates relative local feature distributions to enable data-driven modeling of multi-anchor contributions, thereby enhancing RSISR performance. 
+ 
+ Related works Fixed-scale RSISR Fixed-scale RSISR methods have made remarkable advances in recent years, and can be broadly classified into three categories. CNN-based approaches model local features by extracting and fusing multi-layer convolutional representations 24 , 25 . However, their limited receptive fields hinder effective modeling of long-range dependencies in complex remote sensing scenes. GAN-based approaches introduce a generative modeling paradigm and formulate super-resolution as a high-resolution image generation task. They employ adversarial learning to approximate the underlying data distribution and enhance perceptual quality 26 , 27 , 28 . Techniques such as CycleGAN also reduce the reliance on paired training datasets through unsupervised domain mapping. Transformer-based approaches leverage global self-attention to explicitly model long-range dependencies and contextual coherence. They achieve superior performance in reconstructing fine-grained structures and preserving high-frequency details 11 , 29 , 30 . Although the methods mentioned above have demonstrated impressive performance in fixed-scale SR tasks, they generally necessitate retraining the entire network for each specific upscaling factor. This approach not only imposes a significant computational burden in practical applications but also lacks the flexibility required to address multi-scale demands. Continuous-scale RSISR Continuous-scale SR approaches have emerged to address the limitations of fixed-scale RSISR methods in terms of flexibility. Meta-SR 31 was one of the first to introduce a meta-learning framework, dynamically generating upsampling filter weights at different scales. However, this approach relies solely on the feature vector of a single position during the prediction process, which can cause adjacent pixels to use different feature representations, leading to discontinuities in the reconstructed image, particularly in local regions. Additionally, with the support of implicit neural representations, LIIF 21 combines image coordinates with surrounding backbone features and predicts RGB values at arbitrary query coordinates through a local implicit function. These backbone features are extracted using feature extraction networks from single-image super-resolution (SISR), such as the structures of EDSR 32 , RDN 33 , and SwinIR 34 . Building on LIIF, UltraSR 35 and IPE-LIIF 36 introduce positional encoding to aggregate frequency information, addressing the issue of spectral bias. Furthermore, LTE 37 proposes a local texture estimator to estimate the dominant frequency and corresponding Fourier coefficients for natural images. Overall, these methods generally determine anchor weighting coefficients based on the spatial relationships of pixel positions, which are more effective for smooth structures. In remote sensing image processing, continuous-scale RSISR based on INR have also made significant advances. FunSR 18 models context interaction in implicit function space, enabling unified reconstruction across multiple scales for remote sensing images. SR-FEINR 38 integrates positional encoding and a feature-enhanced MLP to improve approximation accuracy in continuous-scale RSISR. CDCR 39 combines continuous implicit representations with discrete convolutional kernels, enhancing ultra-high magnification accuracy and detail preservation for satellite imagery. CSUM 19 introduces scale-aware dynamic convolutions and a global implicit function module, enabling efficient arbitrary-scale upsampling for remote sensing images. Beyond INR-based modeling, studies have incorporated generative models to handle fine-grained details in continuous-scale RSISR. For example, E 2 DiffSR 40 explicitly models scale conditions in latent space to improve efficiency and flexibility. Neurop-Diff 41 uses neural operators to learn scale-aware representations, serving as conditional priors for diffusion. Continuous-scale SR methods perform well on natural images and show promise in remote sensing, yet two major challenges persist. First, INR-based approaches rely on non-learnable, geometry-based weighting to aggregate local features. Such static weighting aligns well with natural image priors but its suitability for remote sensing images remains uncertain. Second, most methods are designed and trained on natural image datasets, without fully considering the modality, semantics, and distribution gaps in remote sensing data. As a result, these models often suffer from domain shift, causing degraded reconstruction stability and compromised detail fidelity in cross-domain scenarios. Meta-learning Meta-learning enables rapid task adaptation and improves generalization by acquiring transferable knowledge across diverse tasks. Among the representative strategies of meta-learning 42 , 43 , weight prediction employs an auxiliary neural network to dynamically generate the parameters of the target model, thereby overcoming the limitations of conventional fixed-parameter training. Wang et al. 44 employed a weight-prediction meta-model to facilitate the parameter transfer from few-shot classes to large-scale classes, thus enhancing the performance of few-shot object detection. Han et al. 45 utilized a weight-prediction network based on meta-learning to assign adaptive weights to the sample loss at each exit, jointly optimizing it with the primary network. These studies demonstrate the flexibility of weight prediction in meta-learning and offer valuable insights for adaptive anchor weighting in cross-domain continuous-scale RSISR. Meta-Learning is typically formulated as a Weight-Prediction Network, as established by seminal works such as Meta-SR 31 and the recent COZ 46 . COZ 46 leveraged meta-learning to learn multiple local coordinate representations and generate mixing weights, which were subsequently applied to coordinate-specific features for effective feature aggregation. However, coordinate-driven weighting assumes local smoothness based solely on distances, which is not effective for non-smooth structures. In contrast, our method learns content-aware multi-anchor weights based on local feature information, enabling the soft weights to align with underlying image structures. Methodology Existing RSISR methods still suffer from limitations in continuous-scale modeling and cross-domain generalization. To address these challenges, we propose a meta-learning-based implicit neural representation framework for cross-domain continuous-scale RSISR. The core innovation lies in leveraging meta-learning to design a content-aware adaptive anchor weighting mechanism, which integrates local feature distributions with spatial geometric priors. Unlike approaches that rely on handcrafted weighting strategies, our method dynamically allocates anchor contributions based on image content, thereby enhancing cross-domain generalization. As illustrated in Fig.  1 , the overall framework consists of a feature encoder pretrained on natural images to extract cross-domain representations, and a meta-implicit decoder that incorporates the proposed adaptive weighting mechanism. Fig. 1 Full size image The network architecture of the MLIN. Preliminary and motivation In continuous-scale SR tasks, the objective is to learn an implicit function: $$\begin{aligned} f_\theta : (z^{*}, \Delta _x) \mapsto I_{HR}(x_q), \end{aligned}$$ 
+ (1)
+ which maps an encoded feature \(z^{*}\) and a relative query position \(\Delta _x\) to the RGB value at any arbitrary image location \(x_q\) . This INR framework, which has been widely adopted in natural image continuous-scale SR, fundamentally treats an image as a continuous signal and reconstructs it via a MLP conditioned on spatial coordinates. Specifically, the input low-resolution image \(I_{LR} \in \mathbb {R}^{3 \times H \times W}\) is first processed by an encoder (e.g., EDSR 32 , RDN 33 ) to generate a grid of latent feature embeddings. These embeddings are then projected into a 2D latent space as intermediate image representations. For any arbitrary query coordinate \(x_q\) , its relative position to the nearest anchor point is constructed and passed, along with the corresponding latent code, to the implicit function to regress the RGB value: $$\begin{aligned} \hat{I}(x_q) = f_\theta (z^*, x_q - v^*), \end{aligned}$$ 
+ (2)
+ where \(x_q \in \mathbb {R}^2\) denotes the query coordinate, \(z^*\) represents the latent code of the nearest anchor, and \(v^*\) denotes its 2D location in the image domain. To address spatial discontinuity at query locations, recent methods use a local ensemble strategy. This strategy predicts results by computing a weighted fusion of features from four neighboring points: $$\begin{aligned} \hat{I}(x_q) = \sum _{k \in \{00,01,10,11\}} S_k \cdot f_\theta (z_k^*, x_q - v_k^*), \end{aligned}$$ 
+ (3)
+ where \(z_i^*\) denotes the nearest latent feature corresponding to the query point within the four subregions: top-left, top-right, bottom-left, and bottom-right. \(S_t\) represents the bilinear interpolation weight based on the area of influence. Although geometry-prior-driven strategies have achieved promising performance on natural images, they implicitly assume locally smooth and uniform content distributions. However, remote sensing images differ significantly from natural images in terms of object morphology, scale variation, and texture complexity. Since most continuous-scale SR methods are trained on natural image datasets, directly transferring them to remote sensing images often leads to domain shift. Therefore, it is essential to develop a data-driven and learnable local anchor weighting mechanism capable of adaptively handling structurally complex regions. Encoder To construct a high-quality implicit representation space, this study adopts the feature extraction encoder from the LIIF framework as the latent representation network. Pre-trained on natural image datasets, this encoder effectively captures image texture features and exhibits stable feature modeling capabilities. Considering modality and semantic gaps between RSIs and natural images, direct encoder fine-tuning risks degrading pre-trained priors and inducing overfitting. Therefore, the encoder parameters are kept frozen, and only the downstream implicit representation and weight prediction modules are optimized. This strategy effectively mitigates domain shift and enhances cross-domain generalization performance. Specifically, the low-resolution input image \(I_{LR} \in \mathbb {R}^{3 \times H \times W}\) is passed through the encoder \(E_\phi\) , producing a latent feature map \(F \in \mathbb {R}^{C \times H \times W}\) , whose spatial resolution is consistent with that of the input image: $$\begin{aligned} F = E_\phi (I_{LR}). \end{aligned}$$ 
+ (4)
+ It is worth noting that each feature location is associated with a normalized spatial coordinate, which is used to construct relative geometry with respect to query positions. Furthermore, we introduce the low-resolution input image in a bilinear form as a global residual branch to guide the final output prediction. Meta-implicit decoder To achieve adaptive ensemble of multiple anchors, we introduce a meta-learning-based, data-driven weight adaptation mechanism. For any continuous coordinate \(x_q \in [-1,1]^2\) to be reconstructed, we retrieve the nearest latent codes from a \(2 \times 2\) local region centered around \(x_q\) , denoted as \(\{ z_k^{*} \}_{k=1}^{4}\) . We construct a local sampling grid \(\{ \delta _k \}_{k=1}^{K}\) with \(K = 4\) , where each sampling position is given by \(x_q + \delta _k\) , forming a \(2 \times 2\) neighborhood. At each offset position \(x_q + \delta _k\) , we extract features from the encoded feature map \(F \in \mathbb {R}^{C \times H \times W}\) using the pre-trained encoder, resulting in the corresponding latent codes \(\{ z_k^{*} \}_{k=1}^{4}\) . To capture the spatial relationship within the local region, we define the relative positional offset as: $$\begin{aligned} \Delta _k = x_q - v_k^{*}, \end{aligned}$$ 
+ (5)
+ where \(v_k^{*}\) denotes the coordinate of the \(k\) -th sampling point in the feature space. In addition, a scale parameter \(c\) is introduced to provide structural normalization. This mechanism adaptively learns the contribution weights of multiple anchor points with respect to each query location. We employ a standalone meta-learning network, implemented as a MLP(detailed architecture specifications are provided in  4.2 ), to construct a reweighting network. This network encodes the feature and coordinate information of each anchor point into high-dimensional descriptors: $$\begin{aligned} e_k = concat(z_k^{*}, \Delta _k), \end{aligned}$$ 
+ (6)
+ where concat(·) denotes the concatenation operation. In addition, we introduce a scale control factor c to enhance the adaptability of the network to multi-scale spatial contexts and geometric structures.The adaptive weight of each anchor point is then defined as: $$\begin{aligned} \alpha _k = Softmax(g_\phi (Flatten(e_k)), \frac{1}{c}), \quad \sum _{k=1}^{K} \alpha _k = 1, \end{aligned}$$ 
+ (7)
+ where Flatten(·) denotes the vector flattening operation, and \(g_\phi\) represents the meta-network. This meta-learning-based reweighting module adaptively assigns content-aware importance to local anchors, capturing relative contributions and improving content and positional discriminability. To obtain the final prediction at the query location \(x_q\) , we perform a weighted ensemble of all anchor points using meta-weights \(\alpha _k\) : $$\begin{aligned} \hat{I}(x_q) = \sum _{k=1}^{K} \alpha _k \cdot \hat{I}_k = \sum _{k=1}^{K} \alpha _k \cdot f_\theta (z_k^{*}, \Delta _k), \end{aligned}$$ 
+ (8)
+ where \(\alpha _k\) denotes the meta-weight learned in a data-driven manner. Unlike traditional fixed-weight fusion strategies (see Eq. 3 ), the learnable \(\alpha _k\) enables the network to dynamically adapt to different image regions, yielding spatially differentiated responses. The proposed Meta-Implicit Decoder introduces a content-driven soft alignment strategy to achieve adaptive multi-anchor ensemble. It flexibly adjusts the fusion weights of individual anchors based on the local feature distribution. This enhances the structural consistency across different image regions during cross-domain modeling. Loss function We employ the \(\mathscr {L}_1\) loss function, formulated in a manner consistent with other continuous-scale SR approaches based on INR. The detailed expression is given as follows: $$\begin{aligned} \mathscr {L} = \frac{1}{N \cdot M} \sum _{i=0}^{N} \sum _{j=0}^{M} \left\| \hat{\mathscr {I}}_{sr}^{(x_i, y_j)} - \mathscr {I}_{HR}^{(x_i, y_j)} \right\| _1, \end{aligned}$$ 
+ (9)
+ where \(\hat{\mathscr {I}}_{sr}^{(x_i, y_j)}\) and \(\mathscr {I}_{HR}^{(x_i, y_j)}\) denote the predicted and ground-truth pixel values at spatial location \((x_i, y_j)\) , respectively. N and M represent the spatial dimensions of the image, \(||\cdot ||_1\) denotes the \(\mathscr {L}_1\) norm. Experiments Datasets and metrics To evaluate the effectiveness of the proposed remote sensing image super-resolution method, we conducted experiments on two public datasets, WHU-RS19 47 and UCMerced 48 . The WHU-RS19 dataset, widely used for remote sensing image classification, retrieval, and reconstruction tasks, contains 1005 high-resolution images across 19 typical land-use categories, including airports, residential areas, parking lots, and parks. All images have a spatial resolution of \(600 \times 600\) pixels with three RGB channels, and the ground sampling distance reaches \(0.5\,\textrm{m}\) . The UCMerced dataset includes 2100 remote sensing images across 21 land-cover classes, including agricultural areas, forests, residential zones, and industrial regions. Each image has a resolution of \(256 \times 256\) pixels and an approximate ground resolution of \(0.3\,\textrm{m}\) , also providing RGB channels. For experiments, both datasets were divided into training and testing subsets using an 80%–20% split. Examples of the datasets are shown in Fig.   2 . Fig. 2 Full size image ( a ) Representative samples extracted from the WHU-RS19 dataset. ( b ) Representative samples extracted from the UCMerced dataset. Implementation details During training, we build upon the PyTorch 49 framework and leverage its bicubic interpolation module to implement continuous-scale downsampling. The network input is fixed as image patches of size \(48 \times 48\) . For each training iteration, N scaling factors \(\{r_i\}_{i=1}^{N}\) are uniformly sampled from the interval \(\mathscr {U}(1,4)\) , and for each factor, corresponding patches of size \(48r_i \times 48r_i\) are cropped from the training dataset. These patches are then uniformly downsampled to \(48 \times 48\) before being fed into the network. The encoder is implemented based on the LIIF framework and initialized with EDSR, RDN and SwinIR models pre-trained on the DIV2K natural image dataset. During training, the encoder remains frozen, and only the implicit decoder and the weight prediction module are optimized. For baseline methods, we utilized their official open-source implementations, which involve full parameter fine-tuning of both the encoder and decoder on the remote sensing datasets. For the proposed Meta-Implicit Decoder, the meta-network is designed as a 4-layer MLP. Specifically, it comprises three hidden layers, each containing 1024 neurons activated by the ReLU function. The input dimension of the MLP is set to 268 ( \(anchors \times (D_F + D_{\text {coord}} + D_{\text {cell}})\) ). This dimensionality is derived from the flattened concatenation of the feature vectors and geometric attributes of the four nearest anchors in the \(2\times 2\) local grid. The final fully connected layer projects the hidden features to a 4-dimensional vector, which represents the unnormalized logits. These are then processed by a Softmax function to generate the adaptive anchor weights as defined in Eq. ( 7 )  3.3 . The Adam 50 optimizer is adopted with an initial learning rate of \(1 \times 10^{-4}\) . The total training process comprises 1000 epochs, with a batch size of 16. After every 200 epochs, the learning rate is decayed by a factor of 0.5. All experiments are conducted on an NVIDIA RTX 2080Ti GPU using the PyTorch platform. To evaluate the performance of the proposed method, two classical and widely used image reconstruction 51 , 52 assessment metrics are adopted: Peak Signal-to-Noise Ratio (PSNR) and Structural Similarity Index (SSIM). PSNR measures the pixel-level difference between the reconstructed image and the original image; a higher PSNR value indicates that the reconstructed image is closer to the ground truth. For three-channel remote sensing RGB images, the PSNR is calculated as follows: $$\begin{aligned} PSNR = 10 \lg \left( \frac{255^2}{MSE} \right) , \end{aligned}$$ 
+ (10)
+ $$\begin{aligned} MSE = \frac{1}{h \times w} \sum _{a=1}^{h} \sum _{b=1}^{w} \left( I_H(a,b) - I_S(a,b) \right) ^2, \end{aligned}$$ 
+ (11)
+ where MSE denotes the mean squared error between the original high-resolution image \(I_H\) and the super-resolved image \(I_S\) , and h and w represent the height and width of the image, respectively. The SSIM ranges within [0, 1], where a value closer to 1 indicates better preservation of structural information and less loss of fine details. The SSIM is computed as follows: $$\begin{aligned} SSIM(I_{H}, I_{S}) = \frac{(2\mu _{I_H} \mu _{I_S} + C_1)(2\sigma _{I_H I_S} + C_2)}{(\mu _{I_H}^2 + \mu _{I_S}^2 + C_1)(\sigma _{I_H}^2 + \sigma _{I_S}^2 + C_2)}, \end{aligned}$$ 
+ (12)
+ where \(\mu _H\) and \(\mu _S\) denote the mean values of the high-resolution image \(I_H\) and the super-resolved image \(I_S\) , respectively; \(\sigma _H^2\) and \(\sigma _S^2\) represent their corresponding variances; \(\sigma _{HS}\) is the covariance between \(I_H\) and \(I_S\) ; and \(C_1\) and \(C_2\) are constants introduced to ensure numerical stability when the denominator is close to zero. Table 1 Average PSNR (dB) and SSIM scores on the WHU-RS19 test set across continuous scaling factors. The best results are highlighted in bold. Full size table Table 2 Average PSNR (dB) and SSIM scores on the UCMerced test set across continuous scaling factors. The best results are highlighted in bold. Full size table Comparison with the state of the art Table 3 Quantitative results on the 19 individual scenes of the WHU-RS19 dataset at a scaling factor of \(\times\) 5 (PSNR \(\uparrow\) /SSIM \(\uparrow\) ). Full size table Table 4 Quantitative results on the 21 individual scenes of the UCMerced dataset at a scaling factor of \(\times\) 5 (PSNR \(\uparrow\) /SSIM \(\uparrow\) ) using the pre-trained EDSR encoder. Full size table To thoroughly evaluate the performance of the proposed method on continuous-SR tasks for remote sensing images, we conducted both quantitative and qualitative experiments, comparing our approach with several representative continuous-scale SR methods, including MetaSR 31 , LIIF 21 , LINF 16 , CSUM 19 , and COZ 46 . These methods exhibit diverse characteristics in terms of scale-continuous modeling strategies, reconstruction architectures, and feature representation mechanisms, collectively covering the mainstream technical paradigms in this field. To ensure fairness and reproducibility, all models are trained under identical batch sizes and iteration counts. The implementations are based on their publicly released PyTorch versions, and the overall experimental settings strictly follow the configurations reported in the original papers. (1) Quantitative results on the WHU-RS19 dataset: We conducted a systematic quantitative evaluation of the proposed MLIN framework, and the results are reported in Tables  1 and 3 . As shown in Table  1 , MLIN consistently achieves the best performance under EDSR, RDN and SwinIR for both in-distribution scaling factors ( \(\times\) 2.0, \(\times\) 3.0, \(\times\) 4.0) and out-of-distribution scaling factors ( \(\times\) 6.0, \(\times\) 8.0, \(\times\) 10.0). For instance, with a scaling factor of \(\times\) 3.0, MLIN-EDSR attains a PSNR/SSIM of \(33.09\ \textrm{dB} / 0.8839\) , outperforming the implicit-representation-based LIIF by \(0.23\ \textrm{dB}\) . Under an extreme scaling factor of \(\times\) 10.0, MLIN-RDN achieves \(26.94\ \textrm{dB} / 0.6499\) , surpassing the second-best approach by an average margin of 0.2– \(0.3\ \textrm{dB}\) .These results indicate that MLIN demonstrates outstanding reconstruction performance in continuous super-resolution tasks. Table  3 reports the class-level reconstruction performance for 19 representative land-cover categories under an upscaling factor of \(\times 5.0\) . The results demonstrate that MLIN achieves the highest PSNR and SSIM across all 19 categories. In scenarios with complex structures and abundant high-frequency details, such as Airport, Industrial, Residential, and Railway Station, the advantages of MLIN in recovering high-frequency textures and preserving spatial structural consistency are particularly pronounced. This superiority can be attributed to the anchor-based adaptive aggregation mechanism introduced in MLIN, which dynamically adjusts the weights according to local content during feature aggregation. This enables more effective modeling of local geometric variations and texture changes in remote sensing images, thereby significantly improving reconstruction accuracy in complex land-cover regions. Fig. 3 Full size image The visual comparison of \(\times 4\) SR results by different continuous SR methods from the WHU-RS19 dataset, with the PSNR/SSIM values of each method’s generated SR image annotated below the corresponding image. Fig. 4 Full size image The visual comparison of \(\times 4\) SR results by different continuous SR methods from the WHU-RS19 dataset, with the PSNR/SSIM values of each method’s generated SR image annotated below the corresponding image. (2) Quantitative results on the UCMerced dataset: To further validate the effectiveness of the proposed MLIN framework, we conducted quantitative experiments on the UCMerced dataset. Table  2 reports the overall performance results under different continuous scaling factors.MLIN consistently achieves the best or second-best PSNR and SSIM performance across all magnification factors and baseline models, including EDSR, RDN, and SwinIR. Table  4 presents the detailed results for 21 scene categories under the scaling factor of \(\times\) 5.0. MLIN achieves superior performance in most categories. It performs especially well on scenes rich in high-frequency details and repetitive textures, such as Buildings, Dense Residential, Storage Tanks, and Tennis Courts. By combining the results from Tables  2 and 4 , we conclude that MLIN demonstrates stronger high-frequency detail recovery across various land-cover categories. These results further verify the effectiveness of the proposed method in complex remote sensing scenarios. Fig. 5 Full size image The visual comparison of \(\times 4\) SR results by different continuous SR methods from the UCMerced dataset, with the PSNR/SSIM values of each method’s generated SR image annotated below the corresponding image. Fig. 6 Full size image The visual comparison of \(\times 4\) SR results by different continuous SR methods from the UCMerced dataset, with the PSNR/SSIM values of each method’s generated SR image annotated below the corresponding image. (3) Qualitative visual comparisons: To further evaluate the MLIN framework, we examine its visual reconstruction performance in continuous-scale RSISR. The proposed method consistently achieves superior visual quality across diverse scenarios. For clearer comparisons with other approaches, we provide qualitative results under a \(4\times\) scaling factor. On the WHU-RS19 dataset, as shown in Figs. 3 and 4 , the “parking lot” scene demonstrates accurate restoration of vehicle layouts by MLIN. In the “football field” scene, MLIN successfully recovers clear contours of the letter “P”. Figures  5 and 6 illustrates examples from the UCMerced dataset, including the “airplane” and “buildings” scenes. Straight airplane wing edges are precisely reconstructed, and rooftop structures are effectively restored. Overall, MLIN produces visual results closer to high-resolution references compared with other methods. The reported PSNR and SSIM values further confirm its advantage in perceptual quality and objective evaluation. Training and computational efficiency analysis To demonstrate the convergence behavior of the proposed Meta-Implicit Decoder, Fig.   7 presents the training and validation loss curves during training on the UCMerced dataset, with SwinIR as the backbone network. Both curves exhibit a steep decline within the first 200 epochs, indicating the rapid establishment of structural mappings for remote sensing images by the meta-weight network. Between the 200th and 600th epochs, the training loss decreases steadily, while the validation loss stabilizes, showing a minor overfitting tendency, with the gap remaining under 0.002. This suggests strong generalization to unseen data. After 600 epochs, both curves stabilize near 0.037, with no significant rebound or divergence, confirming that, under the frozen SwinIR parameters, the proposed method achieves full convergence within a limited number of iterations and demonstrates exceptional robustness for cross-domain, continuous-scale SR tasks. Fig. 7 Full size image Training and validation loss. We also evaluated the computational efficiency of MLIN on the UCMerced dataset at a \(\times 10\) upscaling factor using the RDN backbone. The results are summarized in Table  5 . (1) Training efficiency: MLIN achieves the shortest training time of 5.8 h, representing an approximately 38% reduction compared to the baseline LIIF (9.3 h). This substantial improvement can be attributed to our Frozen Encoder strategy, which obviates the need for computationally intensive back-propagation through the deep backbone, thereby focusing optimization exclusively on the efficient Meta-Implicit Decoder. (2) Inference performance: Although the incorporation of meta-weight generation increases the model’s FLOPs to 46.07 G, relative to LIIF’s 27.56 G, the associated operations are highly parallelizable on modern GPUs. Consequently, the actual inference time of MLIN (65.2 ms) remains comparable to that of LIIF (63.7 ms), incurring only a marginal latency overhead of \(\sim 1.5\) ms. These results demonstrate that MLIN achieves superior reconstruction quality with a negligible computational penalty. Table 5 Quantitative comparison of FLOPs, inference time, and training time among different methods. Full size table Ablation study To justify the choice of the local neighborhood size, we conducted an ablation study comparing the proposed \(2\times 2\) anchor configuration ( \(K=4\) ) against a denser \(3\times 3\) anchor configuration ( \(K=9\) ). The experiments were performed on the WHU-RS19 dataset at an extreme scaling factor of \(\times 10\) , with results summarized in Table  6 . Although the \(3\times 3\) setting yields a marginal performance improvement of 0.05 dB in PSNR, it incurs a substantial computational penalty. Specifically, the training time more than doubles (increasing from 3.2 to 6.9 h), and the inference latency rises by approximately 65%. Consequently, the \(2\times 2\) configuration is adopted as the optimal default setting, as it strikes a superior balance between spatial context modeling and computational efficiency. Table 6 Ablation study on different local anchor configurations on WHU-RS19 dataset. Full size table We conducted systematic ablation studies to evaluate the effectiveness of different anchor weighting strategies in the proposed meta-implicit decoder. The experiments cover both in-distribution scales ( \(\times\) 2.0, \(\times\) 3.0, \(\times\) 4.0) and out-of-distribution scales ( \(\times\) 6.0, \(\times\) 8.0, \(\times\) 10.0). Specifically, nearest denotes the use of conventional nearest-neighbor interpolation to compute anchor weights; area refers to fixed bilinear interpolation weights determined solely by the relative area between the query point and the rectangular regions of the four anchors, relying only on geometric relationships; coordinate represents a simplified variant of our method, still using the four nearest anchors but replacing the fixed area weights with meta-learning regression weights based on relative distances, without incorporating feature information; and MID denotes the proposed meta-decoding block. Table 7 Ablation study of different interpolation and coordinate designs. The best results are highlighted in bold. Full size table Fig. 8 Full size image The ablation results are shown by comparing the proposed MID with variants in which this module is replaced by nearest and area interpolation methods. The MID achieves the best performance across all scales, as reported in Table  7 and Fig.   8 . At the extreme out-of-distribution scale of \(\times 10.0\) , it surpasses the Area by 0.16 dB in PSNR and 0.0071 in SSIM, demonstrating superior robustness under large-scale extrapolation scenarios. Compared to Coordinate, incorporating feature embeddings enables more accurate anchor contribution estimation. While Coordinate outperforms Area due to its meta-learning fitting capability based on distance priors, it lacks feature information, limiting reconstruction performance. Experimental results show that the proposed feature–geometry anchor integration mechanism significantly improves reconstruction accuracy in texture-rich regions. Moreover, with the natural-image pre-trained encoder frozen, it effectively adapts the meta-implicit decoder to unique RSI spatial structures, mitigating performance degradation caused by cross-domain feature distribution discrepancies. Fig. 9 Full size image In the residential_16 scene, \(\times 4\) SR results are compared across three approaches: area-based interpolation, without MID, and with MID, with enlarged local details displayed on the right. Fig. 10 Full size image In the port_01 scene, \(\times 5\) SR results are compared across three approaches: area-based interpolation, without MID, and with MID, with enlarged local details displayed on the right. Fig. 11 Full size image In the residential_27 scene, \(\times 6\) SR results are compared across three approaches: area-based interpolation, without MID, and with MID, with enlarged local details displayed on the right. The visualized results of the ablation study on MID (corresponding to \(4\times\) , \(5\times\) , and \(6\times\) upscaling factors) are shown in Figs.   9 ,  10 , and 11 . Experimental results indicate that MID greatly improves detail reconstruction in continuous-scale SR across diverse remote sensing scenarios. In Figs.   9 and  11 , MID effectively improves the edge sharpness and texture continuity of high-frequency structures such as rooftops; In the Fig.   10 , it maintains higher structural consistency along the interface between the vessel hull and the water surface.In contrast, compared with the w/o MID and area-weighted methods, w/MID yields more accurate results than removing it. Conclusions This paper presents MLIN, a cross-domain continuous-scale RSISR framework featuring a meta-learning-based implicit decoder for adaptive anchor weighting. The decoder predicts content-aware weights conditioned on local features and relative geometric positions, enabling dynamic feature integration without handcrafted rules. MLIN supports continuous-scale reconstruction within a single model, removing the burden of multiple fixed-scale models and improving scalability. Extensive experiments on remote sensing datasets demonstrate significant gains over geometry-weighted baselines, achieving state-of-the-art performance in both visual quality and quantitative metrics. Furthermore, MLIN effectively bridges the cross-domain gap between natural and remote sensing images without encoder fine-tuning, while ablation studies confirm the effectiveness of the proposed framework. 
+ 
+ 
+
+ 
+ Data availability 
+ 
+ The datasets generated during and/or analysed during the current study are available from the corresponding author on reasonable request. 
+ References Tang, D. et al. Aerogen: Enhancing remote sensing object detection with diffusion-driven data generation. In 2025 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 3614–3624, https://doi.org/10.1109/CVPR52734.2025.00342 (2025). Zhu, D., Huang, X., Huang, H., Zhou, H. & Shao, Z. Change3d: Revisiting change detection and captioning from a video modeling perspective. In 2025 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 24011–24022, https://doi.org/10.1109/CVPR52734.2025.02236 (2025). Gao, J. et al. Combining Sam with limited data for change detection in remote sensing. IEEE Trans. Geosci. Remote Sens. 63 , 1–11. https://doi.org/10.1109/TGRS.2025.3545040 (2025). Article  
+ 
+ Google Scholar  
+ Zhang, X., Yuan, G., Hua, Z. & Li, J. Tsmga: Temporal-spatial multiscale graph attention network for remote sensing change detection. IEEE J. Sel. Top. Appl. Earth Observ. Remote Sens. 18 , 3696–3712. https://doi.org/10.1109/JSTARS.2025.3526785 (2025). Article  
+ ADS  
+ 
+ Google Scholar  
+ Dong, R. et al. Large-scale land cover mapping with fine-grained classes via class-aware semi-supervised semantic segmentation. In 2023 IEEE/CVF International Conference on Computer Vision (ICCV) , 16737–16747, https://doi.org/10.1109/ICCV51070.2023.01539 (2023). Wang, J., Zhong, Y., Zheng, Z., Ma, A. & Zhang, L. Rsnet: The search for remote sensing deep neural networks in recognition tasks. IEEE Trans. Geosci. Remote Sens. 59 , 2520–2534. https://doi.org/10.1109/TGRS.2020.3001401 (2021). Article  
+ ADS  
+ 
+ Google Scholar  
+ Qi, Y. et al. Advancing image super-resolution techniques in remote sensing: A comprehensive survey. ISPRS J. Photogramm. Remote. Sens. 231 , 68–100. https://doi.org/10.1016/j.isprsjprs.2025.10.024 (2026). Article  
+ ADS  
+ 
+ Google Scholar  
+ Zhang, X., Dong, K., Cheng, D., Hua, Z. & Li, J. Stwanet: Spatio-temporal wavelet attention aggregation network for remote sensing change detection. IEEE J. Sel. Top. Appl. Earth Obs. Remote. Sens. 18 , 8813–8830. https://doi.org/10.1109/JSTARS.2025.3551093 (2025). Zhang, X., Wang, Z., Li, J. & Hua, Z. MVAFG: Multiview fusion and advanced feature guidance change detection network for remote sensing images. IEEE J. Sel. Top. Appl. Earth Obs. Remote. Sens. 17 , 11050–11068. https://doi.org/10.1109/JSTARS.2024.3407972 (2024). Article  
+ ADS  
+ 
+ Google Scholar  
+ Lei, S. & Shi, Z. Hybrid-scale self-similarity exploitation for remote sensing image super-resolution. IEEE Trans. Geosci. Remote Sens. 60 , 1–10. https://doi.org/10.1109/TGRS.2021.3069889 (2022). Article  
+ 
+ Google Scholar  
+ Xiao, Y. et al. Ttst: A top-k token selective transformer for remote sensing image super-resolution. IEEE Trans. Image Process. 33 , 738–752. https://doi.org/10.1109/TIP.2023.3349004 (2024). Article  
+ ADS  
+ PubMed  
+ 
+ Google Scholar  
+ Kang, X., Duan, P., Li, J. & Li, S. Efficient Swin transformer for remote sensing image super-resolution. IEEE Trans. Image Process. 33 , 6367–6379. https://doi.org/10.1109/TIP.2024.3489228 (2024). Article  
+ ADS  
+ PubMed  
+ 
+ Google Scholar  
+ Xiao, Y. et al. Ediffsr: An efficient diffusion probabilistic model for remote sensing image super-resolution. IEEE Trans. Geosci. Remote Sens. 62 , 1–14. https://doi.org/10.1109/TGRS.2023.3341437 (2024). Article  
+ 
+ Google Scholar  
+ Jiang, Y. et al. Hiif: Hierarchical encoding based implicit image function for continuous super-resolution. In 2025 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 2289–2299. https://doi.org/10.1109/CVPR52734.2025.00219 (2025). Hu, J., Xia, B., Chen, B., Yang, W. & Zhang, L. Gaussiansr: High fidelity 2d gaussian splatting for arbitrary-scale image super-resolution. In Walsh, T., Shah, J. & Kolter, Z. (eds.) AAAI-25, Sponsored by the Association for the Advancement of Artificial Intelligence, February 25 - March 4, 2025, Philadelphia, PA, USA , 3554–3562, https://doi.org/10.1609/AAAI.V39I4.32369 (AAAI Press, 2025). Yao, J.-E. et al. Local implicit normalizing flow for arbitrary-scale image super-resolution. In 2023 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 1776–1785. https://doi.org/10.1109/CVPR52729.2023.00177 (2023). Zhan, W., Lin, M., Lin, C.-W. & Ji, R. Anysr: Realizing image super-resolution as any-scale, any-resource. IEEE Trans. Image Process. 33 , 6564–6578. https://doi.org/10.1109/TIP.2024.3497807 (2024). Article  
+ ADS  
+ 
+ Google Scholar  
+ Chen, K. et al. Continuous remote sensing image super-resolution based on context interaction in implicit function space. IEEE Trans. Geosci. Remote Sens. 61 , 1–16. https://doi.org/10.1109/TGRS.2023.3272473 (2023). Article  
+ 
+ Google Scholar  
+ Wu, H., Ni, N. & Zhang, L. Learning dynamic scale awareness and global implicit functions for continuous-scale super-resolution of remote sensing images. IEEE Trans. Geosci. Remote Sens. 61 , 1–15. https://doi.org/10.1109/TGRS.2023.3240254 (2023). Article  
+ 
+ Google Scholar  
+ Chen, H.-W. et al. Cascaded local implicit transformer for arbitrary-scale super-resolution. In 2023 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 18257–18267. https://doi.org/10.1109/CVPR52729.2023.01751 (2023). Chen, Y., Liu, S. & Wang, X. Learning continuous image representation with local implicit image function. In 2021 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 8624–8634. https://doi.org/10.1109/CVPR46437.2021.00852 (2021). Xu, Q., Shi, Y. & Zhu, X. Universal domain adaptation without source data for remote sensing image scene classification. In IGARSS 2022 - 2022 IEEE International Geoscience and Remote Sensing Symposium , 5341–5344, https://doi.org/10.1109/IGARSS46834.2022.9884889 (2022). Wu, J. et al. Super-resolution domain adaptation networks for semantic segmentation via pixel and output level aligning. Front. Earth Sci. Volume 10 - 2022 , https://doi.org/10.3389/feart.2022.974325 (2022). Lei, S., Shi, Z. & Zou, Z. Super-resolution for remote sensing images via local–global combined network. IEEE Geosci. Remote Sens. Lett. 14 , 1243–1247. https://doi.org/10.1109/LGRS.2017.2704122 (2017). Article  
+ ADS  
+ 
+ Google Scholar  
+ Kong, D., Gu, L., Li, X. & Gao, F. Multiscale residual dense network for the super-resolution of remote sensing images. IEEE Trans. Geosci. Remote Sens. 62 , 1–12. https://doi.org/10.1109/TGRS.2024.3370826 (2024). Article  
+ 
+ Google Scholar  
+ Lei, S., Shi, Z. & Zou, Z. Coupled adversarial training for remote sensing image super-resolution. IEEE Trans. Geosci. Remote Sens. 58 , 3633–3643. https://doi.org/10.1109/TGRS.2019.2959020 (2020). Article  
+ ADS  
+ 
+ Google Scholar  
+ Jia, S., Wang, Z., Li, Q., Jia, X. & Xu, M. Multiattention generative adversarial network for remote sensing image super-resolution. IEEE Trans. Geosci. Remote Sens. 60 , 1–15. https://doi.org/10.1109/TGRS.2022.3180068 (2022). Article  
+ 
+ Google Scholar  
+ Meng, F. et al. Single remote sensing image super-resolution via a generative adversarial network with stratified dense sampling and chain training. IEEE Trans. Geosci. Remote Sens. 62 , 1–22. https://doi.org/10.1109/TGRS.2023.3344112 (2024). Article  
+ 
+ Google Scholar  
+ Zhang, K. et al. Csct: Channel–spatial coherent transformer for remote sensing image super-resolution. IEEE Trans. Geosci. Remote Sens. 63 , 1–14. https://doi.org/10.1109/TGRS.2025.3540260 (2025). Article  
+ 
+ Google Scholar  
+ Qiao, J. et al. Lipt: Latency-aware image processing transformer. IEEE Trans. Image Process. 34 , 3056–3069. https://doi.org/10.1109/TIP.2025.3567832 (2025). Article  
+ ADS  
+ PubMed  
+ 
+ Google Scholar  
+ Hu, X. et al. Meta-sr: A magnification-arbitrary network for super-resolution. In 2019 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 1575–1584, https://doi.org/10.1109/CVPR.2019.00167 (2019). Lim, B., Son, S., Kim, H., Nah, S. & Lee, K. M. Enhanced deep residual networks for single image super-resolution. In 2017 IEEE Conference on Computer Vision and Pattern Recognition Workshops (CVPRW) , 1132–1140, https://doi.org/10.1109/CVPRW.2017.151 (2017). Zhang, Y., Tian, Y., Kong, Y., Zhong, B. & Fu, Y. Residual dense network for image super-resolution. In 2018 IEEE/CVF Conference on Computer Vision and Pattern Recognition , 2472–2481, https://doi.org/10.1109/CVPR.2018.00262 (2018). Liang, J. et al. Swinir: Image restoration using swin transformer. In 2021 IEEE/CVF International Conference on Computer Vision Workshops (ICCVW) , 1833–1844, https://doi.org/10.1109/ICCVW54120.2021.00210 (2021). Xu, X., Wang, Z. & Shi, H. Ultrasr: Spatial encoding is a missing key for implicit image function-based arbitrary-scale super-resolution. CoRR abs/2103.12716 (2021). arXiv:2103.12716 . Liu, Y., Guo, Y. & Zhang, S. Enhancing multi-scale implicit learning in image super-resolution with integrated positional encoding. CoRR abs/2112.05756 (2021). arXiv:2112.05756 . Lee, J. & Jin, K. H. Local texture estimator for implicit representation function. In 2022 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 1919–1928, https://doi.org/10.1109/CVPR52688.2022.00197 (2022). Luo, J., Han, L., Gao, X., Liu, X. & Wang, W. Sr-feinr: Continuous remote sensing image super-resolution using feature-enhanced implicit neural representation. Sensors 23 , https://doi.org/10.3390/s23073573 (2023). An, T., Huo, C., Xiang, S. & Pan, C. Combining discrete and continuous representation: Scale-arbitrary super-resolution for satellite images. Remote Sensing 15 , https://doi.org/10.3390/rs15071827 (2023). Wu, H., Mo, J., Sun, X. & Ma, J. Latent diffusion, implicit amplification: Efficient continuous-scale super-resolution for remote sensing images. IEEE Trans. Geosci. Remote Sens. 63 , 1–17. https://doi.org/10.1109/TGRS.2025.3571290 (2025). Article  
+ 
+ Google Scholar  
+ Xu, Z., Tang, Y., Xu, B. & Li, Q. Neurop-diff:continuous remote sensing image super-resolution via neural operator diffusion. CoRR abs/2501.09054 , https://doi.org/10.48550/ARXIV.2501.09054 (2025). arXiv:2501.09054 . Finn, C., Abbeel, P. & Levine, S. Model-agnostic meta-learning for fast adaptation of deep networks. In Precup, D. & Teh, Y. W. (eds.) Proceedings of the 34th International Conference on Machine Learning , vol. 70 of Proceedings of Machine Learning Research , 1126–1135 (PMLR, 2017). Huisman, M., van Rijn, J. N. & Plaat, A. A survey of deep meta-learning. Artif. Intell. Rev. 54 , 4483–4541. https://doi.org/10.1007/S10462-021-10004-4 (2021). Article  
+ 
+ Google Scholar  
+ Wang, Y.-X., Ramanan, D. & Hebert, M. Meta-learning to detect rare objects. In 2019 IEEE/CVF International Conference on Computer Vision (ICCV) , 9924–9933, https://doi.org/10.1109/ICCV.2019.01002 (2019). Han, Y. et al. Learning to weight samples for dynamic early-exiting networks. In Avidan, S., Brostow, G. J., Cissé, M., Farinella, G. M. & Hassner, T. (eds.) Computer Vision - ECCV 2022 - 17th European Conference, Tel Aviv, Israel, October 23-27, 2022, Proceedings, Part XI , vol. 13671 of Lecture Notes in Computer Science , 362–378, https://doi.org/10.1007/978-3-031-20083-0_22 (Springer, 2022). Fu, H. et al. Continuous optical zooming: A benchmark for arbitrary-scale image super-resolution in real world. In 2024 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 3035–3044, https://doi.org/10.1109/CVPR52733.2024.00293 (2024). Dai, D. & Yang, W. Satellite image classification via two-layer sparse coding with biased image representation. IEEE Geosci. Remote Sens. Lett. 8 , 173–176. https://doi.org/10.1109/LGRS.2010.2055033 (2011). Article  
+ ADS  
+ 
+ Google Scholar  
+ Yang, Y. & Newsam, S. Bag-of-visual-words and spatial extensions for land-use classification. In Proceedings of the 18th SIGSPATIAL International Conference on Advances in Geographic Information Systems , GIS ’10, 270–279, https://doi.org/10.1145/1869790.1869829 (Association for Computing Machinery, New York, NY, USA, 2010). Paszke, A. et al. Pytorch: An imperative style, high-performance deep learning library. In Wallach, H. et al. (eds.) Advances in Neural Information Processing Systems , vol. 32 (Curran Associates, Inc., 2019). Kingma, D. P. & Ba, J. Adam: A method for stochastic optimization. In Bengio, Y. & LeCun, Y. (eds.) 3rd International Conference on Learning Representations, ICLR 2015, San Diego, CA, USA, May 7-9, 2015, Conference Track Proceedings (2015). Wang, Z., Bovik, A., Sheikh, H. & Simoncelli, E. Image quality assessment: From error visibility to structural similarity. IEEE Trans. Image Process. 13 , 600–612. https://doi.org/10.1109/TIP.2003.819861 (2004). Article  
+ ADS  
+ PubMed  
+ 
+ Google Scholar  
+ Huynh-Thu, Q. & Ghanbari, M. Scope of validity of psnr in image/video quality assessment. Electron. Lett. 44 , 800–801 (2008). Article  
+ ADS  
+ 
+ Google Scholar  
+ Download references Funding This work was supported by the National Natural Science Foundation of China under Grant No. 62462069. Author information Authors and Affiliations School of Mathematics and Computer Science, Yunnan Minzu University, Kunming, 650500, China Qiyue Zhang & Yi Tang XunDian No.1 Secondary School, Kunming, 655200, China Shunqiu Ma School of Physical Education, Yunnan Minzu University, Kunming, 650500, China Lingling Zheng Authors Qiyue Zhang View author publications Search author on: PubMed   Google Scholar Shunqiu Ma View author publications Search author on: PubMed   Google Scholar Yi Tang View author publications Search author on: PubMed   Google Scholar Lingling Zheng View author publications Search author on: PubMed   Google Scholar Contributions Methodology, Q.Z. and S.M. (Shunqiu Ma); Software, Q.Z.; Validation, S.M. and Y.T. (Yi Tang); Formal Analysis, Q.Z.; Investigation, S.M.; Resources, L.Z.; Data Curation, Y.T.; Writing—Original Draft Preparation, Q.Z.; Writing—Review & Editing, S.M., Y.T. and L.Z.; Visualization, Q.Z.; Supervision, L.Z.; Project Administration, L.Z.; Funding Acquisition, L.Z. Corresponding author Correspondence to
+ Lingling Zheng . Ethics declarations 
+ 
+ 
+ Competing interests 
+ The authors declare no competing interests. 
+ 
+ Additional information Publisher’s note Springer Nature remains neutral with regard to jurisdictional claims in published maps and institutional affiliations. Rights and permissions 
+ Open Access This article is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License, which permits any non-commercial use, sharing, distribution and reproduction in any medium or format, as long as you give appropriate credit to the original author(s) and the source, provide a link to the Creative Commons licence, and indicate if you modified the licensed material. You do not have permission under this licence to share adapted material derived from this article or parts of it. The images or other third party material in this article are included in the article’s Creative Commons licence, unless indicated otherwise in a credit line to the material. If material is not included in the article’s Creative Commons licence and your intended use is not permitted by statutory regulation or exceeds the permitted use, you will need to obtain permission directly from the copyright holder. To view a copy of this licence, visit http://creativecommons.org/licenses/by-nc-nd/4.0/ . 
+ Reprints and permissions About this article Cite this article Zhang, Q., Ma, S., Tang, Y. et al. Cross-domain continuous-scale remote sensing image super-resolution via meta-weight learning.
+ Sci Rep 16 , 6073 (2026). https://doi.org/10.1038/s41598-026-36632-w Download citation Received : 12 November 2025 Accepted : 14 January 2026 Published : 23 January 2026 Version of record : 12 February 2026 DOI : https://doi.org/10.1038/s41598-026-36632-w Share this article Anyone you share the following link with will be able to read this content: Get shareable link Sorry, a shareable link is not currently available for this article. Copy shareable link to clipboard 
+ Provided by the Springer Nature SharedIt content-sharing initiative
+ Keywords Continuous remote sensing image super-resolution Implicit neural representation Meta-weight learning 
+ 
+
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ Download PDF 
+ 
+ 
+ 
+ 
+
+ 
+ 
+
+
+
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Advertisement 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+
+ 
+
+
+
+
+ 
+ 
+ 
+ Explore content 
+ 
+ 
+ 
+ 
+ 
+ Research articles
+ 
+ 
+ 
+ 
+ 
+ News & Comment
+ 
+ 
+ 
+ 
+ 
+ Collections
+ 
+ 
+ 
+ 
+ 
+ Subjects
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Follow us on Facebook
+ 
+ 
+ 
+ 
+ 
+ 
+ Follow us on X
+ 
+ 
+ 
+ 
+ 
+ 
+ Sign up for alerts 
+ 
+ 
+ 
+ 
+ 
+ 
+ RSS feed 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ About the journal 
+ 
+ 
+ 
+ 
+ About Scientific Reports
+ 
+ 
+ 
+ 
+ 
+ Contact
+ 
+ 
+ 
+ 
+ 
+ Editors
+ 
+ 
+ 
+ 
+ 
+ Journal policies
+ 
+ 
+ 
+ 
+ 
+ Guide to referees
+ 
+ 
+ 
+ 
+ 
+ Calls for Papers
+ 
+ 
+ 
+ 
+ 
+ Editor's Choice
+ 
+ 
+ 
+ 
+ 
+ Journal highlights
+ 
+ 
+ 
+ 
+ 
+ Open Access Fees and Funding
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ Publish with us 
+ 
+ 
+ 
+ 
+ For authors
+ 
+ 
+ 
+ 
+ 
+ 
+ Language editing services
+ 
+ 
+ 
+ 
+ 
+ Open access funding 
+ 
+ 
+ 
+ 
+ Submit manuscript 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+ 
+ 
+ Search 
+ 
+ Search articles by subject, keyword or author 
+ 
+ 
+ 
+ 
+ 
+ 
+ Show results from 
+ 
+ 
+ 
+ All journals 
+ This journal 
+ 
+ 
+ 
+ 
+ 
+ Search 
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+ Advanced search
+ 
+ 
+
+ Quick links 
+ 
+ Explore articles by subject 
+ Find a job 
+ Guide to authors 
+ Editorial policies 
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ Scientific Reports
+ 
+ ( Sci Rep )
+ 
+ 
+ 
+ 
+ ISSN 2045-2322 (online)
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+ 
+ nature.com footer links 
+ 
+ 
+ 
+ About Nature Portfolio 
+ 
+ About us 
+ Press releases 
+ Press office 
+ Contact us 
+ 
+ 
+
+ 
+ Discover content 
+ 
+ Journals A-Z 
+ Articles by subject 
+ protocols.io 
+ Nature Index 
+ 
+ Nature Books 
+ 
+ 
+ 
+
+ 
+ Publishing policies 
+ 
+ Nature portfolio policies 
+ Open access 
+ 
+ 
+
+ 
+ Author & Researcher services 
+ 
+ Reprints & permissions 
+ Research data 
+ Language editing 
+ Scientific editing 
+ Nature Masterclasses 
+ Research Solutions 
+ 
+ 
+
+ 
+ Libraries & institutions 
+ 
+ Librarian service & tools 
+ Librarian portal 
+ Open research 
+ Recommend to library 
+ 
+ 
+
+ 
+ Advertising & partnerships 
+ 
+ Advertising 
+ Partnerships & Services 
+ Media kits 
+ 
+ Branded
+ content 
+ 
+ 
+
+ 
+ Professional development 
+ 
+ Nature Awards 
+ Nature Careers 
+ Nature 
+ Conferences 
+ 
+ 
+
+ 
+ Regional websites 
+ 
+ Nature Africa 
+ Nature China 
+ Nature India 
+ Nature Japan 
+ Nature Middle East 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ Privacy
+ Policy 
+ Use
+ of cookies 
+ 
+ Your privacy choices/Manage cookies
+ 
+ 
+ Legal
+ notice 
+ Accessibility
+ statement 
+ Terms & Conditions 
+ Your US state privacy rights 
+ 
+ 
+ 
+ 
+
+
+ 
+ 
+ 
+ 
+ © 2026 Springer Nature Limited 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+
+ 
+
+ 
+
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ Close banner 
+ 
+ 
+ 
+ 
+ 
+ 
+ Close 
+ 
+ 
+
+
+ 
+
+ 
+ 
+ 
+ Sign up for the Nature Briefing: AI and Robotics newsletter — what matters in AI and robotics research, free to your inbox weekly. 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+ Email address 
+
+ 
+ 
+ 
+ 
+ Sign up 
+ 
+
+ 
+ 
+ I agree my information will be processed in accordance with the Nature and Springer Nature Limited Privacy Policy . 
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ Close banner 
+ 
+ 
+ 
+ 
+ 
+ 
+ Close 
+ 
+ 
+
+
+ 
+ Get the most important science stories of the day, free in your inbox. 
+ Sign up for Nature Briefing: AI and Robotics
+ 
+ 
+
+ 
+
+ 
+
+
+
+
+
+
+ 
+ 
