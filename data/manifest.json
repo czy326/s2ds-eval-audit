@@ -1,0 +1,3062 @@
+[
+ {
+  "rel": "bsr_2x2ext/a2_rsscn7_s2026/test_per_image.jsonl",
+  "group": "bsr_2x2ext",
+  "run_name": "a2_rsscn7_s2026",
+  "dataset": "RSSCN7",
+  "seed": 2026,
+  "n_images": 281,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 281,
+  "size_match": true,
+  "first_3_paths": [
+   "RSSCN7/images/all/rsscn7_1219.jpg",
+   "RSSCN7/images/all/rsscn7_0107.jpg",
+   "RSSCN7/images/all/rsscn7_0919.jpg"
+  ],
+  "mean_psnr": 33.188644497420015
+ },
+ {
+  "rel": "bsr_2x2ext/a2_ucmerced_s2026/test_per_image.jsonl",
+  "group": "bsr_2x2ext",
+  "run_name": "a2_ucmerced_s2026",
+  "dataset": "UCMerced_LandUse",
+  "seed": 2026,
+  "n_images": 210,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 210,
+  "size_match": true,
+  "first_3_paths": [
+   "UCMerced_LandUse/UCMerced_LandUse/Images/storagetanks/storagetanks99.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/parkinglot/parkinglot64.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/chaparral/chaparral58.tif"
+  ],
+  "mean_psnr": 32.26404088338216
+ },
+ {
+  "rel": "bsr_2x2ext/edge_deep_rsscn7_s2026/test_per_image.jsonl",
+  "group": "bsr_2x2ext",
+  "run_name": "edge_deep_rsscn7_s2026",
+  "dataset": "RSSCN7",
+  "seed": 2026,
+  "n_images": 281,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 281,
+  "size_match": true,
+  "first_3_paths": [
+   "RSSCN7/images/all/rsscn7_1219.jpg",
+   "RSSCN7/images/all/rsscn7_0107.jpg",
+   "RSSCN7/images/all/rsscn7_0919.jpg"
+  ],
+  "mean_psnr": 33.18299396012601
+ },
+ {
+  "rel": "bsr_2x2ext/edge_deep_ucmerced_s2026/test_per_image.jsonl",
+  "group": "bsr_2x2ext",
+  "run_name": "edge_deep_ucmerced_s2026",
+  "dataset": "UCMerced_LandUse",
+  "seed": 2026,
+  "n_images": 210,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 210,
+  "size_match": true,
+  "first_3_paths": [
+   "UCMerced_LandUse/UCMerced_LandUse/Images/storagetanks/storagetanks99.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/parkinglot/parkinglot64.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/chaparral/chaparral58.tif"
+  ],
+  "mean_psnr": 32.35080770765032
+ },
+ {
+  "rel": "bsr_2x2ext/edge_fuse_rsscn7_s2026/test_per_image.jsonl",
+  "group": "bsr_2x2ext",
+  "run_name": "edge_fuse_rsscn7_s2026",
+  "dataset": "RSSCN7",
+  "seed": 2026,
+  "n_images": 281,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 281,
+  "size_match": true,
+  "first_3_paths": [
+   "RSSCN7/images/all/rsscn7_1219.jpg",
+   "RSSCN7/images/all/rsscn7_0107.jpg",
+   "RSSCN7/images/all/rsscn7_0919.jpg"
+  ],
+  "mean_psnr": 33.197813013694464
+ },
+ {
+  "rel": "bsr_2x2ext/edge_fuse_ucmerced_s2026/test_per_image.jsonl",
+  "group": "bsr_2x2ext",
+  "run_name": "edge_fuse_ucmerced_s2026",
+  "dataset": "UCMerced_LandUse",
+  "seed": 2026,
+  "n_images": 210,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 210,
+  "size_match": true,
+  "first_3_paths": [
+   "UCMerced_LandUse/UCMerced_LandUse/Images/storagetanks/storagetanks99.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/parkinglot/parkinglot64.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/chaparral/chaparral58.tif"
+  ],
+  "mean_psnr": 32.25806876591274
+ },
+ {
+  "rel": "bsr_adapter/adapter_full_b3frozen_s2026/test_per_image.jsonl",
+  "group": "bsr_adapter",
+  "run_name": "adapter_full_b3frozen_s2026",
+  "dataset": null,
+  "seed": 2026,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": null,
+  "size_match": null,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.56989008522034
+ },
+ {
+  "rel": "bsr_adapter/adapter_full_b3frozen_s2026_v2/test_per_image.jsonl",
+  "group": "bsr_adapter",
+  "run_name": "adapter_full_b3frozen_s2026_v2",
+  "dataset": null,
+  "seed": 2026,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": null,
+  "size_match": null,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.5780246963501
+ },
+ {
+  "rel": "bsr_cross/b3_rsscn7_s2026/test_per_image.jsonl",
+  "group": "bsr_cross",
+  "run_name": "b3_rsscn7_s2026",
+  "dataset": "RSSCN7",
+  "seed": 2026,
+  "n_images": 281,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 281,
+  "size_match": true,
+  "first_3_paths": [
+   "RSSCN7/images/all/rsscn7_1219.jpg",
+   "RSSCN7/images/all/rsscn7_0107.jpg",
+   "RSSCN7/images/all/rsscn7_0919.jpg"
+  ],
+  "mean_psnr": 33.221156945007976
+ },
+ {
+  "rel": "bsr_cross/b3_rsscn7_s2027/test_per_image.jsonl",
+  "group": "bsr_cross",
+  "run_name": "b3_rsscn7_s2027",
+  "dataset": "RSSCN7",
+  "seed": 2027,
+  "n_images": 281,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 281,
+  "size_match": true,
+  "first_3_paths": [
+   "RSSCN7/images/all/rsscn7_1219.jpg",
+   "RSSCN7/images/all/rsscn7_0107.jpg",
+   "RSSCN7/images/all/rsscn7_0919.jpg"
+  ],
+  "mean_psnr": 33.23253645167232
+ },
+ {
+  "rel": "bsr_cross/b3_rsscn7_s2028/test_per_image.jsonl",
+  "group": "bsr_cross",
+  "run_name": "b3_rsscn7_s2028",
+  "dataset": "RSSCN7",
+  "seed": 2028,
+  "n_images": 281,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 281,
+  "size_match": true,
+  "first_3_paths": [
+   "RSSCN7/images/all/rsscn7_1219.jpg",
+   "RSSCN7/images/all/rsscn7_0107.jpg",
+   "RSSCN7/images/all/rsscn7_0919.jpg"
+  ],
+  "mean_psnr": 33.22233128123436
+ },
+ {
+  "rel": "bsr_cross/b3_ucmerced_s2026/test_per_image.jsonl",
+  "group": "bsr_cross",
+  "run_name": "b3_ucmerced_s2026",
+  "dataset": "UCMerced_LandUse",
+  "seed": 2026,
+  "n_images": 210,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 210,
+  "size_match": true,
+  "first_3_paths": [
+   "UCMerced_LandUse/UCMerced_LandUse/Images/storagetanks/storagetanks99.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/parkinglot/parkinglot64.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/chaparral/chaparral58.tif"
+  ],
+  "mean_psnr": 32.26467214311872
+ },
+ {
+  "rel": "bsr_cross/b3_ucmerced_s2027/test_per_image.jsonl",
+  "group": "bsr_cross",
+  "run_name": "b3_ucmerced_s2027",
+  "dataset": "UCMerced_LandUse",
+  "seed": 2027,
+  "n_images": 210,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 210,
+  "size_match": true,
+  "first_3_paths": [
+   "UCMerced_LandUse/UCMerced_LandUse/Images/storagetanks/storagetanks99.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/parkinglot/parkinglot64.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/chaparral/chaparral58.tif"
+  ],
+  "mean_psnr": 32.3068149294172
+ },
+ {
+  "rel": "bsr_cross/b3_ucmerced_s2028/test_per_image.jsonl",
+  "group": "bsr_cross",
+  "run_name": "b3_ucmerced_s2028",
+  "dataset": "UCMerced_LandUse",
+  "seed": 2028,
+  "n_images": 210,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 210,
+  "size_match": true,
+  "first_3_paths": [
+   "UCMerced_LandUse/UCMerced_LandUse/Images/storagetanks/storagetanks99.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/parkinglot/parkinglot64.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/chaparral/chaparral58.tif"
+  ],
+  "mean_psnr": 32.30600479670933
+ },
+ {
+  "rel": "bsr_cross/b3_whurs19_s2026/test_per_image.jsonl",
+  "group": "bsr_cross",
+  "run_name": "b3_whurs19_s2026",
+  "dataset": "WHU-RS19",
+  "seed": 2026,
+  "n_images": 101,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 101,
+  "size_match": true,
+  "first_3_paths": [
+   "WHU-RS19/footballField/footballField_03.jpg",
+   "WHU-RS19/Viaduct/viaduct_24.jpg",
+   "WHU-RS19/Commercial/commercial_50.jpg"
+  ],
+  "mean_psnr": 37.81208487784509
+ },
+ {
+  "rel": "bsr_cross/b3_whurs19_s2027/test_per_image.jsonl",
+  "group": "bsr_cross",
+  "run_name": "b3_whurs19_s2027",
+  "dataset": "WHU-RS19",
+  "seed": 2027,
+  "n_images": 101,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 101,
+  "size_match": true,
+  "first_3_paths": [
+   "WHU-RS19/footballField/footballField_03.jpg",
+   "WHU-RS19/Viaduct/viaduct_24.jpg",
+   "WHU-RS19/Commercial/commercial_50.jpg"
+  ],
+  "mean_psnr": 37.865742447352645
+ },
+ {
+  "rel": "bsr_cross/b3_whurs19_s2028/test_per_image.jsonl",
+  "group": "bsr_cross",
+  "run_name": "b3_whurs19_s2028",
+  "dataset": "WHU-RS19",
+  "seed": 2028,
+  "n_images": 101,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 101,
+  "size_match": true,
+  "first_3_paths": [
+   "WHU-RS19/footballField/footballField_03.jpg",
+   "WHU-RS19/Viaduct/viaduct_24.jpg",
+   "WHU-RS19/Commercial/commercial_50.jpg"
+  ],
+  "mean_psnr": 37.906644462358834
+ },
+ {
+  "rel": "bsr_eff/litecnn_c32/test_per_image.jsonl",
+  "group": "bsr_eff",
+  "run_name": "litecnn_c32",
+  "dataset": null,
+  "seed": null,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": null,
+  "size_match": null,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.445312797546386
+ },
+ {
+  "rel": "bsr_eff/litecnn_c40/test_per_image.jsonl",
+  "group": "bsr_eff",
+  "run_name": "litecnn_c40",
+  "dataset": null,
+  "seed": null,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": null,
+  "size_match": null,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.521516784667966
+ },
+ {
+  "rel": "bsr_eff/litecnn_edge_fuse/test_per_image.jsonl",
+  "group": "bsr_eff",
+  "run_name": "litecnn_edge_fuse",
+  "dataset": null,
+  "seed": null,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": null,
+  "size_match": null,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.47997286605835
+ },
+ {
+  "rel": "bsr_l4/rcan_small_edge_fuse_aid_s2026/test_per_image.jsonl",
+  "group": "bsr_l4",
+  "run_name": "rcan_small_edge_fuse_aid_s2026",
+  "dataset": "AID",
+  "seed": 2026,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 1000,
+  "size_match": true,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.9784464302063
+ },
+ {
+  "rel": "bsr_stage1/stage1_aid_A1_emssm/test_per_image.jsonl",
+  "group": "bsr_stage1",
+  "run_name": "stage1_aid_A1_emssm",
+  "dataset": "AID",
+  "seed": null,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 1000,
+  "size_match": true,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.46843209648132
+ },
+ {
+  "rel": "bsr_stage1/stage1_aid_A2_dir_edge/test_per_image.jsonl",
+  "group": "bsr_stage1",
+  "run_name": "stage1_aid_A2_dir_edge",
+  "dataset": "AID",
+  "seed": null,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 1000,
+  "size_match": true,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.504507705688475
+ },
+ {
+  "rel": "bsr_stage1/stage1_aid_A3_gate/test_per_image.jsonl",
+  "group": "bsr_stage1",
+  "run_name": "stage1_aid_A3_gate",
+  "dataset": "AID",
+  "seed": null,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 1000,
+  "size_match": true,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.45911167526245
+ },
+ {
+  "rel": "bsr_stage1/stage1_aid_A4_recur/test_per_image.jsonl",
+  "group": "bsr_stage1",
+  "run_name": "stage1_aid_A4_recur",
+  "dataset": "AID",
+  "seed": null,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 1000,
+  "size_match": true,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.46803063964844
+ },
+ {
+  "rel": "bsr_stage2/stage2_aid_edge_deep/test_per_image.jsonl",
+  "group": "bsr_stage2",
+  "run_name": "stage2_aid_edge_deep",
+  "dataset": "AID",
+  "seed": null,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 1000,
+  "size_match": true,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.49103451538086
+ },
+ {
+  "rel": "bsr_stage2/stage2_aid_edge_deep_fuse/test_per_image.jsonl",
+  "group": "bsr_stage2",
+  "run_name": "stage2_aid_edge_deep_fuse",
+  "dataset": "AID",
+  "seed": null,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 1000,
+  "size_match": true,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.56989008522034
+ },
+ {
+  "rel": "bsr_stage2/stage2_aid_edge_deep_fuse_s2027/test_per_image.jsonl",
+  "group": "bsr_stage2",
+  "run_name": "stage2_aid_edge_deep_fuse_s2027",
+  "dataset": "AID",
+  "seed": 2027,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 1000,
+  "size_match": true,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.58776958656311
+ },
+ {
+  "rel": "bsr_stage2/stage2_aid_edge_deep_fuse_s2028/test_per_image.jsonl",
+  "group": "bsr_stage2",
+  "run_name": "stage2_aid_edge_deep_fuse_s2028",
+  "dataset": "AID",
+  "seed": 2028,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 1000,
+  "size_match": true,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.54880423164368
+ },
+ {
+  "rel": "bsr_stage2/stage2_aid_edge_fuse/test_per_image.jsonl",
+  "group": "bsr_stage2",
+  "run_name": "stage2_aid_edge_fuse",
+  "dataset": "AID",
+  "seed": null,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 1000,
+  "size_match": true,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.499515687942505
+ },
+ {
+  "rel": "bsr_stage3/eddr_C4_dirloss/test_per_image.jsonl",
+  "group": "bsr_stage3",
+  "run_name": "eddr_C4_dirloss",
+  "dataset": null,
+  "seed": null,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": null,
+  "size_match": null,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.57080921554565
+ },
+ {
+  "rel": "bsr_stage3/eddr_C5_full/test_per_image.jsonl",
+  "group": "bsr_stage3",
+  "run_name": "eddr_C5_full",
+  "dataset": null,
+  "seed": null,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": null,
+  "size_match": null,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.54352615737915
+ },
+ {
+  "rel": "cross/cross_rsscn7_baseline_x2/test_per_image.jsonl",
+  "group": "cross",
+  "run_name": "cross_rsscn7_baseline_x2",
+  "dataset": "RSSCN7",
+  "seed": null,
+  "n_images": 281,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 281,
+  "size_match": true,
+  "first_3_paths": [
+   "RSSCN7/images/all/rsscn7_1219.jpg",
+   "RSSCN7/images/all/rsscn7_0107.jpg",
+   "RSSCN7/images/all/rsscn7_0919.jpg"
+  ],
+  "mean_psnr": 33.19318169291758
+ },
+ {
+  "rel": "cross/cross_rsscn7_oracle_x2/test_per_image.jsonl",
+  "group": "cross",
+  "run_name": "cross_rsscn7_oracle_x2",
+  "dataset": "RSSCN7",
+  "seed": null,
+  "n_images": 281,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 281,
+  "size_match": true,
+  "first_3_paths": [
+   "RSSCN7/images/all/rsscn7_1219.jpg",
+   "RSSCN7/images/all/rsscn7_0107.jpg",
+   "RSSCN7/images/all/rsscn7_0919.jpg"
+  ],
+  "mean_psnr": 33.19243614359682
+ },
+ {
+  "rel": "cross/cross_rsscn7_state_gate_x2/test_per_image.jsonl",
+  "group": "cross",
+  "run_name": "cross_rsscn7_state_gate_x2",
+  "dataset": "RSSCN7",
+  "seed": null,
+  "n_images": 281,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 281,
+  "size_match": true,
+  "first_3_paths": [
+   "RSSCN7/images/all/rsscn7_1219.jpg",
+   "RSSCN7/images/all/rsscn7_0107.jpg",
+   "RSSCN7/images/all/rsscn7_0919.jpg"
+  ],
+  "mean_psnr": 33.18824165317088
+ },
+ {
+  "rel": "cross/cross_ucmerced_baseline_x2/test_per_image.jsonl",
+  "group": "cross",
+  "run_name": "cross_ucmerced_baseline_x2",
+  "dataset": "UCMerced_LandUse",
+  "seed": null,
+  "n_images": 210,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 210,
+  "size_match": true,
+  "first_3_paths": [
+   "UCMerced_LandUse/UCMerced_LandUse/Images/storagetanks/storagetanks99.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/parkinglot/parkinglot64.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/chaparral/chaparral58.tif"
+  ],
+  "mean_psnr": 32.237781125023254
+ },
+ {
+  "rel": "cross/cross_ucmerced_oracle_x2/test_per_image.jsonl",
+  "group": "cross",
+  "run_name": "cross_ucmerced_oracle_x2",
+  "dataset": "UCMerced_LandUse",
+  "seed": null,
+  "n_images": 210,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 210,
+  "size_match": true,
+  "first_3_paths": [
+   "UCMerced_LandUse/UCMerced_LandUse/Images/storagetanks/storagetanks99.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/parkinglot/parkinglot64.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/chaparral/chaparral58.tif"
+  ],
+  "mean_psnr": 32.238574990772065
+ },
+ {
+  "rel": "cross/cross_ucmerced_state_gate_x2/test_per_image.jsonl",
+  "group": "cross",
+  "run_name": "cross_ucmerced_state_gate_x2",
+  "dataset": "UCMerced_LandUse",
+  "seed": null,
+  "n_images": 210,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 210,
+  "size_match": true,
+  "first_3_paths": [
+   "UCMerced_LandUse/UCMerced_LandUse/Images/storagetanks/storagetanks99.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/parkinglot/parkinglot64.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/chaparral/chaparral58.tif"
+  ],
+  "mean_psnr": 32.188849603562126
+ },
+ {
+  "rel": "cross/cross_whurs19_baseline_x2/test_per_image.jsonl",
+  "group": "cross",
+  "run_name": "cross_whurs19_baseline_x2",
+  "dataset": "WHU-RS19",
+  "seed": null,
+  "n_images": 101,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 101,
+  "size_match": true,
+  "first_3_paths": [
+   "WHU-RS19/footballField/footballField_03.jpg",
+   "WHU-RS19/Viaduct/viaduct_24.jpg",
+   "WHU-RS19/Commercial/commercial_50.jpg"
+  ],
+  "mean_psnr": 37.865626684509884
+ },
+ {
+  "rel": "cross/cross_whurs19_oracle_x2/test_per_image.jsonl",
+  "group": "cross",
+  "run_name": "cross_whurs19_oracle_x2",
+  "dataset": "WHU-RS19",
+  "seed": null,
+  "n_images": 101,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 101,
+  "size_match": true,
+  "first_3_paths": [
+   "WHU-RS19/footballField/footballField_03.jpg",
+   "WHU-RS19/Viaduct/viaduct_24.jpg",
+   "WHU-RS19/Commercial/commercial_50.jpg"
+  ],
+  "mean_psnr": 37.86625063301313
+ },
+ {
+  "rel": "cross/cross_whurs19_state_gate_x2/test_per_image.jsonl",
+  "group": "cross",
+  "run_name": "cross_whurs19_state_gate_x2",
+  "dataset": "WHU-RS19",
+  "seed": null,
+  "n_images": 101,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 101,
+  "size_match": true,
+  "first_3_paths": [
+   "WHU-RS19/footballField/footballField_03.jpg",
+   "WHU-RS19/Viaduct/viaduct_24.jpg",
+   "WHU-RS19/Commercial/commercial_50.jpg"
+  ],
+  "mean_psnr": 37.85091696635331
+ },
+ {
+  "rel": "decision/decision_baseline_x2/test_per_image.jsonl",
+  "group": "decision",
+  "run_name": "decision_baseline_x2",
+  "dataset": null,
+  "seed": null,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": null,
+  "size_match": null,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.46604660224914
+ },
+ {
+  "rel": "decision/decision_oracle_x2/test_per_image.jsonl",
+  "group": "decision",
+  "run_name": "decision_oracle_x2",
+  "dataset": null,
+  "seed": null,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": null,
+  "size_match": null,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.468920923233036
+ },
+ {
+  "rel": "decision/decision_state_gate_x2/test_per_image.jsonl",
+  "group": "decision",
+  "run_name": "decision_state_gate_x2",
+  "dataset": null,
+  "seed": null,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": null,
+  "size_match": null,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.47649789428711
+ },
+ {
+  "rel": "main/base_ssm_aid_s2026/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "base_ssm_aid_s2026",
+  "dataset": "AID",
+  "seed": 2026,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 1000,
+  "size_match": true,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.48494532775879
+ },
+ {
+  "rel": "main/base_ssm_aid_s2027/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "base_ssm_aid_s2027",
+  "dataset": "AID",
+  "seed": 2027,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 1000,
+  "size_match": true,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.46054935455322
+ },
+ {
+  "rel": "main/base_ssm_aid_s2028/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "base_ssm_aid_s2028",
+  "dataset": "AID",
+  "seed": 2028,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 1000,
+  "size_match": true,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.47440599250793
+ },
+ {
+  "rel": "main/base_ssm_rsscn7_s2026/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "base_ssm_rsscn7_s2026",
+  "dataset": "RSSCN7",
+  "seed": 2026,
+  "n_images": 281,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 281,
+  "size_match": true,
+  "first_3_paths": [
+   "RSSCN7/images/all/rsscn7_1219.jpg",
+   "RSSCN7/images/all/rsscn7_0107.jpg",
+   "RSSCN7/images/all/rsscn7_0919.jpg"
+  ],
+  "mean_psnr": 33.18312423000132
+ },
+ {
+  "rel": "main/base_ssm_rsscn7_s2027/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "base_ssm_rsscn7_s2027",
+  "dataset": "RSSCN7",
+  "seed": 2027,
+  "n_images": 281,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 281,
+  "size_match": true,
+  "first_3_paths": [
+   "RSSCN7/images/all/rsscn7_1219.jpg",
+   "RSSCN7/images/all/rsscn7_0107.jpg",
+   "RSSCN7/images/all/rsscn7_0919.jpg"
+  ],
+  "mean_psnr": 33.18222725348965
+ },
+ {
+  "rel": "main/base_ssm_rsscn7_s2028/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "base_ssm_rsscn7_s2028",
+  "dataset": "RSSCN7",
+  "seed": 2028,
+  "n_images": 281,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 281,
+  "size_match": true,
+  "first_3_paths": [
+   "RSSCN7/images/all/rsscn7_1219.jpg",
+   "RSSCN7/images/all/rsscn7_0107.jpg",
+   "RSSCN7/images/all/rsscn7_0919.jpg"
+  ],
+  "mean_psnr": 33.18262121261651
+ },
+ {
+  "rel": "main/base_ssm_ucmerced_s2026/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "base_ssm_ucmerced_s2026",
+  "dataset": "UCMerced_LandUse",
+  "seed": 2026,
+  "n_images": 210,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 210,
+  "size_match": true,
+  "first_3_paths": [
+   "UCMerced_LandUse/UCMerced_LandUse/Images/storagetanks/storagetanks99.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/parkinglot/parkinglot64.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/chaparral/chaparral58.tif"
+  ],
+  "mean_psnr": 32.23480156489781
+ },
+ {
+  "rel": "main/base_ssm_ucmerced_s2027/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "base_ssm_ucmerced_s2027",
+  "dataset": "UCMerced_LandUse",
+  "seed": 2027,
+  "n_images": 210,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 210,
+  "size_match": true,
+  "first_3_paths": [
+   "UCMerced_LandUse/UCMerced_LandUse/Images/storagetanks/storagetanks99.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/parkinglot/parkinglot64.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/chaparral/chaparral58.tif"
+  ],
+  "mean_psnr": 32.28372732798258
+ },
+ {
+  "rel": "main/base_ssm_ucmerced_s2028/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "base_ssm_ucmerced_s2028",
+  "dataset": "UCMerced_LandUse",
+  "seed": 2028,
+  "n_images": 210,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 210,
+  "size_match": true,
+  "first_3_paths": [
+   "UCMerced_LandUse/UCMerced_LandUse/Images/storagetanks/storagetanks99.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/parkinglot/parkinglot64.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/chaparral/chaparral58.tif"
+  ],
+  "mean_psnr": 32.26682921818325
+ },
+ {
+  "rel": "main/base_ssm_whurs19_s2026/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "base_ssm_whurs19_s2026",
+  "dataset": "WHU-RS19",
+  "seed": 2026,
+  "n_images": 101,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 101,
+  "size_match": true,
+  "first_3_paths": [
+   "WHU-RS19/footballField/footballField_03.jpg",
+   "WHU-RS19/Viaduct/viaduct_24.jpg",
+   "WHU-RS19/Commercial/commercial_50.jpg"
+  ],
+  "mean_psnr": 37.83544172154795
+ },
+ {
+  "rel": "main/base_ssm_whurs19_s2027/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "base_ssm_whurs19_s2027",
+  "dataset": "WHU-RS19",
+  "seed": 2027,
+  "n_images": 101,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 101,
+  "size_match": true,
+  "first_3_paths": [
+   "WHU-RS19/footballField/footballField_03.jpg",
+   "WHU-RS19/Viaduct/viaduct_24.jpg",
+   "WHU-RS19/Commercial/commercial_50.jpg"
+  ],
+  "mean_psnr": 37.84957995273099
+ },
+ {
+  "rel": "main/base_ssm_whurs19_s2028/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "base_ssm_whurs19_s2028",
+  "dataset": "WHU-RS19",
+  "seed": 2028,
+  "n_images": 101,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 101,
+  "size_match": true,
+  "first_3_paths": [
+   "WHU-RS19/footballField/footballField_03.jpg",
+   "WHU-RS19/Viaduct/viaduct_24.jpg",
+   "WHU-RS19/Commercial/commercial_50.jpg"
+  ],
+  "mean_psnr": 37.84063522414406
+ },
+ {
+  "rel": "main/edge_only_aid_s2026/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "edge_only_aid_s2026",
+  "dataset": "AID",
+  "seed": 2026,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 1000,
+  "size_match": true,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.448206813812256
+ },
+ {
+  "rel": "main/edge_only_aid_s2027/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "edge_only_aid_s2027",
+  "dataset": "AID",
+  "seed": 2027,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 1000,
+  "size_match": true,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.460575534820556
+ },
+ {
+  "rel": "main/edge_only_aid_s2028/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "edge_only_aid_s2028",
+  "dataset": "AID",
+  "seed": 2028,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 1000,
+  "size_match": true,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.449858364105225
+ },
+ {
+  "rel": "main/edge_only_rsscn7_s2026/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "edge_only_rsscn7_s2026",
+  "dataset": "RSSCN7",
+  "seed": 2026,
+  "n_images": 281,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 281,
+  "size_match": true,
+  "first_3_paths": [
+   "RSSCN7/images/all/rsscn7_1219.jpg",
+   "RSSCN7/images/all/rsscn7_0107.jpg",
+   "RSSCN7/images/all/rsscn7_0919.jpg"
+  ],
+  "mean_psnr": 33.18028874244554
+ },
+ {
+  "rel": "main/edge_only_rsscn7_s2027/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "edge_only_rsscn7_s2027",
+  "dataset": "RSSCN7",
+  "seed": 2027,
+  "n_images": 281,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 281,
+  "size_match": true,
+  "first_3_paths": [
+   "RSSCN7/images/all/rsscn7_1219.jpg",
+   "RSSCN7/images/all/rsscn7_0107.jpg",
+   "RSSCN7/images/all/rsscn7_0919.jpg"
+  ],
+  "mean_psnr": 33.17283312705912
+ },
+ {
+  "rel": "main/edge_only_rsscn7_s2028/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "edge_only_rsscn7_s2028",
+  "dataset": "RSSCN7",
+  "seed": 2028,
+  "n_images": 281,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 281,
+  "size_match": true,
+  "first_3_paths": [
+   "RSSCN7/images/all/rsscn7_1219.jpg",
+   "RSSCN7/images/all/rsscn7_0107.jpg",
+   "RSSCN7/images/all/rsscn7_0919.jpg"
+  ],
+  "mean_psnr": 33.175335887488096
+ },
+ {
+  "rel": "main/edge_only_ucmerced_s2026/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "edge_only_ucmerced_s2026",
+  "dataset": "UCMerced_LandUse",
+  "seed": 2026,
+  "n_images": 210,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 210,
+  "size_match": true,
+  "first_3_paths": [
+   "UCMerced_LandUse/UCMerced_LandUse/Images/storagetanks/storagetanks99.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/parkinglot/parkinglot64.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/chaparral/chaparral58.tif"
+  ],
+  "mean_psnr": 32.245778674171085
+ },
+ {
+  "rel": "main/edge_only_ucmerced_s2027/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "edge_only_ucmerced_s2027",
+  "dataset": "UCMerced_LandUse",
+  "seed": 2027,
+  "n_images": 210,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 210,
+  "size_match": true,
+  "first_3_paths": [
+   "UCMerced_LandUse/UCMerced_LandUse/Images/storagetanks/storagetanks99.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/parkinglot/parkinglot64.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/chaparral/chaparral58.tif"
+  ],
+  "mean_psnr": 32.23658034006755
+ },
+ {
+  "rel": "main/edge_only_ucmerced_s2028/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "edge_only_ucmerced_s2028",
+  "dataset": "UCMerced_LandUse",
+  "seed": 2028,
+  "n_images": 210,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 210,
+  "size_match": true,
+  "first_3_paths": [
+   "UCMerced_LandUse/UCMerced_LandUse/Images/storagetanks/storagetanks99.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/parkinglot/parkinglot64.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/chaparral/chaparral58.tif"
+  ],
+  "mean_psnr": 32.2351198105585
+ },
+ {
+  "rel": "main/edge_only_whurs19_s2026/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "edge_only_whurs19_s2026",
+  "dataset": "WHU-RS19",
+  "seed": 2026,
+  "n_images": 101,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 101,
+  "size_match": true,
+  "first_3_paths": [
+   "WHU-RS19/footballField/footballField_03.jpg",
+   "WHU-RS19/Viaduct/viaduct_24.jpg",
+   "WHU-RS19/Commercial/commercial_50.jpg"
+  ],
+  "mean_psnr": 37.85886796630255
+ },
+ {
+  "rel": "main/edge_only_whurs19_s2027/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "edge_only_whurs19_s2027",
+  "dataset": "WHU-RS19",
+  "seed": 2027,
+  "n_images": 101,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 101,
+  "size_match": true,
+  "first_3_paths": [
+   "WHU-RS19/footballField/footballField_03.jpg",
+   "WHU-RS19/Viaduct/viaduct_24.jpg",
+   "WHU-RS19/Commercial/commercial_50.jpg"
+  ],
+  "mean_psnr": 37.82547442747815
+ },
+ {
+  "rel": "main/edge_only_whurs19_s2028/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "edge_only_whurs19_s2028",
+  "dataset": "WHU-RS19",
+  "seed": 2028,
+  "n_images": 101,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 101,
+  "size_match": true,
+  "first_3_paths": [
+   "WHU-RS19/footballField/footballField_03.jpg",
+   "WHU-RS19/Viaduct/viaduct_24.jpg",
+   "WHU-RS19/Commercial/commercial_50.jpg"
+  ],
+  "mean_psnr": 37.81867746787496
+ },
+ {
+  "rel": "main/emssm_full_aid_s2026/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_full_aid_s2026",
+  "dataset": "AID",
+  "seed": 2026,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 1000,
+  "size_match": true,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.46843209648132
+ },
+ {
+  "rel": "main/emssm_full_aid_s2027/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_full_aid_s2027",
+  "dataset": "AID",
+  "seed": 2027,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 1000,
+  "size_match": true,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.460848625183104
+ },
+ {
+  "rel": "main/emssm_full_aid_s2028/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_full_aid_s2028",
+  "dataset": "AID",
+  "seed": 2028,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 1000,
+  "size_match": true,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.45276372909546
+ },
+ {
+  "rel": "main/emssm_full_rsscn7_s2026/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_full_rsscn7_s2026",
+  "dataset": "RSSCN7",
+  "seed": 2026,
+  "n_images": 281,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 281,
+  "size_match": true,
+  "first_3_paths": [
+   "RSSCN7/images/all/rsscn7_1219.jpg",
+   "RSSCN7/images/all/rsscn7_0107.jpg",
+   "RSSCN7/images/all/rsscn7_0919.jpg"
+  ],
+  "mean_psnr": 33.19318169291758
+ },
+ {
+  "rel": "main/emssm_full_rsscn7_s2027/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_full_rsscn7_s2027",
+  "dataset": "RSSCN7",
+  "seed": 2027,
+  "n_images": 281,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 281,
+  "size_match": true,
+  "first_3_paths": [
+   "RSSCN7/images/all/rsscn7_1219.jpg",
+   "RSSCN7/images/all/rsscn7_0107.jpg",
+   "RSSCN7/images/all/rsscn7_0919.jpg"
+  ],
+  "mean_psnr": 33.1664379024845
+ },
+ {
+  "rel": "main/emssm_full_rsscn7_s2028/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_full_rsscn7_s2028",
+  "dataset": "RSSCN7",
+  "seed": 2028,
+  "n_images": 281,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 281,
+  "size_match": true,
+  "first_3_paths": [
+   "RSSCN7/images/all/rsscn7_1219.jpg",
+   "RSSCN7/images/all/rsscn7_0107.jpg",
+   "RSSCN7/images/all/rsscn7_0919.jpg"
+  ],
+  "mean_psnr": 33.179581903478
+ },
+ {
+  "rel": "main/emssm_full_ucmerced_s2026/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_full_ucmerced_s2026",
+  "dataset": "UCMerced_LandUse",
+  "seed": 2026,
+  "n_images": 210,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 210,
+  "size_match": true,
+  "first_3_paths": [
+   "UCMerced_LandUse/UCMerced_LandUse/Images/storagetanks/storagetanks99.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/parkinglot/parkinglot64.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/chaparral/chaparral58.tif"
+  ],
+  "mean_psnr": 32.237781125023254
+ },
+ {
+  "rel": "main/emssm_full_ucmerced_s2027/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_full_ucmerced_s2027",
+  "dataset": "UCMerced_LandUse",
+  "seed": 2027,
+  "n_images": 210,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 210,
+  "size_match": true,
+  "first_3_paths": [
+   "UCMerced_LandUse/UCMerced_LandUse/Images/storagetanks/storagetanks99.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/parkinglot/parkinglot64.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/chaparral/chaparral58.tif"
+  ],
+  "mean_psnr": 32.2373759042649
+ },
+ {
+  "rel": "main/emssm_full_ucmerced_s2028/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_full_ucmerced_s2028",
+  "dataset": "UCMerced_LandUse",
+  "seed": 2028,
+  "n_images": 210,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 210,
+  "size_match": true,
+  "first_3_paths": [
+   "UCMerced_LandUse/UCMerced_LandUse/Images/storagetanks/storagetanks99.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/parkinglot/parkinglot64.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/chaparral/chaparral58.tif"
+  ],
+  "mean_psnr": 32.27652189163935
+ },
+ {
+  "rel": "main/emssm_full_whurs19_s2026/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_full_whurs19_s2026",
+  "dataset": "WHU-RS19",
+  "seed": 2026,
+  "n_images": 101,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 101,
+  "size_match": true,
+  "first_3_paths": [
+   "WHU-RS19/footballField/footballField_03.jpg",
+   "WHU-RS19/Viaduct/viaduct_24.jpg",
+   "WHU-RS19/Commercial/commercial_50.jpg"
+  ],
+  "mean_psnr": 37.865626684509884
+ },
+ {
+  "rel": "main/emssm_full_whurs19_s2027/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_full_whurs19_s2027",
+  "dataset": "WHU-RS19",
+  "seed": 2027,
+  "n_images": 101,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 101,
+  "size_match": true,
+  "first_3_paths": [
+   "WHU-RS19/footballField/footballField_03.jpg",
+   "WHU-RS19/Viaduct/viaduct_24.jpg",
+   "WHU-RS19/Commercial/commercial_50.jpg"
+  ],
+  "mean_psnr": 37.82344064618101
+ },
+ {
+  "rel": "main/emssm_full_whurs19_s2028/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_full_whurs19_s2028",
+  "dataset": "WHU-RS19",
+  "seed": 2028,
+  "n_images": 101,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 101,
+  "size_match": true,
+  "first_3_paths": [
+   "WHU-RS19/footballField/footballField_03.jpg",
+   "WHU-RS19/Viaduct/viaduct_24.jpg",
+   "WHU-RS19/Commercial/commercial_50.jpg"
+  ],
+  "mean_psnr": 37.825225150231084
+ },
+ {
+  "rel": "main/emssm_l000_aid_s2026/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_l000_aid_s2026",
+  "dataset": "AID",
+  "seed": 2026,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 1000,
+  "size_match": true,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.4638026676178
+ },
+ {
+  "rel": "main/emssm_l000_aid_s2027/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_l000_aid_s2027",
+  "dataset": "AID",
+  "seed": 2027,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 1000,
+  "size_match": true,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.457045333862304
+ },
+ {
+  "rel": "main/emssm_l000_aid_s2028/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_l000_aid_s2028",
+  "dataset": "AID",
+  "seed": 2028,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 1000,
+  "size_match": true,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.44867043495178
+ },
+ {
+  "rel": "main/emssm_l000_rsscn7_s2026/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_l000_rsscn7_s2026",
+  "dataset": "RSSCN7",
+  "seed": 2026,
+  "n_images": 281,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 281,
+  "size_match": true,
+  "first_3_paths": [
+   "RSSCN7/images/all/rsscn7_1219.jpg",
+   "RSSCN7/images/all/rsscn7_0107.jpg",
+   "RSSCN7/images/all/rsscn7_0919.jpg"
+  ],
+  "mean_psnr": 33.191038416798
+ },
+ {
+  "rel": "main/emssm_l000_rsscn7_s2027/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_l000_rsscn7_s2027",
+  "dataset": "RSSCN7",
+  "seed": 2027,
+  "n_images": 281,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 281,
+  "size_match": true,
+  "first_3_paths": [
+   "RSSCN7/images/all/rsscn7_1219.jpg",
+   "RSSCN7/images/all/rsscn7_0107.jpg",
+   "RSSCN7/images/all/rsscn7_0919.jpg"
+  ],
+  "mean_psnr": 33.16402605674445
+ },
+ {
+  "rel": "main/emssm_l000_rsscn7_s2028/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_l000_rsscn7_s2028",
+  "dataset": "RSSCN7",
+  "seed": 2028,
+  "n_images": 281,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 281,
+  "size_match": true,
+  "first_3_paths": [
+   "RSSCN7/images/all/rsscn7_1219.jpg",
+   "RSSCN7/images/all/rsscn7_0107.jpg",
+   "RSSCN7/images/all/rsscn7_0919.jpg"
+  ],
+  "mean_psnr": 33.17583726224526
+ },
+ {
+  "rel": "main/emssm_l000_ucmerced_s2026/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_l000_ucmerced_s2026",
+  "dataset": "UCMerced_LandUse",
+  "seed": 2026,
+  "n_images": 210,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 210,
+  "size_match": true,
+  "first_3_paths": [
+   "UCMerced_LandUse/UCMerced_LandUse/Images/storagetanks/storagetanks99.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/parkinglot/parkinglot64.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/chaparral/chaparral58.tif"
+  ],
+  "mean_psnr": 32.23674215589251
+ },
+ {
+  "rel": "main/emssm_l000_ucmerced_s2027/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_l000_ucmerced_s2027",
+  "dataset": "UCMerced_LandUse",
+  "seed": 2027,
+  "n_images": 210,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 210,
+  "size_match": true,
+  "first_3_paths": [
+   "UCMerced_LandUse/UCMerced_LandUse/Images/storagetanks/storagetanks99.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/parkinglot/parkinglot64.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/chaparral/chaparral58.tif"
+  ],
+  "mean_psnr": 32.23253715151832
+ },
+ {
+  "rel": "main/emssm_l000_ucmerced_s2028/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_l000_ucmerced_s2028",
+  "dataset": "UCMerced_LandUse",
+  "seed": 2028,
+  "n_images": 210,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 210,
+  "size_match": true,
+  "first_3_paths": [
+   "UCMerced_LandUse/UCMerced_LandUse/Images/storagetanks/storagetanks99.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/parkinglot/parkinglot64.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/chaparral/chaparral58.tif"
+  ],
+  "mean_psnr": 32.26261218843006
+ },
+ {
+  "rel": "main/emssm_l000_whurs19_s2026/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_l000_whurs19_s2026",
+  "dataset": "WHU-RS19",
+  "seed": 2026,
+  "n_images": 101,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 101,
+  "size_match": true,
+  "first_3_paths": [
+   "WHU-RS19/footballField/footballField_03.jpg",
+   "WHU-RS19/Viaduct/viaduct_24.jpg",
+   "WHU-RS19/Commercial/commercial_50.jpg"
+  ],
+  "mean_psnr": 37.876303512271086
+ },
+ {
+  "rel": "main/emssm_l000_whurs19_s2027/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_l000_whurs19_s2027",
+  "dataset": "WHU-RS19",
+  "seed": 2027,
+  "n_images": 101,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 101,
+  "size_match": true,
+  "first_3_paths": [
+   "WHU-RS19/footballField/footballField_03.jpg",
+   "WHU-RS19/Viaduct/viaduct_24.jpg",
+   "WHU-RS19/Commercial/commercial_50.jpg"
+  ],
+  "mean_psnr": 37.813901674629435
+ },
+ {
+  "rel": "main/emssm_l000_whurs19_s2028/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_l000_whurs19_s2028",
+  "dataset": "WHU-RS19",
+  "seed": 2028,
+  "n_images": 101,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 101,
+  "size_match": true,
+  "first_3_paths": [
+   "WHU-RS19/footballField/footballField_03.jpg",
+   "WHU-RS19/Viaduct/viaduct_24.jpg",
+   "WHU-RS19/Commercial/commercial_50.jpg"
+  ],
+  "mean_psnr": 37.81189351978868
+ },
+ {
+  "rel": "main/emssm_l004_aid_s2026/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_l004_aid_s2026",
+  "dataset": "AID",
+  "seed": 2026,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 1000,
+  "size_match": true,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.46594720840454
+ },
+ {
+  "rel": "main/emssm_l004_aid_s2027/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_l004_aid_s2027",
+  "dataset": "AID",
+  "seed": 2027,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 1000,
+  "size_match": true,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.460720224380495
+ },
+ {
+  "rel": "main/emssm_l004_aid_s2028/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_l004_aid_s2028",
+  "dataset": "AID",
+  "seed": 2028,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 1000,
+  "size_match": true,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.451509656906126
+ },
+ {
+  "rel": "main/emssm_l004_rsscn7_s2026/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_l004_rsscn7_s2026",
+  "dataset": "RSSCN7",
+  "seed": 2026,
+  "n_images": 281,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 281,
+  "size_match": true,
+  "first_3_paths": [
+   "RSSCN7/images/all/rsscn7_1219.jpg",
+   "RSSCN7/images/all/rsscn7_0107.jpg",
+   "RSSCN7/images/all/rsscn7_0919.jpg"
+  ],
+  "mean_psnr": 33.19332797501859
+ },
+ {
+  "rel": "main/emssm_l004_rsscn7_s2027/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_l004_rsscn7_s2027",
+  "dataset": "RSSCN7",
+  "seed": 2027,
+  "n_images": 281,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 281,
+  "size_match": true,
+  "first_3_paths": [
+   "RSSCN7/images/all/rsscn7_1219.jpg",
+   "RSSCN7/images/all/rsscn7_0107.jpg",
+   "RSSCN7/images/all/rsscn7_0919.jpg"
+  ],
+  "mean_psnr": 33.16606484952771
+ },
+ {
+  "rel": "main/emssm_l004_rsscn7_s2028/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_l004_rsscn7_s2028",
+  "dataset": "RSSCN7",
+  "seed": 2028,
+  "n_images": 281,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 281,
+  "size_match": true,
+  "first_3_paths": [
+   "RSSCN7/images/all/rsscn7_1219.jpg",
+   "RSSCN7/images/all/rsscn7_0107.jpg",
+   "RSSCN7/images/all/rsscn7_0919.jpg"
+  ],
+  "mean_psnr": 33.17847465705193
+ },
+ {
+  "rel": "main/emssm_l004_ucmerced_s2026/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_l004_ucmerced_s2026",
+  "dataset": "UCMerced_LandUse",
+  "seed": 2026,
+  "n_images": 210,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 210,
+  "size_match": true,
+  "first_3_paths": [
+   "UCMerced_LandUse/UCMerced_LandUse/Images/storagetanks/storagetanks99.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/parkinglot/parkinglot64.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/chaparral/chaparral58.tif"
+  ],
+  "mean_psnr": 32.23802799951463
+ },
+ {
+  "rel": "main/emssm_l004_ucmerced_s2027/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_l004_ucmerced_s2027",
+  "dataset": "UCMerced_LandUse",
+  "seed": 2027,
+  "n_images": 210,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 210,
+  "size_match": true,
+  "first_3_paths": [
+   "UCMerced_LandUse/UCMerced_LandUse/Images/storagetanks/storagetanks99.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/parkinglot/parkinglot64.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/chaparral/chaparral58.tif"
+  ],
+  "mean_psnr": 32.23554340544201
+ },
+ {
+  "rel": "main/emssm_l004_ucmerced_s2028/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_l004_ucmerced_s2028",
+  "dataset": "UCMerced_LandUse",
+  "seed": 2028,
+  "n_images": 210,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 210,
+  "size_match": true,
+  "first_3_paths": [
+   "UCMerced_LandUse/UCMerced_LandUse/Images/storagetanks/storagetanks99.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/parkinglot/parkinglot64.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/chaparral/chaparral58.tif"
+  ],
+  "mean_psnr": 32.270743987673804
+ },
+ {
+  "rel": "main/emssm_l004_whurs19_s2026/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_l004_whurs19_s2026",
+  "dataset": "WHU-RS19",
+  "seed": 2026,
+  "n_images": 101,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 101,
+  "size_match": true,
+  "first_3_paths": [
+   "WHU-RS19/footballField/footballField_03.jpg",
+   "WHU-RS19/Viaduct/viaduct_24.jpg",
+   "WHU-RS19/Commercial/commercial_50.jpg"
+  ],
+  "mean_psnr": 37.868785178307256
+ },
+ {
+  "rel": "main/emssm_l004_whurs19_s2027/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_l004_whurs19_s2027",
+  "dataset": "WHU-RS19",
+  "seed": 2027,
+  "n_images": 101,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 101,
+  "size_match": true,
+  "first_3_paths": [
+   "WHU-RS19/footballField/footballField_03.jpg",
+   "WHU-RS19/Viaduct/viaduct_24.jpg",
+   "WHU-RS19/Commercial/commercial_50.jpg"
+  ],
+  "mean_psnr": 37.824350942479505
+ },
+ {
+  "rel": "main/emssm_l004_whurs19_s2028/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_l004_whurs19_s2028",
+  "dataset": "WHU-RS19",
+  "seed": 2028,
+  "n_images": 101,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 101,
+  "size_match": true,
+  "first_3_paths": [
+   "WHU-RS19/footballField/footballField_03.jpg",
+   "WHU-RS19/Viaduct/viaduct_24.jpg",
+   "WHU-RS19/Commercial/commercial_50.jpg"
+  ],
+  "mean_psnr": 37.82611907354676
+ },
+ {
+  "rel": "main/emssm_l012_aid_s2026/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_l012_aid_s2026",
+  "dataset": "AID",
+  "seed": 2026,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 1000,
+  "size_match": true,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.4692453327179
+ },
+ {
+  "rel": "main/emssm_l012_aid_s2027/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_l012_aid_s2027",
+  "dataset": "AID",
+  "seed": 2027,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 1000,
+  "size_match": true,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.46027786064148
+ },
+ {
+  "rel": "main/emssm_l012_aid_s2028/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_l012_aid_s2028",
+  "dataset": "AID",
+  "seed": 2028,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 1000,
+  "size_match": true,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.451841606140135
+ },
+ {
+  "rel": "main/emssm_l012_rsscn7_s2026/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_l012_rsscn7_s2026",
+  "dataset": "RSSCN7",
+  "seed": 2026,
+  "n_images": 281,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 281,
+  "size_match": true,
+  "first_3_paths": [
+   "RSSCN7/images/all/rsscn7_1219.jpg",
+   "RSSCN7/images/all/rsscn7_0107.jpg",
+   "RSSCN7/images/all/rsscn7_0919.jpg"
+  ],
+  "mean_psnr": 33.193528653888094
+ },
+ {
+  "rel": "main/emssm_l012_rsscn7_s2027/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_l012_rsscn7_s2027",
+  "dataset": "RSSCN7",
+  "seed": 2027,
+  "n_images": 281,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 281,
+  "size_match": true,
+  "first_3_paths": [
+   "RSSCN7/images/all/rsscn7_1219.jpg",
+   "RSSCN7/images/all/rsscn7_0107.jpg",
+   "RSSCN7/images/all/rsscn7_0919.jpg"
+  ],
+  "mean_psnr": 33.166790761981574
+ },
+ {
+  "rel": "main/emssm_l012_rsscn7_s2028/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_l012_rsscn7_s2028",
+  "dataset": "RSSCN7",
+  "seed": 2028,
+  "n_images": 281,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 281,
+  "size_match": true,
+  "first_3_paths": [
+   "RSSCN7/images/all/rsscn7_1219.jpg",
+   "RSSCN7/images/all/rsscn7_0107.jpg",
+   "RSSCN7/images/all/rsscn7_0919.jpg"
+  ],
+  "mean_psnr": 33.18082751073871
+ },
+ {
+  "rel": "main/emssm_l012_ucmerced_s2026/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_l012_ucmerced_s2026",
+  "dataset": "UCMerced_LandUse",
+  "seed": 2026,
+  "n_images": 210,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 210,
+  "size_match": true,
+  "first_3_paths": [
+   "UCMerced_LandUse/UCMerced_LandUse/Images/storagetanks/storagetanks99.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/parkinglot/parkinglot64.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/chaparral/chaparral58.tif"
+  ],
+  "mean_psnr": 32.23716123671759
+ },
+ {
+  "rel": "main/emssm_l012_ucmerced_s2027/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_l012_ucmerced_s2027",
+  "dataset": "UCMerced_LandUse",
+  "seed": 2027,
+  "n_images": 210,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 210,
+  "size_match": true,
+  "first_3_paths": [
+   "UCMerced_LandUse/UCMerced_LandUse/Images/storagetanks/storagetanks99.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/parkinglot/parkinglot64.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/chaparral/chaparral58.tif"
+  ],
+  "mean_psnr": 32.235146931239534
+ },
+ {
+  "rel": "main/emssm_l012_ucmerced_s2028/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_l012_ucmerced_s2028",
+  "dataset": "UCMerced_LandUse",
+  "seed": 2028,
+  "n_images": 210,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 210,
+  "size_match": true,
+  "first_3_paths": [
+   "UCMerced_LandUse/UCMerced_LandUse/Images/storagetanks/storagetanks99.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/parkinglot/parkinglot64.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/chaparral/chaparral58.tif"
+  ],
+  "mean_psnr": 32.276230566842216
+ },
+ {
+  "rel": "main/emssm_l012_whurs19_s2026/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_l012_whurs19_s2026",
+  "dataset": "WHU-RS19",
+  "seed": 2026,
+  "n_images": 101,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 101,
+  "size_match": true,
+  "first_3_paths": [
+   "WHU-RS19/footballField/footballField_03.jpg",
+   "WHU-RS19/Viaduct/viaduct_24.jpg",
+   "WHU-RS19/Commercial/commercial_50.jpg"
+  ],
+  "mean_psnr": 37.86272132042611
+ },
+ {
+  "rel": "main/emssm_l012_whurs19_s2027/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_l012_whurs19_s2027",
+  "dataset": "WHU-RS19",
+  "seed": 2027,
+  "n_images": 101,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 101,
+  "size_match": true,
+  "first_3_paths": [
+   "WHU-RS19/footballField/footballField_03.jpg",
+   "WHU-RS19/Viaduct/viaduct_24.jpg",
+   "WHU-RS19/Commercial/commercial_50.jpg"
+  ],
+  "mean_psnr": 37.818650689455545
+ },
+ {
+  "rel": "main/emssm_l012_whurs19_s2028/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_l012_whurs19_s2028",
+  "dataset": "WHU-RS19",
+  "seed": 2028,
+  "n_images": 101,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 101,
+  "size_match": true,
+  "first_3_paths": [
+   "WHU-RS19/footballField/footballField_03.jpg",
+   "WHU-RS19/Viaduct/viaduct_24.jpg",
+   "WHU-RS19/Commercial/commercial_50.jpg"
+  ],
+  "mean_psnr": 37.82856389791659
+ },
+ {
+  "rel": "main/emssm_learn_edge_aid_s2026/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_learn_edge_aid_s2026",
+  "dataset": "AID",
+  "seed": 2026,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 1000,
+  "size_match": true,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.48468456268311
+ },
+ {
+  "rel": "main/emssm_learn_edge_aid_s2027/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_learn_edge_aid_s2027",
+  "dataset": "AID",
+  "seed": 2027,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 1000,
+  "size_match": true,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.473827220916746
+ },
+ {
+  "rel": "main/emssm_learn_edge_aid_s2028/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_learn_edge_aid_s2028",
+  "dataset": "AID",
+  "seed": 2028,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 1000,
+  "size_match": true,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.48201107978821
+ },
+ {
+  "rel": "main/emssm_multidir_aid_s2026/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_multidir_aid_s2026",
+  "dataset": "AID",
+  "seed": 2026,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 1000,
+  "size_match": true,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.475733364105224
+ },
+ {
+  "rel": "main/emssm_multidir_aid_s2027/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_multidir_aid_s2027",
+  "dataset": "AID",
+  "seed": 2027,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 1000,
+  "size_match": true,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.45048781967163
+ },
+ {
+  "rel": "main/emssm_multidir_aid_s2028/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "emssm_multidir_aid_s2028",
+  "dataset": "AID",
+  "seed": 2028,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 1000,
+  "size_match": true,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.484303134918214
+ },
+ {
+  "rel": "main/fenet32_aid_s2026/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "fenet32_aid_s2026",
+  "dataset": "AID",
+  "seed": 2026,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 1000,
+  "size_match": true,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.80525150299072
+ },
+ {
+  "rel": "main/fenet32_aid_s2027/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "fenet32_aid_s2027",
+  "dataset": "AID",
+  "seed": 2027,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 1000,
+  "size_match": true,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.79945146179199
+ },
+ {
+  "rel": "main/fenet32_aid_s2028/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "fenet32_aid_s2028",
+  "dataset": "AID",
+  "seed": 2028,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 1000,
+  "size_match": true,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.79570208358765
+ },
+ {
+  "rel": "main/fenet32_rsscn7_s2026/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "fenet32_rsscn7_s2026",
+  "dataset": "RSSCN7",
+  "seed": 2026,
+  "n_images": 281,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 281,
+  "size_match": true,
+  "first_3_paths": [
+   "RSSCN7/images/all/rsscn7_1219.jpg",
+   "RSSCN7/images/all/rsscn7_0107.jpg",
+   "RSSCN7/images/all/rsscn7_0919.jpg"
+  ],
+  "mean_psnr": 33.274251198005
+ },
+ {
+  "rel": "main/fenet32_rsscn7_s2027/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "fenet32_rsscn7_s2027",
+  "dataset": "RSSCN7",
+  "seed": 2027,
+  "n_images": 281,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 281,
+  "size_match": true,
+  "first_3_paths": [
+   "RSSCN7/images/all/rsscn7_1219.jpg",
+   "RSSCN7/images/all/rsscn7_0107.jpg",
+   "RSSCN7/images/all/rsscn7_0919.jpg"
+  ],
+  "mean_psnr": 33.23123994331767
+ },
+ {
+  "rel": "main/fenet32_rsscn7_s2028/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "fenet32_rsscn7_s2028",
+  "dataset": "RSSCN7",
+  "seed": 2028,
+  "n_images": 281,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 281,
+  "size_match": true,
+  "first_3_paths": [
+   "RSSCN7/images/all/rsscn7_1219.jpg",
+   "RSSCN7/images/all/rsscn7_0107.jpg",
+   "RSSCN7/images/all/rsscn7_0919.jpg"
+  ],
+  "mean_psnr": 33.28283984635648
+ },
+ {
+  "rel": "main/fenet32_ucmerced_s2026/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "fenet32_ucmerced_s2026",
+  "dataset": "UCMerced_LandUse",
+  "seed": 2026,
+  "n_images": 210,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 210,
+  "size_match": true,
+  "first_3_paths": [
+   "UCMerced_LandUse/UCMerced_LandUse/Images/storagetanks/storagetanks99.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/parkinglot/parkinglot64.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/chaparral/chaparral58.tif"
+  ],
+  "mean_psnr": 32.49515120188395
+ },
+ {
+  "rel": "main/fenet32_ucmerced_s2027/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "fenet32_ucmerced_s2027",
+  "dataset": "UCMerced_LandUse",
+  "seed": 2027,
+  "n_images": 210,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 210,
+  "size_match": true,
+  "first_3_paths": [
+   "UCMerced_LandUse/UCMerced_LandUse/Images/storagetanks/storagetanks99.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/parkinglot/parkinglot64.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/chaparral/chaparral58.tif"
+  ],
+  "mean_psnr": 32.43786176953997
+ },
+ {
+  "rel": "main/fenet32_ucmerced_s2028/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "fenet32_ucmerced_s2028",
+  "dataset": "UCMerced_LandUse",
+  "seed": 2028,
+  "n_images": 210,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 210,
+  "size_match": true,
+  "first_3_paths": [
+   "UCMerced_LandUse/UCMerced_LandUse/Images/storagetanks/storagetanks99.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/parkinglot/parkinglot64.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/chaparral/chaparral58.tif"
+  ],
+  "mean_psnr": 32.4621342250279
+ },
+ {
+  "rel": "main/fenet32_whurs19_s2026/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "fenet32_whurs19_s2026",
+  "dataset": "WHU-RS19",
+  "seed": 2026,
+  "n_images": 101,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 101,
+  "size_match": true,
+  "first_3_paths": [
+   "WHU-RS19/footballField/footballField_03.jpg",
+   "WHU-RS19/Viaduct/viaduct_24.jpg",
+   "WHU-RS19/Commercial/commercial_50.jpg"
+  ],
+  "mean_psnr": 37.79948026827066
+ },
+ {
+  "rel": "main/fenet32_whurs19_s2027/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "fenet32_whurs19_s2027",
+  "dataset": "WHU-RS19",
+  "seed": 2027,
+  "n_images": 101,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 101,
+  "size_match": true,
+  "first_3_paths": [
+   "WHU-RS19/footballField/footballField_03.jpg",
+   "WHU-RS19/Viaduct/viaduct_24.jpg",
+   "WHU-RS19/Commercial/commercial_50.jpg"
+  ],
+  "mean_psnr": 37.61233080495702
+ },
+ {
+  "rel": "main/fenet32_whurs19_s2028/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "fenet32_whurs19_s2028",
+  "dataset": "WHU-RS19",
+  "seed": 2028,
+  "n_images": 101,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 101,
+  "size_match": true,
+  "first_3_paths": [
+   "WHU-RS19/footballField/footballField_03.jpg",
+   "WHU-RS19/Viaduct/viaduct_24.jpg",
+   "WHU-RS19/Commercial/commercial_50.jpg"
+  ],
+  "mean_psnr": 37.755931929786605
+ },
+ {
+  "rel": "main/fusion_only_aid_s2026/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "fusion_only_aid_s2026",
+  "dataset": "AID",
+  "seed": 2026,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 1000,
+  "size_match": true,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.49965723800659
+ },
+ {
+  "rel": "main/fusion_only_aid_s2027/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "fusion_only_aid_s2027",
+  "dataset": "AID",
+  "seed": 2027,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 1000,
+  "size_match": true,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.458825929641726
+ },
+ {
+  "rel": "main/fusion_only_aid_s2028/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "fusion_only_aid_s2028",
+  "dataset": "AID",
+  "seed": 2028,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 1000,
+  "size_match": true,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.49815753746033
+ },
+ {
+  "rel": "main/fusion_only_rsscn7_s2026/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "fusion_only_rsscn7_s2026",
+  "dataset": "RSSCN7",
+  "seed": 2026,
+  "n_images": 281,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 281,
+  "size_match": true,
+  "first_3_paths": [
+   "RSSCN7/images/all/rsscn7_1219.jpg",
+   "RSSCN7/images/all/rsscn7_0107.jpg",
+   "RSSCN7/images/all/rsscn7_0919.jpg"
+  ],
+  "mean_psnr": 33.192947251940964
+ },
+ {
+  "rel": "main/fusion_only_rsscn7_s2027/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "fusion_only_rsscn7_s2027",
+  "dataset": "RSSCN7",
+  "seed": 2027,
+  "n_images": 281,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 281,
+  "size_match": true,
+  "first_3_paths": [
+   "RSSCN7/images/all/rsscn7_1219.jpg",
+   "RSSCN7/images/all/rsscn7_0107.jpg",
+   "RSSCN7/images/all/rsscn7_0919.jpg"
+  ],
+  "mean_psnr": 33.18211110885457
+ },
+ {
+  "rel": "main/fusion_only_rsscn7_s2028/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "fusion_only_rsscn7_s2028",
+  "dataset": "RSSCN7",
+  "seed": 2028,
+  "n_images": 281,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 281,
+  "size_match": true,
+  "first_3_paths": [
+   "RSSCN7/images/all/rsscn7_1219.jpg",
+   "RSSCN7/images/all/rsscn7_0107.jpg",
+   "RSSCN7/images/all/rsscn7_0919.jpg"
+  ],
+  "mean_psnr": 33.19155245064841
+ },
+ {
+  "rel": "main/fusion_only_ucmerced_s2026/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "fusion_only_ucmerced_s2026",
+  "dataset": "UCMerced_LandUse",
+  "seed": 2026,
+  "n_images": 210,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 210,
+  "size_match": true,
+  "first_3_paths": [
+   "UCMerced_LandUse/UCMerced_LandUse/Images/storagetanks/storagetanks99.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/parkinglot/parkinglot64.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/chaparral/chaparral58.tif"
+  ],
+  "mean_psnr": 32.2671413512457
+ },
+ {
+  "rel": "main/fusion_only_ucmerced_s2027/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "fusion_only_ucmerced_s2027",
+  "dataset": "UCMerced_LandUse",
+  "seed": 2027,
+  "n_images": 210,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 210,
+  "size_match": true,
+  "first_3_paths": [
+   "UCMerced_LandUse/UCMerced_LandUse/Images/storagetanks/storagetanks99.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/parkinglot/parkinglot64.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/chaparral/chaparral58.tif"
+  ],
+  "mean_psnr": 32.24114220937093
+ },
+ {
+  "rel": "main/fusion_only_ucmerced_s2028/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "fusion_only_ucmerced_s2028",
+  "dataset": "UCMerced_LandUse",
+  "seed": 2028,
+  "n_images": 210,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 210,
+  "size_match": true,
+  "first_3_paths": [
+   "UCMerced_LandUse/UCMerced_LandUse/Images/storagetanks/storagetanks99.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/parkinglot/parkinglot64.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/chaparral/chaparral58.tif"
+  ],
+  "mean_psnr": 32.2680172874814
+ },
+ {
+  "rel": "main/fusion_only_whurs19_s2026/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "fusion_only_whurs19_s2026",
+  "dataset": "WHU-RS19",
+  "seed": 2026,
+  "n_images": 101,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 101,
+  "size_match": true,
+  "first_3_paths": [
+   "WHU-RS19/footballField/footballField_03.jpg",
+   "WHU-RS19/Viaduct/viaduct_24.jpg",
+   "WHU-RS19/Commercial/commercial_50.jpg"
+  ],
+  "mean_psnr": 37.80778061517395
+ },
+ {
+  "rel": "main/fusion_only_whurs19_s2027/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "fusion_only_whurs19_s2027",
+  "dataset": "WHU-RS19",
+  "seed": 2027,
+  "n_images": 101,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 101,
+  "size_match": true,
+  "first_3_paths": [
+   "WHU-RS19/footballField/footballField_03.jpg",
+   "WHU-RS19/Viaduct/viaduct_24.jpg",
+   "WHU-RS19/Commercial/commercial_50.jpg"
+  ],
+  "mean_psnr": 37.82258549303111
+ },
+ {
+  "rel": "main/fusion_only_whurs19_s2028/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "fusion_only_whurs19_s2028",
+  "dataset": "WHU-RS19",
+  "seed": 2028,
+  "n_images": 101,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 101,
+  "size_match": true,
+  "first_3_paths": [
+   "WHU-RS19/footballField/footballField_03.jpg",
+   "WHU-RS19/Viaduct/viaduct_24.jpg",
+   "WHU-RS19/Commercial/commercial_50.jpg"
+  ],
+  "mean_psnr": 37.8478164861698
+ },
+ {
+  "rel": "main/litecnn_aid_s2026/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "litecnn_aid_s2026",
+  "dataset": "AID",
+  "seed": 2026,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 1000,
+  "size_match": true,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.445312797546386
+ },
+ {
+  "rel": "main/litecnn_aid_s2027/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "litecnn_aid_s2027",
+  "dataset": "AID",
+  "seed": 2027,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 1000,
+  "size_match": true,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.458344165802
+ },
+ {
+  "rel": "main/litecnn_aid_s2028/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "litecnn_aid_s2028",
+  "dataset": "AID",
+  "seed": 2028,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 1000,
+  "size_match": true,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.45926298522949
+ },
+ {
+  "rel": "main/litecnn_rsscn7_s2026/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "litecnn_rsscn7_s2026",
+  "dataset": "RSSCN7",
+  "seed": 2026,
+  "n_images": 281,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 281,
+  "size_match": true,
+  "first_3_paths": [
+   "RSSCN7/images/all/rsscn7_1219.jpg",
+   "RSSCN7/images/all/rsscn7_0107.jpg",
+   "RSSCN7/images/all/rsscn7_0919.jpg"
+  ],
+  "mean_psnr": 33.217531801542776
+ },
+ {
+  "rel": "main/litecnn_rsscn7_s2027/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "litecnn_rsscn7_s2027",
+  "dataset": "RSSCN7",
+  "seed": 2027,
+  "n_images": 281,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 281,
+  "size_match": true,
+  "first_3_paths": [
+   "RSSCN7/images/all/rsscn7_1219.jpg",
+   "RSSCN7/images/all/rsscn7_0107.jpg",
+   "RSSCN7/images/all/rsscn7_0919.jpg"
+  ],
+  "mean_psnr": 33.206713292946596
+ },
+ {
+  "rel": "main/litecnn_rsscn7_s2028/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "litecnn_rsscn7_s2028",
+  "dataset": "RSSCN7",
+  "seed": 2028,
+  "n_images": 281,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 281,
+  "size_match": true,
+  "first_3_paths": [
+   "RSSCN7/images/all/rsscn7_1219.jpg",
+   "RSSCN7/images/all/rsscn7_0107.jpg",
+   "RSSCN7/images/all/rsscn7_0919.jpg"
+  ],
+  "mean_psnr": 33.195305488287765
+ },
+ {
+  "rel": "main/litecnn_ucmerced_s2026/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "litecnn_ucmerced_s2026",
+  "dataset": "UCMerced_LandUse",
+  "seed": 2026,
+  "n_images": 210,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 210,
+  "size_match": true,
+  "first_3_paths": [
+   "UCMerced_LandUse/UCMerced_LandUse/Images/storagetanks/storagetanks99.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/parkinglot/parkinglot64.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/chaparral/chaparral58.tif"
+  ],
+  "mean_psnr": 32.210751696995324
+ },
+ {
+  "rel": "main/litecnn_ucmerced_s2027/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "litecnn_ucmerced_s2027",
+  "dataset": "UCMerced_LandUse",
+  "seed": 2027,
+  "n_images": 210,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 210,
+  "size_match": true,
+  "first_3_paths": [
+   "UCMerced_LandUse/UCMerced_LandUse/Images/storagetanks/storagetanks99.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/parkinglot/parkinglot64.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/chaparral/chaparral58.tif"
+  ],
+  "mean_psnr": 32.22905016399565
+ },
+ {
+  "rel": "main/litecnn_ucmerced_s2028/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "litecnn_ucmerced_s2028",
+  "dataset": "UCMerced_LandUse",
+  "seed": 2028,
+  "n_images": 210,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 210,
+  "size_match": true,
+  "first_3_paths": [
+   "UCMerced_LandUse/UCMerced_LandUse/Images/storagetanks/storagetanks99.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/parkinglot/parkinglot64.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/chaparral/chaparral58.tif"
+  ],
+  "mean_psnr": 32.22040461585635
+ },
+ {
+  "rel": "main/litecnn_whurs19_s2026/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "litecnn_whurs19_s2026",
+  "dataset": "WHU-RS19",
+  "seed": 2026,
+  "n_images": 101,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 101,
+  "size_match": true,
+  "first_3_paths": [
+   "WHU-RS19/footballField/footballField_03.jpg",
+   "WHU-RS19/Viaduct/viaduct_24.jpg",
+   "WHU-RS19/Commercial/commercial_50.jpg"
+  ],
+  "mean_psnr": 37.933963379057325
+ },
+ {
+  "rel": "main/litecnn_whurs19_s2027/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "litecnn_whurs19_s2027",
+  "dataset": "WHU-RS19",
+  "seed": 2027,
+  "n_images": 101,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 101,
+  "size_match": true,
+  "first_3_paths": [
+   "WHU-RS19/footballField/footballField_03.jpg",
+   "WHU-RS19/Viaduct/viaduct_24.jpg",
+   "WHU-RS19/Commercial/commercial_50.jpg"
+  ],
+  "mean_psnr": 37.93377545800539
+ },
+ {
+  "rel": "main/litecnn_whurs19_s2028/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "litecnn_whurs19_s2028",
+  "dataset": "WHU-RS19",
+  "seed": 2028,
+  "n_images": 101,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 101,
+  "size_match": true,
+  "first_3_paths": [
+   "WHU-RS19/footballField/footballField_03.jpg",
+   "WHU-RS19/Viaduct/viaduct_24.jpg",
+   "WHU-RS19/Commercial/commercial_50.jpg"
+  ],
+  "mean_psnr": 37.956130150521155
+ },
+ {
+  "rel": "main/rcan_small_aid_s2026/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "rcan_small_aid_s2026",
+  "dataset": "AID",
+  "seed": 2026,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 1000,
+  "size_match": true,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.9765882472992
+ },
+ {
+  "rel": "main/rcan_small_aid_s2027/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "rcan_small_aid_s2027",
+  "dataset": "AID",
+  "seed": 2027,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 1000,
+  "size_match": true,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.9769610710144
+ },
+ {
+  "rel": "main/rcan_small_aid_s2028/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "rcan_small_aid_s2028",
+  "dataset": "AID",
+  "seed": 2028,
+  "n_images": 1000,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 1000,
+  "size_match": true,
+  "first_3_paths": [
+   "AID/Park/park_76.jpg",
+   "AID/Port/port_10.jpg",
+   "AID/Airport/airport_146.jpg"
+  ],
+  "mean_psnr": 36.9873724861145
+ },
+ {
+  "rel": "main/rcan_small_rsscn7_s2026/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "rcan_small_rsscn7_s2026",
+  "dataset": "RSSCN7",
+  "seed": 2026,
+  "n_images": 281,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 281,
+  "size_match": true,
+  "first_3_paths": [
+   "RSSCN7/images/all/rsscn7_1219.jpg",
+   "RSSCN7/images/all/rsscn7_0107.jpg",
+   "RSSCN7/images/all/rsscn7_0919.jpg"
+  ],
+  "mean_psnr": 33.38407020297339
+ },
+ {
+  "rel": "main/rcan_small_rsscn7_s2027/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "rcan_small_rsscn7_s2027",
+  "dataset": "RSSCN7",
+  "seed": 2027,
+  "n_images": 281,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 281,
+  "size_match": true,
+  "first_3_paths": [
+   "RSSCN7/images/all/rsscn7_1219.jpg",
+   "RSSCN7/images/all/rsscn7_0107.jpg",
+   "RSSCN7/images/all/rsscn7_0919.jpg"
+  ],
+  "mean_psnr": 33.38925424759074
+ },
+ {
+  "rel": "main/rcan_small_rsscn7_s2028/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "rcan_small_rsscn7_s2028",
+  "dataset": "RSSCN7",
+  "seed": 2028,
+  "n_images": 281,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 281,
+  "size_match": true,
+  "first_3_paths": [
+   "RSSCN7/images/all/rsscn7_1219.jpg",
+   "RSSCN7/images/all/rsscn7_0107.jpg",
+   "RSSCN7/images/all/rsscn7_0919.jpg"
+  ],
+  "mean_psnr": 33.38703310277538
+ },
+ {
+  "rel": "main/rcan_small_ucmerced_s2026/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "rcan_small_ucmerced_s2026",
+  "dataset": "UCMerced_LandUse",
+  "seed": 2026,
+  "n_images": 210,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 210,
+  "size_match": true,
+  "first_3_paths": [
+   "UCMerced_LandUse/UCMerced_LandUse/Images/storagetanks/storagetanks99.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/parkinglot/parkinglot64.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/chaparral/chaparral58.tif"
+  ],
+  "mean_psnr": 32.689425532023115
+ },
+ {
+  "rel": "main/rcan_small_ucmerced_s2027/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "rcan_small_ucmerced_s2027",
+  "dataset": "UCMerced_LandUse",
+  "seed": 2027,
+  "n_images": 210,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 210,
+  "size_match": true,
+  "first_3_paths": [
+   "UCMerced_LandUse/UCMerced_LandUse/Images/storagetanks/storagetanks99.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/parkinglot/parkinglot64.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/chaparral/chaparral58.tif"
+  ],
+  "mean_psnr": 32.69153229849679
+ },
+ {
+  "rel": "main/rcan_small_ucmerced_s2028/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "rcan_small_ucmerced_s2028",
+  "dataset": "UCMerced_LandUse",
+  "seed": 2028,
+  "n_images": 210,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 210,
+  "size_match": true,
+  "first_3_paths": [
+   "UCMerced_LandUse/UCMerced_LandUse/Images/storagetanks/storagetanks99.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/parkinglot/parkinglot64.tif",
+   "UCMerced_LandUse/UCMerced_LandUse/Images/chaparral/chaparral58.tif"
+  ],
+  "mean_psnr": 32.70769980294364
+ },
+ {
+  "rel": "main/rcan_small_whurs19_s2026/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "rcan_small_whurs19_s2026",
+  "dataset": "WHU-RS19",
+  "seed": 2026,
+  "n_images": 101,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 101,
+  "size_match": true,
+  "first_3_paths": [
+   "WHU-RS19/footballField/footballField_03.jpg",
+   "WHU-RS19/Viaduct/viaduct_24.jpg",
+   "WHU-RS19/Commercial/commercial_50.jpg"
+  ],
+  "mean_psnr": 37.97284341566633
+ },
+ {
+  "rel": "main/rcan_small_whurs19_s2027/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "rcan_small_whurs19_s2027",
+  "dataset": "WHU-RS19",
+  "seed": 2027,
+  "n_images": 101,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 101,
+  "size_match": true,
+  "first_3_paths": [
+   "WHU-RS19/footballField/footballField_03.jpg",
+   "WHU-RS19/Viaduct/viaduct_24.jpg",
+   "WHU-RS19/Commercial/commercial_50.jpg"
+  ],
+  "mean_psnr": 38.00364609520034
+ },
+ {
+  "rel": "main/rcan_small_whurs19_s2028/test_per_image.jsonl",
+  "group": "main",
+  "run_name": "rcan_small_whurs19_s2028",
+  "dataset": "WHU-RS19",
+  "seed": 2028,
+  "n_images": 101,
+  "n_bad_lines": 0,
+  "n_nan_psnr": 0,
+  "split_test_size": 101,
+  "size_match": true,
+  "first_3_paths": [
+   "WHU-RS19/footballField/footballField_03.jpg",
+   "WHU-RS19/Viaduct/viaduct_24.jpg",
+   "WHU-RS19/Commercial/commercial_50.jpg"
+  ],
+  "mean_psnr": 38.01033069119595
+ }
+]

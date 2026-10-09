@@ -1,0 +1,142 @@
+{
+ "resolution": [
+  {
+   "id": "MLIN-MetaWeight",
+   "doi": "10.1038/s41598-026-36632-w",
+   "publisher": "Scientific Reports",
+   "status": "FETCHED",
+   "reason": "nature.com 直连取到 HTML 412 KB（gold OA）；R2=A/R3=C/R5=A"
+  },
+  {
+   "id": "SDGAN-SciRep",
+   "doi": "10.1038/s41598-026-41832-5",
+   "publisher": "Scientific Reports",
+   "status": "FETCHED",
+   "reason": "nature.com 直连取到 HTML 393 KB（gold OA）；R2=A/R3=C/R5=A"
+  },
+  {
+   "id": "DBTSR",
+   "doi": "10.1016/j.eswa.2025.129424",
+   "publisher": "Expert Systems with Applications",
+   "status": "CLOSED",
+   "reason": "OpenAlex oa_status=closed，无任何 pdf_url / 作者预印本"
+  },
+  {
+   "id": "ORDiffSR",
+   "doi": "10.1016/j.eswa.2026.132254",
+   "publisher": "Expert Systems with Applications",
+   "status": "CLOSED",
+   "reason": "OpenAlex oa_status=closed"
+  },
+  {
+   "id": "HAC-MoE",
+   "doi": "10.1016/j.neucom.2026.133615",
+   "publisher": "Neurocomputing",
+   "status": "CLOSED",
+   "reason": "OpenAlex oa_status=closed；sciencedirect.com 403"
+  },
+  {
+   "id": "UDAMSR",
+   "doi": "S2095809926001682",
+   "publisher": "Engineering (CAE)",
+   "status": "CLOSED",
+   "reason": "sciencedirect.com 403（Elsevier 系一律墙）"
+  },
+  {
+   "id": "MT-Hybrid",
+   "doi": "10.1109/tgrs.2026.3651693",
+   "publisher": "IEEE TGRS",
+   "status": "CLOSED",
+   "reason": "OpenAlex oa_status=closed"
+  },
+  {
+   "id": "Sen4x",
+   "doi": "10.1109/jstars.2026.11435384",
+   "publisher": "IEEE JSTARS",
+   "status": "CLOSED",
+   "reason": "xplorestaging.ieee.org 返回 48 KB 付费墙页"
+  },
+  {
+   "id": "BKX-HMM",
+   "doi": "10.1109/tpami.2026.3681688",
+   "publisher": "IEEE TPAMI",
+   "status": "CLOSED",
+   "reason": "OpenAlex oa_status=closed"
+  },
+  {
+   "id": "PLAN",
+   "doi": "10.1109/xxx.2026.11370168",
+   "publisher": "IEEE（实为 IEEE 非 DOAJ）",
+   "status": "CLOSED",
+   "reason": "DOAJ 检索显示全文链接指向 ieeexplore.ieee.org/document/11370168（付费墙）；早期误记为 DOAJ 收录"
+  },
+  {
+   "id": "DiffBSR",
+   "doi": "（DOAJ 条目 b98e0f0f…）",
+   "publisher": "DOAJ 收录",
+   "status": "CLOSED",
+   "reason": "doaj.org 直链 403；开源仓库未在摘要给出"
+  },
+  {
+   "id": "S3-ESRGAN",
+   "doi": "10.1109/icmlc66258.2025.11280263",
+   "publisher": "IEEE ICMLC 2025",
+   "status": "CLOSED",
+   "reason": "OpenAlex oa_status=closed；Twente 机构仓库页面 404"
+  },
+  {
+   "id": "VolumeNet+TT",
+   "doi": "10.1145/3785443.3785445",
+   "publisher": "ACM ICMIP",
+   "status": "CLOSED",
+   "reason": "OpenAlex oa_status=hybrid 但无 pdf_url；dl.acm.org 403"
+  },
+  {
+   "id": "NTIRE2026-ESR",
+   "doi": "—",
+   "publisher": "Codabench (CVPRW)",
+   "status": "NO_PDF",
+   "reason": "赛事榜单页，无论文 PDF（与 NTIRE2026-SR 同源，已由后者代表）"
+  },
+  {
+   "id": "UDAMSR-mean",
+   "doi": "—",
+   "publisher": "同 UDAMSR",
+   "status": "NO_PDF",
+   "reason": "与 UDAMSR 同源，仅单列记录 'mean 聚合' 表述，不需独立全文"
+  },
+  {
+   "id": "PLGMamba",
+   "doi": "—",
+   "publisher": "HSI-SR 期刊",
+   "status": "NO_PDF",
+   "reason": "仅有 radaislice 新闻页（404），无 DOI 可查"
+  },
+  {
+   "id": "HSISR-KAN",
+   "doi": "—",
+   "publisher": "HSI-SR 综述",
+   "status": "NO_PDF",
+   "reason": "emergentmind 汇总页 403，非单篇论文"
+  },
+  {
+   "id": "LocalStateSpace",
+   "doi": "—",
+   "publisher": "中国图象图形学报",
+   "status": "NO_PDF",
+   "reason": "中文期刊，知网无 OA；本机无知网权限"
+  },
+  {
+   "id": "JNUN-CA",
+   "doi": "—",
+   "publisher": "西北大学学报(自然科学版)",
+   "status": "NO_PDF",
+   "reason": "中文期刊，知网无 OA"
+  }
+ ],
+ "summary": {
+  "FETCHED": 2,
+  "CLOSED": 11,
+  "NO_PDF": 6
+ }
+}

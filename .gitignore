@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.venv/
+venv/
+env/
+.DS_Store
+Thumbs.db
+*.log
+!data/*.log
+.pytest_cache/
+.mypy_cache/
+
+# Internal working drafts are kept locally, not shipped in the public repo.
+papers/drafts_internal/

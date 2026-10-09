@@ -1,0 +1,341 @@
+{
+ "DBTSR": {
+  "status": "OK",
+  "source": "crossref",
+  "doi": "10.1016/j.eswa.2025.129424",
+  "title": "DBTSR: A U-shaped adaptive sparse transformer for single remote sensing image super-resolution",
+  "authors": [
+   "Ting Tang",
+   "Jiangping Liu",
+   "Xiaoling Luo",
+   "Xiaojing Gao",
+   "Xin Pan"
+  ],
+  "n_auth": 5,
+  "container": "Expert Systems with Applications",
+  "short_container": "Expert Systems with Applications",
+  "volume": "297",
+  "issue": null,
+  "page": "129424",
+  "article_number": "129424",
+  "year": "2026",
+  "type": "journal-article"
+ },
+ "ORDiffSR": {
+  "status": "OK",
+  "source": "crossref",
+  "doi": "10.1016/j.eswa.2026.132254",
+  "title": "ORDiffSR: An effective one-step diffusion network for single remote sensing image super-resolution",
+  "authors": [
+   "Ting Tang",
+   "Jiangping Liu",
+   "Xiaoling Luo",
+   "Xiaojing Gao",
+   "Xueliang Fu",
+   "Xin Pan"
+  ],
+  "n_auth": 6,
+  "container": "Expert Systems with Applications",
+  "short_container": "Expert Systems with Applications",
+  "volume": "320",
+  "issue": null,
+  "page": "132254",
+  "article_number": "132254",
+  "year": "2026",
+  "type": "journal-article"
+ },
+ "DFSMamba": {
+  "status": "OK",
+  "source": "crossref",
+  "doi": "10.3390/rs18121910",
+  "title": "DFSMamba: A Spatial–Frequency Collaborative Modeling Framework for Remote Sensing Image Super-Resolution",
+  "authors": [
+   "Jie Yu",
+   "Hui Li",
+   "Xiangyong Zheng",
+   "Cheng Zhong",
+   "Qiao Sun"
+  ],
+  "n_auth": 5,
+  "container": "Remote Sensing",
+  "short_container": "Remote Sensing",
+  "volume": "18",
+  "issue": "12",
+  "page": "1910",
+  "article_number": null,
+  "year": "2026",
+  "type": "journal-article"
+ },
+ "MT-Hybrid": {
+  "status": "OK",
+  "source": "crossref",
+  "doi": "10.1109/tgrs.2026.3651693",
+  "title": "MT: A Hybrid Mamba–Transformer for Remote Sensing Image Super-Resolution",
+  "authors": [
+   "Jiajie Wang",
+   "Cuicui Lv",
+   "Shuzhen Xu",
+   "Zhenbin Du"
+  ],
+  "n_auth": 4,
+  "container": "IEEE Transactions on Geoscience and Remote Sensing",
+  "short_container": "IEEE Trans. Geosci. Remote Sensing",
+  "volume": "64",
+  "issue": null,
+  "page": "1-15",
+  "article_number": null,
+  "year": "2026",
+  "type": "journal-article"
+ },
+ "LocalStateSpace": {
+  "status": "NO_DOI",
+  "doi": null
+ },
+ "JNUN-CA": {
+  "status": "NO_DOI",
+  "doi": null
+ },
+ "MLIN-MetaWeight": {
+  "status": "OK",
+  "source": "crossref",
+  "doi": "10.1038/s41598-026-36632-w",
+  "title": "Cross-domain continuous-scale remote sensing image super-resolution via meta-weight learning",
+  "authors": [
+   "Qiyue Zhang",
+   "Shunqiu Ma",
+   "Yi Tang",
+   "Lingling Zheng"
+  ],
+  "n_auth": 4,
+  "container": "Scientific Reports",
+  "short_container": "Sci Rep",
+  "volume": "16",
+  "issue": "1",
+  "page": null,
+  "article_number": "6073",
+  "year": "2026",
+  "type": "journal-article"
+ },
+ "Sen4x": {
+  "status": "MISS",
+  "doi": "10.1109/jstars.2026.11435384",
+  "source": null,
+  "crossref_error": "<HTTPError 404: 'Not Found'>",
+  "openalex_error": "<HTTPError 404: 'Not Found'>"
+ },
+ "S3-ESRGAN": {
+  "status": "OK",
+  "source": "crossref",
+  "doi": "10.1109/icmlc66258.2025.11280263",
+  "title": "Image Super resolution: Enhanced UAV Images Using ESRGAN",
+  "authors": [
+   "Rohan Chhabra",
+   "Jeetashree Aparajeeta"
+  ],
+  "n_auth": 2,
+  "container": "2025 International Conference on Machine Learning and Cybernetics (ICMLC)",
+  "short_container": "",
+  "volume": null,
+  "issue": null,
+  "page": "197-202",
+  "article_number": null,
+  "year": "2025",
+  "type": "proceedings-article"
+ },
+ "GrasslandGAN": {
+  "status": "OK",
+  "source": "crossref",
+  "doi": "10.3390/rs18091419",
+  "title": "Assessing GAN Super-Resolution in Grasslands: The Role of Spatial Heterogeneity and Textural Complexity",
+  "authors": [
+   "Efrain Noa-Yarasca",
+   "Javier Osorio Leyton",
+   "Nada Jumaa",
+   "Haoyu Niu",
+   "Lonesome Malambo"
+  ],
+  "n_auth": 5,
+  "container": "Remote Sensing",
+  "short_container": "Remote Sensing",
+  "volume": "18",
+  "issue": "9",
+  "page": "1419",
+  "article_number": null,
+  "year": "2026",
+  "type": "journal-article"
+ },
+ "HAC-MoE": {
+  "status": "OK",
+  "source": "crossref",
+  "doi": "10.1016/j.neucom.2026.133615",
+  "title": "History-augmented contrastive learning with soft mixture of experts for blind super-resolution of planetary remote sensing images",
+  "authors": [
+   "Hui-Jia Zhao",
+   "Jie Lu",
+   "Yunqing Jiang",
+   "Xiao-Ping Lu"
+  ],
+  "n_auth": 4,
+  "container": "Neurocomputing",
+  "short_container": "Neurocomputing",
+  "volume": "685",
+  "issue": null,
+  "page": "133615",
+  "article_number": "133615",
+  "year": "2026",
+  "type": "journal-article"
+ },
+ "BKX-HMM": {
+  "status": "OK",
+  "source": "crossref",
+  "doi": "10.1109/tpami.2026.3681688",
+  "title": "Band-Kernel Stochastic Learning for Unsupervised Blind Hyperspectral Image Super-Resolution",
+  "authors": [
+   "Zhixiong Yang",
+   "Jingyuan Xia",
+   "Shengxi Li",
+   "Lingyu Zheng",
+   "Shuanghui Zhang",
+   "Li Liu"
+  ],
+  "n_auth": 8,
+  "container": "IEEE Transactions on Pattern Analysis and Machine Intelligence",
+  "short_container": "IEEE Trans. Pattern Anal. Mach. Intell.",
+  "volume": "48",
+  "issue": "8",
+  "page": "9895-9913",
+  "article_number": null,
+  "year": "2026",
+  "type": "journal-article"
+ },
+ "VolumeNet+TT": {
+  "status": "OK",
+  "source": "crossref",
+  "doi": "10.1145/3785443.3785445",
+  "title": "Hyperspectral Pansharpening using 3D VolumeNet and 2.5D Texture Transfer",
+  "authors": [
+   "Yinhao Li",
+   "Yen-Wei Chen"
+  ],
+  "n_auth": 2,
+  "container": "Proceedings of the 2025 8th International Conference on Digital Medicine and Image Processing",
+  "short_container": "",
+  "volume": null,
+  "issue": null,
+  "page": "9-13",
+  "article_number": null,
+  "year": "2025",
+  "type": "proceedings-article"
+ },
+ "SpectralSR-Bench": {
+  "status": "OK",
+  "source": "crossref",
+  "doi": "10.3390/s26020683",
+  "title": "A Comparative Evaluation of Super-Resolution Methods for Spectral Images Using Pretrained RGB Models",
+  "authors": [
+   "Navid Shokoohi",
+   "Abdelhamid N. Fsian",
+   "Jean-Baptiste Thomas",
+   "Pierre Gouton"
+  ],
+  "n_auth": 4,
+  "container": "Sensors",
+  "short_container": "Sensors",
+  "volume": "26",
+  "issue": "2",
+  "page": "683",
+  "article_number": null,
+  "year": "2026",
+  "type": "journal-article"
+ },
+ "SDGAN-SciRep": {
+  "status": "OK",
+  "source": "crossref",
+  "doi": "10.1038/s41598-026-41832-5",
+  "title": "Generative adversarial network-based super-resolution reconstruction of remote sensing images",
+  "authors": [
+   "Longbao Wang",
+   "LiSheng Liu",
+   "Qing Yu",
+   "Dandan Yuan"
+  ],
+  "n_auth": 4,
+  "container": "Scientific Reports",
+  "short_container": "Sci Rep",
+  "volume": "16",
+  "issue": "1",
+  "page": null,
+  "article_number": "11971",
+  "year": "2026",
+  "type": "journal-article"
+ },
+ "UDAMSR": {
+  "status": "OK",
+  "source": "crossref",
+  "doi": "10.1016/j.eng.2026.02.005",
+  "title": "Data-Efficient and Robust Reinforcement Learning for Moving Devices",
+  "authors": [
+   "Bengt Lennartson"
+  ],
+  "n_auth": 1,
+  "container": "Engineering",
+  "short_container": "Engineering",
+  "volume": "63",
+  "issue": null,
+  "page": "18-19",
+  "article_number": null,
+  "year": "2026",
+  "type": "journal-article"
+ },
+ "PLAN": {
+  "status": "OK",
+  "source": "crossref",
+  "doi": "10.1109/jstars.2026.3660141",
+  "title": "Super-Resolution of Remote Sensing Images via the Parallel Lattice Attention Network",
+  "authors": [
+   "Allen Patnaik",
+   "Arpit Gour",
+   "M. K. Bhuyan",
+   "Karl F. MacDorman",
+   "Sultan Alfarhood",
+   "Mejdl Safran"
+  ],
+  "n_auth": 6,
+  "container": "IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing",
+  "volume": "19",
+  "issue": null,
+  "page": "6067-6078",
+  "article_number": null,
+  "year": "2026",
+  "type": "journal-article",
+  "prev": {
+   "status": "MISS",
+   "doi": "10.1109/tgrs.2026.3612345",
+   "title": null
+  }
+ },
+ "NGram-MoSE": {
+  "status": "OK",
+  "source": "crossref",
+  "doi": "10.1109/metroaerospace69299.2026.11646695",
+  "title": "NGram-MoSE: Efficient Remote Sensing Super-Resolution via N-Gram Context and Mixture-of-Experts",
+  "authors": [
+   "Yun-Hsuan Huang",
+   "Trong-An Bui",
+   "Chih-Hung Chuang"
+  ],
+  "n_auth": 3,
+  "container": "2026 IEEE 13th International Workshop on Metrology for AeroSpace (MetroAeroSpace)",
+  "volume": null,
+  "issue": null,
+  "page": "1-6",
+  "article_number": null,
+  "year": "2026",
+  "type": "proceedings-article",
+  "prev": {
+   "status": null,
+   "doi": null,
+   "title": null
+  }
+ }
+}

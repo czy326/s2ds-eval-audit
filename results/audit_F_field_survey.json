@@ -1,0 +1,953 @@
+{
+ "n_papers": 35,
+ "n_quantified_gain": 7,
+ "n_qualitative_only": 28,
+ "n_with_code": 5,
+ "seed_sd_median_dB": 0.088,
+ "seed_sd_range_dB": [
+  0.049,
+  0.248
+ ],
+ "dataset_counts": {
+  "AID": 5,
+  "DOTA": 2,
+  "DIOR": 2,
+  "RSSCN7": 2,
+  "WHU-RS19": 5,
+  "UCMerced": 3,
+  "其他 5 个（摘要未列全）": 1,
+  "SpaceNet": 1,
+  "SEN2VENμS": 1,
+  "地理隔离 OOD 测试集": 1,
+  "滑坡分割基准": 1,
+  "（摘要未列）": 2,
+  "Chikusei": 1,
+  "Houston": 1,
+  "Pavia": 1,
+  "GF-5": 1,
+  "Sentinel-2 + Pléiades Neo (Hanoi)": 1,
+  "Sentinel-2 time series + LiDAR HD (France)": 1,
+  "IR275K (594 seq / 275,196 frames)": 1,
+  "Sen2UAV (428,000 patch pairs, 33 scenes)": 1,
+  "PlanetScope 3m + UAV 0.03m (Texas)": 1,
+  "Alsat-2B": 1,
+  "UC Merced": 1,
+  "Aerial Image": 1,
+  "SECOND": 1,
+  "FUSU": 1,
+  "Ceres-50 (自建 benchmark)": 1,
+  "Gaofen": 1,
+  "DOTA-v1.0 (1,411 images, 自建退化前向模型)": 1,
+  "3 设备 × 2 空间尺度 × 2 地理区域": 1,
+  "WorldView3 ×4": 1,
+  "ARAD_1K": 1,
+  "多设备/多区域": 1,
+  "~36,000 地点, 500m-0.6m, 跨平台": 1,
+  "DIV2K (100 test) + LSDIR": 1,
+  "DIV2K_LSDIR_valid/test": 1,
+  "MST++ 伪光谱 GT (31→30 band)": 1,
+  "（待核）": 3,
+  "（挑战赛数据）": 1,
+  "Landsat-8 合成基准 (6 退化)": 1
+ },
+ "seeds_or_stats_in_abstract": [],
+ "aggregation_mention_in_abstract": [
+  "DBTSR",
+  "THREASURE-Net",
+  "UDAMSR",
+  "UDAMSR-mean"
+ ],
+ "task_or_protocol_oriented": [
+  "GeoSR-Bench",
+  "Sen4x",
+  "THREASURE-Net",
+  "NGram-MoSE",
+  "UDAMSR",
+  "EORestore-Agent",
+  "GrasslandGAN",
+  "IR275K",
+  "SpectralSR-Bench",
+  "NTIRE2026-SR",
+  "NTIRE2026-ESR"
+ ],
+ "evidence_legend": {
+  "A": "摘要/检索片段直接可见",
+  "B": "正文片段可见（如完整指标表、明确退化设定）",
+  "C": "需全文核对（未取得可核查片段）"
+ },
+ "papers": [
+  {
+   "id": "DBTSR",
+   "venue": "Expert Systems with Applications",
+   "year": 2026,
+   "task": "SISR-RS",
+   "datasets": [
+    "AID",
+    "DOTA",
+    "DIOR",
+    "RSSCN7"
+   ],
+   "claimed_gain_dB": 0.12,
+   "claimed_vs": "SwinIR (avg); 对 TTST +0.05",
+   "gain_quote": "outperforms ... SwinIR and the advanced TTST in terms of PSNR by an average of approximately 0.12 dB and 0.05 dB",
+   "code": "github.com/TeresaTing/DBTSR",
+   "metric_mention": "PSNR (abstract)",
+   "R2_agg": "C",
+   "R3_seeds": "C",
+   "R5_testset": "C",
+   "ev_test": "C",
+   "url": "",
+   "note": "摘要只提 PSNR；未提 seed / 方差 / 检验。"
+  },
+  {
+   "id": "ORDiffSR",
+   "venue": "Expert Systems with Applications",
+   "year": 2026,
+   "task": "SISR-RS (diffusion)",
+   "datasets": [
+    "AID",
+    "DOTA",
+    "DIOR",
+    "WHU-RS19"
+   ],
+   "claimed_gain_dB": null,
+   "claimed_vs": "CNN/Transformer/GAN/diffusion（未给具体 dB）",
+   "gain_quote": "significantly outperforms existing CNN, Transformer, GAN, and diffusion model approaches",
+   "code": "github.com/TeresaTing/ORDiffSR",
+   "metric_mention": "subjective + objective",
+   "R2_agg": "C",
+   "R3_seeds": "C",
+   "R5_testset": "C",
+   "ev_test": "C",
+   "url": "",
+   "note": "只给效率对比（150× faster），性能增益定性描述，未给 dB。"
+  },
+  {
+   "id": "PLAN",
+   "venue": "DOAJ (Parallel Lattice Attention Network)",
+   "year": 2026,
+   "task": "SISR-RS",
+   "datasets": [
+    "AID",
+    "UCMerced",
+    "WHU-RS19"
+   ],
+   "claimed_gain_dB": 0.07,
+   "claimed_vs": "ESTNet/BMFENet",
+   "gain_quote": "outperforming state-of-the-art methods such as ESTNet and BMFENet by at least 0.07 dB in PSNR and 0.0210 in SSIM",
+   "code": null,
+   "metric_mention": "PSNR + SSIM",
+   "R2_agg": "C",
+   "R3_seeds": "C",
+   "R5_testset": "C",
+   "ev_test": "C",
+   "url": "",
+   "note": "报告运行时间；未提 seed/方差/检验。"
+  },
+  {
+   "id": "DFSMamba",
+   "venue": "Remote Sensing (MDPI) 18(12), 1910",
+   "year": 2026,
+   "task": "SISR-RS (Mamba+DFT)",
+   "datasets": [
+    "AID",
+    "其他 5 个（摘要未列全）"
+   ],
+   "claimed_gain_dB": 1.07,
+   "claimed_vs": "MambaIRv2 on AID×3",
+   "gain_quote": "On the AID×3 task, it achieves a PSNR of 31.48 dB, exceeding MambaIRv2 by 1.07 dB",
+   "code": null,
+   "metric_mention": "PSNR（摘要）",
+   "R2_agg": "B",
+   "R3_seeds": "C",
+   "R5_testset": "B",
+   "ev_test": "C",
+   "url": "",
+   "note": "消融给 0.85 dB 模块增益；未提 seed/方差/检验。",
+   "fulltext_evidence": {
+    "R2": "★ 做了**分类别（per-category）分解**：'in the \"Farmland\" category, it achieves 29.02 dB, exceeding MambaIRv2 by about 0.74 dB'；消融明确 'all single-module configurations underperform the baseline in PSNR'。但未说明总体 PSNR 是逐图均值还是中位。",
+    "R3": "未见 seed 数；仅给 'Parameter Settings'（学习率等）。",
+    "R5": "含 AID/WHU-RS19（×2/×3）+ 一个'不同季节与天气'的测试集；未在正文给精确 split 计数。"
+   },
+   "fulltext_note": "★ 有 per-category 分解（比全池多数更细），但总体聚合口径仍未披露。★ 另注意：其消融显示单模块在 PSNR 上**全面低于基线**，却仍以组合模型 +1.07 dB 为主结论——这正是'模块叠加 vs 容量效应'难以归因的典型（与用户 BSRNet 机制证伪的经验同源）。",
+   "fulltext_key": "10.3390/rs18121910",
+   "fulltext_source": "arxiv"
+  },
+  {
+   "id": "SFG-SwinSR",
+   "venue": "arXiv 2605.09687",
+   "year": 2026,
+   "task": "SISR-RS (Swin, SFG-FFN)",
+   "datasets": [
+    "SpaceNet",
+    "SEN2VENμS"
+   ],
+   "claimed_gain_dB": null,
+   "claimed_vs": "Swin2SR",
+   "gain_quote": "On SpaceNet, it achieves 45.19 dB PSNR and 0.9852 SSIM",
+   "code": null,
+   "metric_mention": "PSNR + SSIM",
+   "R2_agg": "C",
+   "R3_seeds": "A",
+   "R5_testset": "A",
+   "ev_test": "C",
+   "url": "http://arxiv.gg/abs/2605.09687",
+   "note": "★ 摘要给出绝对 PSNR（45.19 dB）但未给相对增益 dB；未提 seed/方差。",
+   "fulltext_evidence": {
+    "R2": "未说明 PSNR 聚合口径。",
+    "R3": "'For reproducibility, a fixed random seed of 42 is used for data shuffling and weight initialization.' ⇒ **明确单一固定 seed 并说明用途**。",
+    "R5": "'we obtain 12,144 valid image pairs, comprising 10,261 training samples and 1,883 test samples.'（精确计数）+ 自建退化过程。"
+   },
+   "fulltext_note": "★ R3/R5 明确（单 seed 42 + 精确 split 计数）；R2 缺席。",
+   "fulltext_key": "2605.09687",
+   "fulltext_source": "arxiv"
+  },
+  {
+   "id": "NGram-MoSE",
+   "venue": "arXiv 2606.08535",
+   "year": 2026,
+   "task": "SISR-RS (efficient Transformer)",
+   "datasets": [
+    "地理隔离 OOD 测试集",
+    "滑坡分割基准"
+   ],
+   "claimed_gain_dB": null,
+   "claimed_vs": "重量级 Transformer 参照",
+   "gain_quote": "achieves 31.68 dB PSNR while reducing FLOPs by 14× ... yielding a 4.47% absolute gain in mAP@50 over bicubic",
+   "code": null,
+   "metric_mention": "PSNR + 下游 mAP@50",
+   "R2_agg": "C",
+   "R3_seeds": "C",
+   "R5_testset": "A",
+   "ev_test": "C",
+   "url": "https://arxiv.org/abs/2606.08535",
+   "note": "★ 报告 OOD 测试集 + 下游任务，但摘要未给相对 dB 增益、未提 seed。原话强调 robustness。",
+   "fulltext_evidence": {
+    "R2": "未说明 PSNR 聚合方式。",
+    "R3": "未报告 seed 数或多次运行。",
+    "R5": "'The training set is constructed from five large-scale high-resolution remote sensing scenes (5000x5000 pixels each)... Evaluation is conducted on an independent test set of 29 geographically disjoint scenes (480x480), which are excluded from training.'"
+   },
+   "fulltext_note": "★ 明确的地理隔离 OOD 测试集（29 场景）；R5 优秀，R2/R3 缺席。",
+   "fulltext_key": "2606.08535",
+   "fulltext_source": "arxiv"
+  },
+  {
+   "id": "MT-Hybrid",
+   "venue": "IEEE TGRS Vol 64",
+   "year": 2026,
+   "task": "SISR-RS (Mamba-Transformer)",
+   "datasets": [
+    "（摘要未列）"
+   ],
+   "claimed_gain_dB": null,
+   "claimed_vs": "CNNs / Transformers / Mamba 类",
+   "gain_quote": "we propose a hybrid Mamba–Transformer (MT) framework",
+   "code": null,
+   "metric_mention": "（摘要未给具体指标）",
+   "R2_agg": "C",
+   "R3_seeds": "C",
+   "R5_testset": "C",
+   "ev_test": "C",
+   "url": "",
+   "note": "摘要未给数字。"
+  },
+  {
+   "id": "LocalStateSpace",
+   "venue": "中国图象图形学报",
+   "year": 2026,
+   "task": "SISR-RS (VSSM)",
+   "datasets": [
+    "UCMerced",
+    "RSSCN7",
+    "AID",
+    "WHU-RS19"
+   ],
+   "claimed_gain_dB": null,
+   "claimed_vs": "FeNet/HauNet/MambaIR/RCAN/HAT/SwinIR/MambaformerSR/Rep-Mamba",
+   "gain_quote": "在 UCMerced 数据集×4 放大下，本文方法在 PSNR 上取得最高值，同时计算量显著低于其他方法",
+   "code": null,
+   "metric_mention": "PSNR + SSIM",
+   "R2_agg": "C",
+   "R3_seeds": "C",
+   "R5_testset": "B",
+   "ev_test": "B",
+   "url": "",
+   "note": "★ 正文明确退化方式（bicubic）——R5 部分信息可见。"
+  },
+  {
+   "id": "JNUN-CA",
+   "venue": "西北大学学报(自然科学版) 56(1):108-117",
+   "year": 2026,
+   "task": "SISR-RS (通道注意力)",
+   "datasets": [
+    "WHU-RS19"
+   ],
+   "claimed_gain_dB": 0.19,
+   "claimed_vs": "次优方法（WHU-RS19）",
+   "gain_quote": "WHU-RS19 测试集上 PSNR/SSIM 分别为 28.70 dB / 0.7539，分别比次优方法提高了 0.19 dB 和 0.0066",
+   "code": null,
+   "metric_mention": "PSNR + SSIM",
+   "R2_agg": "C",
+   "R3_seeds": "C",
+   "R5_testset": "C",
+   "ev_test": "C",
+   "url": "",
+   "note": "只报单数据集（WHU-RS19，101 张测试图）。"
+  },
+  {
+   "id": "MLIN-MetaWeight",
+   "venue": "Scientific Reports",
+   "year": 2026,
+   "task": "连续尺度 RS-SR (跨域)",
+   "datasets": [
+    "WHU-RS19",
+    "UCMerced"
+   ],
+   "claimed_gain_dB": null,
+   "claimed_vs": "连续尺度 SOTA",
+   "gain_quote": "demonstrating state-of-the-art performance and outperforming existing methods in both visual quality and quantitative metrics",
+   "code": null,
+   "metric_mention": "PSNR/SSIM（图中标注）",
+   "R2_agg": "A",
+   "R3_seeds": "C",
+   "R5_testset": "A",
+   "ev_test": "C",
+   "url": "",
+   "note": "定性描述 SOTA，未给 dB。",
+   "fulltext_evidence": {
+    "R2": "'Table 1 Average PSNR (dB) and SSIM scores on the WHU-RS19 test set across continuous scaling factors.' ⇒ **聚合量被显式命名为 Average**（非 median/trim），且在连续尺度上逐尺度报告。",
+    "R3": "全文出现 'reproducibility'，但**语境是'公平性'而非'种间重复'**：'To ensure fairness and reproducibility, all models are trained under identical batch sizes and iteration counts.' ⇒ 统一训练配置，**未报告 seed 数、未做多次重复**。",
+    "R5": "'both datasets were divided into training and testing subsets using an 80%–20% split'；'leverage its bicubic interpolation module to implement continuous-scale downsampling'；'image patches of size 48 x 48'；WHU-RS19 1005 张 / UCMerced。"
+   },
+   "fulltext_note": "★★ 反面教材的精准样本：**把 'reproducibility' 用成了 'fairness' 的同义词**（统一超参 = 可复现），却仍未做种子重复。这正好把 R3 与'训练公平性'区分开——前者是**结果稳定性**，后者是**比较公平性**，两者不可互相替代。",
+   "fulltext_key": "srep:10.1038/s41598-026-36632-w",
+   "fulltext_source": "nature/srep"
+  },
+  {
+   "id": "PLGMamba",
+   "venue": "（HSI-SR，期刊）",
+   "year": 2026,
+   "task": "HSI-SR (状态空间)",
+   "datasets": [
+    "Chikusei",
+    "Houston",
+    "Pavia",
+    "GF-5"
+   ],
+   "claimed_gain_dB": null,
+   "claimed_vs": "CNN/Transformer/其他 SOTA",
+   "gain_quote": "PSNR of 44.058, SAM 1.3404, and ERGAS 10.069 at ×2 scale (Chikusei); PSNR 39.804 ... at ×4 (Houston)",
+   "code": null,
+   "metric_mention": "PSNR + SAM + ERGAS",
+   "R2_agg": "C",
+   "R3_seeds": "C",
+   "R5_testset": "C",
+   "ev_test": "C",
+   "url": "https://radaislice.com/news/ai-state-space-model-enhances-hyperspectral-image-resolution",
+   "note": "★ 报三指标；摘要给绝对 PSNR 未给相对增益；训练 200 epochs / RTX 3060。"
+  },
+  {
+   "id": "Sen4x",
+   "venue": "IEEE JSTARS Vol 19, 11042-11051",
+   "year": 2026,
+   "task": "MISR+SISR 混合 (Sentinel-2)",
+   "datasets": [
+    "Sentinel-2 + Pléiades Neo (Hanoi)"
+   ],
+   "claimed_gain_dB": null,
+   "claimed_vs": "SOTA SR baselines（下游分类）",
+   "gain_quote": "We find that they lead to a significant performance improvement over state-of-the-art super-resolution baselines",
+   "code": null,
+   "metric_mention": "下游土地覆盖分类 + 视觉质量",
+   "R2_agg": "C",
+   "R3_seeds": "C",
+   "R5_testset": "B",
+   "ev_test": "B",
+   "url": "https://xplorestaging.ieee.org/document/11435384/",
+   "note": "★ 罕见地把 SR 评测锚定到下游分类任务；但摘要未给 dB、未提 seed/检验。"
+  },
+  {
+   "id": "THREASURE-Net",
+   "venue": "arXiv 2512.11524",
+   "year": 2026,
+   "task": "MISR (Sentinel-2 时序 → 冠层高度)",
+   "datasets": [
+    "Sentinel-2 time series + LiDAR HD (France)"
+   ],
+   "claimed_gain_dB": null,
+   "claimed_vs": "其他 SOTA 方法",
+   "gain_quote": "the 2.5 m model achieved a Mean Absolute Error (MAE) of 2.63 m ... THREASURE-Net compares to other state-of-the-art methods",
+   "code": null,
+   "metric_mention": "MAE (高度) + 分类",
+   "R2_agg": "A",
+   "R3_seeds": "C",
+   "R5_testset": "B",
+   "ev_test": "C",
+   "url": "https://www.alphaxiv.org/overview/2512.11524v3",
+   "note": "★ 任务型 SR（回归到 LiDAR 参考），非 PSNR 叙事。",
+   "fulltext_evidence": {
+    "R2": "★★ 'Values are reported as the median, along with the 25th and 75th percentiles'；误差用 box-and-whisker（中位+IQR）；表格列 '(Tree Height, m ± STD)'。⇒ **罕见的 median + IQR 报告，而非仅报 mean**。",
+    "R3": "未见 seed 数（但用了 Mann-Kendall 统计显著性检验）。",
+    "R5": "法国全域多生态区；多分辨率（2.5/5/10 m）对比，但未在检索片段给精确 split 计数。"
+   },
+   "fulltext_note": "★★★【R2 最佳实践】用 **median + IQR** 而非 mean，且做 Mann-Kendall 趋势显著性检验。⇒ 与 P0-S1 的核心主张（聚合口径决定结论）直接呼应。",
+   "fulltext_key": "2512.11524",
+   "fulltext_source": "arxiv"
+  },
+  {
+   "id": "IR275K",
+   "venue": "arXiv 2607.22380 (Benchmark)",
+   "year": 2026,
+   "task": "MISR (红外多帧)",
+   "datasets": [
+    "IR275K (594 seq / 275,196 frames)"
+   ],
+   "claimed_gain_dB": 0.35,
+   "claimed_vs": "红外单图 SR 参照（0.35--0.52 dB）",
+   "gain_quote": "It achieves 33.19dB PSNR, outperforming infrared single-image super-resolution references by 0.35--0.52 dB at substantially lower computational cost",
+   "code": "github.com/InfraRecon7/IR275K",
+   "metric_mention": "PSNR + FLOPs + params",
+   "R2_agg": "B",
+   "R3_seeds": "C",
+   "R5_testset": "A",
+   "ev_test": "B",
+   "url": "https://arxiv.org/abs/2607.22380",
+   "note": "★ 明确提供 'reproducible X4 evaluation protocol' + sequence-level splits —— 本领域少见的协议自觉。但摘要仍未提 seed/方差/统计检验。",
+   "fulltext_evidence": {
+    "R2": "报告了各 split 的 thermal contrast / temporal noise 的 均值/中位/IQR（分布级刻画），但未明确说评测指标（PSNR）本身是逐图均值还是中位。",
+    "R3": "全文未见 seed 数或多次训练平均的表述。",
+    "R5": "'Training receives 261 sequences with 192,776 frames, validation receives 111 sequences with 27,576 frames, and test receives 222 sequences with 54,844 frames.' 且 'no frame from the same sequence appears in more than one partition'（序列级隔离）。"
+   },
+   "fulltext_note": "★ benchmark 论文，R5 做得很规范（序列级 split + 分布级刻画）；但 R3 仍缺席。",
+   "fulltext_key": "2607.22380",
+   "fulltext_source": "arxiv"
+  },
+  {
+   "id": "S3-ESRGAN",
+   "venue": "（Sentinel-2 + UAV, Univ. Twente）",
+   "year": 2026,
+   "task": "跨传感器 SR (5×)",
+   "datasets": [
+    "Sen2UAV (428,000 patch pairs, 33 scenes)"
+   ],
+   "claimed_gain_dB": null,
+   "claimed_vs": "SOTA SR 方法",
+   "gain_quote": "S3-ESRGAN consistently outperforms state-of-the-art methods, producing sharper textures, enhanced edges, and improved spectral fidelity",
+   "code": null,
+   "metric_mention": "视觉 + 光谱保真（消融）",
+   "R2_agg": "C",
+   "R3_seeds": "C",
+   "R5_testset": "C",
+   "ev_test": "C",
+   "url": "https://research.utwente.nl/en/publications/ce847b6d-4fbc-4e27-9a90-11cd7658afa8",
+   "note": "★ 大数据集（42.8 万对）却仍用定性 SOTA 表述；消融只证模块贡献。"
+  },
+  {
+   "id": "GrasslandGAN",
+   "venue": "Remote Sensing (MDPI) 18(9), 1419",
+   "year": 2026,
+   "task": "GAN SR (草地, 分层评测)",
+   "datasets": [
+    "PlanetScope 3m + UAV 0.03m (Texas)"
+   ],
+   "claimed_gain_dB": null,
+   "claimed_vs": "SRGAN/ESRGAN/bicubic",
+   "gain_quote": "Landscape heterogeneity strongly influenced downscaling outcomes. SRGAN performance declined ... ESRGAN demonstrated consistently robust performance",
+   "code": null,
+   "metric_mention": "PSNR + SSIM + variability analysis",
+   "R2_agg": "A",
+   "R3_seeds": "C",
+   "R5_testset": "A",
+   "ev_test": "B",
+   "url": "https://www.mdpi.com/2072-4292/18/9/1419/html",
+   "note": "★★ 少数做了'variability analysis'（报告性能稳定性）的论文——R4 种子噪声相关意识可见。但按景观异质性分层，不等于按 seed 分层。",
+   "fulltext_evidence": {
+    "R2": "★★★ 全池**最强的聚合/不确定性实践**：(1) 定义 'coefficient of variation (CV), defined as the ratio of the standard deviation to the mean (CV = SD/M)'，并给出分级'CV < 10% ... low variability, 10% < CV < 20% ... moderate, CV ≥ 20% ... high variability'；(2) 表格明确列 'mean, standard deviation, and coefficient of variation (CV)'；(3) 'Normality assumptions were not satisfied, and the Kruskal–Wallis test confirmed...'。",
+    "R3": "未见训练随机种子数（仅报告 30 epochs / batch size 1 等训练超参）。",
+    "R5": "★★ 'This stratification produced a balanced training set of 409 paired tiles (80%) and a test set of 102 paired tiles per cluster (20%)'；三层操作框架（intra-sensor / cross-sensor / intra-to-cross generalization）显式定义。"
+   },
+   "fulltext_note": "★★★【全池唯一的 R4 级实践】用 **CV = SD/M + Kruskal-Wallis（H 统计量 + p 值）** 做**分布级**稳定性分析，且显式检验正态假设。⇒ **它证明'报告离散度与显著性检验'在 RS-SR 里完全可做**——只是它被当成'生态学分层的附产物'而非'SR 评测的标准动作'。这是 P0-S1 最有说服力的正面样板，也是最强的反例（说明不是不能做）。",
+   "fulltext_key": "10.3390/rs18091419",
+   "fulltext_source": "arxiv"
+  },
+  {
+   "id": "Text-RSIR",
+   "venue": "arXiv 2605.15558",
+   "year": 2026,
+   "task": "文本引导重建/传输",
+   "datasets": [
+    "Alsat-2B",
+    "UC Merced",
+    "Aerial Image"
+   ],
+   "claimed_gain_dB": null,
+   "claimed_vs": "（语义保真对比）",
+   "gain_quote": "achieves reconstruction PSNRs of 16.36 dB, 26.87 dB, and 27.41 dB, respectively",
+   "code": "github.com/haoyangofficial/textrssr",
+   "metric_mention": "PSNR",
+   "R2_agg": "C",
+   "R3_seeds": "C",
+   "R5_testset": "C",
+   "ev_test": "C",
+   "url": "https://arxiv.gg/abs/2605.15558",
+   "note": "摘要给绝对 PSNR（16-27 dB 跨度极大，说明任务难）；未给相对增益。",
+   "fulltext_evidence": {
+    "R2": "全文关键词检索未见聚合口径披露。",
+    "R3": "全文未见 seed 数。",
+    "R5": "提及三个数据集（Alsat-2B/UC Merced/Aerial）但未在检索片段中给出精确计数。"
+   },
+   "fulltext_note": "文本引导重建；三字段待人工确认。",
+   "fulltext_key": "2605.15558",
+   "fulltext_source": "arxiv"
+  },
+  {
+   "id": "DS-DiT (RefSR)",
+   "venue": "arXiv 2605.17980",
+   "year": 2026,
+   "task": "参考图引导 SR (diffusion)",
+   "datasets": [
+    "SECOND",
+    "FUSU"
+   ],
+   "claimed_gain_dB": null,
+   "claimed_vs": "现有 RefSR 方法",
+   "gain_quote": "Experimental results across multiple datasets and scaling factors show that DS-DiT outperforms existing methods in both quantitative metrics and visual fidelity",
+   "code": null,
+   "metric_mention": "定量指标 + 视觉",
+   "R2_agg": "C",
+   "R3_seeds": "C",
+   "R5_testset": "A",
+   "ev_test": "C",
+   "url": "https://www.pith.science/paper/2605.17980",
+   "note": "★ 论文自己指出 'perceptual quality ... may still receive higher scores'（对感知指标的怀疑）——与评测批判同调。",
+   "fulltext_evidence": {
+    "R2": "未说明聚合口径。",
+    "R3": "未报告 seed。",
+    "R5": "'We follow the official split, using 2,968 image pairs for training and 1,694 pairs for testing.'（SECOND 官方 split）+ FUSU。"
+   },
+   "fulltext_note": "R5 明确（沿用官方 split）；R2/R3 缺席。",
+   "fulltext_key": "2605.17980",
+   "fulltext_source": "arxiv"
+  },
+  {
+   "id": "HAC-MoE",
+   "venue": "Neurocomputing Vol 685",
+   "year": 2026,
+   "task": "盲 SR (行星遥感, 无监督)",
+   "datasets": [
+    "Ceres-50 (自建 benchmark)"
+   ],
+   "claimed_gain_dB": null,
+   "claimed_vs": "无监督盲 SR 基线",
+   "gain_quote": "achieves competitive quantitative performance under physically motivated synthetic degradations",
+   "code": "github.com/2333repeat/HAC-MoE",
+   "metric_mention": "定量（未在摘要给 dB）",
+   "R2_agg": "C",
+   "R3_seeds": "C",
+   "R5_testset": "B",
+   "ev_test": "B",
+   "url": "https://acm-stag.literatumonline.com/doi/10.1016/j.neucom.2026.133615",
+   "note": "★★ 摘要用词极克制（'competitive'、'in the evaluated setting'、'simplified surrogate analysis ... rather than a direct global guarantee'）——罕见的自我设限式表述。自建 benchmark + 开放代码与数据。"
+  },
+  {
+   "id": "DiffBSR",
+   "venue": "（DOAJ 收录）",
+   "year": 2026,
+   "task": "盲 SR (扩散, 未知核)",
+   "datasets": [
+    "Gaofen"
+   ],
+   "claimed_gain_dB": null,
+   "claimed_vs": "SOTA CNN 方法",
+   "gain_quote": "our DiffBSR improves the learned perceptual image patch similarity metric by 32%–76% and achieves higher segmentation accuracy",
+   "code": null,
+   "metric_mention": "LPIPS + 分割精度",
+   "R2_agg": "C",
+   "R3_seeds": "C",
+   "R5_testset": "C",
+   "ev_test": "C",
+   "url": "https://doaj.org/article/b98e0f0f1167469299cbc9cac67c9755",
+   "note": "★ 报告相对 LPIPS 改善（32-76%）而非 PSNR dB —— 指标口径不可比。"
+  },
+  {
+   "id": "AstraMoE-SR",
+   "venue": "arXiv 2609.07012",
+   "year": 2026,
+   "task": "盲去抖+SR (卫星 pushbroom)",
+   "datasets": [
+    "DOTA-v1.0 (1,411 images, 自建退化前向模型)"
+   ],
+   "claimed_gain_dB": 0.64,
+   "claimed_vs": "StableSR",
+   "gain_quote": "improving on StableSR, the strongest learned baseline, by 0.64 dB PSNR, 15.2% LPIPS, and 0.091 in DINO feature similarity",
+   "code": null,
+   "metric_mention": "PSNR + LPIPS + DINO",
+   "R2_agg": "A",
+   "R3_seeds": "C",
+   "R5_testset": "A",
+   "ev_test": "B",
+   "url": "https://arxiv.org/html/2609.07012v1",
+   "note": "★ 报告了 3 个指标，且明确 self-degradation 前向模型（可复现性相关）；但'唯一在所有保真指标上超过 no-restoration baseline 的方法'这一表述暴露了基线普遍不可靠。",
+   "fulltext_evidence": {
+    "R2": "★ 'sizes span several hundred pixels to 12029x5014, so aggregates are area-weighted.' ⇒ **明确披露聚合是按面积加权**。另有 'We use DINO as the primary semantic-fidelity criterion because pixel-wise metrics can be sensitive to ...' ⇒ **明确说明主指标选择理由**。",
+    "R3": "全文未见 seed 数或多次训练平均。",
+    "R5": "'We train on AID and evaluate on the train split of DOTA-v1.0, using all 1,411 images rather than a subset'（明确说明未取子集）；自建物理前向退化模型。"
+   },
+   "fulltext_note": "★★★【R2 最佳实践】罕见地披露 **area-weighted 聚合** + **主指标选择理由**。⇒ 证明'聚合口径'在本领域是可报告且应当报告的，只是几乎没人报。",
+   "fulltext_key": "2609.07012",
+   "fulltext_source": "arxiv"
+  },
+  {
+   "id": "BKX-HMM",
+   "venue": "IEEE TPAMI 2026",
+   "year": 2026,
+   "task": "无监督盲超分 (HSI)",
+   "datasets": [
+    "（摘要未列）"
+   ],
+   "claimed_gain_dB": null,
+   "claimed_vs": "无监督 HSI-SR 方法",
+   "gain_quote": "建立了基于隐马尔可夫模型的统一统计框架 ... 首个无需任何标签、全自动盲估计的无监督超分方案",
+   "code": null,
+   "metric_mention": "（“砸钱换效果”批判式叙事）",
+   "R2_agg": "C",
+   "R3_seeds": "C",
+   "R5_testset": "C",
+   "ev_test": "C",
+   "url": "https://gitcode.csdn.net/69e9de2a0a2f6a37c5a276c3.html",
+   "note": "★ 论文自陈行业误区：'预设死板的模糊核和波段选择' —— 与本审计 R5（基线/退化口径）问题同源。"
+  },
+  {
+   "id": "UDAMSR",
+   "venue": "Engineering (Elsevier/CAE)",
+   "year": 2026,
+   "task": "无监督退化感知 SR (光谱/作物)",
+   "datasets": [
+    "3 设备 × 2 空间尺度 × 2 地理区域"
+   ],
+   "claimed_gain_dB": null,
+   "claimed_vs": "有监督/无监督基线",
+   "gain_quote": "mean PSNR of 32.78, mean RMSE of 6.93, mean SSIM of 0.89, and mean SAM of 0.131 ... strong generalization across different spatial scales, geographic regions, devices, and data types",
+   "code": null,
+   "metric_mention": "PSNR + RMSE + SSIM + SAM",
+   "R2_agg": "C",
+   "R3_seeds": "C",
+   "R5_testset": "B",
+   "ev_test": "B",
+   "url": "https://www.sciencedirect.com/science/article/pii/S2095809926001682",
+   "note": "★★ 明确的跨设备/跨尺度/跨区域泛化评测设计 + 4 指标。这是本池里最接近'协议有序'的一类，但摘要用 mean 而不是 median/trim，且未见 seed 或配对检验。"
+  },
+  {
+   "id": "VolumeNet+TT",
+   "venue": "ACM (ICMIP/相关会议)",
+   "year": 2026,
+   "task": "全色锐化 (HS)",
+   "datasets": [
+    "WorldView3 ×4"
+   ],
+   "claimed_gain_dB": null,
+   "claimed_vs": "PNN / PanNet / PSMD-Net",
+   "gain_quote": "Table 1: PSNR 30.43/30.03/31.15/31.17/31.75 ... SAM 0.072/0.075/0.072/0.068/0.067 ... ERGAS 4.627/5.089/4.280/4.260/4.040",
+   "code": null,
+   "metric_mention": "PSNR+SSIM+CC+SAM+ERGAS+params+time",
+   "R2_agg": "C",
+   "R3_seeds": "C",
+   "R5_testset": "B",
+   "ev_test": "B",
+   "url": "https://dl.acm.org/doi/abs/10.1145/3785443.3785445",
+   "note": "★★ 罕见地把 5 个指标全列成表。但仅单一场景（WorldView3 ×4），且选择标准是'best accuracy during training'（best-checkpoint 选择，未提 seed）。"
+  },
+  {
+   "id": "HSISR-KAN",
+   "venue": "（HSI-SR, 综述/方法）",
+   "year": 2026,
+   "task": "HSI-SR (KAN)",
+   "datasets": [
+    "ARAD_1K"
+   ],
+   "claimed_gain_dB": null,
+   "claimed_vs": "CNN/Transformer 基线",
+   "gain_quote": "EigenSR-β | ARAD_1K 4× | PSNR=40.46dB, SSIM=0.9605, SAM=1.18°",
+   "code": null,
+   "metric_mention": "PSNR + SSIM + SAM",
+   "R2_agg": "C",
+   "R3_seeds": "C",
+   "R5_testset": "C",
+   "ev_test": "C",
+   "url": "https://www.emergentmind.com/topics/hyperspectral-single-image-super-resolution-hs-sisr",
+   "note": "★ 综述汇总表显示该子领域'指标族'已相对统一（PSNR/SSIM/SAM/ERGAS），但仍无 seed/检验列。"
+  },
+  {
+   "id": "UDAMSR-mean",
+   "venue": "ScienceDirect (crop sensing)",
+   "year": 2026,
+   "task": "光谱 SR（作物）",
+   "datasets": [
+    "多设备/多区域"
+   ],
+   "claimed_gain_dB": null,
+   "claimed_vs": "无监督 SR 基线",
+   "gain_quote": "best overall performance in the comprehensive evaluation, with a mean PSNR of 32.78",
+   "code": null,
+   "metric_mention": "PSNR+RMSE+SSIM+SAM",
+   "R2_agg": "C",
+   "R3_seeds": "C",
+   "R5_testset": "C",
+   "ev_test": "C",
+   "url": "",
+   "note": "与 UDAMSR 同源，此处单列以记录'mean 聚合'表述。"
+  },
+  {
+   "id": "GeoSR-Bench",
+   "venue": "arXiv 2605.00310",
+   "year": 2026,
+   "task": "SR 基准（下游任务整合）",
+   "datasets": [
+    "~36,000 地点, 500m-0.6m, 跨平台"
+   ],
+   "claimed_gain_dB": null,
+   "claimed_vs": "GAN/Transformer/neural operator/diffusion",
+   "gain_quote": "improvements in traditional SR metrics often do not correlate with gains in task performance, and the correlations can be negative",
+   "code": null,
+   "metric_mention": "感知质量 + 下游任务（270 设置）",
+   "R2_agg": "B",
+   "R3_seeds": "A",
+   "R5_testset": "A",
+   "ev_test": "A",
+   "url": "https://scholar.google.com.sg/citations?user=X2Wfl1UAAAAJ",
+   "note": "★★★ 【同调】直接证伪'PSNR 提升 = 有用'。270 设置 / 9 SR 模型 / 5 下游任务。这是 P0 叙事最直接的支撑文献，但不是关于**排名在多协议间不稳定**（我们的增量）。",
+   "fulltext_evidence": {
+    "R2": "下游任务用 mean F1 / MAE，未明确 SR 保真指标的聚合口径。",
+    "R3": "'To enhance result robustness, for each evaluation case we train the pixel-level prediction models three times, and report performance averaged over the three runs.' 表 VIII/IX 标题亦标注 'averaged over three independent runs'。",
+    "R5": "~36,000 空间共定位、时间对齐、质控后的图像对，覆盖 500m-0.6m 多分辨率。"
+   },
+   "fulltext_note": "★★★【标杆】唯一一篇在**下游任务**上明确 3 次独立运行取平均的论文。⇒ 证明'种子重复'在这个领域是可做且已被做的——问题在于它没有被推广。",
+   "fulltext_key": "2605.00310",
+   "fulltext_source": "arxiv"
+  },
+  {
+   "id": "NTIRE2026-SR",
+   "venue": "arXiv 2604.14558 (CVPRW)",
+   "year": 2026,
+   "task": "挑战赛报告 (×4 SR)",
+   "datasets": [
+    "DIV2K (100 test) + LSDIR"
+   ],
+   "claimed_gain_dB": null,
+   "claimed_vs": "（Track 1 PSNR / Track 2 感知）",
+   "gain_quote": "PSNR and seven perceptual metric scores are evaluated on the DIV2K test set (100 images). ... A 4-pixel border is excluded ... on the Y channel",
+   "code": null,
+   "metric_mention": "PSNR + SSIM + LPIPS + DISTS + NIQE + ManIQA + MUSIQ + CLIP-IQA",
+   "R2_agg": "A",
+   "R3_seeds": "B",
+   "R5_testset": "A",
+   "ev_test": "A",
+   "url": "https://arxiv.org/html/2604.14558v1",
+   "note": "★★★【同调·最重要的协议标尺】官方明确：8 指标、4-pixel border、Y 通道、DIV2K 100 张测试。⇒ 说明'口径'确实被官方固定，但**学术论文普遍不照抄这套口径**（per-paper 各取所需）。这正是 R1/R2 的核心落差来源。",
+   "fulltext_evidence": {
+    "R2": "'A 4-pixel border is excluded from each image during evaluation, and all calculations are carried out on the Y channel of the YCbCr color space.' + 8 指标定义明确。",
+    "R3": "多数队伍仅报单次；个别队伍给 'Random seed 42'（单一 seed，非多次重复）。",
+    "R5": "DIV2K test 100 张；LR-HR 由 HQ 经 bicubic ×4 生成；HR 测试图全程保密。"
+   },
+   "fulltext_note": "★★★ 官方口径最完整（border/色彩通道/8 指标）；但官方仍用**单点阈值**而非统计功效。",
+   "fulltext_key": "2604.14558",
+   "fulltext_source": "arxiv"
+  },
+  {
+   "id": "NTIRE2026-ESR",
+   "venue": "Codabench (CVPRW)",
+   "year": 2026,
+   "task": "高效 SR 挑战赛",
+   "datasets": [
+    "DIV2K_LSDIR_valid/test"
+   ],
+   "claimed_gain_dB": null,
+   "claimed_vs": "SPAN (基线)",
+   "gain_quote": "The threshold PSNR is set to 26.90 dB on DIV2K_LSDIR_valid and 26.99 dB on DIV2K_LSDIR_test ... greater weight will be given to teams ... in more than one aspect",
+   "code": null,
+   "metric_mention": "PSNR 阈值 + Runtime + FLOPs + Params",
+   "R2_agg": "C",
+   "R3_seeds": "C",
+   "R5_testset": "A",
+   "ev_test": "A",
+   "url": "https://www.codabench.org/competitions/13553/",
+   "note": "★★ 官方用'单点阈值 + 加权'来对抗排名脆弱性，而非报告置信区间。⇒ 官方也在用一个 'hard threshold' 回避统计功效问题。"
+  },
+  {
+   "id": "SpectralSR-Bench",
+   "venue": "Sensors 26(2), 683 (MDPI)",
+   "year": 2026,
+   "task": "光谱 SR 比较评测",
+   "datasets": [
+    "MST++ 伪光谱 GT (31→30 band)"
+   ],
+   "claimed_gain_dB": null,
+   "claimed_vs": "CNN/GAN/diffusion/classical",
+   "gain_quote": "The workflow was designed to be modular and reproducible ... Centralized logging records model metadata, timestamps, and per-image metrics, supporting traceability and repeatability",
+   "code": null,
+   "metric_mention": "PSNR（按 ×2/×4/×8 分档）",
+   "R2_agg": "A",
+   "R3_seeds": "C",
+   "R5_testset": "A",
+   "ev_test": "A",
+   "url": "https://doi.org/10.3390/s26020683",
+   "note": "★★★【同调】明确以'reproducible evaluation protocol'为卖点，逐图记录指标、zero-shot 公平比较。⇒ 与本审计 A 线（逐图 path 一致性）同一诉求。但它做的是**跨方法公平性**，我们做的是**同方法跨口径排名稳定性**。",
+   "fulltext_evidence": {
+    "R2": "★★★ 'results are summarized as mean± std over a 50-image set'；每张表标题均为 'quantitative results (mean± std over 50 images)'；'We report mean± standard deviation over a 50-image set for all metrics'；'This reinforces the value of reporting mean± std across 50 images and including SAM alongside PSNR and SSIM to capture both spatial fidelity and spectral consistency.'",
+    "R3": "未见训练 seed（全部为 zero-shot 使用公开预训练权重，故无训练随机性；但**推理随机性**——扩散模型的采样噪声——同样未用多种子刻画）。",
+    "R5": "★★ 'on 50 unseen images'；MST++ 生成 31→30 band 伪光谱 GT；统一 pipeline 逐图记录（reproducible evaluation framework）。"
+   },
+   "fulltext_note": "★★★【本轮最锋利的一篇】它是全池**唯一把 mean ± std 写进每张表**的工作，但**std 量级（1.90–3.66 dB）远大于方法间差距**：见 `audit_H_spectralsr_std.json` —— **10 对相邻方法中 8 对满足 Δ < std**。⇒ **论文自己报告了离散度，却仍按 mean 排序宣称某法更优**。这是 P0-S1 核心论点最硬的证据：**证据来自论文自身，不依赖我们复现任何东西**。",
+   "fulltext_key": "10.3390/s26020683",
+   "fulltext_source": "arxiv"
+  },
+  {
+   "id": "SyMTRS",
+   "venue": "arXiv 2604.21801",
+   "year": 2026,
+   "task": "SISR-RS (对称/多任务)",
+   "datasets": [
+    "（待核）"
+   ],
+   "claimed_gain_dB": null,
+   "claimed_vs": "（待核）",
+   "gain_quote": "（未取得可核查增益原句——列入待核队列）",
+   "code": null,
+   "metric_mention": "（待核）",
+   "R2_agg": "C",
+   "R3_seeds": "B",
+   "R5_testset": "A",
+   "ev_test": "C",
+   "url": "https://arxiv.org/abs/2604.21801",
+   "note": "候选池成员；未取得摘要级增益，暂不计入分子。",
+   "fulltext_evidence": {
+    "R2": "未说明 PSNR 聚合口径。",
+    "R3": "明确 split seed 42（deterministic split），但未说明训练权重初始化 seed 数或多次运行。",
+    "R5": "'we use a fixed split with seed 42, containing 1656 training tiles and 414 test tiles' （80/20 确定性划分）。"
+   },
+   "fulltext_note": "★ R5/R3-split 明确；仍未做多次训练重复。",
+   "fulltext_key": "2604.21801",
+   "fulltext_source": "arxiv"
+  },
+  {
+   "id": "NTIRE2026-IR",
+   "venue": "arXiv 2604.21312 (CVPRW)",
+   "year": 2026,
+   "task": "红外 SR 挑战赛报告",
+   "datasets": [
+    "（挑战赛数据）"
+   ],
+   "claimed_gain_dB": null,
+   "claimed_vs": "（挑战赛 baseline）",
+   "gain_quote": "（未取得可核查增益原句——列入待核队列）",
+   "code": null,
+   "metric_mention": "（待核）",
+   "R2_agg": "A",
+   "R3_seeds": "A",
+   "R5_testset": "A",
+   "ev_test": "C",
+   "url": "https://arxiv.org/abs/2604.21312",
+   "note": "候选池成员；NTIRE 系，预期协议自觉度高，待取全文。",
+   "fulltext_evidence": {
+    "R2": "★ 挑战赛评分公式明确：'Score = PSNR + 20 x SSIM amplifies SSIM by a factor of 20 relative to PSNR. Concretely, an SSIM improvement of 0.01 contributes the same as a 0.2 dB PSNR gain.' ⇒ **权重选择被显式披露，且直接改变排名语义**。",
+    "R3": "参赛队表格中明确列出 'Random seed 42'（S2 队）；S1 未列。",
+    "R5": "1,019 official HR/LR pairs，no extra data；另有队伍用 SatVideoIRSDT 补充训练。"
+   },
+   "fulltext_note": "★★★【最点题】官方评分公式把 SSIM 放大 20 倍（0.01 SSIM = 0.2 dB PSNR）——**这正是 P0-S1 说的'口径选择直接决定排名'的权威例证**。且该口径是被明示的，说明官方知道权重选择重要。",
+   "fulltext_key": "2604.21312",
+   "fulltext_source": "arxiv"
+  },
+  {
+   "id": "SlimDiffSR",
+   "venue": "arXiv 2605.02198",
+   "year": 2026,
+   "task": "轻量扩散 SR",
+   "datasets": [
+    "（待核）"
+   ],
+   "claimed_gain_dB": null,
+   "claimed_vs": "（待核）",
+   "gain_quote": "（未取得可核查增益原句——列入待核队列）",
+   "code": null,
+   "metric_mention": "（待核）",
+   "R2_agg": "C",
+   "R3_seeds": "C",
+   "R5_testset": "C",
+   "ev_test": "C",
+   "url": "https://arxiv.org/abs/2605.02198",
+   "note": "候选池成员；待核。",
+   "fulltext_evidence": {
+    "R2": "全文关键词检索未见聚合口径披露。",
+    "R3": "全文未见 seed 数。",
+    "R5": "全文未见精确 test split 规模（需进一步人工定位）。"
+   },
+   "fulltext_note": "轻量扩散 SR；三个字段均未在自动检索中命中，标注为待人工确认。",
+   "fulltext_key": "2605.02198",
+   "fulltext_source": "arxiv"
+  },
+  {
+   "id": "SDGAN-SciRep",
+   "venue": "Scientific Reports 16, 11971",
+   "year": 2026,
+   "task": "GAN SR",
+   "datasets": [
+    "（待核）"
+   ],
+   "claimed_gain_dB": null,
+   "claimed_vs": "（待核）",
+   "gain_quote": "（未取得可核查增益原句——列入待核队列）",
+   "code": null,
+   "metric_mention": "（待核）",
+   "R2_agg": "B",
+   "R3_seeds": "C",
+   "R5_testset": "A",
+   "ev_test": "C",
+   "url": "https://www.nature.com/srep/",
+   "note": "候选池成员；待核。",
+   "fulltext_evidence": {
+    "R2": "附录给出 additional experimental details，含训练配置；聚合口径部分披露。",
+    "R3": "未报告 seed 数或多次运行。",
+    "R5": "'The split was performed at the video-sequence level to avoid information leakage.' ⇒ **序列级隔离**（与 IR275K 同级的规范做法）。"
+   },
+   "fulltext_note": "★ 跨领域对照（医学视频 SR）：R5 序列级隔离做得好，R3 同样缺席 ⇒ **R3 缺失是跨领域的普遍现象，不是遥感特有**。",
+   "fulltext_key": "srep:10.1038/s41598-026-65714-y",
+   "fulltext_source": "nature/srep"
+  },
+  {
+   "id": "EORestore-Agent",
+   "venue": "arXiv 2610.06196",
+   "year": 2026,
+   "task": "复合退化恢复 (agent)",
+   "datasets": [
+    "Landsat-8 合成基准 (6 退化)"
+   ],
+   "claimed_gain_dB": 2.3,
+   "claimed_vs": "最强重训 all-in-one baseline（2.3--3.2 dB）",
+   "gain_quote": "EORestore-Agent improves PSNR by 2.3 to 3.2 dB over the strongest retrained all-in-one baseline on composites of two to six degradations, whereas zero-shot natural-image agents fall below the degraded input in PSNR in 17 of 18 settings",
+   "code": null,
+   "metric_mention": "PSNR + SSIM + LPIPS (+ 逐步骤接受判据)",
+   "R2_agg": "A",
+   "R3_seeds": "A",
+   "R5_testset": "A",
+   "ev_test": "B",
+   "url": "https://arxiv-vanity.com/papers/2610.06196",
+   "note": "★★★【同调·方法论价值最高】用'reference-free verifiable per-step decision'替代'不可测目标'，明确报告 '17/18 设置下 zero-shot agent 反而低于退化输入' —— 罕见的系统性负结果披露。",
+   "fulltext_evidence": {
+    "R2": "'PSNR, SSIM, and LPIPS averaged over all degradation combinations at each N' （明确按退化组合数聚合）。",
+    "R3": "★★★ 'We train E = 7 models differing only in random seed and average their predictions at inference.' ⇒ **显式的多种子集成**。",
+    "R5": "'The test set contains 270 clean tiles'；'The training split does not overlap with the 270 test tiles'；六种退化类型逐一定义。"
+   },
+   "fulltext_note": "★★★【全文级最佳实践】唯一一篇**明确 E=7 个 seed 训练并集成**的论文；且主动披露 '17/18 设置下 zero-shot agent 反而低于退化输入' 的系统性负结果。⇒ 它是 P0-S1 想要的'应该如何做'的正面样板。",
+   "fulltext_key": "2610.06196",
+   "fulltext_source": "arxiv"
+  }
+ ],
+ "fulltext_summary": {
+  "n_upgraded": 18,
+  "R2_A": 8,
+  "R3_A": 4,
+  "R5_A": 15,
+  "abstract_level_R3_mention": 0,
+  "key_lesson": "摘要级 R3=0/35，全文级 R3[A]=4/35 ⇒ 摘要不可作为'未报告'的依据。"
+ }
+}

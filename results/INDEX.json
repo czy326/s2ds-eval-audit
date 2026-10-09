@@ -1,0 +1,147 @@
+{
+ "results": [
+  {
+   "file": "INDEX.json",
+   "bytes": 2415,
+   "top_keys": [
+    "results"
+   ]
+  },
+  {
+   "file": "_arxiv_meta.json",
+   "bytes": 3626,
+   "top_keys": [
+    "2607.22380",
+    "2606.08535",
+    "2605.00310",
+    "2604.14558",
+    "2604.21312",
+    "2604.21801",
+    "2610.06196",
+    "2609.07012"
+   ]
+  },
+  {
+   "file": "_arxiv_meta_extra.json",
+   "bytes": 710,
+   "top_keys": [
+    "2605.14847v1",
+    "2606.02535v1"
+   ]
+  },
+  {
+   "file": "_doi_meta.json",
+   "bytes": 8915,
+   "top_keys": [
+    "DBTSR",
+    "ORDiffSR",
+    "DFSMamba",
+    "MT-Hybrid",
+    "LocalStateSpace",
+    "JNUN-CA",
+    "MLIN-MetaWeight",
+    "Sen4x"
+   ]
+  },
+  {
+   "file": "_doi_meta_extra.json",
+   "bytes": 5252,
+   "top_keys": [
+    "PLAN",
+    "Sen4x",
+    "NGram-MoSE"
+   ]
+  },
+  {
+   "file": "audit_A_pathset.json",
+   "bytes": 32679,
+   "top_keys": [
+    "AID",
+    "RSSCN7",
+    "UCMerced_LandUse",
+    "WHU-RS19"
+   ]
+  },
+  {
+   "file": "audit_B_protocols.json",
+   "bytes": 62543,
+   "top_keys": [
+    "AID",
+    "RSSCN7",
+    "UCMerced_LandUse",
+    "WHU-RS19"
+   ]
+  },
+  {
+   "file": "audit_C_seednoise.json",
+   "bytes": 42800,
+   "top_keys": "list[136]"
+  },
+  {
+   "file": "audit_D_effect_vs_noise.json",
+   "bytes": 128470,
+   "top_keys": "list[327]"
+  },
+  {
+   "file": "audit_E_anchor_b3.json",
+   "bytes": 2509,
+   "top_keys": [
+    "vs_main_baseline",
+    "vs_old_baseline"
+   ]
+  },
+  {
+   "file": "audit_F_field_survey.json",
+   "bytes": 42082,
+   "top_keys": [
+    "n_papers",
+    "n_quantified_gain",
+    "n_qualitative_only",
+    "n_with_code",
+    "seed_sd_median_dB",
+    "seed_sd_range_dB",
+    "dataset_counts",
+    "seeds_or_stats_in_abstract"
+   ]
+  },
+  {
+   "file": "audit_G_gain_vs_noise.json",
+   "bytes": 4223,
+   "top_keys": [
+    "n_papers_total",
+    "n_claims_quantified",
+    "n_within_noise_median",
+    "n_within_noise_max",
+    "seed_noise_by_dataset",
+    "fallback",
+    "rows",
+    "boundary_note"
+   ]
+  },
+  {
+   "file": "audit_H_spectralsr_std.json",
+   "bytes": 3054,
+   "top_keys": [
+    "rows",
+    "pairwise",
+    "n_pairs",
+    "n_delta_below_std",
+    "psnr_span",
+    "std_range"
+   ]
+  },
+  {
+   "file": "audit_I_oa_resolution.json",
+   "bytes": 3926,
+   "top_keys": [
+    "resolution",
+    "summary"
+   ]
+  },
+  {
+   "file": "manifest.json",
+   "bytes": 83156,
+   "top_keys": "list[170]"
+  }
+ ]
+}

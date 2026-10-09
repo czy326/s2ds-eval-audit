@@ -1,0 +1,31 @@
+{
+ "2605.14847v1": {
+  "title": "SR-Prominence: A Crowdsourced Protocol and Dataset Suite for Perceptually-Weighted Super-Resolution Artifact Evaluation",
+  "authors": [
+   "Ivan Molodetskikh",
+   "Kirill Malyshev",
+   "Mark Mirgaleev",
+   "Nikita Zagainov",
+   "Evgeney Bogatyrev",
+   "Dmitriy Vatolin"
+  ],
+  "n_auth": 6,
+  "year": "2026"
+ },
+ "2606.02535v1": {
+  "title": "LL-Bench: Rethinking Low-Level Vision Evaluation in the Era of Large-Scale Generative Models",
+  "authors": [
+   "Lu Liu",
+   "Huiyu Duan",
+   "Chenxin Zhu",
+   "Jintong Lu",
+   "Haoyun Jiang",
+   "Liu Yang",
+   "Qiang Hu",
+   "Guangtao Zhai",
+   "Xiaoyun Zhang"
+  ],
+  "n_auth": 9,
+  "year": "2026"
+ }
+}

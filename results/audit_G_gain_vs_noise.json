@@ -1,0 +1,143 @@
+{
+ "n_papers_total": 35,
+ "n_claims_quantified": 7,
+ "n_within_noise_median": 1,
+ "n_within_noise_max": 2,
+ "seed_noise_by_dataset": {
+  "AID": {
+   "sd_median": 0.07277793981722501,
+   "sd_max": 0.11868415879645632,
+   "sd_min": 0.06363648986899277,
+   "n_pairs": 37
+  },
+  "RSSCN7": {
+   "sd_median": 0.06316809762922482,
+   "sd_max": 0.11690807167637676,
+   "sd_min": 0.04922740693544419,
+   "n_pairs": 33
+  },
+  "UCMerced_LandUse": {
+   "sd_median": 0.10695900412415618,
+   "sd_max": 0.17013461481827205,
+   "sd_min": 0.08353800921308384,
+   "n_pairs": 33
+  },
+  "WHU-RS19": {
+   "sd_median": 0.1202225688263164,
+   "sd_max": 0.24847233672327076,
+   "sd_min": 0.060601765682037505,
+   "n_pairs": 33
+  }
+ },
+ "fallback": {
+  "sd_median": 0.088,
+  "sd_max": 0.248
+ },
+ "rows": [
+  {
+   "id": "PLAN",
+   "gain": 0.07,
+   "datasets": [
+    "AID",
+    "UCMerced",
+    "WHU-RS19"
+   ],
+   "vs": "ESTNet/BMFENet",
+   "quote": "outperforming state-of-the-art methods such as ESTNet and BMFENet by at least 0.07 dB in PSNR and 0.0210 in SSIM",
+   "sd_median": 0.07277793981722501,
+   "sd_max": 0.11868415879645632,
+   "ratio": 0.9618299195580208,
+   "verdict": "⚠️ 噪声内",
+   "noise_src": "AID"
+  },
+  {
+   "id": "DBTSR",
+   "gain": 0.12,
+   "datasets": [
+    "AID",
+    "DOTA",
+    "DIOR",
+    "RSSCN7"
+   ],
+   "vs": "SwinIR (avg); 对 TTST +0.05",
+   "quote": "outperforms ... SwinIR and the advanced TTST in terms of PSNR by an average of approximately 0.12 dB and 0.05 dB",
+   "sd_median": 0.07277793981722501,
+   "sd_max": 0.11868415879645632,
+   "ratio": 1.6488512906708925,
+   "verdict": "△ 勉强可见",
+   "noise_src": "AID"
+  },
+  {
+   "id": "JNUN-CA",
+   "gain": 0.19,
+   "datasets": [
+    "WHU-RS19"
+   ],
+   "vs": "次优方法（WHU-RS19）",
+   "quote": "WHU-RS19 测试集上 PSNR/SSIM 分别为 28.70 dB / 0.7539，分别比次优方法提高了 0.19 dB 和 0.0066",
+   "sd_median": 0.1202225688263164,
+   "sd_max": 0.24847233672327076,
+   "ratio": 1.5804020979995022,
+   "verdict": "△ 勉强可见",
+   "noise_src": "WHU-RS19"
+  },
+  {
+   "id": "IR275K",
+   "gain": 0.35,
+   "datasets": [
+    "IR275K (594 seq / 275,196 frames)"
+   ],
+   "vs": "红外单图 SR 参照（0.35--0.52 dB）",
+   "quote": "It achieves 33.19dB PSNR, outperforming infrared single-image super-resolution references by 0.35--0.52 dB at substantially lower computational cost",
+   "sd_median": 0.088,
+   "sd_max": 0.248,
+   "ratio": 3.977272727272727,
+   "verdict": "✅ 超噪声",
+   "noise_src": "全库中位(回落)"
+  },
+  {
+   "id": "AstraMoE-SR",
+   "gain": 0.64,
+   "datasets": [
+    "DOTA-v1.0 (1,411 images, 自建退化前向模型)"
+   ],
+   "vs": "StableSR",
+   "quote": "improving on StableSR, the strongest learned baseline, by 0.64 dB PSNR, 15.2% LPIPS, and 0.091 in DINO feature similarity",
+   "sd_median": 0.088,
+   "sd_max": 0.248,
+   "ratio": 7.272727272727273,
+   "verdict": "✅ 超噪声",
+   "noise_src": "全库中位(回落)"
+  },
+  {
+   "id": "DFSMamba",
+   "gain": 1.07,
+   "datasets": [
+    "AID",
+    "其他 5 个（摘要未列全）"
+   ],
+   "vs": "MambaIRv2 on AID×3",
+   "quote": "On the AID×3 task, it achieves a PSNR of 31.48 dB, exceeding MambaIRv2 by 1.07 dB",
+   "sd_median": 0.07277793981722501,
+   "sd_max": 0.11868415879645632,
+   "ratio": 14.702257341815459,
+   "verdict": "✅ 超噪声",
+   "noise_src": "AID"
+  },
+  {
+   "id": "EORestore-Agent",
+   "gain": 2.3,
+   "datasets": [
+    "Landsat-8 合成基准 (6 退化)"
+   ],
+   "vs": "最强重训 all-in-one baseline（2.3--3.2 dB）",
+   "quote": "EORestore-Agent improves PSNR by 2.3 to 3.2 dB over the strongest retrained all-in-one baseline on composites of two to six degradations, whereas zero-shot natural-image agents fall below the degraded input in PSNR in 17 of 18 settings",
+   "sd_median": 0.088,
+   "sd_max": 0.248,
+   "ratio": 26.136363636363637,
+   "verdict": "✅ 超噪声",
+   "noise_src": "全库中位(回落)"
+  }
+ ],
+ "boundary_note": "噪声 sd 来自本审计 RS-SR 库，非被引论文自身数据集。仅对给出具体 dB 的论文可判读。"
+}

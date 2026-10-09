@@ -1,0 +1,170 @@
+{
+ "rows": [
+  {
+   "method": "ESRGAN (×2)",
+   "type": "GAN",
+   "psnr": 35.89,
+   "std": 3.53
+  },
+  {
+   "method": "SRCNN (×2)",
+   "type": "CNN",
+   "psnr": 40.77,
+   "std": 2.2
+  },
+  {
+   "method": "FSRCNN (×2)",
+   "type": "CNN",
+   "psnr": 41.15,
+   "std": 2.19
+  },
+  {
+   "method": "Bicubic (×2)",
+   "type": "Interpolation",
+   "psnr": 34.89,
+   "std": 3.53
+  },
+  {
+   "method": "Bilinear (×2)",
+   "type": "Interpolation",
+   "psnr": 34.39,
+   "std": 3.53
+  },
+  {
+   "method": "SinSR (×4)",
+   "type": "Diffusion",
+   "psnr": 30.94,
+   "std": 2.44
+  },
+  {
+   "method": "ResShift (×4)",
+   "type": "Diffusion",
+   "psnr": 29.98,
+   "std": 1.9
+  },
+  {
+   "method": "Bicubic (×4)",
+   "type": "Interpolation",
+   "psnr": 32.6,
+   "std": 3.66
+  },
+  {
+   "method": "Bilinear (×4)",
+   "type": "Interpolation",
+   "psnr": 32.18,
+   "std": 3.49
+  },
+  {
+   "method": "SRCNN (×2→× 4)",
+   "type": "CNN",
+   "psnr": 37.27,
+   "std": 2.13
+  },
+  {
+   "method": "Bicubic (×8)",
+   "type": "Interpolation",
+   "psnr": 30.3,
+   "std": 3.65
+  },
+  {
+   "method": "Bilinear (×8)",
+   "type": "Interpolation",
+   "psnr": 29.89,
+   "std": 3.43
+  },
+  {
+   "method": "SR3 (×8)",
+   "type": "Diffusion",
+   "psnr": 13.87,
+   "std": 14.8
+  },
+  {
+   "method": "SRCNN (×2→× 4→× 8)",
+   "type": "CNN",
+   "psnr": 35.82,
+   "std": 2.2
+  }
+ ],
+ "pairwise": [
+  {
+   "a": "FSRCNN (×2)",
+   "b": "SRCNN (×2)",
+   "delta": 0.37999999999999545,
+   "max_std": 2.2,
+   "ratio": 0.17272727272727065
+  },
+  {
+   "a": "SRCNN (×2)",
+   "b": "SRCNN (×2→× 4)",
+   "delta": 3.5,
+   "max_std": 2.2,
+   "ratio": 1.5909090909090908
+  },
+  {
+   "a": "SRCNN (×2→× 4)",
+   "b": "SRCNN (×2→× 4→× 8)",
+   "delta": 1.4500000000000028,
+   "max_std": 2.2,
+   "ratio": 0.6590909090909103
+  },
+  {
+   "a": "Bicubic (×2)",
+   "b": "Bilinear (×2)",
+   "delta": 0.5,
+   "max_std": 3.53,
+   "ratio": 0.141643059490085
+  },
+  {
+   "a": "Bilinear (×2)",
+   "b": "Bicubic (×4)",
+   "delta": 1.7899999999999991,
+   "max_std": 3.66,
+   "ratio": 0.4890710382513659
+  },
+  {
+   "a": "Bicubic (×4)",
+   "b": "Bilinear (×4)",
+   "delta": 0.4200000000000017,
+   "max_std": 3.66,
+   "ratio": 0.1147540983606562
+  },
+  {
+   "a": "Bilinear (×4)",
+   "b": "Bicubic (×8)",
+   "delta": 1.879999999999999,
+   "max_std": 3.65,
+   "ratio": 0.5150684931506847
+  },
+  {
+   "a": "Bicubic (×8)",
+   "b": "Bilinear (×8)",
+   "delta": 0.41000000000000014,
+   "max_std": 3.65,
+   "ratio": 0.11232876712328771
+  },
+  {
+   "a": "SinSR (×4)",
+   "b": "ResShift (×4)",
+   "delta": 0.9600000000000009,
+   "max_std": 2.44,
+   "ratio": 0.39344262295082005
+  },
+  {
+   "a": "ResShift (×4)",
+   "b": "SR3 (×8)",
+   "delta": 16.11,
+   "max_std": 14.8,
+   "ratio": 1.0885135135135133
+  }
+ ],
+ "n_pairs": 10,
+ "n_delta_below_std": 8,
+ "psnr_span": [
+  13.87,
+  41.15
+ ],
+ "std_range": [
+  1.9,
+  14.8
+ ]
+}

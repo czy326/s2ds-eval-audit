@@ -1,0 +1,142 @@
+{
+ "2607.22380": {
+  "title": "IR275K: A Benchmark for Infrared Multi-Frame Super-Resolution Toward Efficient Remote Sensing",
+  "authors": [
+   "Jie Deng",
+   "Heyang Wang",
+   "Changxin Wang",
+   "Junkai Shen"
+  ],
+  "n_auth": 9,
+  "year": "2026"
+ },
+ "2606.08535": {
+  "title": "NGram-MoSE: Efficient Remote Sensing Super-Resolution via N-Gram Context and Mixture-of-Experts",
+  "authors": [
+   "Yun-Hsuan Huang",
+   "Trong-An Bui",
+   "Chih-Hung Chuang"
+  ],
+  "n_auth": 3,
+  "year": "2026"
+ },
+ "2605.00310": {
+  "title": "Beyond Visual Fidelity: Benchmarking Super-Resolution Models for Large-Scale Remote Sensing Imagery via Downstream Task Integration",
+  "authors": [
+   "Zhili Li",
+   "Kangyang Chai",
+   "Zhihao Wang",
+   "Xiaowei Jia"
+  ],
+  "n_auth": 9,
+  "year": "2026"
+ },
+ "2604.14558": {
+  "title": "The Fourth Challenge on Image Super-Resolution ($\\times$4) at NTIRE 2026: Benchmark Results and Method Overview",
+  "authors": [
+   "Zheng Chen",
+   "Kai Liu",
+   "Jingkai Wang",
+   "Xianglong Yan"
+  ],
+  "n_auth": 153,
+  "year": "2026"
+ },
+ "2604.21312": {
+  "title": "The First Challenge on Remote Sensing Infrared Image Super-Resolution at NTIRE 2026: Benchmark Results and Method Overview",
+  "authors": [
+   "Kai Liu",
+   "Haoyang Yue",
+   "Zeli Lin",
+   "Zheng Chen"
+  ],
+  "n_auth": 68,
+  "year": "2026"
+ },
+ "2604.21801": {
+  "title": "SyMTRS: Benchmark Multi-Task Synthetic Dataset for Depth, Domain Adaptation and Super-Resolution in Aerial Imagery",
+  "authors": [
+   "Safouane El Ghazouali",
+   "Nicola Venturi",
+   "Michael Rueegsegger",
+   "Umberto Michelucci"
+  ],
+  "n_auth": 4,
+  "year": "2026"
+ },
+ "2610.06196": {
+  "title": "EORestore-Agent: Fidelity-Guided Agentic Restoration of Remote Sensing Images with Composite Degradations",
+  "authors": [
+   "Heli Qi",
+   "Zeqi Zhou",
+   "Jingjun Yi",
+   "Kunyi Liu"
+  ],
+  "n_auth": 8,
+  "year": "2026"
+ },
+ "2609.07012": {
+  "title": "AstraMoE-SR: Trajectory-Guided Diffusion for Blind Satellite Jitter Deblurring and Super-Resolution",
+  "authors": [
+   "Yi-Chung Lai",
+   "Chin-Tien Wu",
+   "Yu-Chih Chen"
+  ],
+  "n_auth": 3,
+  "year": "2026"
+ },
+ "2605.09687": {
+  "title": "Spatial-Frequency Gated Swin Transformer for Cross-Sensor Remote Sensing Super-Resolution",
+  "authors": [
+   "Md Aminur Hossain",
+   "Ayush V. Patel",
+   "Sanjay K. Singh",
+   "Yogesh Jethani"
+  ],
+  "n_auth": 5,
+  "year": "2026"
+ },
+ "2605.17980": {
+  "title": "Learning to Balance: Decoupled Siamese Diffusion Transformer for Reference-Based Remote Sensing Image Super-Resolution",
+  "authors": [
+   "Bin Luo",
+   "Runmin Dong",
+   "Zhaoyang Luo",
+   "Jinxiao Zhang"
+  ],
+  "n_auth": 7,
+  "year": "2026"
+ },
+ "2605.02198": {
+  "title": "SlimDiffSR: Toward Lightweight and Efficient Remote Sensing Image Super-Resolution via Diffusion Model Distillation",
+  "authors": [
+   "Ce Wang",
+   "Zhenyu Hu",
+   "Wanjie Sun"
+  ],
+  "n_auth": 3,
+  "year": "2026"
+ },
+ "2605.15558": {
+  "title": "Text-RSIR: A Text-Guided Framework for Efficient Remote Sensing Image Transmission and Reconstruction",
+  "authors": [
+   "Hao Yang",
+   "Xianping Ma",
+   "Peifeng Ma",
+   "Man-On Pun"
+  ],
+  "n_auth": 4,
+  "year": "2026"
+ },
+ "2512.11524": {
+  "title": "Super-Resolved Canopy Height Mapping from Sentinel-2 Time Series Using Airborne LiDAR HD Reference Data across Metropolitan France",
+  "authors": [
+   "Ekaterina Kalinicheva",
+   "Florian Helen",
+   "Stéphane Mermoz",
+   "Florian Mouret"
+  ],
+  "n_auth": 5,
+  "year": "2025"
+ }
+}

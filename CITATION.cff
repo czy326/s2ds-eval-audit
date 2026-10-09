@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you use this audit, please cite the manuscript listed below."
+title: "Protocol Choices, Not Method Quality, Decide the Ranking: A Reproducibility Audit of Remote Sensing Super-Resolution Evaluation"
+abstract: >-
+  A zero-training audit of 170 existing runs across four standard remote sensing
+  super-resolution benchmarks, combined with a report-practice survey of 35 papers
+  from 2026. The audit measures how often a method ranking changes when only the
+  metric, the aggregation rule, the training seed, or the baseline convention is
+  varied, and reduces the findings to a seven-item reproducibility scorecard.
+authors:
+  - family-names: "Chen"
+    given-names: "Zhengyang"
+  - family-names: "Liu"
+    given-names: "Dawei"
+  - family-names: "Liu"
+    given-names: "Zhiheng"
+version: 0.1.0
+date-released: "2026-10-09"
+license: MIT
+keywords:
+  - reproducibility
+  - benchmark methodology
+  - super-resolution
+  - remote sensing
+  - evaluation protocol

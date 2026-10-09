@@ -1,0 +1,185 @@
+{
+ "PLAN": {
+  "query": "Parallel Lattice Attention Network remote sensing super-resolution",
+  "crossref_top5": [
+   {
+    "doi": "10.1109/jstars.2026.3660141",
+    "title": "Super-Resolution of Remote Sensing Images via the Parallel Lattice Attention Network",
+    "container": "IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing",
+    "authors": [
+     "Allen Patnaik",
+     "Arpit Gour",
+     "M. K. Bhuyan",
+     "Karl F. MacDorman"
+    ],
+    "year": "2026"
+   },
+   {
+    "doi": "10.3390/rs15123139",
+    "title": "Pixel-Wise Attention Residual Network for Super-Resolution of Optical Remote Sensing Images",
+    "container": "Remote Sensing",
+    "authors": [
+     "Yali Chang",
+     "Gang Chen",
+     "Jifa Chen"
+    ],
+    "year": "2023"
+   },
+   {
+    "doi": "10.3390/rs17061078",
+    "title": "Dual Attention Fusion Enhancement Network for Lightweight Remote-Sensing Image Super-Resolution",
+    "container": "Remote Sensing",
+    "authors": [
+     "Wangyou Chen",
+     "Shenming Qu",
+     "Laigan Luo",
+     "Yongyong Lu"
+    ],
+    "year": "2025"
+   },
+   {
+    "doi": "10.3390/rs13152966",
+    "title": "Remote Sensing Image Super-Resolution Based on Dense Channel Attention Network",
+    "container": "Remote Sensing",
+    "authors": [
+     "Yunchuan Ma",
+     "Pengyuan Lv",
+     "Hao Liu",
+     "Xuehong Sun"
+    ],
+    "year": "2021"
+   },
+   {
+    "doi": "10.3390/rs13142784",
+    "title": "Deep Residual Dual-Attention Network for Super-Resolution Reconstruction of Remote Sensing Images",
+    "container": "Remote Sensing",
+    "authors": [
+     "Bo Huang",
+     "Boyong He",
+     "Liaoni Wu",
+     "Zhiming Guo"
+    ],
+    "year": "2021"
+   }
+  ]
+ },
+ "Sen4x": {
+  "query": "Sen4x remote sensing super-resolution JSTARS",
+  "crossref_top5": [
+   {
+    "doi": "10.3390/rs18162823",
+    "title": "AERO: Arbitrary-Scale Equivariant Resolution Operator for Remote Sensing Image Super-Resolution",
+    "container": "Remote Sensing",
+    "authors": [
+     "Rui Qin",
+     "Ying Shi",
+     "Yuhan Liu"
+    ],
+    "year": "2026"
+   },
+   {
+    "doi": "10.3390/rs15133309",
+    "title": "Enhancing Remote Sensing Image Super-Resolution Guided by Bicubic-Downsampled Low-Resolution Image",
+    "container": "Remote Sensing",
+    "authors": [
+     "Minkyung Chung",
+     "Minyoung Jung",
+     "Yongil Kim"
+    ],
+    "year": "2023"
+   },
+   {
+    "doi": "10.3390/rs6010637",
+    "title": "Super-Resolution Reconstruction for Multi-Angle Remote Sensing Images Considering Resolution Differences",
+    "container": "Remote Sensing",
+    "authors": [
+     "Hongyan Zhang",
+     "Zeyu Yang",
+     "Liangpei Zhang",
+     "Huanfeng Shen"
+    ],
+    "year": "2014"
+   },
+   {
+    "doi": "10.58837/chula.the.2025.859",
+    "title": "U-Net Network for Remote Sensing Image Super-Resolution",
+    "container": "",
+    "authors": [
+     "Kanapoj Ngambenjavichaikul"
+    ],
+    "year": "None"
+   },
+   {
+    "doi": "10.3390/rs11202333",
+    "title": "Bidirectional Convolutional LSTM Neural Network for Remote Sensing Image Super-Resolution",
+    "container": "Remote Sensing",
+    "authors": [
+     "Yunpeng Chang",
+     "Bin Luo"
+    ],
+    "year": "2019"
+   }
+  ]
+ },
+ "NGram-MoSE": {
+  "query": "NGram-MoSE N-Gram context mixture of experts remote sensing super-resolution",
+  "crossref_top5": [
+   {
+    "doi": "10.1109/metroaerospace69299.2026.11646695",
+    "title": "NGram-MoSE: Efficient Remote Sensing Super-Resolution via N-Gram Context and Mixture-of-Experts",
+    "container": "2026 IEEE 13th International Workshop on Metrology for AeroSpace (MetroAeroSpace)",
+    "authors": [
+     "Yun-Hsuan Huang",
+     "Trong-An Bui",
+     "Chih-Hung Chuang"
+    ],
+    "year": "2026"
+   },
+   {
+    "doi": "10.1109/lgrs.2025.3557928",
+    "title": "Heterogeneous Mixture of Experts for Remote Sensing Image Super-Resolution",
+    "container": "IEEE Geoscience and Remote Sensing Letters",
+    "authors": [
+     "Bowen Chen",
+     "Keyan Chen",
+     "Mohan Yang",
+     "Zhengxia Zou"
+    ],
+    "year": "2025"
+   },
+   {
+    "doi": "10.1016/j.neucom.2026.133615",
+    "title": "History-augmented contrastive learning with soft mixture of experts for blind super-resolution of planetary remote sensing images",
+    "container": "Neurocomputing",
+    "authors": [
+     "Hui-Jia Zhao",
+     "Jie Lu",
+     "Yunqing Jiang",
+     "Xiao-Ping Lu"
+    ],
+    "year": "2026"
+   },
+   {
+    "doi": "10.51489/tuzal.1829904",
+    "title": "Modified very deep super resolution network - Gaussian mixture models based single image super-resolution: A comprehensive comparative analysis",
+    "container": "Turkish Journal of Remote Sensing",
+    "authors": [
+     "Mehmet Akıf Günen"
+    ],
+    "year": "2026"
+   },
+   {
+    "doi": "10.3390/rs16111956",
+    "title": "ESatSR: Enhancing Super-Resolution for Satellite Remote Sensing Images with State Space Model and Spatial Context",
+    "container": "Remote Sensing",
+    "authors": [
+     "Yinxiao Wang",
+     "Wei Yuan",
+     "Fang Xie",
+     "Baojun Lin"
+    ],
+    "year": "2024"
+   }
+  ]
+ }
+}
