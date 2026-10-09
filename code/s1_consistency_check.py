@@ -21,9 +21,9 @@ import json, re, io, os, sys
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 ROOT = PROJ_ROOT
-AUD = os.path.join(ROOT, "audit", "out")
-PAPER = os.path.join(ROOT, "out", "P0S1_论文正文_v1.md")
-CAPT = os.path.join(ROOT, "out", "P0S1_图表caption定稿_2026-10-09.md")
+AUD = os.path.join(ROOT, "results")
+PAPER = os.path.join(ROOT, "papers", "P0S1_论文正文_v1.md")
+CAPT = os.path.join(ROOT, "papers", "P0S1_图表caption定稿_2026-10-09.md")
 
 J = {f: json.load(open(os.path.join(AUD, f), encoding="utf-8"))
      for f in ["audit_A_pathset.json", "audit_B_protocols.json",
@@ -232,7 +232,7 @@ check("closed11", s["CLOSED"], "11")
 
 # ---------------------------------------------------------------- references
 print("\n=== reference list ===")
-REF = os.path.join(ROOT, "out", "references.md")
+REF = os.path.join(ROOT, "papers", "references.md")
 reftxt = open(REF, encoding="utf-8").read()
 # Section A holds the 37 numbered survey and general entries. Section B holds the
 # author's own works, numbered 38 upward, and is not part of the surveyed sample.
