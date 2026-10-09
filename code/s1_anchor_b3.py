@@ -1,16 +1,18 @@
 # -*- coding: utf-8 -*-
-# --- portable roots ---
+
+# --- portable roots injected by the packaging script ---
 import os as _os
 PROJ_ROOT = _os.environ.get("S2DS_AUDIT_ROOT", _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
 OUT_DIR   = _os.environ.get("S2DS_AUDIT_OUT", _os.path.join(PROJ_ROOT, "results"))
 DATA_ROOT = _os.environ.get("S2DS_DATA_ROOT", _os.path.join(PROJ_ROOT, "data"))
 DATA_RUNS = _os.environ.get("S2DS_RUNS_ROOT", _os.path.join(DATA_ROOT, "runs"))
-# --- end portable roots ---
+# --- end injected ---
+
 """
 P0-S1 Audit / Step 4: 锚点案例 —— BSRNet B3 vs base_ssm 在主口径下的效应量与可复现性。
 
-Pairing discipline:
-  - per-image pairing on identical paths, seeds are never merged
+按项目统计纪律（见 docs/PROVENANCE.md）:
+  - 逐图配对（同 path），不合并 seed
   - 报告 点估计 + 逐图配对 95% CI + Cohen's d_z + 方向一致性
   - 同一端点（都是 30k last.pt 口径，产物即 test_per_image.jsonl）
 

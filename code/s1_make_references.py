@@ -60,6 +60,11 @@ SURVEY = [
     ("DiffBSR",          "DiffBSR2026",          None,               None),
     ("AstraMoE-SR",      "AstraMoESR2026",       None,               "2609.07012"),
     ("BKX-HMM",          "BKXHMM2026",           "BKX-HMM",          None),
+    # Entry 23. The pool DOI (10.1016/j.eng.2026.02.005) was wrong: it resolves at
+    # Crossref to "Data-Efficient and Robust Reinforcement Learning for Moving
+    # Devices". The real record was recovered by querying Crossref with the Elsevier
+    # PII (S2095809926001682) as an alternative-id, which gave the true DOI
+    # 10.1016/j.eng.2026.01.031. That is the record used here.
     ("UDAMSR",           "UDAMSR2026",           "UDAMSR",           None),
     ("VolumeNet+TT",     "VolumeNetTT2025",      "VolumeNet+TT",     None),
     ("HSISR-KAN",        "HSISRKAN2026",         None,               None),
@@ -317,6 +322,20 @@ L.append("One is a DOAJ record behind a 403 (20). **All headline percentages in 
 L.append("are reported against the full 35-item sample and this appendix records the")
 L.append("composition.** If the venue asks for a citable-only denominator, Section 5")
 L.append("should be re-run over the 31-item subset rather than the counts being adjusted by hand.")
+L.append("")
+L.append("### A resolved DOI that resolved to the wrong paper")
+L.append("")
+L.append("Entry 23 is the case in this survey where an automated lookup returned a")
+L.append("record that had to be rejected. The pool DOI `10.1016/j.eng.2026.02.005`")
+L.append("resolves cleanly at Crossref, so a pipeline that checked only HTTP status")
+L.append("would have accepted it. The title it resolves to is a note on reinforcement")
+L.append("learning for moving devices in *Engineering*, which is not a remote sensing")
+L.append("super-resolution paper. The true record was recovered by querying Crossref")
+L.append("with the Elsevier PII `S2095809926001682` as an alternative-id, which returned")
+L.append("*UDAMSR Net: An Unsupervised Degradation-Aware Network for Enhancing the")
+L.append("Spatial Resolution of Spectral Images for Crop Sensing*, Engineering 60,")
+L.append("31-48, DOI `10.1016/j.eng.2026.01.031`. That record is used above. Automated")
+L.append("reference building needs a title-agreement check, not only a status check.")
 L.append("")
 L.append("### Entries that must not be cited without a full record")
 L.append("")

@@ -22,10 +22,18 @@ The audit re-reads per-image evaluation artifacts that already exist.
 | Median method effect | 0.018 to 0.039 dB |
 | Surveyed papers that state a verifiable dB gain | 7 of 35 (20.0%) |
 | Surveyed abstracts that mention seeds, variance, or a test | 0 of 35 |
+| Surveyed references resolved to a complete record | 29 of 37 |
+| Surveyed references where the pool DOI pointed at a different paper | 1 (recovered) |
 
 The seed noise is two to five times the method effect it is meant to
 discriminate. On the smallest benchmark, a 0.1 dB claim sits below the median
 seed variation.
+
+The headline 52.6% depends on one convention: which of the two paired methods
+supplies the reference seed standard deviation. Using the smaller of the two
+gives 47.1%, using the larger gives 68.5%. All three are reported in the
+manuscript. That a headline number in this audit moves by more than 20 points
+under an unstated convention is an instance of the problem the audit documents.
 
 ## The seven-point scorecard (R1 to R7)
 
@@ -53,29 +61,28 @@ docs/          data availability, provenance, and reproduction notes
 ## Reproducing the audit
 
 The scripts require Python 3.11 or newer. `numpy` is optional and only speeds up
-the aggregation. Everything else uses the standard library.
+the aggregation. Everything else uses the standard library. The figure script
+needs `matplotlib`, and the full-text step needs `pypdf`.
 
 ```bash
-export S2DS_AUDIT_ROOT="$(pwd)"
-export S2DS_AUDIT_OUT="$(pwd)/results"
-export S2DS_DATA_ROOT="$(pwd)/data"
-export S2DS_RUNS_ROOT="$(pwd)/data/perimage"
+python -m pip install pypdf matplotlib
 
-# Lines A to E: the controlled audit of the 170 runs
-python code/s1_build_manifest.py
-python code/s1_audit_core.py
-python code/s1_effect_vs_noise.py
-python code/s1_anchor_b3.py
-
-# Lines F to I: the 35-paper report-practice survey
-python code/run_audit_chain.py        # field survey -> full-text coding -> gain vs noise
-python code/s1_oa_resolution.py
-python code/s1_make_paper_figures.py
+# one command runs everything in dependency order
+python code/run_audit_chain.py
 ```
 
-Outputs land in `results/`. The provenance of every number in the manuscript is
+The chain sets its own roots. To point it at a different interpreter, for
+example one with matplotlib installed, set `S2DS_PYTHON`. To run a single step,
+set `S2DS_AUDIT_ROOT`, `S2DS_AUDIT_OUT`, `S2DS_DATA_ROOT`, and `S2DS_RUNS_ROOT`
+first and then call the script directly.
+
+Outputs land in `results/`. `results/fulltext/` holds the plain-text extractions
+the coding step reads. The provenance of every number in the manuscript is
 listed in `docs/PROVENANCE.md`, which maps each table and figure to the JSON file
 that produced it and to the script that writes that file.
+
+The chain was verified against the archived results: running it end to end
+reproduces all ten result files with identical content.
 
 ## The one rule that matters
 
@@ -92,6 +99,20 @@ A sign-reversed "major finding" is more likely to be a bug in the audit script
 than a discovery about the audited work. `code/s1_anchor_b3.py` exists to
 enforce this before any negative result is reported.
 
+## The second rule: check the title, not only the status
+
+While assembling the reference list, one DOI carried in the survey pool resolved
+at Crossref with HTTP 200 to a paper on reinforcement learning in *Engineering*,
+not to the super-resolution paper it was recorded against. A check that trusted
+the response status would have accepted it. The true record was recovered by
+querying Crossref with the publisher's article identifier (`S2095809926001682`)
+as an `alternative-id`, which returned the correct DOI
+`10.1016/j.eng.2026.01.031`.
+
+Every bibliographic field in `papers/references.md` is copied from a Crossref,
+arXiv, or OpenAlex record, and the source is named for each entry. The eight
+entries that could not be completed are flagged in place, with the reason.
+
 ## Data availability
 
 `data/perimage/` holds the per-image evaluation records the audit reads, one
@@ -102,7 +123,8 @@ redistributed. See `docs/DATA_AVAILABILITY.md`.
 Publisher PDFs and HTML retrieved during the survey are not redistributed. Only
 the derived codings are shipped, in `results/audit_F_field_survey.json`, and
 `data/fulltext_index/index.json` records which files were read so the codings
-can be checked.
+can be checked. `results/fulltext/` holds plain-text extractions only, for the
+same reason.
 
 ## Citation
 

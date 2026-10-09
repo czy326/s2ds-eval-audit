@@ -1,9 +1,18 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """Portable chain runner shipped with the repo.
 
 Order matters: s1_fulltext_coding.py must run AFTER s1_field_survey.py, because
 the survey script resets R2/R3/R5 to tier C and the coding script is what
 upgrades them back using full-text evidence.
+
+Every step runs under the same interpreter, so put whatever packages the steps
+need into that interpreter first:
+
+    python -m pip install pypdf matplotlib
+
+Only the figure step needs matplotlib. If matplotlib is missing the chain still
+finishes, prints a notice, and leaves the figures/ directory as shipped.
 """
 import subprocess, sys, os
 
@@ -16,6 +25,17 @@ env.setdefault("S2DS_AUDIT_OUT", os.path.join(ROOT, "results"))
 # s1_build_manifest.py scans <DATA_ROOT>/runs/**/test_per_image.jsonl
 env.setdefault("S2DS_DATA_ROOT", os.path.join(ROOT, "data"))
 env.setdefault("S2DS_RUNS_ROOT", os.path.join(ROOT, "data", "runs"))
+# set S2DS_PYTHON if the steps need a different interpreter than this one
+PY = env.get("S2DS_PYTHON") or sys.executable
+
+
+def has(mod):
+    try:
+        __import__(mod)
+        return True
+    except Exception:
+        return False
+
 
 CHAIN = [
     ("s1_build_manifest.py", False),
@@ -36,8 +56,13 @@ for script, optional in CHAIN:
     if not os.path.exists(p):
         print(f"[skip] {script} not present")
         continue
+    if script == "s1_make_paper_figures.py" and not has("matplotlib"):
+        print("\n[skip] s1_make_paper_figures.py: matplotlib is not installed in "
+              f"{PY}.\n       Install it with: {PY} -m pip install matplotlib\n"
+              "       The figures/ directory already holds the committed output.")
+        continue
     print(f"\n{'='*72}\n>>> {script}\n{'='*72}")
-    r = subprocess.run([sys.executable, p], cwd=HERE, env=env,
+    r = subprocess.run([PY, p], cwd=HERE, env=env,
                        capture_output=True, text=True, encoding="utf-8", errors="ignore")
     sys.stdout.write(r.stdout or "")
     if r.returncode != 0:

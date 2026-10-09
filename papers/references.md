@@ -77,7 +77,7 @@
 **[22]** Zhixiong Yang, Jingyuan Xia, Shengxi Li, Lingyu Zheng, Shuanghui Zhang and Li Liu et al. (2026). Band-Kernel Stochastic Learning for Unsupervised Blind Hyperspectral Image Super-Resolution. IEEE Transactions on Pattern Analysis and Machine Intelligence48(8), 9895-9913. doi:10.1109/tpami.2026.3681688  
   *source: Crossref*
 
-**[23]** Bengt Lennartson (2026). Data-Efficient and Robust Reinforcement Learning for Moving Devices. Engineering63, 18-19. doi:10.1016/j.eng.2026.02.005  
+**[23]** Weijie Tang, Ruomei Zhao, Hong Sun, Minzan Li, Lang Qiao, Mingjia Liu, Guohui Liu, Yang Liu and Di Song (2026). UDAMSR Net: An Unsupervised Degradation-Aware Network for Enhancing the Spatial Resolution of Spectral Images for Crop Sensing. Engineering60, 31-48. doi:10.1016/j.eng.2026.01.031  
   *source: Crossref*
 
 **[24]** Yinhao Li and Yen-Wei Chen (2025). Hyperspectral Pansharpening using 3D VolumeNet and 2.5D Texture Transfer. Proceedings of the 2025 8th International Conference on Digital Medicine and Image Processing, 9-13. doi:10.1145/3785443.3785445  
@@ -322,11 +322,11 @@
 }
 
 @article{UDAMSR2026,
-  title   = {Data-Efficient and Robust Reinforcement Learning for Moving Devices},
-  author  = {Bengt Lennartson},
+  title   = {UDAMSR Net: An Unsupervised Degradation-Aware Network for Enhancing the Spatial Resolution of Spectral Images for Crop Sensing},
+  author  = {Weijie Tang, Ruomei Zhao, Hong Sun, Minzan Li, Lang Qiao, Mingjia Liu, Guohui Liu, Yang Liu and Di Song},
   journal = {Engineering},
   year    = {2026},
-  doi     = {10.1016/j.eng.2026.02.005},
+  doi     = {10.1016/j.eng.2026.01.031},
 }
 
 @article{VolumeNetTT2025,
@@ -512,6 +512,20 @@ One is a DOAJ record behind a 403 (20). **All headline percentages in Section 5
 are reported against the full 35-item sample and this appendix records the
 composition.** If the venue asks for a citable-only denominator, Section 5
 should be re-run over the 31-item subset rather than the counts being adjusted by hand.
+
+### A resolved DOI that resolved to the wrong paper
+
+Entry 23 is the case in this survey where an automated lookup returned a
+record that had to be rejected. The pool DOI `10.1016/j.eng.2026.02.005`
+resolves cleanly at Crossref, so a pipeline that checked only HTTP status
+would have accepted it. The title it resolves to is a note on reinforcement
+learning for moving devices in *Engineering*, which is not a remote sensing
+super-resolution paper. The true record was recovered by querying Crossref
+with the Elsevier PII `S2095809926001682` as an alternative-id, which returned
+*UDAMSR Net: An Unsupervised Degradation-Aware Network for Enhancing the
+Spatial Resolution of Spectral Images for Crop Sensing*, Engineering 60,
+31-48, DOI `10.1016/j.eng.2026.01.031`. That record is used above. Automated
+reference building needs a title-agreement check, not only a status check.
 
 ### Entries that must not be cited without a full record
 

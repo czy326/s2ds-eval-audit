@@ -11,5 +11,6 @@ Thumbs.db
 .pytest_cache/
 .mypy_cache/
 
-# Internal working drafts are kept locally, not shipped in the public repo.
+# internal working documents, not for release
 papers/drafts_internal/
+_pushing_notes/

@@ -272,17 +272,25 @@
  "UDAMSR": {
   "status": "OK",
   "source": "crossref",
-  "doi": "10.1016/j.eng.2026.02.005",
-  "title": "Data-Efficient and Robust Reinforcement Learning for Moving Devices",
+  "doi": "10.1016/j.eng.2026.01.031",
+  "title": "UDAMSR Net: An Unsupervised Degradation-Aware Network for Enhancing the Spatial Resolution of Spectral Images for Crop Sensing",
   "authors": [
-   "Bengt Lennartson"
+   "Weijie Tang",
+   "Ruomei Zhao",
+   "Hong Sun",
+   "Minzan Li",
+   "Lang Qiao",
+   "Mingjia Liu",
+   "Guohui Liu",
+   "Yang Liu",
+   "Di Song"
   ],
-  "n_auth": 1,
+  "n_auth": 9,
   "container": "Engineering",
   "short_container": "Engineering",
-  "volume": "63",
+  "volume": "60",
   "issue": null,
-  "page": "18-19",
+  "page": "31-48",
   "article_number": null,
   "year": "2026",
   "type": "journal-article"
