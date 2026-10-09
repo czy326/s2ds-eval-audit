@@ -10,10 +10,12 @@ import os, io, sys, json, hashlib, subprocess
 import urllib.request
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
-REPO = r"E:\论文5\repo\s2ds-eval-audit"
-GIT = r"C:\Users\陈正洋\.workbuddy\binaries\PortableGit\versions\1.2.0\cmd\git.exe"
+# Set S2DS_REPO to point at a checkout other than the parent of this file.
+_HERE = os.path.dirname(os.path.abspath(__file__))
+REPO = os.environ.get("S2DS_REPO") or os.path.dirname(_HERE)
+GIT = os.environ.get("GIT_BIN") or "git"
 TOKEN = os.environ.get("GH_TOKEN", "")
-OWNER, NAME = "czy326", "s2ds-eval-audit"
+OWNER, NAME = os.environ.get("GH_OWNER", "czy326"), os.environ.get("GH_NAME", "s2ds-eval-audit")
 
 
 def blob_sha(raw):
