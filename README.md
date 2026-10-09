@@ -7,6 +7,11 @@ remote-sensing super-resolution (RS-SR) ranking moves when the protocol around a
 fixed metric is allowed to vary. No model is trained or fine-tuned at any point.
 The audit re-reads per-image evaluation artifacts that already exist.
 
+**Target venue: IEEE JSTARS** (IEEE Journal of Selected Topics in Applied Earth
+Observations and Remote Sensing), submitted as an IEEE Regular Paper. The
+submission package in `papers/` comprises the manuscript, the IEEE-style table
+and figure captions, and the cover letter.
+
 ## Headline results
 
 | Finding | Value |
@@ -22,8 +27,10 @@ The audit re-reads per-image evaluation artifacts that already exist.
 | Median method effect | 0.018 to 0.039 dB |
 | Surveyed papers that state a verifiable dB gain | 7 of 35 (20.0%) |
 | Surveyed abstracts that mention seeds, variance, or a test | 0 of 35 |
+| Surveyed papers whose full text mentions repeated runs | 4 of 35 (after full-text retrieval) |
 | Surveyed references resolved to a complete record | 29 of 37 |
 | Surveyed references where the pool DOI pointed at a different paper | 1 (recovered) |
+| Surviving references locked to a publisher-closed record | 11 of the remaining 19 |
 
 The seed noise is two to five times the method effect it is meant to
 discriminate. On the smallest benchmark, a 0.1 dB claim sits below the median
@@ -54,9 +61,21 @@ code/          recomputation scripts (standard library + optional numpy)
 data/          per-image evaluation artifacts (170 files) and the run manifest
 results/       every audit_*.json produced by the scripts
 figures/       Figure 1 and Figure 2, in png / pdf / svg at 300 dpi
-papers/        the manuscript draft, the R2 protocol grid, and the reference list
+papers/        the JSTARS manuscript, captions, cover letter, and the reference list
 docs/          data availability, provenance, and reproduction notes
 ```
+
+The submit-ready files are:
+
+| File | Role |
+|---|---|
+| `papers/P0S1_JSTARS_v1.md` | Manuscript, IEEE Regular Paper format, abstract 250 words, 18 IEEE-order references |
+| `papers/P0S1_图表caption_JSTARS_v1.md` | Table I-IX captions above, Fig. 1-2 captions below, each with a source line |
+| `papers/P0S1_JSTARS_CoverLetter.md` | Cover letter addressed to the Editor-in-Chief |
+| `papers/references.md` | Full bibliographic source of truth, with the verification channel per entry |
+
+`papers/P0S1_论文正文_v1.md` is the earlier conference and datasets-and-benchmarks
+framing of the same audit. It is kept for comparison and is not the submission file.
 
 ## Reproducing the audit
 
@@ -83,6 +102,20 @@ that produced it and to the script that writes that file.
 
 The chain was verified against the archived results: running it end to end
 reproduces all ten result files with identical content.
+
+A separate checker, `code/s1_jstars_check.py`, re-derives every headline number in
+the JSTARS manuscript and captions from the result files and additionally asserts
+the venue constraints (abstract length, absence of citations in the abstract,
+section presence, reference contiguity, no dangling citations, no banned words, no
+semicolons in prose). It currently passes 55 assertions with zero mismatches:
+
+```bash
+# from the repository root
+python code/s1_jstars_check.py
+```
+
+The script resolves its inputs relative to its own location, or from
+`S2DS_AUDIT_ROOT` when that is set.
 
 ## The one rule that matters
 
@@ -128,7 +161,7 @@ same reason.
 
 ## Citation
 
-See `CITATION.cff`. The manuscript is in preparation.
+See `CITATION.cff`. The manuscript is under review at IEEE JSTARS.
 
 ## License
 

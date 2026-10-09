@@ -7,17 +7,23 @@ so the map cannot silently drift from the code.
 
 ## Manuscript item to result file
 
+Item numbers follow the JSTARS manuscript (`papers/P0S1_JSTARS_v1.md`), where
+tables are Roman and figures are Arabic. The parenthesized Arabic number is the
+numbering used by the earlier conference draft.
+
 | Item | Content | Result file | Written by |
 |---|---|---|---|
-| Table 1 | SpectralSR-Bench per-pair delta against std (8 of 10 below std) | `audit_H_spectralsr_std.json` | `s1_spectralsr_std_evidence.py` |
-| Table 2 | Rank correlation against mean PSNR, 8 conventions x 4 datasets | `audit_B_protocols.json` | `s1_audit_core.py` |
-| Table 3 | Effect size against seed noise, 327 pairs | `audit_D_effect_vs_noise.json` | `s1_effect_vs_noise.py` |
-| Table 4 | Seed noise by dataset | `audit_C_seednoise.json` | `s1_audit_core.py` |
-| Table 5 | Report-practice statistics, 35 papers | `audit_F_field_survey.json` | `s1_field_survey.py` |
-| Table 6 | Claimed gains against the noise floor, 7 papers | `audit_G_gain_vs_noise.json` | `s1_gain_vs_noise.py` |
-| Table 7 | The R1 to R7 scorecard | `(authored, no data file)` | `(authored)` |
-| Figure 1 | Seed noise versus test-set size | `figures/fig1_noise_vs_testsize.*` | `s1_make_paper_figures.py` |
-| Figure 2 | Method effect versus seed noise, 327 pairs | `figures/fig2_effect_vs_noise.*` | `s1_make_paper_figures.py` |
+| Table I | The four audit lines, scope and size | `audit_A_pathset.json`, `audit_B_protocols.json`, `audit_C_seednoise.json`, `audit_D_effect_vs_noise.json` | `s1_audit_core.py`, `s1_effect_vs_noise.py` |
+| Table II (Table 7) | The R1 to R7 scorecard | `(authored, no data file)` | `(authored)` |
+| Table III (Table 1) | SpectralSR-Bench per-pair delta against std (8 of 10 below std) | `audit_H_spectralsr_std.json` | `s1_spectralsr_std_evidence.py` |
+| Table IV (Table 2) | Rank correlation against mean PSNR, 8 conventions x 4 datasets | `audit_B_protocols.json` | `s1_audit_core.py` |
+| Table V (Table 4) | Seed noise by dataset | `audit_C_seednoise.json` | `s1_audit_core.py` |
+| Table VI | Anchor check, B3 against `base_ssm` under two conventions | `audit_E_anchor_b3.json` | `s1_anchor_b3.py` |
+| Table VII (Table 5) | Report-practice statistics, 35 papers | `audit_F_field_survey.json` | `s1_field_survey.py` |
+| Table VIII (Table 6) | Claimed gains against the noise floor, 7 papers | `audit_G_gain_vs_noise.json` | `s1_gain_vs_noise.py` |
+| Table IX (Table 3) | Effect size against seed noise, 327 pairs | `audit_D_effect_vs_noise.json` | `s1_effect_vs_noise.py` |
+| Fig. 1 (Figure 1) | Seed noise versus test-set size | `figures/fig1_noise_vs_testsize.*` | `s1_make_paper_figures.py` |
+| Fig. 2 (Figure 2) | Method effect versus seed noise, 327 pairs | `figures/fig2_effect_vs_noise.*` | `s1_make_paper_figures.py` |
 
 ## Result file to scripts that touch it
 
@@ -114,3 +120,14 @@ GH_TOKEN=... python docs/_verify_remote.py
 
 It prints any file missing on either side and any file whose content differs,
 then a single-line verdict. The shipped state is `IDENTICAL` for all 591 files.
+
+## Venue checks
+
+`s1_jstars_check.py` runs in addition to the number checks. It asserts the venue
+constraints the manuscript has to satisfy at IEEE JSTARS: the abstract is one
+paragraph and between 150 and 250 words, the abstract carries no citations, Index
+Terms are present, the Conclusion, Data and Code Availability, and Acknowledgment
+sections all exist, the reference list is contiguous, every reference is cited,
+no citation is dangling, tables and figures are all defined, and no banned word
+or semicolon appears in the prose. It currently passes 55 assertions with zero
+mismatches.

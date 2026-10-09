@@ -7,6 +7,7 @@ abstract: >-
   from 2026. The audit measures how often a method ranking changes when only the
   metric, the aggregation rule, the training seed, or the baseline convention is
   varied, and reduces the findings to a seven-item reproducibility scorecard.
+  Submitted to IEEE JSTARS as an IEEE Regular Paper.
 authors:
   - family-names: "Chen"
     given-names: "Zhengyang"
@@ -14,7 +15,7 @@ authors:
     given-names: "Dawei"
   - family-names: "Liu"
     given-names: "Zhiheng"
-version: 0.1.0
+version: 0.2.0
 date-released: "2026-10-09"
 license: MIT
 keywords:
