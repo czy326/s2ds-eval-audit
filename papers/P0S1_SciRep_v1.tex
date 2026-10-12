@@ -147,9 +147,23 @@ The seed noise is two to five times the size of the method effect it is supposed
 
 The per-benchmark noise, reported in Supplementary Table S2, follows the test-set size. WHU-RS19, at 101 images, has the largest noise and, at 47.3\%, the highest reversal rate, with 80\% of its pairs falling below the noise. AID, at 1000 images, has the smallest noise. The ordering is monotone in test-set size, with one inversion between AID and RSSCN7 that we attribute to the differing content heterogeneity of the two benchmarks rather than to size alone.
 
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.55\textwidth]{fig1_noise_vs_testsize.pdf}
+\caption{Seed noise against test-set size.}
+\label{fig:1}
+\end{figure}
+
 The horizontal axis is the number of test images on a logarithmic scale and the vertical axis is the median seed-to-seed standard deviation of the paired per-image PSNR difference in dB. Each marker is one benchmark and the error bars span the minimum to the maximum standard deviation observed for it. The four points are AID (1000 images, 0.0728 dB), RSSCN7 (281, 0.0632 dB), UCMerced (210, 0.1070 dB), and WHU-RS19 (101, 0.1202 dB). A fixed absolute effect, such as the 0.1 dB that RS-SR papers commonly claim, is therefore compared against a smaller noise floor on a large benchmark and a larger one on a small benchmark.
 
 The practical implication is direct. The headline convention in RS-SR, stating that a method exceeds the previous best by 0.1 dB, sits inside the noise band on small benchmarks. On WHU-RS19, a 0.1 dB claim is below the median seed variation.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.55\textwidth]{fig2_effect_vs_noise.pdf}
+\caption{Method effect against seed noise, for all 327 pairs.}
+\label{fig:2}
+\end{figure}
 
 The horizontal axis is the absolute mean paired PSNR difference in dB and the vertical axis is the seed-to-seed standard deviation of that difference in dB. Both axes are logarithmic and a dashed line marks equality. Points above the line have an effect larger than the noise. Points below the line, colored, are the 172 pairs whose difference does not clear the noise floor under the reference-method definition. The cluster near the lower-left corner corresponds to pairs on AID between method variants that differ by a single component, where both the effect and the noise are of order 0.01 dB.
 
@@ -376,20 +390,6 @@ The reference list is shipped with the repository. Every bibliographic field is 
 \textbf{Competing interests.} The authors declare no competing interests.
 
 ---
-
-\clearpage
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=\textwidth]{fig1_noise_vs_testsize.pdf}
-\caption{Seed noise against test-set size.}
-\label{fig:1}
-\end{figure}
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=\textwidth]{fig2_effect_vs_noise.pdf}
-\caption{Method effect against seed noise, for all 327 pairs.}
-\label{fig:2}
-\end{figure}
 
 \clearpage
 \begin{table}[htbp]

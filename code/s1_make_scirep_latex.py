@@ -34,6 +34,12 @@ OUT = next((c for c in _CANDS
 
 FIG_FILES = {1: "fig1_noise_vs_testsize.pdf", 2: "fig2_effect_vs_noise.pdf"}
 
+# The figures were drawn at about 3.5 in wide for a two-column layout. The
+# Scientific Reports measure is wider than that, so a full \textwidth would
+# upscale them and soften the line work. This fraction lands them close to
+# their drawn size.
+FIG_WIDTH = r"0.55\textwidth"
+
 # Supplementary table order, matching the order written by s1_make_scirep_md.py
 SI_ORDER = ["II", "V", "VI"]
 
@@ -345,9 +351,12 @@ def render(md_path, tex_path, supplementary=False):
         m = re.match(r"^\*\*Fig\.\s+(\d+)\.\s*(.+?)\*\*\s*(.*)$", s)
         if m:
             num = int(m.group(1))
-            figures.append("\n".join([
+            # placed in the flow at the point where the manuscript discusses it,
+            # rather than collected at the end of the document
+            body.append("\n".join([
                 "\\begin{figure}[htbp]", r"\centering",
-                r"\includegraphics[width=\textwidth]{%s}" % FIG_FILES.get(num, "fig%d.pdf" % num),
+                r"\includegraphics[width=%s]{%s}" % (FIG_WIDTH,
+                                                     FIG_FILES.get(num, "fig%d.pdf" % num)),
                 r"\caption{%s}" % conv(smart_quotes(m.group(2)), False),
                 r"\label{fig:%d}" % num, r"\end{figure}"]))
             n_fig += 1
@@ -388,8 +397,6 @@ def render(md_path, tex_path, supplementary=False):
     for name in BACK:
         if name in back:
             doc.append("\\bmhead{%s}\n\n%s" % (conv(name, False), back[name]))
-    if figures:
-        doc.append("\\clearpage\n" + "\n".join(figures))
     if tables:
         doc.append("\\clearpage\n" + "\n".join(tables))
     doc.append("\\end{document}")
