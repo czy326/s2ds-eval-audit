@@ -1,4 +1,11 @@
 # -*- coding: utf-8 -*-
+# --- portable roots injected by the packaging script ---
+import os as _os
+PROJ_ROOT = _os.environ.get("S2DS_AUDIT_ROOT", _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
+OUT_DIR   = _os.environ.get("S2DS_AUDIT_OUT", _os.path.join(PROJ_ROOT, "results"))
+DATA_ROOT = _os.environ.get("S2DS_DATA_ROOT", _os.path.join(PROJ_ROOT, "data"))
+# --- end injected ---
+
 """
 P0-S1 JSTARS-version consistency check.
 
@@ -19,16 +26,10 @@ checks that the JSTARS submission requires:
 import json, re, io, os, sys
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
-
-# Portable roots: this script is shipped inside the repository, so it locates its
-# inputs relative to its own location rather than to an author-side absolute path.
-# Set S2DS_AUDIT_ROOT to point at a different checkout if needed.
-_HERE = os.path.dirname(os.path.abspath(__file__))
-REPO = os.environ.get("S2DS_AUDIT_ROOT") or os.path.dirname(_HERE)
-AUD = os.path.join(REPO, "results")
-PAPER = os.path.join(REPO, "papers", "P0S1_JSTARS_v1.md")
-CAPT = os.path.join(REPO, "papers", "P0S1_图表caption_JSTARS_v1.md")
-MANIFEST = os.path.join(REPO, "data", "manifest.json")
+ROOT = PROJ_ROOT
+AUD = os.path.join(ROOT, "results")
+PAPER = os.path.join(ROOT, "papers", "P0S1_JSTARS_v1.md")
+CAPT = os.path.join(ROOT, "papers", "P0S1_图表caption_JSTARS_v1.md")
 
 J = {f: json.load(open(os.path.join(AUD, f), encoding="utf-8"))
      for f in ["audit_A_pathset.json", "audit_B_protocols.json",
@@ -54,7 +55,7 @@ def add(name, derived, literal, ok):
 
 
 # ------------------------------------------------------------------ A line
-man = json.load(open(MANIFEST, encoding="utf-8"))
+man = json.load(open(os.path.join(AUD, "manifest.json"), encoding="utf-8"))
 n_runs = len(man)
 n_tagged = sum(1 for r in man if r.get("dataset"))
 n_paired = sum(1 for r in man if r.get("dataset") and re.search(r"_s20\d\d", r.get("rel", "")))
@@ -113,6 +114,21 @@ add("flip_exact", round(n_flip / n_pairs * 100, 1), "25.4",
 add("below_ref_exact", round(n_ref / n_pairs * 100, 1), "52.6",
     abs(n_ref / n_pairs * 100 - 52.6) <= 0.05)
 
+# per-benchmark reversal rates (Table V, column 5)
+DS_SHORT = {"UCMerced_LandUse": "UCMerced"}
+by_ds = {}
+for p in pairs:
+    ds = DS_SHORT.get(p["dataset"], p["dataset"])
+    a = by_ds.setdefault(ds, [0, 0])
+    a[1] += 1
+    if not p["sign_consistent"]:
+        a[0] += 1
+for ds in ("AID", "RSSCN7", "UCMerced", "WHU-RS19"):
+    r, t = by_ds[ds]
+    pct = round(r / t * 100, 1)
+    check("reversal_" + ds, f"{pct}%", f"{pct}%")
+    print(f"[D-rev] {ds}: {r}/{t} = {pct}%")
+
 C = J["audit_C_seednoise.json"]
 sds = []
 
@@ -161,8 +177,11 @@ check("R5_A15", fs["R5_A"], "15 of 35")
 check("n_upg18", fs["n_upgraded"], "18")
 
 # ------------------------------------------------------------------ G line
-for v in ["0.59", "1.01", "0.76", "1.41", "2.58", "9.02", "9.27"]:
-    check("G_ratio_" + v, v, v)
+G = J["audit_G_gain_vs_noise.json"]
+for r in G["rows"]:
+    v = f"{r['ratio_max']:.2f}"
+    check("G_ratio_" + r["id"], v, v)
+check("G_within_max2", G["n_within_noise_max"], "Two of the seven claims")
 
 # ------------------------------------------------------------------ H line
 H = J["audit_H_spectralsr_std.json"]
@@ -195,6 +214,42 @@ add("index_terms", "**Index Terms**" in text, "Index Terms present",
 # required sections
 for sec in ["## 9. Conclusion", "## Data and Code Availability", "## Acknowledgment"]:
     add("sec:" + sec, sec in text, sec, sec in text)
+
+# author block, affiliations, corresponding author, and funding
+AUTHOR_FIELDS = {
+    "author_chen": "Zhengyang Chen",
+    "author_liu_dawei": "Dawei Liu",
+    "author_liu_zhiheng": "Zhiheng Liu",
+    "affil_PAP": "Engineering University of PAP",
+    "affil_IEE_CAS": "Institute of Earth Environment, Chinese Academy of Sciences",
+    "corresponding_email": "wjmicheal@163.com",
+    "grant_42502302": "42502302",
+    "author_bios_section": "## Author Biographies",
+}
+for k, s in AUTHOR_FIELDS.items():
+    add(k, s in text, s, s in text)
+add("table8_jnun_row", "JNUN-CA" in text, "JNUN-CA", "JNUN-CA" in text)
+
+# fields the authors supplied: first author is a graduate student, ORCID recorded
+add("first_author_grad", "graduate student" in text, "graduate student",
+    "graduate student" in text)
+add("orcid_recorded", "0009-0003-3310-8077" in text, "0009-0003-3310-8077",
+    "0009-0003-3310-8077" in text)
+
+# LaTeX rendering of the same manuscript, in the journal's IEEEtran template
+TEXP = os.path.join(os.path.dirname(PAPER), "P0S1_JSTARS_v1.tex")
+tex = open(TEXP, encoding="utf-8").read() if os.path.exists(TEXP) else ""
+TEX_CHECKS = [
+    ("tex_exists", bool(tex), "P0S1_JSTARS_v1.tex present"),
+    ("tex_ieeetran", "\\documentclass[journal" in tex, "journal-mode IEEEtran class"),
+    ("tex_keywords_env", "\\begin{IEEEkeywords}" in tex, "IEEEkeywords environment"),
+    ("tex_bibitems", tex.count("\\bibitem") == 19, "19 bibitems"),
+    ("tex_author_chen", "Zhengyang Chen" in tex, "first author in tex"),
+    ("tex_grant", "42502302" in tex, "grant 42502302 in tex"),
+    ("tex_orcid", "0009-0003-3310-8077" in tex, "ORCID in tex"),
+]
+for k, ok, label in TEX_CHECKS:
+    add(k, ok, label, ok)
 
 # references: contiguous from 1, all cited
 refstart = text.find("## References")

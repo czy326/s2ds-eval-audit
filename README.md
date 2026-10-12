@@ -70,12 +70,13 @@ The submit-ready files are:
 | File | Role |
 |---|---|
 | `papers/P0S1_JSTARS_v1.md` | Manuscript, IEEE Regular Paper format, abstract 250 words, 18 IEEE-order references |
+| `papers/P0S1_JSTARS_v1.tex` | The same manuscript generated as IEEEtran LaTeX from the Markdown above |
 | `papers/P0S1_图表caption_JSTARS_v1.md` | Table I-IX captions above, Fig. 1-2 captions below, each with a source line |
 | `papers/P0S1_JSTARS_CoverLetter.md` | Cover letter addressed to the Editor-in-Chief |
 | `papers/references.md` | Full bibliographic source of truth, with the verification channel per entry |
 
-`papers/P0S1_论文正文_v1.md` is the earlier conference and datasets-and-benchmarks
-framing of the same audit. It is kept for comparison and is not the submission file.
+The manuscript files are generated from the Markdown by `code/s1_make_jstars_latex.py`
+and `code/s1_make_jstars_docx.py`, so the numbers cannot drift between formats.
 
 ## Reproducing the audit
 
@@ -107,7 +108,7 @@ A separate checker, `code/s1_jstars_check.py`, re-derives every headline number 
 the JSTARS manuscript and captions from the result files and additionally asserts
 the venue constraints (abstract length, absence of citations in the abstract,
 section presence, reference contiguity, no dangling citations, no banned words, no
-semicolons in prose). It currently passes 55 assertions with zero mismatches:
+semicolons in prose). It currently passes 78 assertions with zero mismatches:
 
 ```bash
 # from the repository root
@@ -161,7 +162,9 @@ same reason.
 
 ## Citation
 
-See `CITATION.cff`. The manuscript is under review at IEEE JSTARS.
+See `CITATION.cff`. The manuscript was returned by the IEEE JSTARS editor
+without review in October 2026 on scope grounds, and is being prepared for a
+machine-learning evaluation venue.
 
 ## License
 

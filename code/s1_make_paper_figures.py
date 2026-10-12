@@ -5,6 +5,7 @@ import os as _os
 PROJ_ROOT = _os.environ.get("S2DS_AUDIT_ROOT", _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
 OUT_DIR   = _os.environ.get("S2DS_AUDIT_OUT", _os.path.join(PROJ_ROOT, "results"))
 DATA_ROOT = _os.environ.get("S2DS_DATA_ROOT", _os.path.join(PROJ_ROOT, "data"))
+RUNS_ROOT = _os.environ.get("S2DS_RUNS_ROOT", _os.path.join(DATA_ROOT, "runs"))
 # --- end injected ---
 
 """
@@ -22,7 +23,7 @@ from matplotlib.ticker import MultipleLocator
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 
 OUT = OUT_DIR
-FIG = os.path.join(PROJ_ROOT, "figures")
+FIG = _os.environ.get("S2DS_FIG_DIR") or _os.path.join(PROJ_ROOT, "figures")
 os.makedirs(FIG, exist_ok=True)
 
 # ---- 统一风格（细线 + 紧凑 + 四边全封）----

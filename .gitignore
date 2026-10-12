@@ -14,3 +14,8 @@ Thumbs.db
 # internal working documents, not for release
 papers/drafts_internal/
 _pushing_notes/
+
+# ad-hoc working scripts, not for release
+code/_jstars_*.py
+code/_compile_online.py
+code/_verify_remote.py

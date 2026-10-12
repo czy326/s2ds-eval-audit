@@ -24,8 +24,8 @@ import json, io, os, sys, datetime
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 
 ROOT = PROJ_ROOT
-AUD = os.path.join(ROOT, "audit", "out")
-OUT = os.path.join(ROOT, "out")
+AUD = os.path.join(ROOT, "results")
+OUT = os.path.join(ROOT, "papers")
 
 doi_meta = json.load(open(os.path.join(AUD, "_doi_meta.json"), encoding="utf-8"))
 arxiv = json.load(open(os.path.join(AUD, "_arxiv_meta.json"), encoding="utf-8"))

@@ -130,8 +130,14 @@ def main():
         else:
             verdict = "✅ 超噪声"
         print(f"{c['id']:16s} {c['gain']:>8.2f} {sd:>10.3f} {ratio:>6.2f}  {verdict:12s} {ds_label}")
-        rows.append({**c, "sd_median": sd, "sd_max": nv["sd_max"],
-                     "ratio": ratio, "verdict": verdict, "noise_src": ds_label})
+        sd_max = nv["sd_max"]
+        ratio_max = c["gain"] / sd_max if sd_max else float("inf")
+        verdict_max = ("<=noise" if ratio_max < 1
+                       else ("marginal" if ratio_max < 2 else "clears"))
+        rows.append({**c, "sd_median": sd, "sd_max": sd_max,
+                     "ratio": ratio, "verdict": verdict,
+                     "ratio_median": ratio, "ratio_max": ratio_max,
+                     "verdict_max": verdict_max, "noise_src": ds_label})
 
     # 严格口径：用该数据集噪声上限
     print("\n[严格口径] 用噪声 sd 上限重判（若连上限都超不过 ⇒ 必然落在噪声内）：")
@@ -163,6 +169,10 @@ def main():
         "rows": rows,
         "boundary_note": "噪声 sd 来自本审计 RS-SR 库，非被引论文自身数据集。"
                          "仅对给出具体 dB 的论文可判读。",
+        "convention": "ratio and verdict use the per-dataset median seed sd. "
+                      "ratio_max and verdict_max use the per-dataset maximum seed sd "
+                      "(fallback 0.248 dB where the benchmark is outside the pool). "
+                      "The manuscript Table VIII reports ratio_max.",
     }, open(os.path.join(OUT, "audit_G_gain_vs_noise.json"), "w", encoding="utf-8"),
         ensure_ascii=False, indent=1)
     print("\nwrote audit_G_gain_vs_noise.json")

@@ -139,6 +139,12 @@
 
 ---
 
+## C. Background citations (cited, not part of the survey sample)
+
+**[43]** D. Hong, C. Li, X. Li, G. Camps-Valls and J. Chanussot, "Foundation Models in Remote Sensing: Evolving from Unimodality to Multimodality," IEEE Geoscience and Remote Sensing Magazine, 2026. doi:10.1109/MGRS.2026.3669086. arXiv:2603.00988. Cited in Section 2.6 as background on remote sensing foundation models. Verified against the arXiv record (author order, "Accepted by IEEE GRSM", related DOI) on 2026-10-09. The content attributed to it in the manuscript is limited to statements confirmed in its text, namely that labeled remote sensing data are scarce and costly (Section I-A) and that computational efficiency is a standing challenge (Section VI).
+
+---
+
 ## BibTeX
 
 ```bibtex
@@ -446,10 +452,63 @@
   archivePrefix = {arXiv},
 }
 
+@article{HongFMSurvey2026,
+  title   = {Foundation Models in Remote Sensing: Evolving from Unimodality to Multimodality},
+  author  = {D. Hong, C. Li, X. Li, G. Camps-Valls and J. Chanussot},
+  journal = {IEEE Geoscience and Remote Sensing Magazine},
+  year    = {2026},
+  doi     = {10.1109/MGRS.2026.3669086},
+  note    = {arXiv:2603.00988},
+}
+
 ```
 ---
 
 ## Verification status
+
+### Live check of the 19 cited references (2026-10-09)
+
+Every entry in the manuscript reference list at `out/P0S1_JSTARS_v1.md` was
+resolved against its registry on 2026-10-09, 19 of 19. DOIs were queried at the
+Crossref REST API and arXiv identifiers at the arXiv Atom API, and the returned
+title was compared to the title printed in the manuscript. Title-token overlap
+was 1.00 for 18 of the 19 entries. The exception is [4], the NTIRE 2026 x4
+challenge report, at 0.83 solely because the registry writes the upscaling
+factor as a math symbol where the manuscript writes "(x4)". Author order and
+family names agreed with the manuscript for all 19, and the venue field agreed
+where the registry carries one. This check confirms that each identifier
+resolves to the work the manuscript claims. It does not confirm that any
+reported number was read correctly from the paper, which the full-text coding in
+`audit_F_field_survey.json` covers separately.
+
+| # | Link | Registry | Title overlap | Venue as returned |
+|---|---|---|---|---|
+| 1 | arXiv:2606.02535 | arXiv | 1.00 | arXiv |
+| 2 | arXiv:2605.14847 | arXiv | 1.00 | arXiv |
+| 3 | arXiv:2605.00310 | arXiv | 1.00 | arXiv |
+| 4 | arXiv:2604.14558 | arXiv | 0.83 | arXiv |
+| 5 | arXiv:2604.21312 | arXiv | 1.00 | arXiv |
+| 6 | 10.3390/s26020683 | Crossref | 1.00 | Sensors |
+| 7 | 10.1016/j.eswa.2026.132254 | Crossref | 1.00 | Expert Systems with Applications |
+| 8 | 10.1109/MGRS.2026.3669086 | Crossref | 1.00 | IEEE Geoscience and Remote Sensing Magazine |
+| 9 | arXiv:2610.06196 | arXiv | 1.00 | arXiv |
+| 10 | arXiv:2605.09687 | arXiv | 1.00 | arXiv |
+| 11 | 10.1109/jstars.2026.3660141 | Crossref | 1.00 | IEEE JSTARS |
+| 12 | 10.1016/j.eswa.2025.129424 | Crossref | 1.00 | Expert Systems with Applications |
+| 13 | arXiv:2607.22380 | arXiv | 1.00 | arXiv |
+| 14 | arXiv:2609.07012 | arXiv | 1.00 | arXiv |
+| 15 | 10.3390/rs18121910 | Crossref | 1.00 | Remote Sensing |
+| 16 | 10.3390/rs18091419 | Crossref | 1.00 | Remote Sensing |
+| 17 | arXiv:2512.11524 | arXiv | 1.00 | arXiv |
+| 18 | 10.1038/s41598-026-36632-w | Crossref | 1.00 | Scientific Reports |
+| 19 | 10.1038/s41598-026-41832-5 | Crossref | 1.00 | Scientific Reports |
+
+Note on [8]. Crossref returns the first author as Danfeng Hong, which is the
+expanded form of the "D. Hong" printed in the manuscript, and the registry
+lowercases "unimodality" in the title. Both are registry formatting, not
+disagreements.
+
+### Registry status of the 37 generated BibTeX keys
 
 | # | Key | Result | Missing |
 |---|---|---|---|
@@ -529,9 +588,10 @@ reference building needs a title-agreement check, not only a status check.
 
 ### Entries that must not be cited without a full record
 
-NeurIPS 2025 and ICLR 2026 are cited in Section 7.2 as announced statistics.
-They have no single authoritative paper record, so they are cited as
-organization announcements with the year and the specific figure. If the venue
-requires a formal reference, the program-chair introduction or the official
-statistics page should be cited instead. These two are deliberately absent from
-the BibTeX block to avoid emitting an entry with no author.
+An earlier draft cited NeurIPS 2025 and ICLR 2026 in Section 7 as announced
+statistics about the direction of super-resolution evaluation. That sentence was
+removed on 2026-10-09 after the claim could not be verified against the official
+calls for papers, which contain no such wording, and because neither venue has a
+single authoritative paper record. Neither venue is cited anywhere in the
+current manuscript. They remain deliberately absent from the BibTeX block to
+avoid emitting an entry with no author.

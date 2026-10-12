@@ -1,5 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# --- portable roots injected by the packaging script ---
+import os as _os
+PROJ_ROOT = _os.environ.get("S2DS_AUDIT_ROOT", _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
+OUT_DIR   = _os.environ.get("S2DS_AUDIT_OUT", _os.path.join(PROJ_ROOT, "results"))
+DATA_ROOT = _os.environ.get("S2DS_DATA_ROOT", _os.path.join(PROJ_ROOT, "data"))
+RUNS_ROOT = _os.environ.get("S2DS_RUNS_ROOT", _os.path.join(DATA_ROOT, "runs"))
+# --- end injected ---
 """
 P0-S1 / Step 7c: 逐篇试非 arXiv 论文的 OA 变体（剩余 19 篇）。
 
@@ -23,7 +30,7 @@ import os, sys, io, json, time, re, urllib.request, urllib.parse
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 
-OUT = os.path.join(OUT_DIR, "fulltext")
+OUT = _os.environ.get("S2DS_FULLTEXT_OUT") or _os.path.join(OUT_DIR, "fulltext")
 os.makedirs(OUT, exist_ok=True)
 
 HDR = {

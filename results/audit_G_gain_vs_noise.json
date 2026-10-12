@@ -48,6 +48,9 @@
    "sd_max": 0.11868415879645632,
    "ratio": 0.9618299195580208,
    "verdict": "⚠️ 噪声内",
+   "ratio_median": 0.9618299195580208,
+   "ratio_max": 0.589800700530306,
+   "verdict_max": "<=noise",
    "noise_src": "AID"
   },
   {
@@ -65,6 +68,9 @@
    "sd_max": 0.11868415879645632,
    "ratio": 1.6488512906708925,
    "verdict": "△ 勉强可见",
+   "ratio_median": 1.6488512906708925,
+   "ratio_max": 1.01108691519481,
+   "verdict_max": "marginal",
    "noise_src": "AID"
   },
   {
@@ -79,6 +85,9 @@
    "sd_max": 0.24847233672327076,
    "ratio": 1.5804020979995022,
    "verdict": "△ 勉强可见",
+   "ratio_median": 1.5804020979995022,
+   "ratio_max": 0.7646726493002208,
+   "verdict_max": "<=noise",
    "noise_src": "WHU-RS19"
   },
   {
@@ -93,6 +102,9 @@
    "sd_max": 0.248,
    "ratio": 3.977272727272727,
    "verdict": "✅ 超噪声",
+   "ratio_median": 3.977272727272727,
+   "ratio_max": 1.411290322580645,
+   "verdict_max": "marginal",
    "noise_src": "全库中位(回落)"
   },
   {
@@ -107,6 +119,9 @@
    "sd_max": 0.248,
    "ratio": 7.272727272727273,
    "verdict": "✅ 超噪声",
+   "ratio_median": 7.272727272727273,
+   "ratio_max": 2.5806451612903225,
+   "verdict_max": "clears",
    "noise_src": "全库中位(回落)"
   },
   {
@@ -122,6 +137,9 @@
    "sd_max": 0.11868415879645632,
    "ratio": 14.702257341815459,
    "verdict": "✅ 超噪声",
+   "ratio_median": 14.702257341815459,
+   "ratio_max": 9.01552499382039,
+   "verdict_max": "clears",
    "noise_src": "AID"
   },
   {
@@ -136,8 +154,12 @@
    "sd_max": 0.248,
    "ratio": 26.136363636363637,
    "verdict": "✅ 超噪声",
+   "ratio_median": 26.136363636363637,
+   "ratio_max": 9.274193548387096,
+   "verdict_max": "clears",
    "noise_src": "全库中位(回落)"
   }
  ],
- "boundary_note": "噪声 sd 来自本审计 RS-SR 库，非被引论文自身数据集。仅对给出具体 dB 的论文可判读。"
+ "boundary_note": "噪声 sd 来自本审计 RS-SR 库，非被引论文自身数据集。仅对给出具体 dB 的论文可判读。",
+ "convention": "ratio and verdict use the per-dataset median seed sd. ratio_max and verdict_max use the per-dataset maximum seed sd (fallback 0.248 dB where the benchmark is outside the pool). The manuscript Table VIII reports ratio_max."
 }

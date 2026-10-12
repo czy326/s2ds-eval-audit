@@ -22,10 +22,9 @@ smaller than the reported dispersion, so the ranking is not resolvable from the
 reported statistics despite the dispersion being disclosed. The two pairs that do
 clear the dispersion involve a large change of operating regime, a three-step
 cascade and a diffusion method near failure. The std column is a per-image
-dispersion across 50 images and is not a seed-to-seed variance. The table supports
-the weaker claim that the method differences are smaller than the data dispersion,
-and it is the only case in the survey where the required evidence comes from the
-paper's own numbers with no recomputation on our part.
+dispersion across 50 images, not a seed-to-seed variance. Table I speaks to data
+dispersion only, and it is the one case in the survey where the required evidence
+comes from the paper's own numbers with no recomputation on our part.
 
 **Source.** `results/audit_H_spectralsr_std.json` (10 pairs, 8 below std).
 
@@ -115,13 +114,14 @@ pairs fall below the noise. The ordering of the median standard deviation is mon
 in test-set size. A consequence for practice is that a 0.1 dB claim on WHU-RS19 lies
 below the median seed variation of that benchmark.
 
-**Source.** `results/audit_C_seednoise.json`.
+**Source.** `results/audit_C_seednoise.json` (columns 2-4). Column 5 derived from
+`results/audit_D_effect_vs_noise.json`.
 
 | Benchmark | Test images | Median sd (dB) | Max sd (dB) | Reversal rate |
 |---|---|---|---|---|
-| AID | 1000 | 0.0728 | 0.1187 | — |
-| RSSCN7 | 281 | 0.0632 | 0.1169 | — |
-| UCMerced | 210 | 0.1070 | 0.1701 | — |
+| AID | 1000 | 0.0728 | 0.1187 | 30.0% |
+| RSSCN7 | 281 | 0.0632 | 0.1169 | 15.4% |
+| UCMerced | 210 | 0.1070 | 0.1701 | 17.6% |
 | WHU-RS19 | 101 | 0.1202 | 0.2485 | 47.3% |
 
 ---

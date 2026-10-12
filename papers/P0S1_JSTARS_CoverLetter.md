@@ -1,21 +1,21 @@
 # Cover Letter — IEEE JSTARS Submission
 
 > Draft for submission through ScholarOne (mc.manuscriptcentral.com/jstars).
-> Fill the bracketed placeholders before sending. Do not invent author details.
+> No author details are invented. Reviewer names are entered in the submission form.
 
 ---
 
-[Date]
+9 October 2026
 
-Prof. Peifeng Ma
 Editor-in-Chief
 *IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing*
 
-Dear Prof. Ma,
+Dear Editor-in-Chief,
 
 We submit for consideration as a Regular Paper the manuscript entitled
-**"Protocol Choices, Not Method Quality, Decide the Ranking: A Reproducibility Audit
-of Remote Sensing Super-Resolution Evaluation"** by [author list].
+**"Protocol Choices, Not Just Method Quality, Decide the Ranking: A Reproducibility Audit
+of Remote Sensing Super-Resolution Evaluation"** by Zhengyang Chen, Dawei Liu, and
+Zhiheng Liu.
 
 **What the paper does.** Remote sensing super-resolution (RS-SR) papers routinely
 report that a method exceeds the previous best by a small margin expressed in dB. We
@@ -61,21 +61,23 @@ methods is stable when the protocol is allowed to vary within the range of defen
 choices. It answers with measured fractions rather than a position.
 
 **Article type and length.** We submit this as a Regular Paper. The manuscript is
-written in IEEE two-column format, and [the body is within the six-page length that
-avoids the excessive-length charge OR the estimated length is N pages].
+written in the IEEE two-column format and is 10 pages long including the figures,
+tables, and references. We note that JSTARS is a fully open-access journal and that
+the article processing charge applies.
 
-**Suggested reviewers.** [Optional. Up to three names with affiliations and emails,
-none of whom are collaborators or from our institution.]
+**Suggested reviewers.** Three suggestions are supplied in the submission form, with
+affiliations and contact addresses. None is a collaborator or from our institution.
 
 **Declarations.** The manuscript is original, has not been published, and is not under
 consideration elsewhere. All authors have approved the submission and declare no
-competing interests. [Confirm preprint status if the work has been posted.]
+competing interests. The work has not been posted to a preprint server. This work
+was supported by the National Natural Science Foundation of China under Grant 42502302.
 
 Thank you for considering the manuscript.
 
 Sincerely,
 
-[Corresponding author name]
-[Affiliation, address]
-[Email, ORCID]
-on behalf of all authors
+Dawei Liu (corresponding author)
+Engineering University of PAP, Xi'an 710086, China
+wjmicheal@163.com
+on behalf of Zhengyang Chen and Zhiheng Liu

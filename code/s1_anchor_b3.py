@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
-
 # --- portable roots injected by the packaging script ---
 import os as _os
 PROJ_ROOT = _os.environ.get("S2DS_AUDIT_ROOT", _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
 OUT_DIR   = _os.environ.get("S2DS_AUDIT_OUT", _os.path.join(PROJ_ROOT, "results"))
 DATA_ROOT = _os.environ.get("S2DS_DATA_ROOT", _os.path.join(PROJ_ROOT, "data"))
-DATA_RUNS = _os.environ.get("S2DS_RUNS_ROOT", _os.path.join(DATA_ROOT, "runs"))
+RUNS_ROOT = _os.environ.get("S2DS_RUNS_ROOT", _os.path.join(DATA_ROOT, "runs"))
 # --- end injected ---
 
 """
@@ -26,7 +25,7 @@ P0-S1 Audit / Step 4: 锚点案例 —— BSRNet B3 vs base_ssm 在主口径下�
 import json, os, sys, io, math, statistics
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 
-R = DATA_RUNS
+R = RUNS_ROOT
 OUT = OUT_DIR
 
 

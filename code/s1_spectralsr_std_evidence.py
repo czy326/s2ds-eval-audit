@@ -5,6 +5,7 @@ import os as _os
 PROJ_ROOT = _os.environ.get("S2DS_AUDIT_ROOT", _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
 OUT_DIR   = _os.environ.get("S2DS_AUDIT_OUT", _os.path.join(PROJ_ROOT, "results"))
 DATA_ROOT = _os.environ.get("S2DS_DATA_ROOT", _os.path.join(PROJ_ROOT, "data"))
+RUNS_ROOT = _os.environ.get("S2DS_RUNS_ROOT", _os.path.join(DATA_ROOT, "runs"))
 # --- end injected ---
 
 """
@@ -19,7 +20,7 @@ import os, re, sys, io, json
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 
-FT = os.path.join(OUT_DIR, "fulltext")
+FT = _os.environ.get("S2DS_FULLTEXT_OUT") or _os.path.join(OUT_DIR, "fulltext")
 SRC = os.path.join(FT, "spectral_sr_bench_s26_683.txt")
 OUT = OUT_DIR
 
