@@ -1,0 +1,74 @@
+\documentclass[pdflatex,sn-nature]{sn-jnl}
+% Scientific Reports submission, built on the official Springer Nature class.
+% The class and the reference styles ship in out/sn/sn-article-template.
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage{url}
+\graphicspath{{figures/}{../figures/}}
+\newlength{\tblavail}
+
+\begin{document}
+
+
+\title[Supplementary information]{Supplementary information}
+\author*[1]{}\affil*[1]{}
+\renewcommand{\thetable}{S\arabic{table}}
+\maketitle
+
+
+Tables S1 to S3 carry the supporting audit detail that would take the main text past the eight-display-item limit.
+
+\clearpage
+\begin{table}[htbp]
+\centering
+\small
+\setlength{\tabcolsep}{3pt}
+\setlength{\tblavail}{\dimexpr\textwidth-6\tabcolsep\relax}
+\begin{tabular}{p{0.165\tblavail}p{0.390\tblavail}p{0.415\tblavail}}
+\hline
+Line & Question & Criterion \\
+\hline
+\textbf{A} per-image consistency & Is the same test set literally the same images & Exact path-set comparison and Jaccard index per benchmark \\
+\textbf{B} convention sensitivity & Does the ranking or the champion change when the metric or aggregation changes & Eight conventions, Spearman rank correlation against mean PSNR, and top-1 agreement \\
+\textbf{C/D} effect versus noise & Which is larger, the method effect or the seed-to-seed fluctuation & Seed-to-seed standard deviation of paired $\Delta$PSNR, and the sign-reversal rate \\
+\textbf{E} anchor & Is the audit pipeline itself correct & Reproduce a known result and compare to the published numbers digit by digit \\
+\hline
+\end{tabular}
+\caption{The four audit lines.}\label{tab:lines}
+\end{table}
+\begin{table}[htbp]
+\centering
+\small
+\setlength{\tabcolsep}{3pt}
+\setlength{\tblavail}{\dimexpr\textwidth-10\tabcolsep\relax}
+\begin{tabular}{lcccc}
+\hline
+Benchmark & Test images & Median sd (dB) & Max sd (dB) & Reversal rate \\
+\hline
+AID & 1000 & 0.0728 & 0.1187 & 30.0\% \\
+RSSCN7 & 281 & 0.0632 & 0.1169 & 15.4\% \\
+UCMerced & 210 & 0.1070 & 0.1701 & 17.6\% \\
+WHU-RS19 & 101 & 0.1202 & 0.2485 & 47.3\% \\
+\hline
+\end{tabular}
+\caption{Seed noise by benchmark.}\label{tab:seednoise}
+\end{table}
+\begin{table}[htbp]
+\centering
+\small
+\setlength{\tabcolsep}{3pt}
+\setlength{\tblavail}{\dimexpr\textwidth-8\tabcolsep\relax}
+\begin{tabular}{p{0.388\tblavail}p{0.208\tblavail}p{0.187\tblavail}p{0.187\tblavail}}
+\hline
+Comparison & This audit & Published & Agreement \\
+\hline
+B3 vs base\_ssm, primary convention & +0.0849 / +0.1272 / +0.0744 dB & same & digit for digit \\
+B3 vs base\_ssm, legacy convention & +0.1015 / +0.1193 / +0.0804 dB & same & digit for digit \\
+Difference attributable to the baseline convention alone & \textbf{0.0049 dB} & --- & --- \\
+\hline
+\end{tabular}
+\caption{Anchor comparison.}\label{tab:anchor}
+\end{table}
+
+\end{document}

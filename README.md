@@ -65,7 +65,19 @@ papers/        the JSTARS manuscript, captions, cover letter, and the reference 
 docs/          data availability, provenance, and reproduction notes
 ```
 
-The submit-ready files are:
+The submission package for Scientific Reports is:
+
+| File | Role |
+|---|---|
+| `papers/P0S1_SciRep_v1.md` | Manuscript master: Introduction / Related work / Results / Discussion / Methods, 200-word abstract, six tables and two figures |
+| `papers/P0S1_SciRep_v1.tex` | The same manuscript as Springer Nature LaTeX (`sn-jnl`, Nature Portfolio reference style) |
+| `papers/P0S1_SciRep_SI.md` | Supplementary tables S1-S3, moved out to respect the eight-display-item limit |
+| `papers/P0S1_SciRep_SI.tex` | The supplementary document, compiled separately |
+| `papers/sn-jnl.cls` | The official Springer Nature class, redistributed unmodified |
+| `papers/references.md` | Full bibliographic source of truth, with the verification channel per entry |
+
+The IEEE JSTARS package was submitted in October 2026 and returned by the editor
+without review on scope grounds. It is kept as the earlier framing:
 
 | File | Role |
 |---|---|
@@ -73,10 +85,12 @@ The submit-ready files are:
 | `papers/P0S1_JSTARS_v1.tex` | The same manuscript generated as IEEEtran LaTeX from the Markdown above |
 | `papers/P0S1_图表caption_JSTARS_v1.md` | Table I-IX captions above, Fig. 1-2 captions below, each with a source line |
 | `papers/P0S1_JSTARS_CoverLetter.md` | Cover letter addressed to the Editor-in-Chief |
-| `papers/references.md` | Full bibliographic source of truth, with the verification channel per entry |
 
-The manuscript files are generated from the Markdown by `code/s1_make_jstars_latex.py`
-and `code/s1_make_jstars_docx.py`, so the numbers cannot drift between formats.
+The Scientific Reports version is generated from the IEEE text by
+`code/s1_make_scirep_md.py` and `code/s1_make_scirep_latex.py`, so the two
+venue versions cannot drift apart. `code/s1_scirep_check.py` asserts that:
+every decimal figure in the Scientific Reports text also appears in the IEEE
+text, whose numbers `code/s1_jstars_check.py` verifies independently.
 
 ## Reproducing the audit
 
@@ -117,6 +131,29 @@ python code/s1_jstars_check.py
 
 The script resolves its inputs relative to its own location, or from
 `S2DS_AUDIT_ROOT` when that is set.
+
+`code/s1_scirep_check.py` does the same job for the Scientific Reports version
+and adds that journal's own limits: title at most 20 words, abstract at most 200
+words and uncited, at most six keywords, at most eight display items, Methods
+placed last, the mandatory Author contributions / Data availability / Additional
+Information / Acknowledgements statements, and no dangling or escaped cross
+references in the compiled LaTeX. It also asserts that every decimal figure in
+the Scientific Reports text also appears in the IEEE text, which is what keeps
+the two venue versions from drifting apart. It currently passes 62 assertions
+with zero mismatches.
+
+```bash
+# from the repository root
+python code/s1_scirep_check.py
+```
+
+## Building the manuscripts
+
+`papers/P0S1_SciRep_v1.tex` compiles with two passes of `pdflatex`, using the
+`sn-jnl.cls` shipped alongside it and the figure PDFs in `figures/`. The
+reference list is carried inside the manuscript rather than in a `.bib`, which
+is what the Springer Nature template asks for on the Nature Portfolio
+submission system, so no BibTeX run is needed.
 
 ## The one rule that matters
 
@@ -162,9 +199,9 @@ same reason.
 
 ## Citation
 
-See `CITATION.cff`. The manuscript was returned by the IEEE JSTARS editor
-without review in October 2026 on scope grounds, and is being prepared for a
-machine-learning evaluation venue.
+See `CITATION.cff`. The IEEE JSTARS editor returned the manuscript without
+review in October 2026 on scope grounds, and it is now prepared for Scientific
+Reports.
 
 ## License
 
