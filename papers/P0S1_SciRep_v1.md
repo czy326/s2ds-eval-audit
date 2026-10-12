@@ -35,6 +35,20 @@ The stakes are higher in remote sensing than in generic image restoration, for t
 
 We begin with a case that requires no reproduction on our part. SpectralSR-Bench (Sensors, 2026) is the only paper in our sample that reports `mean ± std` in every table. On disclosure practice it belongs to the best tier we found. Its own reported numbers, however, show that in 8 of 10 adjacent method comparisons the difference in mean PSNR is smaller than the reported per-image standard deviation (Table~\ref{tab:srbench}).
 
+**TABLE I. Adjacent-pair comparison in SpectralSR-Bench, using the paper's own reported statistics.**
+
+| Method A | Method B | ΔPSNR (dB) | max std (dB) | Δ / std |
+|---|---|---|---|---|
+| FSRCNN (×2) | SRCNN (×2) | 0.38 | 2.20 | 0.17 |
+| SRCNN (×2) | SRCNN (×2→×4) | 3.50 | 2.20 | 1.59 |
+| SRCNN (×2→×4) | SRCNN (×2→×4→×8) | 1.45 | 2.20 | 0.66 |
+| Bicubic (×2) | Bilinear (×2) | 0.50 | 3.53 | 0.14 |
+| Bilinear (×2) | Bicubic (×4) | 1.79 | 3.66 | 0.49 |
+| Bicubic (×4) | Bilinear (×4) | 0.42 | 3.66 | 0.11 |
+| Bilinear (×4) | Bicubic (×8) | 1.88 | 3.65 | 0.52 |
+| Bicubic (×8) | Bilinear (×8) | 0.41 | 3.65 | 0.11 |
+| SinSR (×4) | ResShift (×4) | 0.96 | 2.44 | 0.39 |
+| ResShift (×4) | SR3 (×8) | 16.11 | 14.80 | 1.09 |
 
 The `std` column is the larger of the two reported per-image standard deviations. The last column is the ratio of the mean difference to that dispersion. Eight of the ten ratios are below 1, so the ranking is not resolvable from the reported statistics. The two pairs that do clear the dispersion involve a large change of operating regime, a three-step cascade and a diffusion method near failure. The `std` here is a per-image dispersion across 50 images, not a seed-to-seed variance, so Table~\ref{tab:srbench} speaks to data dispersion only. It is also the one case in the survey where the decisive evidence comes from a paper's own reported numbers, with no recomputation on our part.
 
@@ -120,6 +134,18 @@ The instability reported below is not a test-set artifact. Whatever moves a rank
 
 ### B. Line B: the champion changes on all four benchmarks {@sec:champion@}
 
+**TABLE III. Rank correlation against mean PSNR, and whether the champion changes.**
+
+| Convention | AID (46) | RSSCN7 (39) | UCMerced (39) | WHU-RS19 (36) |
+|---|---|---|---|---|
+| `psnr_mean` (reference) | 1.000 | 1.000 | 1.000 | 1.000 |
+| `psnr_median` | **0.882** ✗ | **0.502** ✗ | **0.818** ✗ | **0.749** ✗ |
+| `psnr_trim10` | 0.979 | 0.987 | 0.996 | 0.934 |
+| `psnr_trim25` | 0.962 | 0.986 | 0.981 | 0.833 |
+| `ssim_mean` | 0.868 | **0.957** ✗ | 0.747 | 0.807 |
+| `ergas_mean` | 0.943 | **0.982** ✗ | 0.945 | 0.944 |
+| `sam_mean` | 0.813 | **0.535** ✗ | 0.793 | **0.272** ✗ |
+| `lpips_mean` | 0.534 | **0.894** ✗ | 0.549 | 0.860 |
 
 ✗ marks a convention under which the top-ranked method differs from the `psnr_mean` champion.
 
@@ -143,17 +169,28 @@ The strictest rule counts a pair as below the noise only when the effect is smal
 
 The definition we carry through the paper compares the effect against the seed standard deviation of the reference method in each pair, fixed as the first method so that the count is deterministic. That gives 172 of 327, 52.6%.
 
-The symmetric definition compares the effect against the larger of the two seed standard deviations and gives 224 of 327, 68.5%. The three definitions span 47.1% to 68.5% and agree on the direction of the finding. We carry the middle one because its reference is explicit, and report all three for a reader who prefers a different convention. The 21-point spread is itself an instance of the paper's subject, since a headline percentage in this audit moves by more than 20 points under a convention that most papers would leave unstated.
+The symmetric definition compares the effect against the larger of the two seed standard deviations and gives 224 of 327, 68.5%. The three definitions span 47.1% to 68.5% and agree on the direction of the finding. We carry the middle one because its reference is explicit, and report all three for a reader who prefers a different convention. The 21-point spread is itself an instance of the paper's subject, since a headline percentage in this audit moves by more than 20 points under a convention that most papers would leave unstated. Table~\ref{tab:effect} collects these counts.
 
+**TABLE IV. Effect size against seed noise.**
+
+| Quantity | Value |
+|---|---|
+| Method pairs analyzed | 327 |
+| Pairs that reverse sign across seeds | **83 (25.4%)** |
+| Pairs with \|effect\| below the reference method's seed sd | **172 (52.6%)** of 327 |
+| Pairs with \|effect\| below the smaller of the two methods' seed sds | 154 (47.1%) of 327 |
+| Pairs with \|effect\| below the larger of the two methods' seed sds | 224 (68.5%) of 327 |
+| Median seed-to-seed standard deviation | **0.088 dB** (range 0.049 to 0.248) |
+| Median method effect | **0.018 to 0.039 dB** |
 
 The seed noise is two to five times the size of the method effect it is supposed to discriminate. One in four method pairs reverses order when the seed changes. Slightly more than half of all pairs show a difference smaller than the noise.
 
-The per-benchmark noise, reported in Supplementary Table S2, follows the test-set size. WHU-RS19, at 101 images, has the largest noise and, at 47.3%, the highest reversal rate, with 80% of its pairs falling below the noise. AID, at 1000 images, has the smallest noise. The ordering is monotone in test-set size, with one inversion between AID and RSSCN7 that we attribute to the differing content heterogeneity of the two benchmarks rather than to size alone.
+The per-benchmark noise, reported in Supplementary Table S2, follows the test-set size. WHU-RS19, at 101 images, has the largest noise and, at 47.3%, the highest reversal rate, with 80% of its pairs falling below the noise. AID, at 1000 images, has the smallest noise. The ordering is monotone in test-set size, with one inversion between AID and RSSCN7 that we attribute to the differing content heterogeneity of the two benchmarks rather than to size alone. Fig.~\ref{fig:1} shows this relation.
 
 
 **Fig. 1. Seed noise against test-set size.** The horizontal axis is the number of test images on a logarithmic scale and the vertical axis is the median seed-to-seed standard deviation of the paired per-image PSNR difference in dB. Each marker is one benchmark and the error bars span the minimum to the maximum standard deviation observed for it. The four points are AID (1000 images, 0.0728 dB), RSSCN7 (281, 0.0632 dB), UCMerced (210, 0.1070 dB), and WHU-RS19 (101, 0.1202 dB). A fixed absolute effect, such as the 0.1 dB that RS-SR papers commonly claim, is therefore compared against a smaller noise floor on a large benchmark and a larger one on a small benchmark.
 
-The practical implication is direct. The headline convention in RS-SR, stating that a method exceeds the previous best by 0.1 dB, sits inside the noise band on small benchmarks. On WHU-RS19, a 0.1 dB claim is below the median seed variation.
+The practical implication is direct. The headline convention in RS-SR, stating that a method exceeds the previous best by 0.1 dB, sits inside the noise band on small benchmarks. On WHU-RS19, a 0.1 dB claim is below the median seed variation. Fig.~\ref{fig:2} shows all 327 pairs.
 
 **Fig. 2. Method effect against seed noise, for all 327 pairs.** The horizontal axis is the absolute mean paired PSNR difference in dB and the vertical axis is the seed-to-seed standard deviation of that difference in dB. Both axes are logarithmic and a dashed line marks equality. Points above the line have an effect larger than the noise. Points below the line, colored, are the 172 pairs whose difference does not clear the noise floor under the reference-method definition. The cluster near the lower-left corner corresponds to pairs on AID between method variants that differ by a single component, where both the effect and the noise are of order 0.01 dB.
 
@@ -168,6 +205,22 @@ The pipeline reproduces both published figures exactly. It also shows that chang
 
 ### E. Report-practice statistics {@sec:survey@}
 
+
+Table~\ref{tab:practice} reports the full breakdown.
+
+**TABLE VII. Report practice in 35 papers.**
+
+| Field | Count |
+|---|---|
+| State a verifiable specific dB gain | **7 / 35 (20.0%)** |
+| Qualitative SOTA, absolute PSNR only, or efficiency only | **28 / 35 (80.0%)** |
+| Provide a code or data link | 5 / 35 (14.3%) |
+| Mention seeds, variance, or a statistical test in the abstract | **0 / 35 (0.0%)** |
+| Mention the aggregation convention in the abstract | 4 / 35 (11.4%) |
+| Anchor to a downstream task or protocol reproduction | 11 / 35 (31.4%) |
+| Disclose R2 in the body (of 18 full texts) | 8 / 35 |
+| Disclose R3 in the body (of 18 full texts) | 4 / 35 |
+| Disclose R5 in the body (of 18 full texts) | 15 / 35 |
 
 Four fifths of the surveyed papers do not state a number a reader could check. They report an absolute PSNR, or claim a qualitative improvement over the state of the art, or compare only efficiency. The gain-versus-noise comparison in Section~\ref{sec:gains} applies only to the 7 papers that give a number. For the other 28 there is no claim to test.
 
@@ -187,8 +240,19 @@ The count of papers that do not report a field is bounded above by the number of
 
 ### G. Claimed gains against the noise floor {@sec:gains@}
 
-For the 7 papers that state a verifiable dB gain, we compare the claimed effect to the seed noise measured on the same benchmark in Section~\ref{sec:noise}. Where the paper's benchmark is outside our pool, we fall back to the pool-wide median and mark the fallback.
+For the 7 papers that state a verifiable dB gain, we compare the claimed effect to the seed noise measured on the same benchmark in Section~\ref{sec:noise}. Where the paper's benchmark is outside our pool, we fall back to the pool-wide median and mark the fallback. Table~\ref{tab:gains} lists the seven claims against the noise floor of their own benchmarks.
 
+**TABLE VIII. Claimed gains against the seed-noise floor.**
+
+| Paper | Claimed Δ | Benchmark (noise source) | Δ / max sd | Reading |
+|---|---|---|---|---|
+| PLAN [11] | +0.07 dB | AID (measured) | 0.59 | below noise |
+| DBTSR [12] | +0.12 dB | AID (measured) | 1.01 | marginal |
+| JNUN-CA | +0.19 dB | WHU-RS19 (measured) | 0.76 | below noise |
+| IR275K [13] | +0.35 dB | infrared (fallback) | 1.41 | marginal |
+| AstraMoE-SR [14] | +0.64 dB | DOTA (fallback) | 2.58 | clears noise |
+| DFSMamba [15] | +1.07 dB | AID (measured) | 9.02 | clears noise |
+| EORestore-Agent [9] | +2.30 dB | Landsat-8 (fallback) | 9.27 | clears noise |
 
 JNUN-CA carries no reference number because its bibliographic record could not be completed to the standard required for citation, and the data repository records why.
 
@@ -226,8 +290,19 @@ The implication extends past our survey. A third party cannot perform a reproduc
 
 ### K. The R1 to R7 reproducibility scorecard {@sec:scorecard@}
 
-The audit findings reduce to seven checks. Each check names a disclosure whose absence produces a specific failure.
+The audit findings reduce to seven checks. Each check names a disclosure whose absence produces a specific failure. Table~\ref{tab:scorecard} states each check and the failure its omission produces.
 
+**TABLE IX. The R1 to R7 scorecard.**
+
+| # | Check | Failure when omitted | Status in the audit pool |
+|---|---|---|---|
+| R1 | Is the test-set image list public and identical across runs | Cross-paper comparison is void | Pass in all 170 runs |
+| R2 | Is the metric aggregation stated (mean, median, trimmed) | The champion flips under the convention | Not stated in 31/35 papers |
+| R3 | Are three or more seeds run, with per-seed direction reported | The 25.4% reversal rate is invisible | 2 seeds in part of the pool |
+| R4 | Is the seed-noise magnitude reported | A reader cannot tell whether \|Δ\| clears the noise | Not reported |
+| R5 | Is the baseline convention fixed to one run and endpoint | The effect inflates by 5% or more | Two conventions used |
+| R6 | Is equivalence testing used rather than significance alone | No difference reads as improvement | Used only for final confirmation |
+| R7 | Are per-image paired confidence intervals and d_z reported | Stability is unjudgeable | Not reported |
 
 The scorecard is meant to be applied to a published paper, producing a profile of which of the seven a paper omits. It applies to competition reports as well as method papers, since both publish rankings.
 
@@ -390,85 +465,3 @@ The reference list is shipped with the repository. Every bibliographic field is 
 ## Acknowledgements
 
 The authors thank the maintainers of the AID, RSSCN7, UCMerced, and WHU-RS19 benchmarks, whose public release made this audit possible. The audit uses only released per-image evaluation artifacts and no restricted data. This work was supported by the National Natural Science Foundation of China under Grant 42502302.
-
----
-
-## Tables
-
-**TABLE I. Adjacent-pair comparison in SpectralSR-Bench, using the paper's own reported statistics.**
-
-| Method A | Method B | ΔPSNR (dB) | max std (dB) | Δ / std |
-|---|---|---|---|---|
-| FSRCNN (×2) | SRCNN (×2) | 0.38 | 2.20 | 0.17 |
-| SRCNN (×2) | SRCNN (×2→×4) | 3.50 | 2.20 | 1.59 |
-| SRCNN (×2→×4) | SRCNN (×2→×4→×8) | 1.45 | 2.20 | 0.66 |
-| Bicubic (×2) | Bilinear (×2) | 0.50 | 3.53 | 0.14 |
-| Bilinear (×2) | Bicubic (×4) | 1.79 | 3.66 | 0.49 |
-| Bicubic (×4) | Bilinear (×4) | 0.42 | 3.66 | 0.11 |
-| Bilinear (×4) | Bicubic (×8) | 1.88 | 3.65 | 0.52 |
-| Bicubic (×8) | Bilinear (×8) | 0.41 | 3.65 | 0.11 |
-| SinSR (×4) | ResShift (×4) | 0.96 | 2.44 | 0.39 |
-| ResShift (×4) | SR3 (×8) | 16.11 | 14.80 | 1.09 |
-
-**TABLE III. Rank correlation against mean PSNR, and whether the champion changes.**
-
-| Convention | AID (46) | RSSCN7 (39) | UCMerced (39) | WHU-RS19 (36) |
-|---|---|---|---|---|
-| `psnr_mean` (reference) | 1.000 | 1.000 | 1.000 | 1.000 |
-| `psnr_median` | **0.882** ✗ | **0.502** ✗ | **0.818** ✗ | **0.749** ✗ |
-| `psnr_trim10` | 0.979 | 0.987 | 0.996 | 0.934 |
-| `psnr_trim25` | 0.962 | 0.986 | 0.981 | 0.833 |
-| `ssim_mean` | 0.868 | **0.957** ✗ | 0.747 | 0.807 |
-| `ergas_mean` | 0.943 | **0.982** ✗ | 0.945 | 0.944 |
-| `sam_mean` | 0.813 | **0.535** ✗ | 0.793 | **0.272** ✗ |
-| `lpips_mean` | 0.534 | **0.894** ✗ | 0.549 | 0.860 |
-
-**TABLE IV. Effect size against seed noise.**
-
-| Quantity | Value |
-|---|---|
-| Method pairs analyzed | 327 |
-| Pairs that reverse sign across seeds | **83 (25.4%)** |
-| Pairs with \|effect\| below the reference method's seed sd | **172 (52.6%)** of 327 |
-| Pairs with \|effect\| below the smaller of the two methods' seed sds | 154 (47.1%) of 327 |
-| Pairs with \|effect\| below the larger of the two methods' seed sds | 224 (68.5%) of 327 |
-| Median seed-to-seed standard deviation | **0.088 dB** (range 0.049 to 0.248) |
-| Median method effect | **0.018 to 0.039 dB** |
-
-**TABLE VII. Report practice in 35 papers.**
-
-| Field | Count |
-|---|---|
-| State a verifiable specific dB gain | **7 / 35 (20.0%)** |
-| Qualitative SOTA, absolute PSNR only, or efficiency only | **28 / 35 (80.0%)** |
-| Provide a code or data link | 5 / 35 (14.3%) |
-| Mention seeds, variance, or a statistical test in the abstract | **0 / 35 (0.0%)** |
-| Mention the aggregation convention in the abstract | 4 / 35 (11.4%) |
-| Anchor to a downstream task or protocol reproduction | 11 / 35 (31.4%) |
-| Disclose R2 in the body (of 18 full texts) | 8 / 35 |
-| Disclose R3 in the body (of 18 full texts) | 4 / 35 |
-| Disclose R5 in the body (of 18 full texts) | 15 / 35 |
-
-**TABLE VIII. Claimed gains against the seed-noise floor.**
-
-| Paper | Claimed Δ | Benchmark (noise source) | Δ / max sd | Reading |
-|---|---|---|---|---|
-| PLAN [11] | +0.07 dB | AID (measured) | 0.59 | below noise |
-| DBTSR [12] | +0.12 dB | AID (measured) | 1.01 | marginal |
-| JNUN-CA | +0.19 dB | WHU-RS19 (measured) | 0.76 | below noise |
-| IR275K [13] | +0.35 dB | infrared (fallback) | 1.41 | marginal |
-| AstraMoE-SR [14] | +0.64 dB | DOTA (fallback) | 2.58 | clears noise |
-| DFSMamba [15] | +1.07 dB | AID (measured) | 9.02 | clears noise |
-| EORestore-Agent [9] | +2.30 dB | Landsat-8 (fallback) | 9.27 | clears noise |
-
-**TABLE IX. The R1 to R7 scorecard.**
-
-| # | Check | Failure when omitted | Status in the audit pool |
-|---|---|---|---|
-| R1 | Is the test-set image list public and identical across runs | Cross-paper comparison is void | Pass in all 170 runs |
-| R2 | Is the metric aggregation stated (mean, median, trimmed) | The champion flips under the convention | Not stated in 31/35 papers |
-| R3 | Are three or more seeds run, with per-seed direction reported | The 25.4% reversal rate is invisible | 2 seeds in part of the pool |
-| R4 | Is the seed-noise magnitude reported | A reader cannot tell whether \|Δ\| clears the noise | Not reported |
-| R5 | Is the baseline convention fixed to one run and endpoint | The effect inflates by 5% or more | Two conventions used |
-| R6 | Is equivalence testing used rather than significance alone | No difference reads as improvement | Used only for final confirmation |
-| R7 | Are per-image paired confidence intervals and d_z reported | Stability is unjudgeable | Not reported |

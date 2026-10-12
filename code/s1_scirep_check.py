@@ -119,6 +119,15 @@ def main():
           "unresolved %s" % sorted(used - set(range(1, len(refs) + 1))))
     check("all_references_used", set(range(1, len(refs) + 1)) <= used,
           "never cited %s" % sorted(set(range(1, len(refs) + 1)) - used))
+
+    # The submission checklist requires the in-text citations and the supplied
+    # display items to agree, and an uncited table or figure gives the reader no
+    # pointer to it. This is checked against \ref, not against the caption, so a
+    # table that only exists as a caption does not pass.
+    items = ["tab:srbench", "tab:conventions", "tab:effect", "tab:practice",
+             "tab:gains", "tab:scorecard", "fig:1", "fig:2"]
+    uncited = [l for l in items if ("\\ref{%s}" % l) not in body]
+    check("every_display_item_called_out", not uncited, "uncited %s" % uncited)
     check("no_numeric_citation_in_tex",
           not re.search(r"(?<![\w*{])\[\d+\]", tex))
     check("no_unconverted_marker", "{@" not in tex)

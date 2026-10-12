@@ -343,7 +343,9 @@ def render(md_path, tex_path, supplementary=False):
                 rows.append(lines[j])
                 j += 1
             cells = [split_row(r) for r in rows]
-            tables.append(build_table(roman, caption, cells[0], cells[2:]))
+            # emitted in the flow at the point the manuscript discusses it,
+            # rather than collected at the end of the document
+            body.append(build_table(roman, caption, cells[0], cells[2:]))
             n_tab += 1
             i = j
             continue
@@ -397,8 +399,6 @@ def render(md_path, tex_path, supplementary=False):
     for name in BACK:
         if name in back:
             doc.append("\\bmhead{%s}\n\n%s" % (conv(name, False), back[name]))
-    if tables:
-        doc.append("\\clearpage\n" + "\n".join(tables))
     doc.append("\\end{document}")
 
     out = "\n\n".join(doc) + "\n"

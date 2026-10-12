@@ -186,6 +186,20 @@ ORDER = [
 ]
 
 
+# A short call-out added to the paragraph that precedes a display item, for any
+# item the manuscript never cites in its text. Without it a reader has no
+# pointer to the item, and the journal's submission checklist requires the
+# in-text citations and the supplied files to agree.
+CALLOUT = {
+    "IV": "Table~\\ref{tab:effect} collects these counts.",
+    "VII": "Table~\\ref{tab:practice} reports the full breakdown.",
+    "VIII": "Table~\\ref{tab:gains} lists the seven claims against the noise floor of their own benchmarks.",
+    "IX": "Table~\\ref{tab:scorecard} states each check and the failure its omission produces.",
+    "fig1": "Fig.~\\ref{fig:1} shows this relation.",
+    "fig2": "Fig.~\\ref{fig:2} shows all 327 pairs.",
+}
+
+
 def split_sections(text):
     """Return {heading: body} for every '## ' section, plus any preamble."""
     parts = re.split(r"(?m)^## ", text)
@@ -219,15 +233,16 @@ def main():
     text = open(SRC, encoding="utf-8").read()
     pre, sec = split_sections(text)
 
-    # --- pull the table blocks out, whichever section they sit in
+    # --- main tables stay where the manuscript discusses them; only the three
+    # supplementary tables are lifted out into their own document.
     table_blocks = {}
     for head in list(sec):
-        body = sec[head]
+        lines = sec[head].split("\n")
         out_lines, i = [], 0
-        lines = body.split("\n")
         while i < len(lines):
-            m = re.match(r"^\*\*TABLE\s+([IVX]+)\.\s*(.+?)\*\*$", lines[i].strip())
-            if m:
+            s = lines[i].strip()
+            m = re.match(r"^\*\*TABLE\s+([IVX]+)\.\s*(.+?)\*\*$", s)
+            if m and TABLE_MAP.get(m.group(1), ("", "main"))[1] == "si":
                 roman, cap = m.group(1), m.group(2)
                 j = i + 1
                 while j < len(lines) and not lines[j].strip():
@@ -243,8 +258,31 @@ def main():
             i += 1
         sec[head] = "\n".join(out_lines)
 
-    if len(table_blocks) != 9:
-        raise SystemExit("expected 9 tables, found %d" % len(table_blocks))
+    if len(table_blocks) != 3:
+        raise SystemExit("expected 3 supplementary tables, found %d" % len(table_blocks))
+
+    # --- add a call-out before any display item the text never cites
+    for head in list(sec):
+        lines = sec[head].split("\n")
+        out = []
+        for idx, ln in enumerate(lines):
+            m = re.match(r"^\*\*TABLE\s+([IVX]+)\.", ln.strip())
+            f = re.match(r"^\*\*Fig\.\s+(\d+)\.", ln.strip())
+            key = m.group(1) if m else ("fig%s" % f.group(1) if f else None)
+            if key and key in CALLOUT:
+                j = len(out) - 1
+                while j >= 0 and not out[j].strip():
+                    j -= 1
+                if j >= 0 and not out[j].lstrip().startswith(("|", "#", ">")):
+                    # attach to the paragraph that discusses the item
+                    out[j] = out[j].rstrip() + " " + CALLOUT[key]
+                else:
+                    # the item opens a subsection, so it needs its own lead-in
+                    out.append("")
+                    out.append(CALLOUT[key])
+                    out.append("")
+            out.append(ln)
+        sec[head] = "\n".join(out)
 
     # --- build the new body
     def emit(head_old, head_new, extra_bodies=()):
@@ -309,17 +347,6 @@ def main():
 
     doc.append(DECLARATIONS.strip("\n"))
 
-    # main tables, in the order the journal expects (after figure legends)
-    tlines = ["## Tables\n"]
-    for roman in TABLE_ORDER:
-        if TABLE_MAP[roman][1] != "main":
-            continue
-        cap, rows = table_blocks[roman]
-        tlines.append("**TABLE %s. %s**\n" % (roman, cap))
-        tlines.append("\n".join(rows))
-        tlines.append("")
-    doc.append("\n".join(tlines).strip("\n"))
-
     out = "\n\n---\n\n".join(doc) + "\n"
 
     # --- attach the label markers and refuse to emit an unlabelled heading
@@ -365,10 +392,22 @@ def main():
     print("wrote %s" % DST_SI)
     print("title words          :", len(TITLE.split()))
     print("abstract words       :", plain)
-    print("main tables          :", sum(1 for r in TABLE_ORDER if TABLE_MAP[r][1] == "main"))
-    print("supplementary tables :", sum(1 for r in TABLE_ORDER if TABLE_MAP[r][1] == "si"))
-    main = sum(len(re.findall(r"[A-Za-z][A-Za-z'-]*", b)) for b in
-               [intro, rel, results, disc])
+    print("main tables (inline) :", len(re.findall(r"(?m)^\*\*TABLE [IVX]+\.", out)))
+    print("supplementary tables :", len(table_blocks))
+    body_only = out.split("## References")[0]
+    main_labels = ["tab:srbench", "tab:conventions", "tab:effect", "tab:practice",
+                   "tab:gains", "tab:scorecard", "fig:1", "fig:2"]
+    missing = [l for l in main_labels if ("\\ref{%s}" % l) not in body_only]
+    print("display items with no in-text call-out:", missing or "none")
+    # display items are not prose, so table rows and caption lines are excluded
+    def prose(s):
+        keep = [l for l in s.split("\n")
+                if not l.strip().startswith("|")
+                and not re.match(r"^\*\*(TABLE|Fig\.)", l.strip())]
+        return " ".join(keep)
+
+    main = sum(len(re.findall(r"[A-Za-z][A-Za-z'-]*", prose(b)))
+               for b in [intro, rel, results, disc])
     print("approx main text     :", main, "(Methods excluded, target <= 4500)")
     left = re.findall(r"Section [IVX]+|Table [IVX]+", out)
     print("unconverted xrefs    :", sorted(set(left)) if left else "none")
