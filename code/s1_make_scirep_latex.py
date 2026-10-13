@@ -48,8 +48,12 @@ TAB_LABEL = {"I": "srbench", "II": "lines", "III": "conventions", "IV": "effect"
              "V": "seednoise", "VI": "anchor", "VII": "practice",
              "VIII": "gains", "IX": "scorecard"}
 
-BACK = ["Acknowledgements", "Author contributions", "Data availability",
-        "Additional Information"]
+# Recognised back-matter headings. The Data Availability Statement closes the
+# main text, ahead of the reference list; the rest follow the references.
+BACK = ["Data availability", "Author contributions", "Additional Information",
+        "Acknowledgements"]
+BACK_PRE_REFS = ["Data availability"]
+BACK_POST_REFS = ["Author contributions", "Additional Information", "Acknowledgements"]
 
 # ----------------------------------------------------------------- escaping
 PIPE = "\x00P"
@@ -393,10 +397,13 @@ def render(md_path, tex_path, supplementary=False):
                    "\\renewcommand{\\thetable}{S\\arabic{table}}\n"
                    "\\maketitle\n")
     doc.append("\n\n".join(body))
+    for name in BACK_PRE_REFS:
+        if name in back:
+            doc.append("\\bmhead{%s}\n\n%s" % (conv(name, False), back[name]))
     if refs:
         doc.append("\\begin{thebibliography}{99}\n" + "\n".join(refs)
                    + "\n\\end{thebibliography}")
-    for name in BACK:
+    for name in BACK_POST_REFS:
         if name in back:
             doc.append("\\bmhead{%s}\n\n%s" % (conv(name, False), back[name]))
     doc.append("\\end{document}")

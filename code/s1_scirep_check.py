@@ -100,6 +100,12 @@ def main():
                  "## Additional Information", "## Acknowledgements"]:
         check("backmatter_%s" % want.split(" ", 1)[1].replace(" ", "_"), want in md)
 
+    # the checklist places the data availability statement before the references
+    check("data_availability_before_references",
+          md.find("## Data availability") < md.find("## References"),
+          "data availability at %d, references at %d"
+          % (md.find("## Data availability"), md.find("## References")))
+
     # a Results section must carry subheadings; Methods must carry the coding
     check("results_has_subheads",
           len(re.findall(r"(?m)^### [A-Z]\. ", md.split("## 3. Results")[1]

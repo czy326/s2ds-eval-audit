@@ -412,6 +412,18 @@ Four of the 35 items are not standalone published articles, namely one duplicate
 
 ---
 
+---
+
+## Data availability
+
+The audit code, the per-image evaluation records for all 170 runs, every result file, and both figures are available at `https://github.com/czy326/s2ds-eval-audit`. The repository is self-contained. Running `code/run_audit_chain.py` regenerates the audit result files from the shipped per-image records, and the regenerated files are identical to the shipped ones. The chain includes the anchor in the reproducibility check, which reproduces a known result before any negative finding is reported.
+
+The four benchmark datasets (AID, RSSCN7, UCMerced, WHU-RS19) are public and are not redistributed, because the audit reads only stored metric values and image path strings, not pixels. Publisher PDFs and HTML retrieved during the 35-paper survey are not redistributed, because most are copyrighted. The derived codings are shipped in the repository, and an index recording which source files were read is included so the codings can be checked.
+
+The reference list is shipped with the repository. Every bibliographic field is copied from a Crossref, arXiv or OpenAlex record, and the source is named for each entry. Eight entries could not be completed and are flagged. One of those eight is the case in which the DOI carried in the survey pool resolved at Crossref to a paper with an unrelated title. The true record was recovered by querying Crossref with the publisher's article identifier as an alternative-id.
+
+---
+
 ## References
 
 [1] L. Liu, H. Duan, C. Zhu, et al., "LL-Bench: Rethinking Low-Level Vision Evaluation in the Era of Large-Scale Generative Models," arXiv:2606.02535, 2026.
@@ -443,16 +455,6 @@ Four of the 35 items are not standalone published articles, namely one duplicate
 ## Author contributions
 
 Z.C. designed the audit, wrote the analysis code, ran all computations, and wrote the manuscript. D.L. supervised the study, defined the statistical evaluation protocol, and revised the manuscript. Z.L. assembled the survey corpus, verified the bibliographic records, and revised the manuscript. All authors reviewed and approved the final manuscript.
-
----
-
-## Data availability
-
-The audit code, the per-image evaluation records for all 170 runs, every result file, and both figures are available at `https://github.com/czy326/s2ds-eval-audit`. The repository is self-contained. Running `code/run_audit_chain.py` regenerates the audit result files from the shipped per-image records, and the regenerated files are identical to the shipped ones. The chain includes the anchor in the reproducibility check, which reproduces a known result before any negative finding is reported.
-
-The four benchmark datasets (AID, RSSCN7, UCMerced, WHU-RS19) are public and are not redistributed, because the audit reads only stored metric values and image path strings, not pixels. Publisher PDFs and HTML retrieved during the 35-paper survey are not redistributed, because most are copyrighted. The derived codings are shipped in the repository, and an index recording which source files were read is included so the codings can be checked.
-
-The reference list is shipped with the repository. Every bibliographic field is copied from a Crossref, arXiv or OpenAlex record, and the source is named for each entry. Eight entries could not be completed and are flagged. One of those eight is the case in which the DOI carried in the survey pool resolved at Crossref to a paper with an unrelated title. The true record was recovered by querying Crossref with the publisher's article identifier as an alternative-id.
 
 ---
 

@@ -1,0 +1,80 @@
+\documentclass[11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{xcolor}
+\usepackage{parskip}
+\pagestyle{plain}
+
+\begin{document}
+\begin{center}{\large\bfseries Cover letter}\end{center}
+
+\textbf{To:} The Editors, *Scientific Reports*
+
+\textbf{Manuscript title:} Evaluation protocol choices, not method quality, decide the ranking in remote sensing super-resolution benchmarks
+
+\textbf{Article type:} Article
+
+\textbf{Corresponding author:} Dawei Liu
+
+Engineering University of PAP, Xi'an 710086, China
+
+wjmicheal@163.com
+
+\textbf{Authors:} Zhengyang Chen (1250368357@qq.com), Dawei Liu, Zhiheng Liu (liuzhiheng@xidian.edu.cn)
+
+\medskip\hrule\medskip
+
+\medskip\noindent\textbf{Why this work suits Scientific Reports}
+
+This manuscript reports a measurement, not a new model. We ask how much a published method ranking moves when the evaluation protocol around a fixed metric is allowed to vary, and we answer it by re-reading per-image evaluation artifacts that already exist. Nothing is trained. The finding is that the protocol, and not the methods, often decides who is ranked first.
+
+Scientific Reports assesses submissions on whether the work is scientifically valid and methodologically sound rather than on its predicted impact. That is the standard this study was designed against. The paper is a negative and corrective result, and it depends for its value on being fully reconstructable, so every artifact is released.
+
+\medskip\noindent\textbf{What we did}
+
+We audited 170 existing runs across four standard remote sensing super-resolution benchmarks, using stored per-image records and no additional training.
+
+\begin{enumerate}
+\item A path-level check confirms that every run within a benchmark evaluates an identical image set, so the instability we report is not a data-engineering artefact.
+\item Changing only the aggregation rule flips the top-ranked method on all four benchmarks.
+\item Across 327 method pairs, 25.4\% reverse sign between training seeds, and 52.6\% have an effect smaller than the reference method's seed-to-seed standard deviation, whose median is 0.088 dB against method effects of 0.018 to 0.039 dB.
+\item A survey of 35 papers from 2026, with 18 full texts retrieved, finds that 7 state a verifiable dB gain, that no abstract mentions seeds, variance, or statistical testing, and that 4 disclose seed counts in the body.
+\item The audit pipeline is anchored to a published result, which it reproduces to the digit before any negative finding is reported.
+\end{enumerate}
+
+We also state where the study is limited. The survey reports what the retrieved texts say, and a field that is absent from an abstract is not thereby absent from the paper. That distinction is carried through the reporting rather than set aside.
+
+\medskip\noindent\textbf{Code and data}
+
+The audit code, the per-image records for all 170 runs, every result file and both figures are available at https://github.com/czy326/s2ds-eval-audit. Running \textbackslash{}texttt{code/run\textbackslash{}\_audit\textbackslash{}\_chain.py} regenerates the result files from the shipped records, and the regenerated files are identical to the shipped ones.
+
+\medskip\noindent\textbf{Statements}
+
+The manuscript is original, has not been published previously, and is not under consideration elsewhere. All authors have approved the submission and declare no competing interests. This work was supported by the National Natural Science Foundation of China under Grant 42502302.
+
+We have had no prior discussion about this work with any Editorial Board Member of Scientific Reports.
+
+\medskip\noindent\textbf{Suggested reviewers}
+
+The following researchers work on evaluation methodology for low-level vision and on remote sensing image restoration. None has collaborated with the authors.
+
+\begin{enumerate}
+\item \texttt{\textbackslash{}textcolor{red}{[FILL: name, affiliation, e-mail]}}
+\item \texttt{\textbackslash{}textcolor{red}{[FILL: name, affiliation, e-mail]}}
+\item \texttt{\textbackslash{}textcolor{red}{[FILL: name, affiliation, e-mail]}}
+\end{enumerate}
+
+We request that no reviewer be excluded.
+
+\medskip\hrule\medskip
+
+Sincerely,
+
+Dawei Liu, on behalf of all authors
+
+Engineering University of PAP, Xi'an 710086, China
+
+wjmicheal@163.com
+
+\end{document}

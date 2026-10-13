@@ -142,13 +142,9 @@ TABLE_MAP = {
 # old TABLE heading -> new heading (label, destination, caption kept)
 TABLE_ORDER = ["I", "III", "IV", "VII", "VIII", "IX", "II", "V", "VI"]
 
-DECLARATIONS = """
----
-
-## Author contributions
-
-Z.C. designed the audit, wrote the analysis code, ran all computations, and wrote the manuscript. D.L. supervised the study, defined the statistical evaluation protocol, and revised the manuscript. Z.L. assembled the survey corpus, verified the bibliographic records, and revised the manuscript. All authors reviewed and approved the final manuscript.
-
+# The Data Availability Statement belongs at the end of the main text, before
+# the reference list. The remaining statements go after the references.
+DECL_PRE = """
 ---
 
 ## Data availability
@@ -158,6 +154,14 @@ The audit code, the per-image evaluation records for all 170 runs, every result 
 The four benchmark datasets (AID, RSSCN7, UCMerced, WHU-RS19) are public and are not redistributed, because the audit reads only stored metric values and image path strings, not pixels. Publisher PDFs and HTML retrieved during the 35-paper survey are not redistributed, because most are copyrighted. The derived codings are shipped in the repository, and an index recording which source files were read is included so the codings can be checked.
 
 The reference list is shipped with the repository. Every bibliographic field is copied from a Crossref, arXiv or OpenAlex record, and the source is named for each entry. Eight entries could not be completed and are flagged. One of those eight is the case in which the DOI carried in the survey pool resolved at Crossref to a paper with an unrelated title. The true record was recovered by querying Crossref with the publisher's article identifier as an alternative-id.
+"""
+
+DECL_POST = """
+---
+
+## Author contributions
+
+Z.C. designed the audit, wrote the analysis code, ran all computations, and wrote the manuscript. D.L. supervised the study, defined the statistical evaluation protocol, and revised the manuscript. Z.L. assembled the survey corpus, verified the bibliographic records, and revised the manuscript. All authors reviewed and approved the final manuscript.
 
 ---
 
@@ -342,10 +346,13 @@ def main():
            "**Keywords**\u2014%s\n" % KEYWORDS,
            intro, rel, results, disc, meth]
 
-    # references, verbatim from the source
+    # the data availability statement closes the main text, ahead of the
+    # reference list, as the journal's submission checklist requires
+    doc.append(DECL_PRE.strip("\n"))
+
     doc.append("## References\n\n%s" % sec["References"].strip("\n"))
 
-    doc.append(DECLARATIONS.strip("\n"))
+    doc.append(DECL_POST.strip("\n"))
 
     out = "\n\n---\n\n".join(doc) + "\n"
 

@@ -456,6 +456,16 @@ We retrieved full texts for 18 of the 35 papers, using the publisher's open-acce
 
 Four of the 35 items are not standalone published articles, namely one duplicate record, one competition leaderboard, and two entries whose only source was a non-peer-reviewed page. Every percentage in this section is reported against the full 35-item sample. A reader who prefers a denominator restricted to published articles should divide by 31 instead, and the item-by-item composition is recorded in the data repository.
 
+\bmhead{Data availability}
+
+The audit code, the per-image evaluation records for all 170 runs, every result file, and both figures are available at \texttt{https://github.com/czy326/s2ds-eval-audit}. The repository is self-contained. Running \texttt{code/run\_\allowbreak audit\_\allowbreak chain.py} regenerates the audit result files from the shipped per-image records, and the regenerated files are identical to the shipped ones. The chain includes the anchor in the reproducibility check, which reproduces a known result before any negative finding is reported.
+
+The four benchmark datasets (AID, RSSCN7, UCMerced, WHU-RS19) are public and are not redistributed, because the audit reads only stored metric values and image path strings, not pixels. Publisher PDFs and HTML retrieved during the 35-paper survey are not redistributed, because most are copyrighted. The derived codings are shipped in the repository, and an index recording which source files were read is included so the codings can be checked.
+
+The reference list is shipped with the repository. Every bibliographic field is copied from a Crossref, arXiv or OpenAlex record, and the source is named for each entry. Eight entries could not be completed and are flagged. One of those eight is the case in which the DOI carried in the survey pool resolved at Crossref to a paper with an unrelated title. The true record was recovered by querying Crossref with the publisher's article identifier as an alternative-id.
+
+---
+
 \begin{thebibliography}{99}
 \bibitem{ref1}
 L. Liu, H. Duan, C. Zhu, et al., "LL-Bench: Rethinking Low-Level Vision Evaluation in the Era of Large-Scale Generative Models," arXiv:2606.02535, 2026.
@@ -497,23 +507,9 @@ Q. Zhang, S. Ma, Y. Tang, and L. Zheng, "Cross-domain continuous-scale remote se
 L. Wang, L. Liu, Q. Yu, and D. Yuan, "Generative adversarial network-based super-resolution reconstruction of remote sensing images," Sci. Rep., vol. 16, no. 1, art. 11971, 2026, doi: 10.1038/s41598-026-41832-5.
 \end{thebibliography}
 
-\bmhead{Acknowledgements}
-
-The authors thank the maintainers of the AID, RSSCN7, UCMerced, and WHU-RS19 benchmarks, whose public release made this audit possible. The audit uses only released per-image evaluation artifacts and no restricted data. This work was supported by the National Natural Science Foundation of China under Grant 42502302.
-
 \bmhead{Author contributions}
 
 Z.C. designed the audit, wrote the analysis code, ran all computations, and wrote the manuscript. D.L. supervised the study, defined the statistical evaluation protocol, and revised the manuscript. Z.L. assembled the survey corpus, verified the bibliographic records, and revised the manuscript. All authors reviewed and approved the final manuscript.
-
----
-
-\bmhead{Data availability}
-
-The audit code, the per-image evaluation records for all 170 runs, every result file, and both figures are available at \texttt{https://github.com/czy326/s2ds-eval-audit}. The repository is self-contained. Running \texttt{code/run\_\allowbreak audit\_\allowbreak chain.py} regenerates the audit result files from the shipped per-image records, and the regenerated files are identical to the shipped ones. The chain includes the anchor in the reproducibility check, which reproduces a known result before any negative finding is reported.
-
-The four benchmark datasets (AID, RSSCN7, UCMerced, WHU-RS19) are public and are not redistributed, because the audit reads only stored metric values and image path strings, not pixels. Publisher PDFs and HTML retrieved during the 35-paper survey are not redistributed, because most are copyrighted. The derived codings are shipped in the repository, and an index recording which source files were read is included so the codings can be checked.
-
-The reference list is shipped with the repository. Every bibliographic field is copied from a Crossref, arXiv or OpenAlex record, and the source is named for each entry. Eight entries could not be completed and are flagged. One of those eight is the case in which the DOI carried in the survey pool resolved at Crossref to a paper with an unrelated title. The true record was recovered by querying Crossref with the publisher's article identifier as an alternative-id.
 
 ---
 
@@ -522,5 +518,9 @@ The reference list is shipped with the repository. Every bibliographic field is 
 \textbf{Competing interests.} The authors declare no competing interests.
 
 ---
+
+\bmhead{Acknowledgements}
+
+The authors thank the maintainers of the AID, RSSCN7, UCMerced, and WHU-RS19 benchmarks, whose public release made this audit possible. The audit uses only released per-image evaluation artifacts and no restricted data. This work was supported by the National Natural Science Foundation of China under Grant 42502302.
 
 \end{document}
