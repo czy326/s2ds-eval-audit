@@ -42,7 +42,7 @@ DST_MD = os.path.join(OUT, "P0S1_IJRS_v1.md")
 DST_TEX = os.path.join(OUT, "P0S1_IJRS_v1.tex")
 
 FIG_FILES = {1: "fig1_noise_vs_testsize.pdf", 2: "fig2_effect_vs_noise.pdf"}
-FIG_WIDTH = r"0.6\textwidth"
+FIG_WIDTH = r"0.55\textwidth"
 TAB_LABEL = {"I": "srbench", "II": "lines", "III": "conventions", "IV": "effect",
              "V": "seednoise", "VI": "anchor", "VII": "practice",
              "VIII": "gains", "IX": "scorecard"}
@@ -206,6 +206,13 @@ PREAMBLE = r"""\documentclass{interact}
 \bibpunct{(}{)}{;}{a}{}{,}
 \graphicspath{{figures/}{../figures/}}
 \newlength{\tblavail}
+%% Floats may take a page top or a float page, never a page bottom: bottom
+%% placement let a figure and a table collide, which drew the figure outside the
+%% text block. The publisher redoes the page make-up at typesetting anyway.
+\usepackage{float}
+%% Tighten the reference list: the class default of 1em between 19 entries
+%% spills a few lines onto a nearly empty final page.
+\setlength{\bibsep}{0.35em}
 
 \begin{document}
 
@@ -213,12 +220,14 @@ PREAMBLE = r"""\documentclass{interact}
 
 \title{@@TITLE@@}
 
+%% AUTHOR-BEGIN
 \author{\name{Zhengyang Chen\textsuperscript{a}\thanks{ORCID: 0009-0003-3310-8077}
   and Dawei Liu\textsuperscript{a}\thanks{*CONTACT Dawei Liu. Email: wjmicheal@163.com}
   and Zhiheng Liu\textsuperscript{b}}
 \affil{\textsuperscript{a}Engineering University of PAP, Xi'an 710086, China;
   \textsuperscript{b}Institute of Earth Environment, Chinese Academy of Sciences,
   Xi'an 710061, China}}
+%% AUTHOR-END
 
 \maketitle
 
@@ -253,7 +262,7 @@ def build_table(roman, caption, header, body):
     else:
         spec = "l" + "c" * (ncol - 1)
     lab = TAB_LABEL.get(roman, roman.lower())
-    lines = ["\\begin{table}[htbp]", r"\centering", r"\small",
+    lines = ["\\begin{table}[tbp]", r"\centering", r"\footnotesize",
              r"\setlength{\tabcolsep}{3pt}",
              r"\setlength{\tblavail}{\dimexpr\textwidth-%d\tabcolsep\relax}" % (2 * ncol),
              r"\begin{tabular}{%s}" % spec, r"\hline",
@@ -430,7 +439,7 @@ def main():
         if m:
             num = int(m.group(1))
             tex.append("\n".join([
-                "\\begin{figure}[htbp]", r"\centering",
+                "\\begin{figure}[tbp]", r"\centering",
                 r"\includegraphics[width=%s]{%s}" % (FIG_WIDTH,
                                                      FIG_FILES.get(num, "fig%d.pdf" % num)),
                 r"\caption{%s}" % conv(smart_quotes(m.group(2)), False),

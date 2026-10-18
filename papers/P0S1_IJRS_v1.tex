@@ -9,6 +9,13 @@
 \bibpunct{(}{)}{;}{a}{}{,}
 \graphicspath{{figures/}{../figures/}}
 \newlength{\tblavail}
+%% Floats may take a page top or a float page, never a page bottom: bottom
+%% placement let a figure and a table collide, which drew the figure outside the
+%% text block. The publisher redoes the page make-up at typesetting anyway.
+\usepackage{float}
+%% Tighten the reference list: the class default of 1em between 19 entries
+%% spills a few lines onto a nearly empty final page.
+\setlength{\bibsep}{0.35em}
 
 \begin{document}
 
@@ -16,12 +23,14 @@
 
 \title{Protocol choices rival method differences in an audit of 170 remote sensing super-resolution runs}
 
+%% AUTHOR-BEGIN
 \author{\name{Zhengyang Chen\textsuperscript{a}\thanks{ORCID: 0009-0003-3310-8077}
   and Dawei Liu\textsuperscript{a}\thanks{*CONTACT Dawei Liu. Email: wjmicheal@163.com}
   and Zhiheng Liu\textsuperscript{b}}
 \affil{\textsuperscript{a}Engineering University of PAP, Xi'an 710086, China;
   \textsuperscript{b}Institute of Earth Environment, Chinese Academy of Sciences,
   Xi'an 710061, China}}
+%% AUTHOR-END
 
 \maketitle
 
@@ -52,9 +61,9 @@ The stakes are higher in remote sensing than in generic image restoration, for t
 
 We begin with a case that requires no reproduction on our part. SpectralSR-Bench (Sensors, 2026) is the only paper in our sample that reports \texttt{mean $\pm$ std} in every table. On disclosure practice it belongs to the best tier we found. Its own reported numbers, however, show that in 8 of 10 adjacent method comparisons the difference in mean PSNR is smaller than the reported per-image standard deviation (Table\textasciitilde{}\ref{tab:srbench}).
 
-\begin{table}[htbp]
+\begin{table}[tbp]
 \centering
-\small
+\footnotesize
 \setlength{\tabcolsep}{3pt}
 \setlength{\tblavail}{\dimexpr\textwidth-10\tabcolsep\relax}
 \begin{tabular}{lcccc}
@@ -184,9 +193,9 @@ The instability reported below is not a test-set artifact. Whatever moves a rank
 
 \subsection{Line B: aggregation reorders the ranking}\label{sec:champion}
 
-\begin{table}[htbp]
+\begin{table}[tbp]
 \centering
-\small
+\footnotesize
 \setlength{\tabcolsep}{3pt}
 \setlength{\tblavail}{\dimexpr\textwidth-10\tabcolsep\relax}
 \begin{tabular}{lcccc}
@@ -232,9 +241,9 @@ The symmetric definition compares the effect against the larger of the two seed 
 
 Two conventions govern these denominators, and both matter more than they look. A pair whose two methods share only one seed cannot reverse, so it is excluded from the reversal count rather than scored as consistent, which leaves 243 of the 327 pairs. A pair without a defined reference standard deviation cannot be compared with the noise, so it is excluded from that count rather than scored as not below the noise. Scoring an unassessable pair as a null result would bias both percentages downward, which is the reporting failure this paper is about. The 327 pairs are also not independent, because each method enters many of them, so a binomial interval over 327 would be too narrow. We give 95\% intervals from a cluster bootstrap that resamples methods within each benchmark and weights every pair by the product of its endpoints' multiplicities: 34.2\% of pairs reverse, interval 20.9\% to 49.4\%, and 65.4\% fall below the reference noise, interval 49.3\% to 81.9\%.
 
-\begin{table}[htbp]
+\begin{table}[tbp]
 \centering
-\small
+\footnotesize
 \setlength{\tabcolsep}{3pt}
 \setlength{\tblavail}{\dimexpr\textwidth-4\tabcolsep\relax}
 \begin{tabular}{p{0.640\tblavail}p{0.330\tblavail}}
@@ -259,9 +268,9 @@ The seed noise is two to five times the size of the method effect it is supposed
 
 The per-benchmark noise, reported in Supplementary Table S2, follows the test-set size. WHU-RS19, at 101 images, has the largest noise and, at 47.3\%, the highest reversal rate, with 80\% of its pairs falling below the noise. AID, at 1000 images, has the smallest noise. The ordering is monotone in test-set size, with one inversion between AID and RSSCN7 that we attribute to the differing content heterogeneity of the two benchmarks rather than to size alone. Fig.\textasciitilde{}\ref{fig:1} shows this relation.
 
-\begin{figure}[htbp]
+\begin{figure}[tbp]
 \centering
-\includegraphics[width=0.6\textwidth]{fig1_noise_vs_testsize.pdf}
+\includegraphics[width=0.55\textwidth]{fig1_noise_vs_testsize.pdf}
 \caption{Seed noise against test-set size.}
 \label{fig:1}
 \end{figure}
@@ -270,9 +279,9 @@ The horizontal axis is the number of test images on a logarithmic scale and the 
 
 The practical implication is direct. The headline convention in RS-SR, stating that a method exceeds the previous best by 0.1 dB, sits inside the noise band on small benchmarks. On WHU-RS19, a 0.1 dB claim is below the median seed variation. Fig.\textasciitilde{}\ref{fig:2} shows all 327 pairs.
 
-\begin{figure}[htbp]
+\begin{figure}[tbp]
 \centering
-\includegraphics[width=0.6\textwidth]{fig2_effect_vs_noise.pdf}
+\includegraphics[width=0.55\textwidth]{fig2_effect_vs_noise.pdf}
 \caption{Method effect against seed noise, for all 327 pairs.}
 \label{fig:2}
 \end{figure}
@@ -289,9 +298,9 @@ The pipeline reproduces both published figures exactly. It also shows that chang
 
 Table\textasciitilde{}\ref{tab:practice} reports the full breakdown.
 
-\begin{table}[htbp]
+\begin{table}[tbp]
 \centering
-\small
+\footnotesize
 \setlength{\tabcolsep}{3pt}
 \setlength{\tblavail}{\dimexpr\textwidth-4\tabcolsep\relax}
 \begin{tabular}{p{0.676\tblavail}p{0.294\tblavail}}
@@ -332,9 +341,9 @@ The count of papers that do not report a field is bounded above by the number of
 
 For the 7 papers that state a verifiable dB gain, we compare the claimed effect to the seed noise measured on the same benchmark in Section\textasciitilde{}\ref{sec:noise}. Where the paper's benchmark is outside our pool, we fall back to the pool-wide median and mark the fallback. Table\textasciitilde{}\ref{tab:gains} lists the seven claims against the noise floor of their own benchmarks.
 
-\begin{table}[htbp]
+\begin{table}[tbp]
 \centering
-\small
+\footnotesize
 \setlength{\tabcolsep}{3pt}
 \setlength{\tblavail}{\dimexpr\textwidth-10\tabcolsep\relax}
 \begin{tabular}{p{0.384\tblavail}p{0.141\tblavail}p{0.202\tblavail}p{0.081\tblavail}p{0.162\tblavail}}
@@ -389,9 +398,9 @@ The implication extends past our survey. A third party cannot perform a reproduc
 
 The audit findings reduce to seven checks. Each check names a disclosure whose absence produces a specific failure. Table\textasciitilde{}\ref{tab:scorecard} states each check and the failure its omission produces.
 
-\begin{table}[htbp]
+\begin{table}[tbp]
 \centering
-\small
+\footnotesize
 \setlength{\tabcolsep}{3pt}
 \setlength{\tblavail}{\dimexpr\textwidth-8\tabcolsep\relax}
 \begin{tabular}{p{0.038\tblavail}p{0.384\tblavail}p{0.321\tblavail}p{0.227\tblavail}}
