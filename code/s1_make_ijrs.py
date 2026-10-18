@@ -136,17 +136,25 @@ def chicago(body):
     years = re.findall(r"\b(20\d\d)\b", stripped)
     year = int(years[-1]) if years else 0
 
-    # invert only the first author: "L. Liu" -> "Liu, L."
-    parts = [p.strip() for p in authors_raw.split(",") if p.strip()]
+    # invert only the first author: "L. Liu" -> "Liu, L.". Two-author lists are
+    # joined by "and", which must be split as well or the surname comes from the
+    # last author instead of the first.
+    raw = re.sub(r"\s+and\s+", ", ", authors_raw)
+    parts = [p.strip() for p in raw.split(",") if p.strip()]
     first = parts[0]
     toks = first.split()
     if len(toks) >= 2:
         parts[0] = "%s, %s" % (toks[-1], " ".join(toks[:-1]))
-    authors = ", ".join(parts)
+    # Chicago joins the last author with "and", except before "et al."
+    if len(parts) > 1 and not parts[-1].lower().startswith("et al"):
+        authors = "%s, and %s" % (", ".join(parts[:-1]), parts[-1])
+    else:
+        authors = ", ".join(parts)
 
     # split title and venue
     m = re.match(r'^"(.+?)"\s*,?\s*(.*)$', rest, re.S)
     title, venue = (m.group(1), m.group(2).strip()) if m else (rest, "")
+    title = title.rstrip(", ")
 
     # compact the venue towards Chicago
     venue = re.sub(r"\bvol\.\s*(\d+)", r"\1", venue)
@@ -154,7 +162,18 @@ def chicago(body):
     venue = re.sub(r"\bart\.\s*", r"", venue)
     venue = re.sub(r"\bpp\.\s*", r"", venue)
     venue = re.sub(r"\s*,\s*doi:\s*", ". doi:", venue)
-    venue = venue.rstrip(".").rstrip(",")
+    # the year is reported separately, so it must not survive inside the venue.
+    # In conference entries it sits between the proceedings title and the pages,
+    # so it is removed wherever it occurs, not just at the end.
+    if year:
+        venue = re.sub(r",\s*\b%d\b" % year, "", venue)
+        venue = re.sub(r",?\s*\b%d\b\s*\.?\s*$" % year, "", venue)
+    venue = re.sub(r"^[\s,]+", "", venue).rstrip(",. ")
+    # volume (issue): pages, rather than "51, (2), 818-832"
+    venue = re.sub(r",\s*\(", " (", venue)
+    venue = re.sub(r"\)\s*,\s*", "): ", venue)
+    if venue and venue[0].islower() and not venue.startswith("arXiv"):
+        venue = venue[0].upper() + venue[1:]
 
     tail = (" " + venue) if venue else ""
     punct = "" if authors.endswith(".") else "."
@@ -302,6 +321,82 @@ DECLS = [
 ]
 
 
+# Twelve references added on top of the survey corpus. Each is resolved against
+# a Crossref or arXiv record, not from memory: the four benchmarks the audit
+# reads, the architecture lineage the pool draws on, and the statistical
+# reporting literature the paper's argument depends on.
+EXTRA_REFS = [
+    "G. S. Xia, J. Hu, F. Hu, et al., \"AID: A Benchmark Data Set for Performance "
+    "Evaluation of Aerial Scene Classification,\" IEEE Trans. Geosci. Remote Sens., "
+    "vol. 55, no. 7, pp. 3965-3981, 2017, doi: 10.1109/TGRS.2017.2685945.",
+
+    "Q. Zou, L. Ni, T. Zhang, et al., \"Deep Learning Based Feature Selection for "
+    "Remote Sensing Scene Classification,\" IEEE Geosci. Remote Sens. Lett., vol. 12, "
+    "no. 11, pp. 2321-2325, 2015, doi: 10.1109/LGRS.2015.2475299.",
+
+    "Y. Yang and S. Newsam, \"Geographic Image Retrieval Using Local Invariant "
+    "Features,\" IEEE Trans. Geosci. Remote Sens., vol. 51, no. 2, pp. 818-832, 2013, "
+    "doi: 10.1109/TGRS.2012.2205158.",
+
+    "D. Dai and W. Yang, \"Satellite Image Classification via Two-Layer Sparse Coding "
+    "With Biased Image Representation,\" IEEE Geosci. Remote Sens. Lett., vol. 8, "
+    "no. 1, pp. 173-176, 2011, doi: 10.1109/LGRS.2010.2055033.",
+
+    "C. Dong, C. C. Loy, K. He, and X. Tang, \"Image Super-Resolution Using Deep "
+    "Convolutional Networks,\" IEEE Trans. Pattern Anal. Mach. Intell., vol. 38, "
+    "no. 2, pp. 295-307, 2016, doi: 10.1109/TPAMI.2015.2439281.",
+
+    "B. Lim, S. Son, H. Kim, S. Nah, and K. M. Lee, \"Enhanced Deep Residual Networks "
+    "for Single Image Super-Resolution,\" in Proc. IEEE Conf. Comput. Vis. Pattern "
+    "Recognit. Workshops, 2017, pp. 1132-1140, doi: 10.1109/CVPRW.2017.151.",
+
+    "Y. Zhang, K. Li, K. Li, L. Wang, B. Zhong, and Y. Fu, \"Image Super-Resolution "
+    "Using Very Deep Residual Channel Attention Networks,\" in Proc. Eur. Conf. "
+    "Comput. Vis., 2018, pp. 294-310, doi: 10.1007/978-3-030-01234-2_18.",
+
+    "J. Liang, J. Cao, G. Sun, K. Zhang, L. Van Gool, and R. Timofte, \"SwinIR: Image "
+    "Restoration Using Swin Transformer,\" in Proc. IEEE/CVF Int. Conf. Comput. Vis. "
+    "Workshops, 2021, pp. 1833-1844, doi: 10.1109/ICCVW54120.2021.00210.",
+
+    "Z. Wang, A. C. Bovik, H. R. Sheikh, and E. P. Simoncelli, \"Image Quality "
+    "Assessment: From Error Visibility to Structural Similarity,\" IEEE Trans. Image "
+    "Process., vol. 13, no. 4, pp. 600-612, 2004, doi: 10.1109/TIP.2003.819861.",
+
+    "Y. Blau and T. Michaeli, \"The Perception-Distortion Tradeoff,\" in Proc. "
+    "IEEE/CVF Conf. Comput. Vis. Pattern Recognit., 2018, pp. 6228-6237, "
+    "doi: 10.1109/CVPR.2018.00652.",
+
+    "N. Reimers and I. Gurevych, \"Reporting Score Distributions Makes a Difference: "
+    "Performance Study of LSTM-Networks for Sequence Tagging,\" in Proc. Conf. "
+    "Empirical Methods Natural Lang. Process., 2017, pp. 338-348, "
+    "doi: 10.18653/v1/D17-1035.",
+
+    "X. Bouthillier, P. Delaunay, M. Bronzi, et al., \"Accounting for Variance in "
+    "Machine Learning Benchmarks,\" arXiv:2103.03098, 2021.",
+]
+
+# Each anchor must occur exactly once, so a wording change upstream cannot leave
+# a reference uncited without failing the build.
+CITE_INSERTS = [
+    ("correspond to what a human would see.",
+     "correspond to what a human would see \\citep{wang2004,blau2018}."),
+
+    ("have established reporting conventions, namely report effect sizes",
+     "have established reporting conventions \\citep{reimers2017,bouthillier2021}, "
+     "namely report effect sizes"),
+
+    ("and WHU-RS19 (36). Ten further runs",
+     "and WHU-RS19 (36) \\citep{xia2017,zou2015,yang2013,dai2011}. Ten further runs"),
+
+    ("a small residual-channel-attention network, and a 32-channel "
+     "feature-enhancement network.",
+     "a small residual-channel-attention network \\citep{zhang2018}, and a 32-channel "
+     "feature-enhancement network. The lineage these draw on runs from SRCNN "
+     "\\citep{dong2016} through EDSR \\citep{lim2017} and RCAN to transformer models "
+     "such as SwinIR \\citep{liang2021}."),
+]
+
+
 def tighten_limitations(text):
     """Fold the three citation-boundary notes into one item.
 
@@ -375,7 +470,9 @@ def main():
     kwline = next((l for l in sec.get("Keywords", []) if l.strip()), "")
     keywords = re.split("[\u2014\u2013]", kwline, maxsplit=1)[-1].strip().rstrip(".")
 
-    refs = build_references(sec.get("References", []))
+    ref_lines = list(sec.get("References", []))
+    ref_lines += ["[%d] %s" % (900 + i, s) for i, s in enumerate(EXTRA_REFS)]
+    refs = build_references(ref_lines)
     n_refs = len(refs)
 
     # data availability text is carried over; acknowledgements regenerate
@@ -397,6 +494,12 @@ def main():
         chunks.append("## %s {@%s@}\n%s" % (new, lab, body.strip("\n")))
 
     body_all = "\n\n".join(chunks)
+
+    for anchor, repl in CITE_INSERTS:
+        if body_all.count(anchor) != 1:
+            raise SystemExit("citation anchor matched %d times: %r"
+                             % (body_all.count(anchor), anchor[:60]))
+        body_all = body_all.replace(anchor, repl, 1)
 
     body_all = tighten_limitations(body_all)
 
@@ -535,7 +638,8 @@ def main():
     print("word count    :", n_words)
     print("references    :", n_refs, "| keys unique:",
           len({r["key"] for r in refs}) == n_refs)
-    cites = set(re.findall(r"\\citep\{([^}]+)\}", body_all))
+    cites = {k.strip() for grp in re.findall(r"\\citep\{([^}]+)\}", body_all)
+             for k in grp.split(",")}
     keys = {r["key"] for r in refs}
     print("citations     :", len(re.findall(r"\\citep\{", body_all)),
           "| undefined:", sorted(cites - keys) or "none",

@@ -20,7 +20,7 @@ Remote sensing super-resolution papers routinely advertise gains as a single num
 
 ---
 
-**Word count:** 6181 (main text, excluding abstract, references and declarations)
+**Word count:** 6218 (main text, excluding abstract, references and declarations)
 
 
 ---
@@ -86,7 +86,7 @@ The remainder of the paper is organized as follows. Section~\ref{sec:related} pl
 ## Related work {@sec:related@}
 ### Metric trustworthiness {@sec:metric@}
 
-A line of work asks whether the numbers a paper reports correspond to what a human would see. LL-Bench \citep{liu2026a} evaluates image quality assessment models against 152,020 human pairwise preferences over 2,469 images and 16 tasks, and finds weak correlation with human judgment. SR-Prominence \citep{molodetskikh2026} reports that 48.2% of the artifacts its annotators mark are not noticed by viewers, and that no-reference IQA metrics fail to transfer across datasets. Both conclusions concern the metric's validity as a proxy for perceived quality.
+A line of work asks whether the numbers a paper reports correspond to what a human would see \citep{wang2004,blau2018}. LL-Bench \citep{liu2026a} evaluates image quality assessment models against 152,020 human pairwise preferences over 2,469 images and 16 tasks, and finds weak correlation with human judgment. SR-Prominence \citep{molodetskikh2026} reports that 48.2% of the artifacts its annotators mark are not noticed by viewers, and that no-reference IQA metrics fail to transfer across datasets. Both conclusions concern the metric's validity as a proxy for perceived quality.
 
 Our audit keeps the metric fixed and varies the protocol around it. We do not ask whether PSNR measures quality. We ask whether a ranking built on PSNR is stable when the aggregation or the seed changes. The two questions are independent. A perfectly valid metric can still yield an unstable ranking if the aggregation rule is left free.
 
@@ -110,7 +110,7 @@ We vary along a different axis, holding the method set fixed and changing the me
 
 ### Statistical reporting norms {@sec:reporting@}
 
-Psychology and natural language processing have established reporting conventions, namely report effect sizes with confidence intervals, run multiple seeds, and prefer equivalence testing to null-hypothesis significance when the claim is that there is no difference. RS-SR has no such norm. Our survey quantifies the gap, and the scorecard in Section~\ref{sec:scorecard} adapts these conventions to the specific failure modes we measure.
+Psychology and natural language processing have established reporting conventions \citep{reimers2017,bouthillier2021}, namely report effect sizes with confidence intervals, run multiple seeds, and prefer equivalence testing to null-hypothesis significance when the claim is that there is no difference. RS-SR has no such norm. Our survey quantifies the gap, and the scorecard in Section~\ref{sec:scorecard} adapts these conventions to the specific failure modes we measure.
 
 ### Benchmark scale in remote sensing {@sec:scale@}
 
@@ -119,7 +119,7 @@ The benchmarks used in this audit carry between 101 and 1000 test images. The sm
 ## Materials and methods {@sec:methods@}
 ### Data and assets {@sec:assets@}
 
-The audit reads 170 runs, each of which produced a `test_per_image.jsonl` record with one line per test image holding `path`, `psnr`, `ssim`, `ergas`, `sam`, and `lpips`. The runs span four standard benchmarks, AID (46 runs), RSSCN7 (39), UCMerced (39), and WHU-RS19 (36). Ten further runs carry no dataset tag and are excluded from all per-benchmark statistics. Test-set sizes are 1000 images for AID, 281 for RSSCN7, 210 for UCMerced, and 101 for WHU-RS19. All four benchmarks are public and are widely used for RS-SR in the aerial and satellite scene setting. The pool is one laboratory's experiment log rather than a sample of published methods. Counting each run name after removing the seed and dataset suffixes gives 20 distinct entries on AID, 17 on RSSCN7, 17 on UCMerced, and 14 on WHU-RS19. Only three of those entries are independent standard architectures, namely a lightweight CNN, a small residual-channel-attention network, and a 32-channel feature-enhancement network. The remainder are variants within a single model family that differ by one loss weight or one architectural component. The composition bounds what the audit can claim and is carried through the abstract and the limitations.
+The audit reads 170 runs, each of which produced a `test_per_image.jsonl` record with one line per test image holding `path`, `psnr`, `ssim`, `ergas`, `sam`, and `lpips`. The runs span four standard benchmarks, AID (46 runs), RSSCN7 (39), UCMerced (39), and WHU-RS19 (36) \citep{xia2017,zou2015,yang2013,dai2011}. Ten further runs carry no dataset tag and are excluded from all per-benchmark statistics. Test-set sizes are 1000 images for AID, 281 for RSSCN7, 210 for UCMerced, and 101 for WHU-RS19. All four benchmarks are public and are widely used for RS-SR in the aerial and satellite scene setting. The pool is one laboratory's experiment log rather than a sample of published methods. Counting each run name after removing the seed and dataset suffixes gives 20 distinct entries on AID, 17 on RSSCN7, 17 on UCMerced, and 14 on WHU-RS19. Only three of those entries are independent standard architectures, namely a lightweight CNN, a small residual-channel-attention network \citep{zhang2018}, and a 32-channel feature-enhancement network. The lineage these draw on runs from SRCNN \citep{dong2016} through EDSR \citep{lim2017} and RCAN to transformer models such as SwinIR \citep{liang2021}. The remainder are variants within a single model family that differ by one loss weight or one architectural component. The composition bounds what the audit can claim and is carried through the abstract and the limitations.
 
 Every run predates this study. We train nothing. The audit is a re-reading of stored artifacts, which is what makes it cheap and what makes it applicable to any laboratory's existing logs.
 
@@ -418,40 +418,64 @@ The authors report generative AI was not used in their research or preparation o
 
 ## References
 
-Chen, Z., K. Liu, J. Wang, X. Yan, et al. 2026. "The Fourth Challenge on Image Super-Resolution (x4) at NTIRE 2026: Benchmark Results and Method Overview,." arXiv:2604.14558, 2026.
+Blau, Y., and T. Michaeli. 2018. "The Perception-Distortion Tradeoff." In Proc. IEEE/CVF Conf. Comput. Vis. Pattern Recognit., 6228-6237. doi:10.1109/CVPR.2018.00652.
 
-Deng, J., H. Wang, C. Wang, J. Shen, et al. 2026. "IR275K: A Benchmark for Infrared Multi-Frame Super-Resolution Toward Efficient Remote Sensing,." arXiv:2607.22380, 2026.
+Bouthillier, X., P. Delaunay, M. Bronzi, et al. 2021. "Accounting for Variance in Machine Learning Benchmarks." arXiv:2103.03098.
 
-Hong, D., C. Li, X. Li, G. Camps-Valls, and J. Chanussot. 2026. "Foundation Models in Remote Sensing: Evolving from Unimodality to Multimodality,." IEEE Geosci. Remote Sens. Mag., 2026. doi:10.1109/MGRS.2026.3669086.
+Chen, Z., K. Liu, J. Wang, X. Yan, et al. 2026. "The Fourth Challenge on Image Super-Resolution (x4) at NTIRE 2026: Benchmark Results and Method Overview." arXiv:2604.14558.
 
-Hossain, M. A., A. V. Patel, S. K. Singh, Y. Jethani, et al. 2026. "Spatial-Frequency Gated Swin Transformer for Cross-Sensor Remote Sensing Super-Resolution,." arXiv:2605.09687, 2026.
+Dai, D., and W. Yang. 2011. "Satellite Image Classification via Two-Layer Sparse Coding With Biased Image Representation." IEEE Geosci. Remote Sens. Lett., 8 (1): 173-176. doi:10.1109/LGRS.2010.2055033.
 
-Kalinicheva, E., F. Helen, S. Mermoz, F. Mouret, et al. 2025. "Super-Resolved Canopy Height Mapping from Sentinel-2 Time Series Using Airborne LiDAR HD Reference Data across Metropolitan France,." arXiv:2512.11524, 2025.
+Deng, J., H. Wang, C. Wang, J. Shen, et al. 2026. "IR275K: A Benchmark for Infrared Multi-Frame Super-Resolution Toward Efficient Remote Sensing." arXiv:2607.22380.
 
-Lai, Y., C. Wu, and Y. Chen. 2026. "AstraMoE-SR: Trajectory-Guided Diffusion for Blind Satellite Jitter Deblurring and Super-Resolution,." arXiv:2609.07012, 2026.
+Dong, C., C. C. Loy, K. He, and X. Tang. 2016. "Image Super-Resolution Using Deep Convolutional Networks." IEEE Trans. Pattern Anal. Mach. Intell., 38 (2): 295-307. doi:10.1109/TPAMI.2015.2439281.
 
-Li, Z., K. Chai, Z. Wang, X. Jia, et al. 2026. "Beyond Visual Fidelity: Benchmarking Super-Resolution Models for Large-Scale Remote Sensing Imagery via Downstream Task Integration,." arXiv:2605.00310, 2026.
+Hong, D., C. Li, X. Li, G. Camps-Valls, and J. Chanussot. 2026. "Foundation Models in Remote Sensing: Evolving from Unimodality to Multimodality." IEEE Geosci. Remote Sens. Mag.. doi:10.1109/MGRS.2026.3669086.
 
-Liu, L., H. Duan, C. Zhu, et al. 2026. "LL-Bench: Rethinking Low-Level Vision Evaluation in the Era of Large-Scale Generative Models,." arXiv:2606.02535, 2026.
+Hossain, M. A., A. V. Patel, S. K. Singh, Y. Jethani, et al. 2026. "Spatial-Frequency Gated Swin Transformer for Cross-Sensor Remote Sensing Super-Resolution." arXiv:2605.09687.
 
-Liu, K., H. Yue, Z. Lin, Z. Chen, et al. 2026. "The First Challenge on Remote Sensing Infrared Image Super-Resolution at NTIRE 2026: Benchmark Results and Method Overview,." arXiv:2604.21312, 2026.
+Kalinicheva, E., F. Helen, S. Mermoz, F. Mouret, et al. 2025. "Super-Resolved Canopy Height Mapping from Sentinel-2 Time Series Using Airborne LiDAR HD Reference Data across Metropolitan France." arXiv:2512.11524.
 
-Molodetskikh, I., K. Malyshev, M. Mirgaleev, N. Zagainov, E. Bogatyrev, and D. Vatolin. 2026. "SR-Prominence: A Crowdsourced Protocol and Dataset Suite for Perceptually-Weighted Super-Resolution Artifact Evaluation,." arXiv:2605.14847, 2026.
+Lai, Y., C. Wu, and Y. Chen. 2026. "AstraMoE-SR: Trajectory-Guided Diffusion for Blind Satellite Jitter Deblurring and Super-Resolution." arXiv:2609.07012.
 
-Noa-Yarasca, E., J. O. Leyton, N. Jumaa, H. Niu, and L. Malambo. 2026. "Assessing GAN Super-Resolution in Grasslands: The Role of Spatial Heterogeneity and Textural Complexity,." Remote Sens., 18, (9), 1419, 2026. doi:10.3390/rs18091419.
+Li, Z., K. Chai, Z. Wang, X. Jia, et al. 2026. "Beyond Visual Fidelity: Benchmarking Super-Resolution Models for Large-Scale Remote Sensing Imagery via Downstream Task Integration." arXiv:2605.00310.
 
-Patnaik, A., A. Gour, M. K. Bhuyan, K. F. MacDorman, S. Alfarhood, and M. Safran. 2026. "Super-Resolution of Remote Sensing Images via the Parallel Lattice Attention Network,." IEEE J. Sel. Topics Appl. Earth Observ. Remote Sens., 19, 6067-6078, 2026. doi:10.1109/jstars.2026.3660141.
+Liang, J., J. Cao, G. Sun, K. Zhang, L. Van Gool, and R. Timofte. 2021. "SwinIR: Image Restoration Using Swin Transformer." In Proc. IEEE/CVF Int. Conf. Comput. Vis. Workshops, 1833-1844. doi:10.1109/ICCVW54120.2021.00210.
 
-Qi, H., Z. Zhou, J. Yi, K. Liu, et al. 2026. "EORestore-Agent: Fidelity-Guided Agentic Restoration of Remote Sensing Images with Composite Degradations,." arXiv:2610.06196, 2026.
+Lim, B., S. Son, H. Kim, S. Nah, and K. M. Lee. 2017. "Enhanced Deep Residual Networks for Single Image Super-Resolution." In Proc. IEEE Conf. Comput. Vis. Pattern Recognit. Workshops, 1132-1140. doi:10.1109/CVPRW.2017.151.
 
-Shokoohi, N., A. N. Fsian, J. Thomas, and P. Gouton. 2026. "A Comparative Evaluation of Super-Resolution Methods for Spectral Images Using Pretrained RGB Models,." Sensors, 26, (2), 683, 2026. doi:10.3390/s26020683.
+Liu, L., H. Duan, C. Zhu, et al. 2026. "LL-Bench: Rethinking Low-Level Vision Evaluation in the Era of Large-Scale Generative Models." arXiv:2606.02535.
 
-Tang, T., J. Liu, X. Luo, X. Gao, X. Fu, and X. Pan. 2026. "ORDiffSR: An effective one-step diffusion network for single remote sensing image super-resolution,." Expert Syst. Appl., 320, 132254, 2026. doi:10.1016/j.eswa.2026.132254.
+Liu, K., H. Yue, Z. Lin, Z. Chen, et al. 2026. "The First Challenge on Remote Sensing Infrared Image Super-Resolution at NTIRE 2026: Benchmark Results and Method Overview." arXiv:2604.21312.
 
-Tang, T., J. Liu, X. Luo, X. Gao, and X. Pan. 2026. "DBTSR: A U-shaped adaptive sparse transformer for single remote sensing image super-resolution,." Expert Syst. Appl., 297, 129424, 2026. doi:10.1016/j.eswa.2025.129424.
+Molodetskikh, I., K. Malyshev, M. Mirgaleev, N. Zagainov, E. Bogatyrev, and D. Vatolin. 2026. "SR-Prominence: A Crowdsourced Protocol and Dataset Suite for Perceptually-Weighted Super-Resolution Artifact Evaluation." arXiv:2605.14847.
 
-Wang, L., L. Liu, Q. Yu, and D. Yuan. 2026. "Generative adversarial network-based super-resolution reconstruction of remote sensing images,." Sci. Rep., 16, (1), 11971, 2026. doi:10.1038/s41598-026-41832-5.
+Noa-Yarasca, E., J. O. Leyton, N. Jumaa, H. Niu, and L. Malambo. 2026. "Assessing GAN Super-Resolution in Grasslands: The Role of Spatial Heterogeneity and Textural Complexity." Remote Sens., 18 (9): 1419. doi:10.3390/rs18091419.
 
-Yu, J., H. Li, X. Zheng, C. Zhong, and Q. Sun. 2026. "DFSMamba: A Spatial–Frequency Collaborative Modeling Framework for Remote Sensing Image Super-Resolution,." Remote Sens., 18, (12), 1910, 2026. doi:10.3390/rs18121910.
+Patnaik, A., A. Gour, M. K. Bhuyan, K. F. MacDorman, S. Alfarhood, and M. Safran. 2026. "Super-Resolution of Remote Sensing Images via the Parallel Lattice Attention Network." IEEE J. Sel. Topics Appl. Earth Observ. Remote Sens., 19, 6067-6078. doi:10.1109/jstars.2026.3660141.
 
-Zhang, Q., S. Ma, Y. Tang, and L. Zheng. 2026. "Cross-domain continuous-scale remote sensing image super-resolution via meta-weight learning,." Sci. Rep., 16, (1), 6073, 2026. doi:10.1038/s41598-026-36632-w.
+Qi, H., Z. Zhou, J. Yi, K. Liu, et al. 2026. "EORestore-Agent: Fidelity-Guided Agentic Restoration of Remote Sensing Images with Composite Degradations." arXiv:2610.06196.
+
+Reimers, N., and I. Gurevych. 2017. "Reporting Score Distributions Makes a Difference: Performance Study of LSTM-Networks for Sequence Tagging." In Proc. Conf. Empirical Methods Natural Lang. Process., 338-348. doi:10.18653/v1/D17-1035.
+
+Shokoohi, N., A. N. Fsian, J. Thomas, and P. Gouton. 2026. "A Comparative Evaluation of Super-Resolution Methods for Spectral Images Using Pretrained RGB Models." Sensors, 26 (2): 683. doi:10.3390/s26020683.
+
+Tang, T., J. Liu, X. Luo, X. Gao, X. Fu, and X. Pan. 2026. "ORDiffSR: An effective one-step diffusion network for single remote sensing image super-resolution." Expert Syst. Appl., 320, 132254. doi:10.1016/j.eswa.2026.132254.
+
+Tang, T., J. Liu, X. Luo, X. Gao, and X. Pan. 2026. "DBTSR: A U-shaped adaptive sparse transformer for single remote sensing image super-resolution." Expert Syst. Appl., 297, 129424. doi:10.1016/j.eswa.2025.129424.
+
+Wang, Z., A. C. Bovik, H. R. Sheikh, and E. P. Simoncelli. 2004. "Image Quality Assessment: From Error Visibility to Structural Similarity." IEEE Trans. Image Process., 13 (4): 600-612. doi:10.1109/TIP.2003.819861.
+
+Wang, L., L. Liu, Q. Yu, and D. Yuan. 2026. "Generative adversarial network-based super-resolution reconstruction of remote sensing images." Sci. Rep., 16 (1): 11971. doi:10.1038/s41598-026-41832-5.
+
+Xia, G. S., J. Hu, F. Hu, et al. 2017. "AID: A Benchmark Data Set for Performance Evaluation of Aerial Scene Classification." IEEE Trans. Geosci. Remote Sens., 55 (7): 3965-3981. doi:10.1109/TGRS.2017.2685945.
+
+Yang, Y., and S. Newsam. 2013. "Geographic Image Retrieval Using Local Invariant Features." IEEE Trans. Geosci. Remote Sens., 51 (2): 818-832. doi:10.1109/TGRS.2012.2205158.
+
+Yu, J., H. Li, X. Zheng, C. Zhong, and Q. Sun. 2026. "DFSMamba: A Spatial–Frequency Collaborative Modeling Framework for Remote Sensing Image Super-Resolution." Remote Sens., 18 (12): 1910. doi:10.3390/rs18121910.
+
+Zhang, Y., K. Li, K. Li, L. Wang, B. Zhong, and Y. Fu. 2018. "Image Super-Resolution Using Very Deep Residual Channel Attention Networks." In Proc. Eur. Conf. Comput. Vis., 294-310. doi:10.1007/978-3-030-01234-2_18.
+
+Zhang, Q., S. Ma, Y. Tang, and L. Zheng. 2026. "Cross-domain continuous-scale remote sensing image super-resolution via meta-weight learning." Sci. Rep., 16 (1): 6073. doi:10.1038/s41598-026-36632-w.
+
+Zou, Q., L. Ni, T. Zhang, et al. 2015. "Deep Learning Based Feature Selection for Remote Sensing Scene Classification." IEEE Geosci. Remote Sens. Lett., 12 (11): 2321-2325. doi:10.1109/LGRS.2015.2475299.

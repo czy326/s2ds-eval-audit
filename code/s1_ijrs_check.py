@@ -80,7 +80,7 @@ def main():
     sec = md.split("## References", 1)[-1]
     entries = [e for e in sec.split("\n") if e.strip()]
     surnames = [e.split(",")[0].strip().lower() for e in entries if "," in e]
-    check("reference_count", len(entries) == 19, "%d entries" % len(entries))
+    check("reference_count", len(entries) == 31, "%d entries" % len(entries))
     check("references_alphabetical", surnames == sorted(surnames),
           next((surnames[i] for i in range(1, len(surnames))
                 if surnames[i] < surnames[i - 1]), ""))
@@ -96,7 +96,9 @@ def main():
         check("tex_natbib_authoryear", "authoryear" in tex)
         labels = re.findall(r"\\label\{([^}]+)\}", tex)
         refs = set(re.findall(r"\\ref\{([^}]+)\}", tex))
-        cites = set(re.findall(r"\\cite[a-z]*\{([^}]+)\}", tex))
+        cites = {k.strip()
+                 for grp in re.findall(r"\\cite[a-z]*\{([^}]+)\}", tex)
+                 for k in grp.split(",")}
         bibs = set(re.findall(r"\\bibitem\[[^\]]*\]\{([^}]+)\}", tex))
         check("tex_labels_unique", len(labels) == len(set(labels)), "%d" % len(labels))
         check("tex_no_dangling_ref", not (refs - set(labels)), str(sorted(refs - set(labels))))
