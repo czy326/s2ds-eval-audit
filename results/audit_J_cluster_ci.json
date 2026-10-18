@@ -1,0 +1,81 @@
+{
+ "convention": "Denominators count only pairs whose statistic is assessable: at least two shared seeds for sign reversal, a defined reference seed sd for below-noise. Intervals are percentile 95% bounds from a cluster bootstrap over methods within benchmark, 4000 replicates, seed 20261018, each pair weighted by the product of its endpoints' multiplicities.",
+ "n_pairs": 327,
+ "n_clusters": 53,
+ "proportions": {
+  "sign_reversal": {
+   "k": 83,
+   "n_assessable": 243,
+   "pct": 34.2,
+   "ci95_cluster": [
+    20.9,
+    49.4
+   ],
+   "old_denominator": 327,
+   "old_pct": 25.4,
+   "n_boot": 4000,
+   "seed": 20261018
+  },
+  "below_noise_min": {
+   "k": 154,
+   "n_assessable": 243,
+   "pct": 63.4,
+   "ci95_cluster": [
+    46.0,
+    80.9
+   ],
+   "old_denominator": 327,
+   "old_pct": 47.1,
+   "n_boot": 4000,
+   "seed": 20261018
+  },
+  "below_noise_ref_a": {
+   "k": 172,
+   "n_assessable": 263,
+   "pct": 65.4,
+   "ci95_cluster": [
+    49.3,
+    81.9
+   ],
+   "old_denominator": 327,
+   "old_pct": 52.6,
+   "n_boot": 4000,
+   "seed": 20261018
+  },
+  "below_noise_max": {
+   "k": 172,
+   "n_assessable": 243,
+   "pct": 70.8,
+   "ci95_cluster": [
+    54.0,
+    87.3
+   ],
+   "old_denominator": 327,
+   "old_pct": 68.5,
+   "n_boot": 4000,
+   "seed": 20261018
+  }
+ },
+ "per_benchmark_reversal": {
+  "AID": {
+   "k": 27,
+   "n": 78,
+   "pct": 34.6
+  },
+  "RSSCN7": {
+   "k": 14,
+   "n": 55,
+   "pct": 25.5
+  },
+  "UCMerced_LandUse": {
+   "k": 16,
+   "n": 55,
+   "pct": 29.1
+  },
+  "WHU-RS19": {
+   "k": 26,
+   "n": 55,
+   "pct": 47.3
+  }
+ }
+}

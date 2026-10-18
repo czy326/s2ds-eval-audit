@@ -83,7 +83,10 @@ The submission package for Scientific Reports is:
 | `papers/references.md` | Full bibliographic source of truth, with the verification channel per entry |
 
 The IEEE JSTARS package was submitted in October 2026 and returned by the editor
-without review on scope grounds. It is kept as the earlier framing:
+without review on scope grounds. It is kept as the earlier framing. Its
+pair-level proportions predate the correction to the denominators of those
+proportions, so they are a record of what was submitted rather than the current
+figures; the Scientific Reports version carries the corrected values:
 
 | File | Role |
 |---|---|

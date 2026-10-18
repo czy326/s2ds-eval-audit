@@ -165,21 +165,49 @@ def main():
     check("si_not_in_main", "TABLE S1." not in md)
 
     # --------------------------------- numerical agreement with the verified text
-    # the submission is the main text plus the supplementary tables, so both are
-    # compared against the IEEE text whose numbers s1_jstars_check.py verifies
+    # Every decimal in the submission must be traceable to a result file or to
+    # the IEEE text. The IEEE text predates the correction to the pair-level
+    # denominators, so the corrected proportions come from audit_J_cluster_ci.
+    def results_dir():
+        for c in (os.environ.get("S2DS_AUDIT_OUT"),
+                  os.path.join(_ROOT, "results"),
+                  os.path.join(_ROOT, "out")):
+            if c and os.path.exists(os.path.join(c, "audit_D_effect_vs_noise.json")):
+                return c
+        return None
+
     ver = open(REF, encoding="utf-8").read()
     ver_nums = set(re.findall(r"\d+\.\d+", ver))
+    rd = results_dir()
+    corrected = ""
+    if rd:
+        p = os.path.join(rd, "audit_J_cluster_ci.json")
+        if os.path.exists(p):
+            corrected = open(p, encoding="utf-8").read()
+            for block in ("ci95_cluster", "pct"):
+                for m in re.finditer(r'"%s":\s*\[?([0-9.,\s]+)' % block, corrected):
+                    for tok in re.findall(r"\d+\.\d+", m.group(1)):
+                        ver_nums.add(tok)
+    check("corrected_results_available", bool(corrected),
+          rd or "results directory not found")
+
     sub_nums = set(re.findall(r"\d+\.\d+", md + "\n" + si))
     check("no_new_decimals", not (sub_nums - ver_nums),
           "introduced %s" % sorted(sub_nums - ver_nums)[:6])
 
     both = md + "\n" + si
-    HEADLINE = ["170", "327", "25.4", "52.6", "47.1", "68.5", "0.088", "0.272",
-                "0.1202", "0.0728", "47.3", "0.0049", "0.0849", "0.1272",
-                "0.0744", "9.27", "154", "172", "224", "83", "8 of 10",
-                "7 of 35"]
+    HEADLINE = ["170", "327", "243", "263", "34.2", "65.4", "63.4", "70.8",
+                "0.088", "0.272", "0.1202", "0.0728", "47.3", "0.0049",
+                "0.0849", "0.1272", "0.0744", "9.27", "154", "172", "83",
+                "8 of 10", "7 of 35"]
     for h in HEADLINE:
         check("headline_%s" % h, h in both)
+
+    # the superseded proportions must not reappear: they were computed with
+    # unassessable pairs in the denominator
+    for gone in ["25.4%", "52.6%", "47.1%", "68.5%", "21-point"]:
+        check("retired_%s" % gone.replace("%", "_pct"), gone not in both,
+              "superseded figure still present")
 
     # --------------------------------------------------------------- report
     bad = [(n, d) for n, ok, d in results if not ok]

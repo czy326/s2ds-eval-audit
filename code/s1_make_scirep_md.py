@@ -50,8 +50,8 @@ ABSTRACT = (
     "laboratory's log, built from three standard architectures plus variants "
     "within a single model family, which bounds how far the result "
     "generalises. A path-level check confirms identical image sets within each "
-    "benchmark. Across 327 method pairs, 25.4% reverse sign between seeds and "
-    "52.6% have an effect smaller than the reference method's seed-to-seed "
+    "benchmark. Across 327 method pairs, 34.2% reverse sign between seeds and "
+    "65.4% have an effect smaller than the reference method's seed-to-seed "
     "standard deviation, whose median is 0.088 dB against method effects of "
     "0.018 to 0.039 dB. Aggregation and metric choices reorder the ranking in "
     "every benchmark, and on the smallest benchmark it crosses method "
@@ -74,16 +74,16 @@ REWRITES = [
      "and we report the full range. Changing only the aggregation rule flips the "
      "champion on all four benchmarks.",
      "**C2. A measurement of the protocol against the effect it is used to "
-     "rank.** Across 327 method pairs, 25.4% reverse sign between training seeds "
-     "and 52.6% show an effect smaller than the reference method's seed noise. "
-     "The below-noise fraction ranges from 47.1% to 68.5% across three "
-     "defensible reference conventions, and we report the full range. The "
-     "seed-to-seed standard deviation has a median of 0.088 dB against method "
-     "effects of 0.018 to 0.039 dB, so the protocol dominates the quantity "
-     "being ranked. Aggregation and metric choices reorder the ranking in every "
-     "benchmark, which follows from that ratio rather than standing as an "
-     "independent finding. On the smallest benchmark the reordering crosses "
-     "method families."),
+     "rank.** Across 327 method pairs, 34.2% reverse sign between training seeds "
+     "and 65.4% show an effect smaller than the reference method's seed noise. "
+     "Counting only the pairs whose statistic is assessable, the below-noise "
+     "fraction ranges from 63.4% to 70.8% across three defensible reference "
+     "conventions, and we report the full range. The seed-to-seed standard "
+     "deviation has a median of 0.088 dB against method effects of 0.018 to "
+     "0.039 dB, so the protocol dominates the quantity being ranked. Aggregation "
+     "and metric choices reorder the ranking in every benchmark, which follows "
+     "from that ratio rather than standing as an independent finding. On the "
+     "smallest benchmark the reordering crosses method families."),
 
     # the subsection heading should not promise more than the pool can support
     ("### B. Line B: the champion changes on all four benchmarks",
@@ -143,6 +143,100 @@ REWRITES = [
      "method families. The pool is one laboratory's log, so these figures "
      "describe how far the protocol can move a ranking within it rather than an "
      "error rate for the field."),
+
+    # --- corrected denominators: "cannot be assessed" is no longer scored as
+    # "did not happen", so every count below changes and is restated
+    ("That gives 154 of 327 pairs, 47.1%.",
+     "That gives 154 of the 243 pairs in which both methods have a defined "
+     "seed standard deviation, 63.4%."),
+
+    ("That gives 172 of 327, 52.6%.",
+     "That gives 172 of the 263 pairs with a defined reference standard "
+     "deviation, 65.4%."),
+
+    ("The symmetric definition compares the effect against the larger of the "
+     "two seed standard deviations and gives 224 of 327, 68.5%. The three "
+     "definitions span 47.1% to 68.5% and agree on the direction of the "
+     "finding. We carry the middle one because its reference is explicit, and "
+     "report all three for a reader who prefers a different convention. The "
+     "21-point spread is itself an instance of the paper's subject, since a "
+     "headline percentage in this audit moves by more than 20 points under a "
+     "convention that most papers would leave unstated. Table~\\ref{tab:effect} "
+     "collects these counts.",
+     "The symmetric definition compares the effect against the larger of the "
+     "two seed standard deviations and gives 172 of the same 243 pairs, 70.8%. "
+     "The three definitions span 63.4% to 70.8% and agree on the direction of "
+     "the finding. We carry the middle one because its reference is explicit, "
+     "and report all three for a reader who prefers a different convention. "
+     "Table~\\ref{tab:effect} collects these counts.\n\n"
+     "Two conventions govern these denominators, and both matter more than "
+     "they look. A pair whose two methods share only one seed cannot reverse, "
+     "so it is excluded from the reversal count rather than scored as "
+     "consistent, which leaves 243 of the 327 pairs. A pair without a defined "
+     "reference standard deviation cannot be compared with the noise, so it is "
+     "excluded from that count rather than scored as not below the noise. "
+     "Scoring an unassessable pair as a null result would bias both "
+     "percentages downward, which is the reporting failure this paper is "
+     "about. The 327 pairs are also not independent, because each method "
+     "enters many of them, so a binomial interval over 327 would be too "
+     "narrow. We give 95% intervals from a cluster bootstrap that resamples "
+     "methods within each benchmark and weights every pair by the product of "
+     "its endpoints' multiplicities: 34.2% of pairs reverse, interval 20.9% to "
+     "49.4%, and 65.4% fall below the reference noise, interval 49.3% to "
+     "81.9%."),
+
+    ("| Method pairs analyzed | 327 |",
+     "| Method pairs analyzed | 327 |\n"
+     "| Pairs with two or more shared seeds | 243 |\n"
+     "| Pairs with a defined reference seed sd | 263 |"),
+
+    ("| Pairs that reverse sign across seeds | **83 (25.4%)** |",
+     "| Pairs that reverse sign across seeds | **83 (34.2%)** of 243 |"),
+
+    ("| Pairs with \\|effect\\| below the reference method's seed sd | "
+     "**172 (52.6%)** of 327 |",
+     "| Pairs with \\|effect\\| below the reference method's seed sd | "
+     "**172 (65.4%)** of 263 |"),
+
+    ("| Pairs with \\|effect\\| below the smaller of the two methods' seed sds "
+     "| 154 (47.1%) of 327 |",
+     "| Pairs with \\|effect\\| below the smaller of the two methods' seed sds "
+     "| 154 (63.4%) of 243 |"),
+
+    ("| Pairs with \\|effect\\| below the larger of the two methods' seed sds "
+     "| 224 (68.5%) of 327 |",
+     "| Pairs with \\|effect\\| below the larger of the two methods' seed sds "
+     "| 172 (70.8%) of 243 |"),
+
+    ("| R3 | Are three or more seeds run, with per-seed direction reported | "
+     "The 25.4% reversal rate is invisible | 2 seeds in part of the pool |",
+     "| R3 | Are three or more seeds run, with per-seed direction reported | "
+     "The 34.2% reversal rate is invisible | 2 seeds in part of the pool |"),
+
+    ("1. The findings from our own pool of 170 runs do not extend to the claim "
+     "that all RS-SR papers have a 1-in-4 error rate. The 25.4% reversal figure "
+     "includes many method pairs on AID that are close variants, and close "
+     "variants are expected to sit near the noise floor.",
+     "1. The findings from our own pool of 170 runs do not extend to the claim "
+     "that all RS-SR papers have a 1-in-3 error rate. The 34.2% reversal figure "
+     "includes many method pairs on AID that are close variants, and close "
+     "variants are expected to sit near the noise floor."),
+
+    ("one in four method pairs reverses order between training seeds, and "
+     "slightly more than half show a difference smaller than the seed noise.",
+     "one in three method pairs reverses order between training seeds, and "
+     "about two thirds show a difference smaller than the seed noise."),
+]
+
+# The supplementary table carries the per-benchmark reversal rate, whose
+# denominator is also restricted to assessable pairs.
+REWRITES_SI = [
+    ("| AID | 1000 | 0.0728 | 0.1187 | 30.0% |",
+     "| AID | 1000 | 0.0728 | 0.1187 | 34.6% |"),
+    ("| RSSCN7 | 281 | 0.0632 | 0.1169 | 15.4% |",
+     "| RSSCN7 | 281 | 0.0632 | 0.1169 | 25.5% |"),
+    ("| UCMerced | 210 | 0.1070 | 0.1701 | 17.6% |",
+     "| UCMerced | 210 | 0.1070 | 0.1701 | 29.1% |"),
 ]
 
 KEYWORDS = ("Super-resolution; Benchmark evaluation; Reproducibility; "
@@ -478,14 +572,22 @@ def main():
               "<!-- Supplementary tables for the Scientific Reports submission. -->",
               "## Supplementary tables\n",
               "Tables S1 to S3 carry the supporting audit detail that would take "
-              "the main text past the eight-display-item limit.\n"]
+              "the main text past the eight-display-item limit. The reversal "
+              "rate in Table S2 is computed over the pairs whose two methods "
+              "share at least two seeds, the only pairs that can reverse.\n"]
     for n, roman in enumerate(["II", "V", "VI"], start=1):
         cap, rows = table_blocks[roman]
         slines.append("**TABLE S%d. %s**\n" % (n, cap))
         slines.append("\n".join(rows))
         slines.append("")
+    si_out = "\n".join(slines) + "\n"
+    for old, new in REWRITES_SI:
+        if si_out.count(old) != 1:
+            raise SystemExit("SI rewrite anchor matched %d times: %r"
+                             % (si_out.count(old), old[:60]))
+        si_out = si_out.replace(old, new, 1)
     with open(DST_SI, "w", encoding="utf-8", newline="\n") as fh:
-        fh.write("\n".join(slines) + "\n")
+        fh.write(si_out)
 
     # ------------------------------------------------------------------ report
     plain = len(re.findall(r"[A-Za-z][A-Za-z'-]*", ABSTRACT))

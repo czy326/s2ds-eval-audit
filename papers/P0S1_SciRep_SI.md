@@ -2,7 +2,7 @@
 <!-- Supplementary tables for the Scientific Reports submission. -->
 ## Supplementary tables
 
-Tables S1 to S3 carry the supporting audit detail that would take the main text past the eight-display-item limit.
+Tables S1 to S3 carry the supporting audit detail that would take the main text past the eight-display-item limit. The reversal rate in Table S2 is computed over the pairs whose two methods share at least two seeds, the only pairs that can reverse.
 
 **TABLE S1. The four audit lines.**
 
@@ -17,9 +17,9 @@ Tables S1 to S3 carry the supporting audit detail that would take the main text 
 
 | Benchmark | Test images | Median sd (dB) | Max sd (dB) | Reversal rate |
 |---|---|---|---|---|
-| AID | 1000 | 0.0728 | 0.1187 | 30.0% |
-| RSSCN7 | 281 | 0.0632 | 0.1169 | 15.4% |
-| UCMerced | 210 | 0.1070 | 0.1701 | 17.6% |
+| AID | 1000 | 0.0728 | 0.1187 | 34.6% |
+| RSSCN7 | 281 | 0.0632 | 0.1169 | 25.5% |
+| UCMerced | 210 | 0.1070 | 0.1701 | 29.1% |
 | WHU-RS19 | 101 | 0.1202 | 0.2485 | 47.3% |
 
 **TABLE S3. Anchor comparison.**

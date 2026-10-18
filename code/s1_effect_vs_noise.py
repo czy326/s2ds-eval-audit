@@ -122,17 +122,27 @@ def main():
                 "seed_spread_dB": (max(ds_effects) - min(ds_effects)) if len(ds_effects) > 1 else 0.0,
                 "sd_seed_ref_a": seed_sd.get(a),
                 "sd_seed_ref_b": seed_sd.get(b),
-                "sign_consistent": (len(set(same_sign)) == 1) if same_sign else None,
+                "sign_consistent": ((len(set(same_sign)) == 1)
+                                    if len(same_sign) >= 2 else None),
                 "effects": ds_effects,
             })
 
-    # 汇总：效应 < 种子 spread 的比例
+    # 汇总：只对"可判定"的子集报比例，缺失值不再当作 0 或当作一致
     n = len(rows)
-    flip = [r for r in rows if r["sign_consistent"] is False]
-    tiny = [r for r in rows if r["sd_seed_ref_a"] and abs(r["mean_effect_dB"]) < r["sd_seed_ref_a"]]
+    judge_flip = [r for r in rows if r["n_seeds"] >= 2]
+    judge_ref = [r for r in rows if r["sd_seed_ref_a"] is not None]
+    judge_both = [r for r in rows if r["sd_seed_ref_a"] is not None
+                  and r["sd_seed_ref_b"] is not None]
+    flip = [r for r in judge_flip if r["sign_consistent"] is False]
+    tiny = [r for r in judge_ref
+            if abs(r["mean_effect_dB"]) < r["sd_seed_ref_a"]]
     print(f"方法间配对总数: {n}")
-    print(f"跨种子方向翻转(不可复现): {len(flip)}/{n} = {len(flip)/n*100:.1f}%")
-    print(f"|效应| < 种子sd (落在噪声内): {len(tiny)}/{n} = {len(tiny)/n*100:.1f}%")
+    print(f"  可判翻转(共享>=2种子): {len(judge_flip)}")
+    print(f"  可判 below-noise(有 sd_a): {len(judge_ref)}, 两侧齐全: {len(judge_both)}")
+    print(f"跨种子方向翻转(不可复现): {len(flip)}/{len(judge_flip)} = "
+          f"{len(flip)/len(judge_flip)*100:.1f}%")
+    print(f"|效应| < 种子sd (落在噪声内): {len(tiny)}/{len(judge_ref)} = "
+          f"{len(tiny)/len(judge_ref)*100:.1f}%")
     print("\n--- 锚点：BSRNet B3 vs base_ssm 类配对 ---")
     for r in rows:
         if ("b3" in r["method_a"] or "b3" in r["method_b"] or

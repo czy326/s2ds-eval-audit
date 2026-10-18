@@ -10,7 +10,7 @@
 
 ## Abstract
 
-Remote sensing super-resolution papers routinely advertise gains as a single number, such as a 0.1 dB gain over the state of the art. Those numbers rest on protocol choices that are rarely reported: which images form the test set, how per-image metrics are aggregated, how many seeds are run, and which baseline convention defines the endpoint. We audit these choices on 170 existing runs spanning four benchmarks, reusing stored per-image artifacts and training nothing. The pool is one laboratory's log, built from three standard architectures plus variants within a single model family, which bounds how far the result generalises. A path-level check confirms identical image sets within each benchmark. Across 327 method pairs, 25.4% reverse sign between seeds and 52.6% have an effect smaller than the reference method's seed-to-seed standard deviation, whose median is 0.088 dB against method effects of 0.018 to 0.039 dB. Aggregation and metric choices reorder the ranking in every benchmark, and on the smallest benchmark it crosses method families. A survey of 35 papers from 2026, with 18 full texts retrieved, finds that 7 state a verifiable dB gain and that no abstract mentions seeds, variance, or statistical testing. We close with a seven-item scorecard.
+Remote sensing super-resolution papers routinely advertise gains as a single number, such as a 0.1 dB gain over the state of the art. Those numbers rest on protocol choices that are rarely reported: which images form the test set, how per-image metrics are aggregated, how many seeds are run, and which baseline convention defines the endpoint. We audit these choices on 170 existing runs spanning four benchmarks, reusing stored per-image artifacts and training nothing. The pool is one laboratory's log, built from three standard architectures plus variants within a single model family, which bounds how far the result generalises. A path-level check confirms identical image sets within each benchmark. Across 327 method pairs, 34.2% reverse sign between seeds and 65.4% have an effect smaller than the reference method's seed-to-seed standard deviation, whose median is 0.088 dB against method effects of 0.018 to 0.039 dB. Aggregation and metric choices reorder the ranking in every benchmark, and on the smallest benchmark it crosses method families. A survey of 35 papers from 2026, with 18 full texts retrieved, finds that 7 state a verifiable dB gain and that no abstract mentions seeds, variance, or statistical testing. We close with a seven-item scorecard.
 
 
 ---
@@ -72,7 +72,7 @@ We make four contributions.
 
 **C1. A zero-training audit protocol.** We audit 170 existing runs across four standard benchmarks by reading their per-image evaluation artifacts. No model is retrained. The protocol applies to any SR evaluation that has retained per-image results, which is the common case for a laboratory's own experiment logs.
 
-**C2. A measurement of the protocol against the effect it is used to rank.** Across 327 method pairs, 25.4% reverse sign between training seeds and 52.6% show an effect smaller than the reference method's seed noise. The below-noise fraction ranges from 47.1% to 68.5% across three defensible reference conventions, and we report the full range. The seed-to-seed standard deviation has a median of 0.088 dB against method effects of 0.018 to 0.039 dB, so the protocol dominates the quantity being ranked. Aggregation and metric choices reorder the ranking in every benchmark, which follows from that ratio rather than standing as an independent finding. On the smallest benchmark the reordering crosses method families.
+**C2. A measurement of the protocol against the effect it is used to rank.** Across 327 method pairs, 34.2% reverse sign between training seeds and 65.4% show an effect smaller than the reference method's seed noise. Counting only the pairs whose statistic is assessable, the below-noise fraction ranges from 63.4% to 70.8% across three defensible reference conventions, and we report the full range. The seed-to-seed standard deviation has a median of 0.088 dB against method effects of 0.018 to 0.039 dB, so the protocol dominates the quantity being ranked. Aggregation and metric choices reorder the ranking in every benchmark, which follows from that ratio rather than standing as an independent finding. On the smallest benchmark the reordering crosses method families.
 
 **C3. A report-practice survey.** We code 35 papers on disclosure of aggregation, seeds, and test-set composition. The abstract-level count for seed disclosure is zero. Retrieving 18 full texts raises it to four. The difference between the two counts governs how the whole survey has to be read.
 
@@ -167,21 +167,25 @@ We pair every two runs of the same benchmark that share a seed and belong to dif
 
 The noise comparison depends on which standard deviation serves as the reference, so we report all three definitions.
 
-The strictest rule counts a pair as below the noise only when the effect is smaller than the smaller of the two methods' seed standard deviations, so that both methods are noisier than the effect. That gives 154 of 327 pairs, 47.1%.
+The strictest rule counts a pair as below the noise only when the effect is smaller than the smaller of the two methods' seed standard deviations, so that both methods are noisier than the effect. That gives 154 of the 243 pairs in which both methods have a defined seed standard deviation, 63.4%.
 
-The definition we carry through the paper compares the effect against the seed standard deviation of the reference method in each pair, fixed as the first method so that the count is deterministic. That gives 172 of 327, 52.6%.
+The definition we carry through the paper compares the effect against the seed standard deviation of the reference method in each pair, fixed as the first method so that the count is deterministic. That gives 172 of the 263 pairs with a defined reference standard deviation, 65.4%.
 
-The symmetric definition compares the effect against the larger of the two seed standard deviations and gives 224 of 327, 68.5%. The three definitions span 47.1% to 68.5% and agree on the direction of the finding. We carry the middle one because its reference is explicit, and report all three for a reader who prefers a different convention. The 21-point spread is itself an instance of the paper's subject, since a headline percentage in this audit moves by more than 20 points under a convention that most papers would leave unstated. Table~\ref{tab:effect} collects these counts.
+The symmetric definition compares the effect against the larger of the two seed standard deviations and gives 172 of the same 243 pairs, 70.8%. The three definitions span 63.4% to 70.8% and agree on the direction of the finding. We carry the middle one because its reference is explicit, and report all three for a reader who prefers a different convention. Table~\ref{tab:effect} collects these counts.
+
+Two conventions govern these denominators, and both matter more than they look. A pair whose two methods share only one seed cannot reverse, so it is excluded from the reversal count rather than scored as consistent, which leaves 243 of the 327 pairs. A pair without a defined reference standard deviation cannot be compared with the noise, so it is excluded from that count rather than scored as not below the noise. Scoring an unassessable pair as a null result would bias both percentages downward, which is the reporting failure this paper is about. The 327 pairs are also not independent, because each method enters many of them, so a binomial interval over 327 would be too narrow. We give 95% intervals from a cluster bootstrap that resamples methods within each benchmark and weights every pair by the product of its endpoints' multiplicities: 34.2% of pairs reverse, interval 20.9% to 49.4%, and 65.4% fall below the reference noise, interval 49.3% to 81.9%.
 
 **TABLE IV. Effect size against seed noise.**
 
 | Quantity | Value |
 |---|---|
 | Method pairs analyzed | 327 |
-| Pairs that reverse sign across seeds | **83 (25.4%)** |
-| Pairs with \|effect\| below the reference method's seed sd | **172 (52.6%)** of 327 |
-| Pairs with \|effect\| below the smaller of the two methods' seed sds | 154 (47.1%) of 327 |
-| Pairs with \|effect\| below the larger of the two methods' seed sds | 224 (68.5%) of 327 |
+| Pairs with two or more shared seeds | 243 |
+| Pairs with a defined reference seed sd | 263 |
+| Pairs that reverse sign across seeds | **83 (34.2%)** of 243 |
+| Pairs with \|effect\| below the reference method's seed sd | **172 (65.4%)** of 263 |
+| Pairs with \|effect\| below the smaller of the two methods' seed sds | 154 (63.4%) of 243 |
+| Pairs with \|effect\| below the larger of the two methods' seed sds | 172 (70.8%) of 243 |
 | Median seed-to-seed standard deviation | **0.088 dB** (range 0.049 to 0.248) |
 | Median method effect | **0.018 to 0.039 dB** |
 
@@ -300,7 +304,7 @@ The audit findings reduce to seven checks. Each check names a disclosure whose a
 |---|---|---|---|
 | R1 | Is the test-set image list public and identical across runs | Cross-paper comparison is void | Pass in all 170 runs |
 | R2 | Is the metric aggregation stated (mean, median, trimmed) | The champion flips under the convention | Not stated in 31/35 papers |
-| R3 | Are three or more seeds run, with per-seed direction reported | The 25.4% reversal rate is invisible | 2 seeds in part of the pool |
+| R3 | Are three or more seeds run, with per-seed direction reported | The 34.2% reversal rate is invisible | 2 seeds in part of the pool |
 | R4 | Is the seed-noise magnitude reported | A reader cannot tell whether \|Δ\| clears the noise | Not reported |
 | R5 | Is the baseline convention fixed to one run and endpoint | The effect inflates by 5% or more | Two conventions used |
 | R6 | Is equivalence testing used rather than significance alone | No difference reads as improvement | Used only for final confirmation |
@@ -351,7 +355,7 @@ A ranking is a summary of a protocol. When the protocol is published, the rankin
 
 ### F. Limitations {@sec:limitations@}
 
-1. The findings from our own pool of 170 runs do not extend to the claim that all RS-SR papers have a 1-in-4 error rate. The 25.4% reversal figure includes many method pairs on AID that are close variants, and close variants are expected to sit near the noise floor.
+1. The findings from our own pool of 170 runs do not extend to the claim that all RS-SR papers have a 1-in-3 error rate. The 34.2% reversal figure includes many method pairs on AID that are close variants, and close variants are expected to sit near the noise floor.
 2. Only 7 of 35 papers state a verifiable gain, so the gain-versus-noise table is illustrative rather than representative. Of those 7 verifiable claims, 2 fall below the measured noise ceiling on the same benchmark.
 3. The seed noise is measured on our own pool. For papers whose benchmarks fall outside it, such as the infrared, DOTA, and Landsat-8 cases, we fall back to the pool-wide median and mark the fallback. Those entries cannot be read as the noise on the paper's own benchmark.
 4. The abstract-level count of zero for seed disclosure describes abstracts, not practice. Section~\ref{sec:fulltext} shows the count rises to four once full texts are read.
@@ -366,7 +370,7 @@ A ranking is a summary of a protocol. When the protocol is published, the rankin
 
 ### G. Conclusion {@sec:conclusion@}
 
-On 170 existing runs spanning four standard benchmarks, the seed-to-seed standard deviation is two to five times the size of the method effect it is used to discriminate: one in four method pairs reverses order between training seeds, and slightly more than half show a difference smaller than the seed noise. Aggregation and metric choices reorder the ranking in every benchmark, and on the smallest benchmark the reordering crosses method families. The pool is one laboratory's log, so these figures describe how far the protocol can move a ranking within it rather than an error rate for the field. A survey of 35 published papers shows that the disclosures that would let a reader evaluate these numbers are almost never made, and that the papers which do make them are the exception rather than a distinct class.
+On 170 existing runs spanning four standard benchmarks, the seed-to-seed standard deviation is two to five times the size of the method effect it is used to discriminate: one in three method pairs reverses order between training seeds, and about two thirds show a difference smaller than the seed noise. Aggregation and metric choices reorder the ranking in every benchmark, and on the smallest benchmark the reordering crosses method families. The pool is one laboratory's log, so these figures describe how far the protocol can move a ranking within it rather than an error rate for the field. A survey of 35 published papers shows that the disclosures that would let a reader evaluate these numbers are almost never made, and that the papers which do make them are the exception rather than a distinct class.
 
 The instability is measurable, and the measurement is cheap. Every number in this paper comes from per-image artifacts that an evaluation already produces, with no retraining and no new data. A laboratory that has kept its per-image logs can compute its own noise floor in an afternoon and state it in the next paper. That is the practical proposal: report the aggregation convention, the seed count, and the seed-noise magnitude, so that a reader can tell whether a ranking of 0.1 dB reflects the methods or the sample.
 

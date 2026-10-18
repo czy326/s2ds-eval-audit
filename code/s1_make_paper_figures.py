@@ -101,10 +101,16 @@ def fig2():
     d = json.load(open(os.path.join(OUT, "audit_D_effect_vs_noise.json"), encoding="utf-8"))
     eff, noise, flip = [], [], []
     for r in d:
-        e = abs(r["mean_effect_dB"])
-        n = r.get("sd_seed_ref_a", 0) or 0
-        eff.append(e); noise.append(n)
-        flip.append(not r.get("sign_consistent", True))
+        # a pair with no reference seed sd cannot be placed on the noise axis;
+        # treating it as zero would manufacture points on the y = 0 line and
+        # inflate the denominator of the annotation
+        sd = r.get("sd_seed_ref_a")
+        if sd is None:
+            continue
+        eff.append(abs(r["mean_effect_dB"]))
+        noise.append(sd)
+        # a pair that could not be assessed is not a flipped pair
+        flip.append(r.get("sign_consistent") is False)
 
     fig, ax = plt.subplots(figsize=(3.6, 3.0))
     lim = max(max(eff), max(noise)) * 1.08
@@ -122,7 +128,7 @@ def fig2():
                label=f"sign-flipped ({len(ef)})")
 
     below = sum(1 for e, n in zip(eff, noise) if e < n)
-    ax.text(0.04, 0.96, f"{below}/{len(d)} = {below/len(d)*100:.1f}%\nbelow noise",
+    ax.text(0.04, 0.96, f"{below}/{len(eff)} = {below/len(eff)*100:.1f}%\nbelow noise",
             transform=ax.transAxes, va="top", fontsize=7.8, color="#2C3E50")
 
     ax.set_xlim(0, lim); ax.set_ylim(0, lim)

@@ -184,7 +184,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": 0.0739095654022592,
   "sd_seed_ref_b": null,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.4935011024475098
   ]
@@ -373,7 +373,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": 0.06667824112504635,
   "sd_seed_ref_b": null,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.5302396163940429
   ]
@@ -546,7 +546,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": 0.0693581690142053,
   "sd_seed_ref_b": null,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.5100143337249756
   ]
@@ -703,7 +703,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": 0.06606115555004281,
   "sd_seed_ref_b": null,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.514643762588501
   ]
@@ -844,7 +844,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": 0.0692332628704172,
   "sd_seed_ref_b": null,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.5124992218017578
   ]
@@ -969,7 +969,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": 0.06876013965596492,
   "sd_seed_ref_b": null,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.5092010974884034
   ]
@@ -1078,7 +1078,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": 0.06942598620009938,
   "sd_seed_ref_b": null,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.49376186752319334
   ]
@@ -1171,7 +1171,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": 0.07830375830566512,
   "sd_seed_ref_b": null,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.5027130661010742
   ]
@@ -1248,7 +1248,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": 0.11634631036206189,
   "sd_seed_ref_b": null,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.17319492721557617
   ]
@@ -1309,7 +1309,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": 0.0835295348235565,
   "sd_seed_ref_b": null,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.47878919219970706
   ]
@@ -1354,7 +1354,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": 0.0797319278144081,
   "sd_seed_ref_b": null,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.5331336326599121
   ]
@@ -1383,7 +1383,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": 0.1166584029462464,
   "sd_seed_ref_b": null,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.001858182907104492
   ]
@@ -1412,7 +1412,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.06397610388302977,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.03251244758796013
   ]
@@ -1426,7 +1426,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.053025494274947,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    0.0055202674186950905
   ]
@@ -1440,7 +1440,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": null,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    0.005650537294000917
   ]
@@ -1454,7 +1454,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": null,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.009168516274448816
   ]
@@ -1468,7 +1468,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.06244504078390164,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    0.008355754974473838
   ]
@@ -1482,7 +1482,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.06160704324045172,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.004537195497560331
   ]
@@ -1496,7 +1496,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.05874009222504065,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.002393919377988768
   ]
@@ -1510,7 +1510,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.061643931870660404,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.004683477598577208
   ]
@@ -1524,7 +1524,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.06125188967250558,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.00488415646807579
   ]
@@ -1538,7 +1538,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.10162804610870223,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.08560670058498179
   ]
@@ -1552,7 +1552,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.05589921469900625,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.004302754520945702
   ]
@@ -1566,7 +1566,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.0623298217241087,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.0288873041227619
   ]
@@ -1580,7 +1580,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.07109913786671057,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.19542570555337382
   ]
@@ -1610,7 +1610,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": 0.06397610388302977,
   "sd_seed_ref_b": null,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    0.03816298488196105
   ]
@@ -1624,7 +1624,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": 0.06397610388302977,
   "sd_seed_ref_b": null,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    0.023343931313511316
   ]
@@ -1782,7 +1782,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": 0.053025494274947,
   "sd_seed_ref_b": null,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    0.0001302698753058274
   ]
@@ -1796,7 +1796,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": 0.053025494274947,
   "sd_seed_ref_b": null,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.014688783693143906
   ]
@@ -1954,7 +1954,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": null,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.014819053568449734
   ]
@@ -1968,7 +1968,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.06244504078390164,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    0.0027052176804729204
   ]
@@ -1982,7 +1982,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.06160704324045172,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.010187732791561249
   ]
@@ -1996,7 +1996,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.05874009222504065,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.008044456671989685
   ]
@@ -2010,7 +2010,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.061643931870660404,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.010334014892578125
   ]
@@ -2024,7 +2024,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.06125188967250558,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.010534693762076707
   ]
@@ -2038,7 +2038,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.10162804610870223,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.09125723787898271
   ]
@@ -2052,7 +2052,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.05589921469900625,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.009953291814946618
   ]
@@ -2066,7 +2066,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.0623298217241087,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.03453784141676282
   ]
@@ -2080,7 +2080,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.07109913786671057,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.20107624284737474
   ]
@@ -2094,7 +2094,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.06244504078390164,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    0.017524271248922654
   ]
@@ -2108,7 +2108,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.06160704324045172,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    0.0046313207768884845
   ]
@@ -2122,7 +2122,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.05874009222504065,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    0.006774596896460048
   ]
@@ -2136,7 +2136,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.061643931870660404,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    0.004485038675871608
   ]
@@ -2150,7 +2150,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.06125188967250558,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    0.004284359806373026
   ]
@@ -2164,7 +2164,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.10162804610870223,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.07643818431053298
   ]
@@ -2178,7 +2178,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.05589921469900625,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    0.004865761753503114
   ]
@@ -2192,7 +2192,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.0623298217241087,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.019718787848313084
   ]
@@ -2206,7 +2206,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.07109913786671057,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.186257189278925
   ]
@@ -2796,7 +2796,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.13333004589510117,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.0006312597365606399
   ]
@@ -2810,7 +2810,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.10020486991859434,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    0.02923931848435175
   ]
@@ -2824,7 +2824,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": null,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.08676682426815942
   ]
@@ -2838,7 +2838,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": null,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    0.005972117469424294
   ]
@@ -2852,7 +2852,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.10241349829734493,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    0.018262209211077008
   ]
@@ -2866,7 +2866,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.11210225142806864,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    0.02625975835890997
   ]
@@ -2880,7 +2880,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.10689029841645878,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    0.027298727489653087
   ]
@@ -2894,7 +2894,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.1070806743484585,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    0.026012883867536273
   ]
@@ -2908,7 +2908,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.1123844661096289,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    0.02687964666457403
   ]
@@ -2922,7 +2922,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.1493833596349884,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.23111031850179037
   ]
@@ -2936,7 +2936,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.09586104592001603,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.003100467863537016
   ]
@@ -2950,7 +2950,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.09099272592698737,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    0.05328918638683501
   ]
@@ -2964,7 +2964,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.1271610715040694,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.42538464864095055
   ]
@@ -2994,7 +2994,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": 0.13333004589510117,
   "sd_seed_ref_b": null,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.08613556453159878
   ]
@@ -3008,7 +3008,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": 0.13333004589510117,
   "sd_seed_ref_b": null,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    0.006603377205984933
   ]
@@ -3166,7 +3166,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": 0.10020486991859434,
   "sd_seed_ref_b": null,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.11600614275251116
   ]
@@ -3180,7 +3180,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": 0.10020486991859434,
   "sd_seed_ref_b": null,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.023267201014927456
   ]
@@ -3338,7 +3338,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": null,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    0.09273894173758371
   ]
@@ -3352,7 +3352,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.10241349829734493,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    0.10502903347923642
   ]
@@ -3366,7 +3366,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.11210225142806864,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    0.11302658262706938
   ]
@@ -3380,7 +3380,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.10689029841645878,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    0.1140655517578125
   ]
@@ -3394,7 +3394,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.1070806743484585,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    0.11277970813569568
   ]
@@ -3408,7 +3408,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.1123844661096289,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    0.11364647093273345
   ]
@@ -3422,7 +3422,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.1493833596349884,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.14434349423363096
   ]
@@ -3436,7 +3436,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.09586104592001603,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    0.0836663564046224
   ]
@@ -3450,7 +3450,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.09099272592698737,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    0.14005601065499443
   ]
@@ -3464,7 +3464,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.1271610715040694,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.3386178243727911
   ]
@@ -3478,7 +3478,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.10241349829734493,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    0.012290091741652716
   ]
@@ -3492,7 +3492,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.11210225142806864,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    0.02028764088948568
   ]
@@ -3506,7 +3506,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.10689029841645878,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    0.021326610020228794
   ]
@@ -3520,7 +3520,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.1070806743484585,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    0.02004076639811198
   ]
@@ -3534,7 +3534,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.1123844661096289,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    0.02090752919514974
   ]
@@ -3548,7 +3548,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.1493833596349884,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.23708243597121464
   ]
@@ -3562,7 +3562,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.09586104592001603,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.009072585332961309
   ]
@@ -3576,7 +3576,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.09099272592698737,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    0.047317068917410714
   ]
@@ -3590,7 +3590,7 @@
   "seed_spread_dB": 0.0,
   "sd_seed_ref_a": null,
   "sd_seed_ref_b": 0.1271610715040694,
-  "sign_consistent": true,
+  "sign_consistent": null,
   "effects": [
    -0.4313567661103748
   ]
