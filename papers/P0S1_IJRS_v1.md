@@ -20,7 +20,7 @@ Remote sensing super-resolution papers routinely advertise gains as a single num
 
 ---
 
-**Word count:** 6202 (main text, excluding abstract, references and declarations)
+**Word count:** 6181 (main text, excluding abstract, references and declarations)
 
 
 ---
@@ -375,12 +375,10 @@ A ranking is a summary of a protocol. When the protocol is published, the rankin
 2. Only 7 of 35 papers state a verifiable gain, so the gain-versus-noise table is illustrative rather than representative. Of those 7 verifiable claims, 2 fall below the measured noise ceiling on the same benchmark.
 3. The seed noise is measured on our own pool. For papers whose benchmarks fall outside it, such as the infrared, DOTA, and Landsat-8 cases, we fall back to the pool-wide median and mark the fallback. Those entries cannot be read as the noise on the paper's own benchmark.
 4. The abstract-level count of zero for seed disclosure describes abstracts, not practice. Section~\ref{sec:fulltext} shows the count rises to four once full texts are read.
-5. The dispersion reported by SpectralSR-Bench is per-image, across 50 images, not the seed-to-seed variation of a method effect. Table~\ref{tab:srbench} shows that the method differences are smaller than the data dispersion, which is a statement about dispersion and not about seeds.
-6. GrasslandGAN applies the Kruskal-Wallis test across landscape strata, not across seeds. It demonstrates the capability to perform distribution-level analysis, not that seed replication was done.
-7. MLIN-MetaWeight uses the word reproducibility to mean identical training hyperparameters. It should not be cited as a paper that reports reproducibility in the seed sense.
-8. The closed-access determination relies on OpenAlex metadata. A paper with an author-hosted preprint that OpenAlex has not indexed could be misclassified as closed. We retain the resolved DOIs for manual checking.
-9. Sixteen dataset-tagged runs without a seed suffix are excluded from pairing, together with ten untagged runs. If any of the untagged runs in fact belongs to a benchmark and has a fixed seed, the pairing sample of 144 could grow.
-10. The audit covers our own experiments and a survey of published papers. It does not reproduce any published experiment.
+5. Three cited papers carry an evidential boundary. The dispersion SpectralSR-Bench reports is per-image across 50 images, not seed-to-seed variation, so Table~\ref{tab:srbench} shows that method differences are smaller than the data dispersion rather than that the differences failed to replicate. GrasslandGAN applies the Kruskal-Wallis test across landscape strata, not across seeds, and shows the capability rather than the practice. MLIN-MetaWeight uses reproducibility to mean identical training hyperparameters, not seed replication.
+6. The closed-access determination relies on OpenAlex metadata. A paper with an author-hosted preprint that OpenAlex has not indexed could be misclassified as closed. We retain the resolved DOIs for manual checking.
+7. Sixteen dataset-tagged runs without a seed suffix are excluded from pairing, together with ten untagged runs. If any of the untagged runs in fact belongs to a benchmark and has a fixed seed, the pairing sample of 144 could grow.
+8. The audit covers our own experiments and a survey of published papers. It does not reproduce any published experiment.
 
 
 ### Conclusion {@sec:conclusion@}

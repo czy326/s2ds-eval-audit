@@ -296,6 +296,50 @@ DECLS = [
 ]
 
 
+def tighten_limitations(text):
+    """Fold the three citation-boundary notes into one item.
+
+    They are one subject, and a ten-item numbered list reads as a disclaimer
+    annex rather than as a statement of what the design can and cannot support.
+    The substantive limits are left untouched.
+    """
+    m = re.search(r"(?s)(### Limitations.*?)(?=### Conclusion)", text)
+    if not m:
+        raise SystemExit("limitations block not found")
+    block = m.group(1)
+
+    old5 = ("5. The dispersion reported by SpectralSR-Bench is per-image, across 50 images, "
+            "not the seed-to-seed variation of a method effect. Table~\\ref{tab:srbench} shows "
+            "that the method differences are smaller than the data dispersion, which is a "
+            "statement about dispersion and not about seeds.")
+    old6 = ("6. GrasslandGAN applies the Kruskal-Wallis test across landscape strata, not across "
+            "seeds. It demonstrates the capability to perform distribution-level analysis, not "
+            "that seed replication was done.")
+    old7 = ("7. MLIN-MetaWeight uses the word reproducibility to mean identical training "
+            "hyperparameters. It should not be cited as a paper that reports reproducibility in "
+            "the seed sense.")
+    new5 = ("5. Three cited papers carry an evidential boundary. The dispersion SpectralSR-Bench "
+            "reports is per-image across 50 images, not seed-to-seed variation, so "
+            "Table~\\ref{tab:srbench} shows that method differences are smaller than the data "
+            "dispersion rather than that the differences failed to replicate. GrasslandGAN "
+            "applies the Kruskal-Wallis test across landscape strata, not across seeds, and shows "
+            "the capability rather than the practice. MLIN-MetaWeight uses reproducibility to "
+            "mean identical training hyperparameters, not seed replication.")
+
+    joined = old5 + "\n" + old6 + "\n" + old7
+    if block.count(joined) != 1:
+        raise SystemExit("limitation items 5-7 did not match as a contiguous block")
+    block = block.replace(joined, new5, 1)
+
+    # renumber in descending order so the substitutions cannot collide
+    for a, b in (("10.", "8."), ("9.", "7."), ("8.", "6.")):
+        block, n = re.subn(r"(?m)^" + re.escape(a) + r" ", b + " ", block, count=1)
+        if n != 1:
+            raise SystemExit("could not renumber item %s" % a)
+
+    return text[:m.start(1)] + block + text[m.end(1):]
+
+
 def main():
     text = open(SRC, encoding="utf-8").read()
     lines = text.split("\n")
@@ -347,6 +391,8 @@ def main():
         chunks.append("## %s {@%s@}\n%s" % (new, lab, body.strip("\n")))
 
     body_all = "\n\n".join(chunks)
+
+    body_all = tighten_limitations(body_all)
 
     # --- word count over the prose only
     prose = [l for l in body_all.split("\n")
