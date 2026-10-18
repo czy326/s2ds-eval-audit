@@ -11,7 +11,7 @@
 \begin{document}
 
 
-\title[Evaluation protocol choices decide the ranking]{Evaluation protocol choices, not method quality, decide the ranking in remote sensing super-resolution benchmarks}
+\title[Evaluation protocol choices decide the ranking]{Protocol choices rival method differences in an audit of 170 remote sensing super-resolution runs}
 
 \author*[1]{\fnm{Zhengyang} \sur{Chen}}\email{1250368357@qq.com}
 
@@ -23,7 +23,7 @@
 
 \affil[2]{\orgname{Institute of Earth Environment, Chinese Academy of Sciences}, \orgaddress{\city{Xi'an}, \postcode{710061}, \country{China}}}
 
-\abstract{Super-resolution papers for remote sensing routinely advertise gains as a single number, for instance that a method exceeds the state of the art by 0.1 dB. Those numbers rest on protocol choices that are rarely reported: which images form the test set, how per-image metrics are aggregated, how many training seeds are run, and which baseline convention defines the endpoint. We audit these choices on 170 existing runs spanning four remote sensing super-resolution benchmarks, reusing stored per-image evaluation artifacts and training nothing. A path-level check confirms that every run within a benchmark evaluates an identical image set, so the instability we report is not a data-engineering artifact. Changing only the aggregation rule flips the top-ranked method on all four benchmarks. Across 327 method pairs, 25.4\% reverse sign between training seeds and 52.6\% have an effect smaller than the reference method's seed-to-seed standard deviation, whose median is 0.088 dB against method effects of 0.018 to 0.039 dB. A survey of 35 papers from 2026, with 18 full texts retrieved, finds that 7 state a verifiable dB gain, that no abstract mentions seeds, variance, or statistical testing, and that 4 disclose seed counts in the body. We close with a seven-item reproducibility scorecard.}
+\abstract{Remote sensing super-resolution papers routinely advertise gains as a single number, such as a 0.1 dB gain over the state of the art. Those numbers rest on protocol choices that are rarely reported: which images form the test set, how per-image metrics are aggregated, how many seeds are run, and which baseline convention defines the endpoint. We audit these choices on 170 existing runs spanning four benchmarks, reusing stored per-image artifacts and training nothing. The pool is one laboratory's log, built from three standard architectures plus variants within a single model family, which bounds how far the result generalises. A path-level check confirms identical image sets within each benchmark. Across 327 method pairs, 25.4\% reverse sign between seeds and 52.6\% have an effect smaller than the reference method's seed-to-seed standard deviation, whose median is 0.088 dB against method effects of 0.018 to 0.039 dB. Aggregation and metric choices reorder the ranking in every benchmark, and on the smallest benchmark it crosses method families. A survey of 35 papers from 2026, with 18 full texts retrieved, finds that 7 state a verifiable dB gain and that no abstract mentions seeds, variance, or statistical testing. We close with a seven-item scorecard.}
 
 \keywords{Super-resolution, Benchmark evaluation, Reproducibility, Statistical significance, Model ranking, Earth observation}
 
@@ -91,7 +91,7 @@ We make four contributions.
 
 \textbf{C1. A zero-training audit protocol.} We audit 170 existing runs across four standard benchmarks by reading their per-image evaluation artifacts. No model is retrained. The protocol applies to any SR evaluation that has retained per-image results, which is the common case for a laboratory's own experiment logs.
 
-\textbf{C2. A measurement of ranking instability.} We quantify how often the ranking changes under three classes of protocol choice. Across 327 method pairs, 25.4\% reverse sign between training seeds and 52.6\% show an effect smaller than the reference method's seed noise. The below-noise fraction ranges from 47.1\% to 68.5\% across three defensible reference conventions, and we report the full range. Changing only the aggregation rule flips the champion on all four benchmarks.
+\textbf{C2. A measurement of the protocol against the effect it is used to rank.} Across 327 method pairs, 25.4\% reverse sign between training seeds and 52.6\% show an effect smaller than the reference method's seed noise. The below-noise fraction ranges from 47.1\% to 68.5\% across three defensible reference conventions, and we report the full range. The seed-to-seed standard deviation has a median of 0.088 dB against method effects of 0.018 to 0.039 dB, so the protocol dominates the quantity being ranked. Aggregation and metric choices reorder the ranking in every benchmark, which follows from that ratio rather than standing as an independent finding. On the smallest benchmark the reordering crosses method families.
 
 \textbf{C3. A report-practice survey.} We code 35 papers on disclosure of aggregation, seeds, and test-set composition. The abstract-level count for seed disclosure is zero. Retrieving 18 full texts raises it to four. The difference between the two counts governs how the whole survey has to be read.
 
@@ -135,13 +135,15 @@ The benchmarks used in this audit carry between 101 and 1000 test images. The sm
 
 \section{3. Results}\label{sec:results}
 
+The method pool is one laboratory's log, built from three standard architectures plus variants of a single model family (Methods). The results below therefore measure how far protocol choices can move a ranking within that pool, and the seed-noise analysis bounds how much of the movement is resolvable at all.
+
 \subsection{Line A: the test sets are identical}\label{sec:testsets}
 
 All 170 runs pass. Within each benchmark, the set of image paths is identical across every run, the Jaccard index is 1.0, the recorded size matches the split file, and no metric value is missing or NaN.
 
 The instability reported below is not a test-set artifact. Whatever moves a ranking here, it is not the images.
 
-\subsection{Line B: the champion changes on all four benchmarks}\label{sec:champion}
+\subsection{Line B: aggregation reorders the ranking}\label{sec:champion}
 
 \begin{table}[htbp]
 \centering
@@ -173,7 +175,7 @@ Table\textasciitilde{}\ref{tab:conventions} reports, for each benchmark, the Spe
 
 \textbf{Trimmed aggregation preserves the ranking.} The 10\% and 25\% trimmed means keep a rank correlation of at least 0.833 with mean PSNR, and mostly above 0.93, across every benchmark. The trimmed mean discards the extremes while retaining the bulk of the distribution, and the ranking is stable under it.
 
-The contrast between the median and the trimmed mean localizes the source. Both are robust aggregators, yet the median reorders and the trimmed mean does not. The difference is that the median depends on the middle order statistics and is sensitive to how the distribution shifts in the center, while the trimmed mean averages the bulk and retains the mean's insensitivity to that shift. The instability therefore lives in the tails and near the center, not in the overall shape. This is an operational diagnostic. When a benchmark's ranking is highly sensitive to the convention, the first thing to inspect is the distribution of the per-image scores, not the choice of metric.
+The contrast between the median and the trimmed mean localizes the source. Both are robust aggregators, yet the median reorders and the trimmed mean does not. The difference is that the median depends on the middle order statistics and is sensitive to how the distribution shifts in the center, while the trimmed mean averages the bulk and retains the mean's insensitivity to that shift. The instability therefore lives in the tails and near the center, not in the overall shape. This is an operational diagnostic. When a benchmark's ranking is highly sensitive to the convention, the first thing to inspect is the distribution of the per-image scores, not the choice of metric. One qualification applies to the flip count. The method pool behind these rankings is dominated by variants of a single model family (Methods), so a flip between the top two entries is often a reordering of near-identical variants, which the seed-noise analysis in the next subsection explains. The WHU-RS19 case below is the exception, because there the two candidates belong to different method families, and it is the clearest evidence that the effect is not confined to close variants.
 
 \textbf{On WHU-RS19, switching the metric changes the winner's method family.} The SAM convention carries the lowest rank correlation in the whole study, 0.272, on WHU-RS19. The champion under mean PSNR is a residual-channel-attention network. Under SAM it is a lightweight CNN. The two methods differ not in depth or width but in family, and the benchmark that produces this reversal is the smallest, at 101 test images.
 
@@ -418,7 +420,7 @@ A ranking is a summary of a protocol. When the protocol is published, the rankin
 
 \subsection{Conclusion}\label{sec:conclusion}
 
-Protocol choices that RS-SR papers rarely report determine which method is ranked first. On 170 existing runs spanning four standard benchmarks, changing only the aggregation rule flips the champion on all four, and across 327 method pairs one in four reverses order between training seeds while slightly more than half show a difference smaller than the seed noise. A survey of 35 published papers shows that the disclosures that would let a reader evaluate these numbers are almost never made, and that the papers which do make them are the exception rather than a distinct class.
+On 170 existing runs spanning four standard benchmarks, the seed-to-seed standard deviation is two to five times the size of the method effect it is used to discriminate: one in four method pairs reverses order between training seeds, and slightly more than half show a difference smaller than the seed noise. Aggregation and metric choices reorder the ranking in every benchmark, and on the smallest benchmark the reordering crosses method families. The pool is one laboratory's log, so these figures describe how far the protocol can move a ranking within it rather than an error rate for the field. A survey of 35 published papers shows that the disclosures that would let a reader evaluate these numbers are almost never made, and that the papers which do make them are the exception rather than a distinct class.
 
 The instability is measurable, and the measurement is cheap. Every number in this paper comes from per-image artifacts that an evaluation already produces, with no retraining and no new data. A laboratory that has kept its per-image logs can compute its own noise floor in an afternoon and state it in the next paper. That is the practical proposal: report the aggregation convention, the seed count, and the seed-noise magnitude, so that a reader can tell whether a ranking of 0.1 dB reflects the methods or the sample.
 
@@ -428,7 +430,7 @@ The seven-item scorecard in Section\textasciitilde{}\ref{sec:scorecard} generali
 
 \subsection{Data and assets}\label{sec:assets}
 
-The audit reads 170 runs, each of which produced a \texttt{test\_\allowbreak per\_\allowbreak image.jsonl} record with one line per test image holding \texttt{path}, \texttt{psnr}, \texttt{ssim}, \texttt{ergas}, \texttt{sam}, and \texttt{lpips}. The runs span four standard benchmarks, AID (46 runs), RSSCN7 (39), UCMerced (39), and WHU-RS19 (36). Ten further runs carry no dataset tag and are excluded from all per-benchmark statistics. Test-set sizes are 1000 images for AID, 281 for RSSCN7, 210 for UCMerced, and 101 for WHU-RS19. All four benchmarks are public and are widely used for RS-SR in the aerial and satellite scene setting.
+The audit reads 170 runs, each of which produced a \texttt{test\_\allowbreak per\_\allowbreak image.jsonl} record with one line per test image holding \texttt{path}, \texttt{psnr}, \texttt{ssim}, \texttt{ergas}, \texttt{sam}, and \texttt{lpips}. The runs span four standard benchmarks, AID (46 runs), RSSCN7 (39), UCMerced (39), and WHU-RS19 (36). Ten further runs carry no dataset tag and are excluded from all per-benchmark statistics. Test-set sizes are 1000 images for AID, 281 for RSSCN7, 210 for UCMerced, and 101 for WHU-RS19. All four benchmarks are public and are widely used for RS-SR in the aerial and satellite scene setting. The pool is one laboratory's experiment log rather than a sample of published methods. Counting each run name after removing the seed and dataset suffixes gives 20 distinct entries on AID, 17 on RSSCN7, 17 on UCMerced, and 14 on WHU-RS19. Only three of those entries are independent standard architectures, namely a lightweight CNN, a small residual-channel-attention network, and a 32-channel feature-enhancement network. The remainder are variants within a single model family that differ by one loss weight or one architectural component. The composition bounds what the audit can claim and is carried through the abstract and the limitations.
 
 Every run predates this study. We train nothing. The audit is a re-reading of stored artifacts, which is what makes it cheap and what makes it applicable to any laboratory's existing logs.
 

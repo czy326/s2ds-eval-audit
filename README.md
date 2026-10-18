@@ -1,6 +1,12 @@
-# Protocol Choices, Not Method Quality, Decide the Ranking
+# Protocol choices rival method differences
 
 **A zero-training reproducibility audit of remote sensing super-resolution evaluation.**
+
+The method pool behind the audit is one laboratory's experiment log: three
+standard architectures plus variants of a single model family. The results
+measure how far protocol choices can move a ranking within that pool, and the
+seed-noise analysis bounds how much of the movement is resolvable at all. See
+the Limitations section of the manuscript for the consequences of this scope.
 
 This repository contains the code, data, and results for an audit of how much a
 remote-sensing super-resolution (RS-SR) ranking moves when the protocol around a

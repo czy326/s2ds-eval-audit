@@ -36,29 +36,114 @@ DST = os.path.join(OUT, "P0S1_SciRep_v1.md")
 DST_SI = os.path.join(OUT, "P0S1_SciRep_SI.md")
 
 # --------------------------------------------------------------- authored text
-TITLE = ("Evaluation protocol choices, not method quality, decide the ranking in "
-         "remote sensing super-resolution benchmarks")
+TITLE = ("Protocol choices rival method differences in an audit of 170 remote "
+         "sensing super-resolution runs")
 
 ABSTRACT = (
-    "Super-resolution papers for remote sensing routinely advertise gains as a "
-    "single number, for instance that a method exceeds the state of the art by "
-    "0.1 dB. Those numbers rest on protocol choices that are rarely reported: "
-    "which images form the test set, how per-image metrics are aggregated, how "
-    "many training seeds are run, and which baseline convention defines the "
-    "endpoint. We audit these choices on 170 existing runs spanning four remote "
-    "sensing super-resolution benchmarks, reusing stored per-image evaluation "
-    "artifacts and training nothing. A path-level check confirms that every run "
-    "within a benchmark evaluates an identical image set, so the instability we "
-    "report is not a data-engineering artifact. Changing only the aggregation "
-    "rule flips the top-ranked method on all four benchmarks. Across 327 method "
-    "pairs, 25.4% reverse sign between training seeds and 52.6% have an effect "
-    "smaller than the reference method's seed-to-seed standard deviation, whose "
-    "median is 0.088 dB against method effects of 0.018 to 0.039 dB. A survey "
-    "of 35 papers from 2026, with 18 full texts retrieved, finds that 7 state a "
-    "verifiable dB gain, that no abstract mentions seeds, variance, or "
-    "statistical testing, and that 4 disclose seed counts in the body. We close "
-    "with a seven-item reproducibility scorecard."
+    "Remote sensing super-resolution papers routinely advertise gains as a "
+    "single number, such as a 0.1 dB gain over the state of the art. Those "
+    "numbers rest on protocol choices that are rarely reported: which images "
+    "form the test set, how per-image metrics are aggregated, how many seeds "
+    "are run, and which baseline convention defines the endpoint. We audit "
+    "these choices on 170 existing runs spanning four benchmarks, reusing "
+    "stored per-image artifacts and training nothing. The pool is one "
+    "laboratory's log, built from three standard architectures plus variants "
+    "within a single model family, which bounds how far the result "
+    "generalises. A path-level check confirms identical image sets within each "
+    "benchmark. Across 327 method pairs, 25.4% reverse sign between seeds and "
+    "52.6% have an effect smaller than the reference method's seed-to-seed "
+    "standard deviation, whose median is 0.088 dB against method effects of "
+    "0.018 to 0.039 dB. Aggregation and metric choices reorder the ranking in "
+    "every benchmark, and on the smallest benchmark it crosses method "
+    "families. A survey of 35 papers from 2026, with 18 full texts retrieved, "
+    "finds that 7 state a verifiable dB gain and that no abstract mentions "
+    "seeds, variance, or statistical testing. We close with a seven-item "
+    "scorecard."
 )
+
+# Targeted revisions applied to the inherited text after it is assembled. Each
+# anchor must match exactly once, so a change to the upstream wording fails
+# loudly instead of silently leaving the revision unapplied.
+REWRITES = [
+    # contributions: lead with the noise-to-effect ratio, not the ranking flip
+    ("**C2. A measurement of ranking instability.** We quantify how often the "
+     "ranking changes under three classes of protocol choice. Across 327 method "
+     "pairs, 25.4% reverse sign between training seeds and 52.6% show an effect "
+     "smaller than the reference method's seed noise. The below-noise fraction "
+     "ranges from 47.1% to 68.5% across three defensible reference conventions, "
+     "and we report the full range. Changing only the aggregation rule flips the "
+     "champion on all four benchmarks.",
+     "**C2. A measurement of the protocol against the effect it is used to "
+     "rank.** Across 327 method pairs, 25.4% reverse sign between training seeds "
+     "and 52.6% show an effect smaller than the reference method's seed noise. "
+     "The below-noise fraction ranges from 47.1% to 68.5% across three "
+     "defensible reference conventions, and we report the full range. The "
+     "seed-to-seed standard deviation has a median of 0.088 dB against method "
+     "effects of 0.018 to 0.039 dB, so the protocol dominates the quantity "
+     "being ranked. Aggregation and metric choices reorder the ranking in every "
+     "benchmark, which follows from that ratio rather than standing as an "
+     "independent finding. On the smallest benchmark the reordering crosses "
+     "method families."),
+
+    # the subsection heading should not promise more than the pool can support
+    ("### B. Line B: the champion changes on all four benchmarks",
+     "### B. Line B: aggregation reorders the ranking"),
+
+    # qualification on the flip count, placed where the flip is interpreted
+    ("When a benchmark's ranking is highly sensitive to the convention, the "
+     "first thing to inspect is the distribution of the per-image scores, not "
+     "the choice of metric.",
+     "When a benchmark's ranking is highly sensitive to the convention, the "
+     "first thing to inspect is the distribution of the per-image scores, not "
+     "the choice of metric. One qualification applies to the flip count. The "
+     "method pool behind these rankings is dominated by variants of a single "
+     "model family (Methods), so a flip between the top two entries is often a "
+     "reordering of near-identical variants, which the seed-noise analysis in "
+     "the next subsection explains. The WHU-RS19 case below is the exception, "
+     "because there the two candidates belong to different method families, "
+     "and it is the clearest evidence that the effect is not confined to close "
+     "variants."),
+
+    # disclose the composition of the method pool in Methods
+    ("All four benchmarks are public and are widely used for RS-SR in the "
+     "aerial and satellite scene setting.",
+     "All four benchmarks are public and are widely used for RS-SR in the "
+     "aerial and satellite scene setting. The pool is one laboratory's "
+     "experiment log rather than a sample of published methods. Counting each "
+     "run name after removing the seed and dataset suffixes gives 20 distinct "
+     "entries on AID, 17 on RSSCN7, 17 on UCMerced, and 14 on WHU-RS19. Only "
+     "three of those entries are independent standard architectures, namely a "
+     "lightweight CNN, a small residual-channel-attention network, and a "
+     "32-channel feature-enhancement network. The remainder are variants within "
+     "a single model family that differ by one loss weight or one architectural "
+     "component. The composition bounds what the audit can claim and is carried "
+     "through the abstract and the limitations."),
+
+    # state the bound where the results begin
+    ("## 3. Results\n",
+     "## 3. Results\n\nThe method pool is one laboratory's log, built from "
+     "three standard architectures plus variants of a single model family "
+     "(Methods). The results below therefore measure how far protocol choices "
+     "can move a ranking within that pool, and the seed-noise analysis bounds "
+     "how much of the movement is resolvable at all.\n"),
+
+    # conclusion: open on the measurable ratio, close on the scope bound
+    ("Protocol choices that RS-SR papers rarely report determine which method "
+     "is ranked first. On 170 existing runs spanning four standard benchmarks, "
+     "changing only the aggregation rule flips the champion on all four, and "
+     "across 327 method pairs one in four reverses order between training seeds "
+     "while slightly more than half show a difference smaller than the seed "
+     "noise.",
+     "On 170 existing runs spanning four standard benchmarks, the seed-to-seed "
+     "standard deviation is two to five times the size of the method effect it "
+     "is used to discriminate: one in four method pairs reverses order between "
+     "training seeds, and slightly more than half show a difference smaller "
+     "than the seed noise. Aggregation and metric choices reorder the ranking "
+     "in every benchmark, and on the smallest benchmark the reordering crosses "
+     "method families. The pool is one laboratory's log, so these figures "
+     "describe how far the protocol can move a ranking within it rather than an "
+     "error rate for the field."),
+]
 
 KEYWORDS = ("Super-resolution; Benchmark evaluation; Reproducibility; "
             "Statistical significance; Model ranking; Earth observation")
@@ -83,7 +168,7 @@ LBL = {
     "Statistical reporting norms": "sec:reporting",
     "Benchmark scale in remote sensing": "sec:scale",
     "Line A: the test sets are identical": "sec:testsets",
-    "Line B: the champion changes on all four benchmarks": "sec:champion",
+    "Line B: aggregation reorders the ranking": "sec:champion",
     "Lines C and D: effect size against seed noise": "sec:noise",
     "Line E: the pipeline reproduces a known result": "sec:anchor",
     "Report-practice statistics": "sec:survey",
@@ -356,6 +441,15 @@ def main():
 
     out = "\n\n---\n\n".join(doc) + "\n"
 
+    # --- targeted revisions, applied before the labels are attached. A missing
+    # anchor is a hard error: it means the upstream text changed and the
+    # revision would otherwise be silently skipped.
+    for old, new in REWRITES:
+        if out.count(old) != 1:
+            raise SystemExit("rewrite anchor matched %d times: %r"
+                             % (out.count(old), old[:80]))
+        out = out.replace(old, new, 1)
+
     # --- attach the label markers and refuse to emit an unlabelled heading
     def sub_heading(m):
         key = m.group(2).strip()
@@ -406,15 +500,15 @@ def main():
                    "tab:gains", "tab:scorecard", "fig:1", "fig:2"]
     missing = [l for l in main_labels if ("\\ref{%s}" % l) not in body_only]
     print("display items with no in-text call-out:", missing or "none")
-    # display items are not prose, so table rows and caption lines are excluded
-    def prose(s):
-        keep = [l for l in s.split("\n")
-                if not l.strip().startswith("|")
-                and not re.match(r"^\*\*(TABLE|Fig\.)", l.strip())]
-        return " ".join(keep)
-
-    main = sum(len(re.findall(r"[A-Za-z][A-Za-z'-]*", prose(b)))
-               for b in [intro, rel, results, disc])
+    # display items are not prose, so table rows and caption lines are excluded.
+    # Counted from the assembled document, after the revisions above have been
+    # applied, so the reported figure is the one that will be submitted.
+    parts = re.split(r"(?m)^## ", out.split("## References")[0])
+    kept = [p for p in parts if not p.startswith("5. Methods")]
+    lines = [l for l in "\n".join(kept).split("\n")
+             if not l.strip().startswith("|")
+             and not re.match(r"^\*\*(TABLE|Fig\.)", l.strip())]
+    main = len(re.findall(r"[A-Za-z][A-Za-z'-]*", " ".join(lines)))
     print("approx main text     :", main, "(Methods excluded, target <= 4500)")
     left = re.findall(r"Section [IVX]+|Table [IVX]+", out)
     print("unconverted xrefs    :", sorted(set(left)) if left else "none")
