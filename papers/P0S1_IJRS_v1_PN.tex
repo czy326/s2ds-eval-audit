@@ -3,6 +3,7 @@
 %% Taylor & Francis Interact layout class (v1.05), single column for review.
 \usepackage{graphicx}
 \usepackage{amsmath,amssymb}
+\usepackage{array}
 \usepackage{xcolor}
 \usepackage{url}
 \usepackage[authoryear,round]{natbib}
@@ -61,7 +62,7 @@ We begin with a case that requires no reproduction on our part. SpectralSR-Bench
 \footnotesize
 \setlength{\tabcolsep}{3pt}
 \setlength{\tblavail}{\dimexpr\textwidth-10\tabcolsep\relax}
-\begin{tabular}{lcccc}
+\begin{tabular}{ccccc}
 \hline
 Method A & Method B & $\Delta$PSNR (dB) & max std (dB) & $\Delta$ / std \\
 \hline
@@ -193,7 +194,7 @@ The instability reported below is not a test-set artifact. Whatever moves a rank
 \footnotesize
 \setlength{\tabcolsep}{3pt}
 \setlength{\tblavail}{\dimexpr\textwidth-10\tabcolsep\relax}
-\begin{tabular}{lcccc}
+\begin{tabular}{ccccc}
 \hline
 Convention & AID (46) & RSSCN7 (39) & UCMerced (39) & WHU-RS19 (36) \\
 \hline
@@ -241,7 +242,7 @@ Two conventions govern these denominators, and both matter more than they look. 
 \footnotesize
 \setlength{\tabcolsep}{3pt}
 \setlength{\tblavail}{\dimexpr\textwidth-4\tabcolsep\relax}
-\begin{tabular}{p{0.640\tblavail}p{0.330\tblavail}}
+\begin{tabular}{>{\centering\arraybackslash}m{0.640\tblavail}>{\centering\arraybackslash}m{0.330\tblavail}}
 \hline
 Quantity & Value \\
 \hline
@@ -298,7 +299,7 @@ Table\textasciitilde{}\ref{tab:practice} reports the full breakdown.
 \footnotesize
 \setlength{\tabcolsep}{3pt}
 \setlength{\tblavail}{\dimexpr\textwidth-4\tabcolsep\relax}
-\begin{tabular}{p{0.676\tblavail}p{0.294\tblavail}}
+\begin{tabular}{>{\centering\arraybackslash}m{0.676\tblavail}>{\centering\arraybackslash}m{0.294\tblavail}}
 \hline
 Field & Count \\
 \hline
@@ -341,7 +342,7 @@ For the 7 papers that state a verifiable dB gain, we compare the claimed effect 
 \footnotesize
 \setlength{\tabcolsep}{3pt}
 \setlength{\tblavail}{\dimexpr\textwidth-10\tabcolsep\relax}
-\begin{tabular}{p{0.384\tblavail}p{0.141\tblavail}p{0.202\tblavail}p{0.081\tblavail}p{0.162\tblavail}}
+\begin{tabular}{>{\centering\arraybackslash}m{0.384\tblavail}>{\centering\arraybackslash}m{0.141\tblavail}>{\centering\arraybackslash}m{0.202\tblavail}>{\centering\arraybackslash}m{0.081\tblavail}>{\centering\arraybackslash}m{0.162\tblavail}}
 \hline
 Paper & Claimed $\Delta$ & Benchmark (noise source) & $\Delta$ / max sd & Reading \\
 \hline
@@ -398,7 +399,7 @@ The audit findings reduce to seven checks. Each check names a disclosure whose a
 \footnotesize
 \setlength{\tabcolsep}{3pt}
 \setlength{\tblavail}{\dimexpr\textwidth-8\tabcolsep\relax}
-\begin{tabular}{p{0.038\tblavail}p{0.384\tblavail}p{0.321\tblavail}p{0.227\tblavail}}
+\begin{tabular}{>{\centering\arraybackslash}m{0.038\tblavail}>{\centering\arraybackslash}m{0.384\tblavail}>{\centering\arraybackslash}m{0.321\tblavail}>{\centering\arraybackslash}m{0.227\tblavail}}
 \hline
 \# & Check & Failure when omitted & Status in the audit pool \\
 \hline

@@ -200,6 +200,7 @@ PREAMBLE = r"""\documentclass{interact}
 %% Taylor & Francis Interact layout class (v1.05), single column for review.
 \usepackage{graphicx}
 \usepackage{amsmath,amssymb}
+\usepackage{array}
 \usepackage{xcolor}
 \usepackage{url}
 \usepackage[authoryear,round]{natbib}
@@ -257,11 +258,15 @@ def build_table(roman, caption, header, body):
     maxlen = [max(len(c) for c in col) for col in cols]
     maxword = [max(longest_word(c) for c in col) for col in cols]
     weights = [max(maxlen[j], 3 * maxword[j]) for j in range(ncol)]
+    # every cell is centred horizontally and vertically: wide tables use m{}
+    # columns (vertical centring) with \centering inside (horizontal), narrow
+    # ones use plain c columns, which centre on the baseline already
     if max(maxlen) > 28:
         tot = float(sum(weights))
-        spec = "".join("p{%.3f\\tblavail}" % (0.97 * w / tot) for w in weights)
+        spec = "".join(">{\\centering\\arraybackslash}m{%.3f\\tblavail}"
+                       % (0.97 * w / tot) for w in weights)
     else:
-        spec = "l" + "c" * (ncol - 1)
+        spec = "c" * ncol
     lab = TAB_LABEL.get(roman, roman.lower())
     lines = ["\\begin{table}[tbp]", r"\centering", r"\footnotesize",
              r"\setlength{\tabcolsep}{3pt}",
