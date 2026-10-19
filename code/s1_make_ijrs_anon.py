@@ -38,7 +38,8 @@ ANON_AVAIL = ("The data that support the findings of this study are available "
 DROP_SECTIONS = ["Acknowledgements", "Funding", "Author contributions"]
 IDENTIFYING = ["Zhengyang", "Dawei", "Zhiheng", "Engineering University",
                "Earth Environment", "Chinese Academy", "wjmicheal",
-               "18392366572", "1250368357", "liuzhiheng", "0009-0003", "42502302",
+               "18392366572", "1250368357", "liuzhiheng",
+               "0009-0003", "0000-0003", "42502302",
                "czy326", "github.com"]
 
 

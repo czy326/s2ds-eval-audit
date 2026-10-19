@@ -243,7 +243,8 @@ PREAMBLE = r"""\documentclass{interact}
 %% AUTHOR-BEGIN
 \author{\name{Zhengyang Chen\textsuperscript{a}\thanks{Email: 18392366572@163.com.
     ORCID: 0009-0003-3310-8077}
-  and Dawei Liu\textsuperscript{a}\thanks{*CONTACT Dawei Liu. Email: wjmicheal@163.com}}
+  and Dawei Liu\textsuperscript{a}\thanks{*CONTACT Dawei Liu.
+    Email: wjmicheal@163.com. ORCID: 0000-0003-2471-4713}}
 \affil{\textsuperscript{a}Engineering University of PAP, Xi'an 710086, China}}
 %% AUTHOR-END
 
