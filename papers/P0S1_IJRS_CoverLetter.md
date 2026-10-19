@@ -1,0 +1,32 @@
+# Cover letter — International Journal of Remote Sensing
+
+19 October 2026
+
+The Editors\\
+International Journal of Remote Sensing
+
+Dear Editors,
+
+We submit our manuscript "Protocol choices rival method differences in an audit of 170 remote sensing super-resolution runs" for consideration as a Research Article in the International Journal of Remote Sensing.
+
+The paper asks a question the evaluation literature leaves open. Studies of super-resolution benchmarks ask whether a metric is trustworthy, whether it agrees with human judgement, or whether it serves a downstream task. They do not ask whether the same set of methods receives the same ranking when the evaluation protocol changes. We answer that question directly, using 170 existing runs across four public benchmarks. Every number comes from per-image artifacts an evaluation had already produced. No model is retrained and no data are collected.
+
+Across 327 method pairs, 34.2 per cent reverse their order between training seeds, and 65.4 per cent have an effect smaller than the reference method's seed-to-seed standard deviation, whose median is 0.088 dB against method effects of 0.018 to 0.039 dB. The protocol is two to five times the size of the quantity it is used to rank. Aggregation and metric choices reorder the ranking in every benchmark. A survey of 35 papers from 2026 finds that seven state a gain a reader could check, and that no abstract mentions seeds, variance or statistical testing.
+
+Two points bound the claim. The method pool is one laboratory's experiment log, built from three standard architectures plus variants of a single model family, so the results describe how far the protocol can move a ranking within that pool rather than an error rate for the field. The reversal and below-noise proportions are reported over the pairs whose statistic is assessable, with cluster-bootstrap intervals, because the 327 pairs share methods.
+
+We believe the work suits the journal because assessment protocol belongs to the technology of remote sensing rather than to any single application, and because the remedy is operational. A laboratory that has kept its per-image logs can compute its own noise floor and state it in the next paper. The seven-item scorecard turns the question of whether a ranking is trustworthy into a short list of disclosures that authors can supply and readers can look for.
+
+The manuscript is original, has not been published elsewhere, and is not under consideration by another journal. Both authors have approved the submission and agree to its content. Neither author has a competing interest, and neither has any relationship with, or competing interest in relation to, any member of the editorial board. The manuscript has not been the subject of a pre-submission enquiry. The audit code, the per-image records and the derived tables are available at https://github.com/czy326/s2ds-eval-audit. An anonymised manuscript is supplied as the main document for review.
+
+Yours sincerely,
+
+Zhengyang Chen (first author)\\
+Engineering University of PAP, Xi'an 710086, China\\
+18392366572@163.com\\
+ORCID 0009-0003-3310-8077
+
+Dawei Liu (corresponding author)\\
+Engineering University of PAP, Xi'an 710086, China\\
+wjmicheal@163.com\\
+ORCID 0000-0003-2471-4713
