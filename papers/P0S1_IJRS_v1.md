@@ -409,7 +409,7 @@ The four benchmark datasets (AID, RSSCN7, UCMerced, WHU-RS19) are public and are
 The reference list is shipped with the repository. Every bibliographic field is copied from a Crossref, arXiv or OpenAlex record, and the source is named for each entry. Eight entries could not be completed and are flagged. One of those eight is the case in which the DOI carried in the survey pool resolved at Crossref to a paper with an unrelated title. The true record was recovered by querying Crossref with the publisher's article identifier as an alternative-id.
 ## Author contributions
 
-**Zhengyang Chen:** conceptualisation, methodology, software, formal analysis, investigation, writing - original draft. **Dawei Liu:** supervision, methodology, validation, writing - review and editing. **Zhiheng Liu:** data curation, resources, validation, writing - review and editing.
+**Zhengyang Chen:** conceptualisation, methodology, software, formal analysis, investigation, writing - original draft. **Dawei Liu:** supervision, methodology, validation, writing - review and editing.
 ## Declaration of generative AI use
 
 The authors report generative AI was not used in their research or preparation of this manuscript.

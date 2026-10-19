@@ -243,11 +243,8 @@ PREAMBLE = r"""\documentclass{interact}
 %% AUTHOR-BEGIN
 \author{\name{Zhengyang Chen\textsuperscript{a}\thanks{Email: 18392366572@163.com.
     ORCID: 0009-0003-3310-8077}
-  and Dawei Liu\textsuperscript{a}\thanks{*CONTACT Dawei Liu. Email: wjmicheal@163.com}
-  and Zhiheng Liu\textsuperscript{b}}
-\affil{\textsuperscript{a}Engineering University of PAP, Xi'an 710086, China;
-  \textsuperscript{b}Institute of Earth Environment, Chinese Academy of Sciences,
-  Xi'an 710061, China}}
+  and Dawei Liu\textsuperscript{a}\thanks{*CONTACT Dawei Liu. Email: wjmicheal@163.com}}
+\affil{\textsuperscript{a}Engineering University of PAP, Xi'an 710086, China}}
 %% AUTHOR-END
 
 \maketitle
@@ -528,8 +525,6 @@ def main():
          "**Zhengyang Chen:** conceptualisation, methodology, software, formal "
          "analysis, investigation, writing - original draft. "
          "**Dawei Liu:** supervision, methodology, validation, writing - review "
-         "and editing. "
-         "**Zhiheng Liu:** data curation, resources, validation, writing - review "
          "and editing."),
         ("Declaration of generative AI use",
          "The authors report generative AI was not used in their research or "
