@@ -52,7 +52,12 @@ def main():
     check("abstract_unstructured", not re.search(r"\*\*|\\textbf", abstract))
     check("abstract_uncited", not re.search(r"\[\d+\]|\\cite", abstract))
     check("title_present", 5 <= len(title.split()) <= 25, "%d words" % len(title.split()))
+    kw = next((l for l in md.split("\n") if l.startswith("**Keywords**")), "")
+    kw_text = re.sub(r"^\*\*Keywords\*\*\s*[\u2014\u2013-]\s*", "", kw).strip()
     check("keywords_present", "**Keywords**" in md)
+    check("keywords_nonempty", bool(kw_text), "%d chars" % len(kw_text))
+    check("keywords_count", 3 <= len([k for k in kw_text.split(";") if k.strip()]) <= 8,
+          "%d terms" % len([k for k in kw_text.split(";") if k.strip()]))
     check("word_count_stated", "**Word count:**" in md, "required by the journal")
 
     # ------------------------------------------------------------- structure
@@ -105,6 +110,9 @@ def main():
         check("tex_cites_defined", not (cites - bibs), str(sorted(cites - bibs)))
         check("tex_no_unused_bibitem", not (bibs - cites))
         check("tex_no_markers", "{@" not in tex)
+        kwm = re.search(r"\\begin\{keywords\}(.*?)\\end\{keywords\}", tex, re.S)
+        check("tex_keywords_nonempty", bool(kwm and kwm.group(1).strip()),
+              "the class prints a KEYWORDS heading even when the block is empty")
         check("tex_no_mangled", "textbackslash" not in tex)
         check("tex_tables", tex.count(r"\begin{table}") == 6)
         check("tex_figures", tex.count(r"\begin{figure}") == 2)

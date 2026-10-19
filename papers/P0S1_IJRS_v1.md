@@ -15,7 +15,7 @@ Remote sensing super-resolution papers routinely advertise gains as a single num
 
 ---
 
-**Keywords**—
+**Keywords**—Super-resolution; Benchmark evaluation; Reproducibility; Statistical significance; Model ranking; Earth observation
 
 
 ---

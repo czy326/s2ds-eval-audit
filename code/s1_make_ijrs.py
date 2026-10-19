@@ -258,6 +258,9 @@ PREAMBLE = r"""\documentclass{interact}
 @@KEYWORDS@@
 \end{keywords}
 
+%% The word count is set plain and without a brace group. A group opened
+%% directly after \end{keywords} interacts with the class's \@endparenv and
+%% adds three pages to the document.
 \noindent\small Word count: @@WORDCOUNT@@ (main text, excluding abstract,
 references and declarations).
 
@@ -465,8 +468,13 @@ def main():
     # the keyword line is not a heading, so it sits inside the abstract section;
     # take only the first non-empty line, which is the abstract itself
     abstract = next((l.strip() for l in sec.get("Abstract", []) if l.strip()), "")
-    kwline = next((l for l in sec.get("Keywords", []) if l.strip()), "")
-    keywords = re.split("[\u2014\u2013]", kwline, maxsplit=1)[-1].strip().rstrip(".")
+    # the keyword line is a bold paragraph rather than a heading, so it has no
+    # section of its own. Read it off the source directly.
+    kwline = next((l for l in lines if l.strip().startswith("**Keywords**")), "")
+    keywords = re.sub(r"^\*\*Keywords\*\*\s*[\u2014\u2013-]\s*", "", kwline).strip().rstrip(".")
+    keywords = " ".join(keywords.split())
+    if not keywords:
+        raise SystemExit("keyword line not found in the source")
 
     ref_lines = list(sec.get("References", []))
     ref_lines += ["[%d] %s" % (900 + i, s) for i, s in enumerate(EXTRA_REFS)]
@@ -550,7 +558,7 @@ def main():
     # ------------------------------------------------------------------ LaTeX
     tex = [PREAMBLE.replace("@@TITLE@@", conv(title, False))
            .replace("@@ABSTRACT@@", conv(abstract, False))
-           .replace("@@KEYWORDS@@", esc(keywords.replace(";", r"\sep ")))
+           .replace("@@KEYWORDS@@", esc(keywords))
            .replace("@@WORDCOUNT@@", "{:,}".format(n_words))]
 
     lines_t = body_all.split("\n")
