@@ -258,9 +258,9 @@ PREAMBLE = r"""\documentclass{interact}
 @@KEYWORDS@@
 \end{keywords}
 
-%% The word count is set plain and without a brace group. A group opened
-%% directly after \end{keywords} interacts with the class's \@endparenv and
-%% adds three pages to the document.
+%% The journal requires a word count in the paper, so it cannot be dropped. It
+%% is set plain and without a brace group: a group opened directly after
+%% \end{keywords} interacts with the class's \@endparenv and adds three pages.
 \noindent\small Word count: @@WORDCOUNT@@ (main text, excluding abstract,
 references and declarations).
 
